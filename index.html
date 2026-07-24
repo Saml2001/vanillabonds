@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VanillaBonds — Standardised bonds for European mid-caps</title>
+<meta name="description" content="VanillaBonds brings the proven Nordic bond format to continental Europe's mid-caps: standardised senior secured bonds, €20–75m, arranged in weeks and tradeable from day one.">
+<meta property="og:title" content="VanillaBonds — Standardised bonds for European mid-caps">
+<meta property="og:description" content="The proven Nordic bond format for continental Europe's mid-caps. Senior secured, €20–75m, governed by a trustee, tradeable from day one.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vanillabonds.com">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230E2A47'/%3E%3Cpath d='M16 18 L32 50 L48 18 L40 18 L32 36 L24 18 Z' fill='%23C9A227'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --navy:#0E2A47; --navy2:#1B4B7A; --navy-deep:#0B2138;
+    --gold:#C9A227; --gold2:#E7C55A;
+    --ivory:#F7F4EC; --paper:#FDFCF8;
+    --ink:#16202B; --grey:#5A6672; --line:#E3E0D6;
+    --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);font-size:15.5px;line-height:1.55}
+
+  header{background:var(--navy);position:sticky;top:0;z-index:50;border-bottom:3px solid var(--gold)}
+  .hwrap{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:26px;padding:14px 24px}
+  .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .logo svg{display:block}
+  .logo .wm{color:#fff;font-family:var(--serif);font-size:21px;letter-spacing:.12em;font-weight:700}
+  .logo .wm span{color:var(--gold2)}
+  .logo .tag{color:#9FB3C8;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+  nav{display:flex;gap:4px;margin-left:auto;align-items:center;flex-wrap:wrap}
+  nav a{color:#C9D6E2;font-size:14px;font-weight:600;padding:9px 15px;border-radius:4px;text-decoration:none}
+  nav a:hover{color:#fff;background:rgba(255,255,255,.07)}
+  nav a.cta{background:transparent;border:1px solid var(--gold);color:var(--gold2);margin-left:8px}
+  nav a.cta:hover{background:var(--gold);color:var(--navy)}
+  @media(max-width:720px){nav a:not(.cta){display:none}}
+
+  main{max-width:1100px;margin:0 auto;padding:0 24px}
+  .eyebrow{color:#B07A1E;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:clamp(32px,5vw,50px);line-height:1.1;color:var(--navy);font-weight:700}
+  h2{font-family:var(--serif);font-size:28px;color:var(--navy);margin-bottom:6px}
+  .lede{font-size:18px;color:var(--grey);max-width:64ch;margin-top:16px}
+  .goldrule{width:64px;height:3px;background:var(--gold);margin:14px 0 20px}
+  section.block{padding:58px 0;border-bottom:1px solid var(--line)}
+  .sub{color:var(--grey);max-width:72ch;margin-bottom:24px}
+
+  .hero{padding:72px 0 50px;border-bottom:1px solid var(--line)}
+  .herobtns{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:13px 24px;border-radius:5px;font-weight:700;font-size:14.5px;cursor:pointer;border:none;font-family:var(--sans);text-decoration:none}
+  .btn.gold{background:var(--gold);color:var(--navy)}
+  .btn.gold:hover{background:var(--gold2)}
+  .btn.ghost{background:none;border:1.5px solid var(--navy);color:var(--navy)}
+  .btn.ghost:hover{background:var(--ivory)}
+  .statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:48px}
+  .stat{background:var(--ivory);border:1px solid var(--line);border-left:3px solid var(--gold);padding:15px 17px;border-radius:4px}
+  .stat b{display:block;font-family:var(--serif);font-size:23px;color:var(--navy)}
+  .stat span{font-size:12.5px;color:var(--grey)}
+
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:24px;box-shadow:0 1px 3px rgba(14,42,71,.05)}
+  .card h3{font-family:var(--serif);font-size:18px;color:var(--navy);margin-bottom:8px}
+  .card p{color:var(--grey);font-size:14px}
+  .card .n{font-family:var(--serif);font-size:15px;color:var(--gold);font-weight:700;letter-spacing:.06em;margin-bottom:10px;display:block}
+  .punch{margin-top:22px;background:var(--navy);color:#EAF0F6;border-radius:6px;padding:18px 22px;font-size:15.5px}
+  .punch b{color:var(--gold2)}
+
+  .roadmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;margin-top:26px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
+  .rstep{background:#fff;padding:20px;border-right:1px solid var(--line);position:relative}
+  .rstep:last-child{border-right:none}
+  .rstep .when{font-family:var(--mono);font-size:12px;color:#B07A1E;font-weight:700;letter-spacing:.05em}
+  .rstep h3{font-family:var(--serif);font-size:16px;color:var(--navy);margin:6px 0 6px}
+  .rstep p{font-size:13px;color:var(--grey)}
+  .rstep.now{background:var(--ivory);border-top:3px solid var(--gold)}
+  @media(max-width:720px){.rstep{border-right:none;border-bottom:1px solid var(--line)}}
+
+  .ctaband{background:var(--navy);border-radius:8px;margin:58px 0;padding:44px 40px;color:#DCE6F0}
+  .ctaband h2{color:#fff}
+  .ctaband p{color:#B7C7D6;max-width:64ch;margin:10px 0 24px}
+  .ctaband .mail{font-family:var(--serif);font-size:20px;color:var(--gold2);text-decoration:none}
+  .ctaband .mail:hover{text-decoration:underline}
+
+  footer{border-top:1px solid var(--line);margin-top:0;padding:34px 24px 46px;background:var(--ivory)}
+  .fwrap{max-width:1100px;margin:0 auto}
+  .fine{font-size:12px;color:var(--grey);max-width:100ch;line-height:1.6}
+  .fbottom{max-width:1100px;margin:18px auto 0;font-size:12.5px;color:var(--grey);display:flex;gap:18px;flex-wrap:wrap}
+  .fbottom a{color:var(--navy2);text-decoration:none}
+  .fbottom a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <a class="logo" href="#top">
+      <svg width="34" height="34" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0E2A47" stroke="#C9A227" stroke-width="3"/><path d="M16 18 L32 50 L48 18 L40 18 L32 36 L24 18 Z" fill="#C9A227"/></svg>
+      <div>
+        <div class="wm">VANILLA<span>BONDS</span></div>
+        <div class="tag">European mid-cap bond platform</div>
+      </div>
+    </a>
+    <nav>
+      <a href="#gap">The gap</a>
+      <a href="#build">What we build</a>
+      <a href="#stand">Where we stand</a>
+      <a class="cta" href="demo.html">Platform demo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="eyebrow">Senior secured bonds · €20–75 million · Nordic format · DACH first</div>
+    <h1>Debt capital markets,<br>sized for the Mittelstand.</h1>
+    <p class="lede">VanillaBonds brings the proven Nordic bond format to continental Europe’s mid-caps: standardised senior secured bonds — priced, governed and tradeable — arranged in weeks, not quarters, and placed with a standing circle of professional investors.</p>
+    <div class="herobtns">
+      <a class="btn gold" href="demo.html">View the platform demo</a>
+      <a class="btn ghost" href="#contact">Get in touch</a>
+    </div>
+    <div class="statrow">
+      <div class="stat"><b>60</b><span>non-Nordic European issuers already using the Nordic format, tracked in our dataset</span></div>
+      <div class="stat"><b>&gt;90%</b><span>of German SME high-yield volume already issues in Nordic format</span></div>
+      <div class="stat"><b>€21.8bn</b><span>Nordic high-yield issuance in 2025 — a record year</span></div>
+      <div class="stat"><b>6–8 weeks</b><span>mandate to settlement on standardised documentation</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="gap">
+    <div class="eyebrow">The problem</div>
+    <h2>Europe’s funding map has a hole in the middle</h2>
+    <div class="goldrule"></div>
+    <p class="sub">Three channels serve European corporate debt — and each one stops short of the ordinary mid-cap.</p>
+    <div class="grid3">
+      <div class="card">
+        <span class="n">01 — BANK SYNDICATES</span>
+        <h3>Don’t clear below ~€75–100m</h3>
+        <p>Syndicate desks carry a cost base that doesn’t work on small tickets. Below the threshold, issuers are left with club loans on bank terms — slow, covenant-heavy, and capital-constrained as banks retreat from mid-cap risk.</p>
+      </div>
+      <div class="card">
+        <span class="n">02 — SCHULDSCHEIN</span>
+        <h3>A conservative pool that just lost trust</h3>
+        <p>The 2024–26 restructurings (Varta, BayWa, KTM) hit a generalist investor base with no trustee, no collective action clauses and no exit. Unrated, smaller and non-German names are being shown the door.</p>
+      </div>
+      <div class="card">
+        <span class="n">03 — SYNDICATED HIGH YIELD</span>
+        <h3>Starts near €200m</h3>
+        <p>Rated, prospectus-based benchmark issuance is built for large caps. The documentation, rating and marketing cost simply doesn’t amortise on a €30m deal.</p>
+      </div>
+    </div>
+    <div class="punch">In between sits the ordinary, healthy European mid-cap — with nowhere to issue. <b>The €20–75m band is where we operate</b>, on a format that already works: over 90% of German SME high yield has quietly moved to Nordic documentation.</div>
+  </section>
+
+  <section class="block" id="build">
+    <div class="eyebrow">The platform</div>
+    <h2>One standard. One process. One investor circle.</h2>
+    <div class="goldrule"></div>
+    <div class="grid3">
+      <div class="card">
+        <h3>One standard</h3>
+        <p>Nordic bond terms: senior secured, trustee-governed, majority decisions through collective action clauses, a fixed covenant menu. Documentation is standardised, so counsel reviews the delta — not two hundred pages from scratch.</p>
+      </div>
+      <div class="card">
+        <h3>One process</h3>
+        <p>Mandate to settlement in six to eight weeks. No prospectus and no mandatory rating in the professional segment (€100,000 minimum denominations). ISIN, Euroclear/Clearstream settlement and paying agent through established providers — tradeable from day one.</p>
+      </div>
+      <div class="card">
+        <h3>One investor circle</h3>
+        <p>Professional and institutional investors onboard once, then see standardised, comparable deal flow matched to their domain — instead of repeating per-deal paperwork for every single ticket.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="stand">
+    <div class="eyebrow">Honest stage</div>
+    <h2>Where we stand</h2>
+    <div class="goldrule"></div>
+    <p class="sub">We build in the open and label our stage precisely. The format is proven and the dataset is real; the company is young. First transactions will be arranged together with a licensed partner while our own authorisation is prepared.</p>
+    <div class="roadmap">
+      <div class="rstep now">
+        <div class="when">NOW — 2026</div>
+        <h3>Formation &amp; groundwork</h3>
+        <p>Company in formation (Munich). Format, issuer dataset and platform demo built; regulatory pathway mapped with counsel.</p>
+      </div>
+      <div class="rstep">
+        <div class="when">H1 2027</div>
+        <h3>Partner phase</h3>
+        <p>First mandates arranged under the umbrella of a licensed partner firm. Founding circle of investors and first issuers assembled.</p>
+      </div>
+      <div class="rstep">
+        <div class="when">H2 2027</div>
+        <h3>First issuance</h3>
+        <p>First standardised senior secured bond placed, settled and tradeable — the reference transaction for everything after it.</p>
+      </div>
+      <div class="rstep">
+        <div class="when">2028 →</div>
+        <h3>Own licence &amp; scale</h3>
+        <p>Own MiFID authorisation, repeat issuers, new domains — deal sizes growing from ~€30m toward €250m.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ctaband" id="contact">
+    <div class="eyebrow" style="color:var(--gold2)">Contact</div>
+    <h2>Talk to us</h2>
+    <p>We’re speaking with mid-cap CFOs, professional investors, and arranging and documentation partners across DACH and the Nordics. If that’s you, we’d like to hear from you.</p>
+    <a class="mail" href="mailto:contact@vanillabonds.com">contact@vanillabonds.com</a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="fwrap">
+    <p class="fine">VanillaBonds is the working name of a company in formation (Munich, Germany). The content of this website is provided for general information only. Nothing on this site constitutes an offer of securities, a solicitation of an offer, investment advice or an investment recommendation. Any future offering would be addressed exclusively to professional investors within the meaning of MiFID II, with minimum denominations of €100,000, in reliance on applicable prospectus exemptions. The platform demo linked from this page is a demonstration environment showing fictitious, illustrative data only.</p>
+    <div class="fbottom">
+      <span>© 2026 VanillaBonds</span>
+      <a href="demo.html">Platform demo</a>
+      <a href="mailto:contact@vanillabonds.com">contact@vanillabonds.com</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

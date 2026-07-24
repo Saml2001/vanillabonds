@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANILLABONDS — European Mid-Cap Bond Platform (Demo)</title>
+<style>
+  :root{
+    --navy:#0E2A47; --navy2:#1B4B7A; --navy-deep:#0B2138;
+    --gold:#C9A227; --gold2:#E7C55A;
+    --ivory:#F7F4EC; --paper:#FDFCF8;
+    --ink:#16202B; --grey:#5A6672; --line:#E3E0D6;
+    --green:#2E7D5B; --red:#B0433C; --amber:#B07A1E;
+    --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);font-size:15.5px;line-height:1.55}
+
+  /* ---------- demo banner + header ---------- */
+  .demobar{background:var(--gold);color:var(--navy);font-size:12px;font-weight:600;text-align:center;padding:5px 14px;letter-spacing:.02em}
+  header{background:var(--navy);position:sticky;top:0;z-index:50;border-bottom:3px solid var(--gold)}
+  .hwrap{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:26px;padding:14px 24px}
+  .logo{display:flex;align-items:center;gap:11px;cursor:pointer}
+  .logo svg{display:block}
+  .logo .wm{color:#fff;font-family:var(--serif);font-size:21px;letter-spacing:.14em;font-weight:700}
+  .logo .wm span{color:var(--gold2)}
+  .logo .tag{color:#9FB3C8;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+  nav{display:flex;gap:4px;margin-left:auto}
+  nav button{background:none;border:none;color:#C9D6E2;font-size:14px;font-weight:600;padding:9px 15px;cursor:pointer;border-radius:4px;font-family:var(--sans)}
+  nav button:hover{color:#fff;background:rgba(255,255,255,.07)}
+  nav button.active{color:var(--navy);background:var(--gold)}
+  .cta-mini{background:transparent;border:1px solid var(--gold);color:var(--gold2)!important;margin-left:8px}
+  .cta-mini:hover{background:var(--gold);color:var(--navy)!important}
+
+  main{max-width:1200px;margin:0 auto;padding:0 24px 70px}
+  .view{display:none}
+  .view.active{display:block;animation:fadein .25s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ---------- typography blocks ---------- */
+  .eyebrow{color:var(--amber);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
+  h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,46px);line-height:1.12;color:var(--navy);font-weight:700}
+  h2{font-family:var(--serif);font-size:27px;color:var(--navy);margin-bottom:6px}
+  h3{font-size:16px;color:var(--navy);margin-bottom:6px}
+  .lede{font-size:17.5px;color:var(--grey);max-width:66ch;margin-top:14px}
+  section.block{padding:54px 0;border-bottom:1px solid var(--line)}
+  .sub{color:var(--grey);max-width:72ch;margin-bottom:22px}
+  .goldrule{width:64px;height:3px;background:var(--gold);margin:14px 0 18px}
+
+  /* ---------- hero ---------- */
+  .hero{padding:64px 0 46px;border-bottom:1px solid var(--line)}
+  .herobtns{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:12px 22px;border-radius:5px;font-weight:700;font-size:14.5px;cursor:pointer;border:none;font-family:var(--sans);text-decoration:none}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.primary:hover{background:var(--navy2)}
+  .btn.gold{background:var(--gold);color:var(--navy)}
+  .btn.gold:hover{background:var(--gold2)}
+  .btn.ghost{background:none;border:1.5px solid var(--navy);color:var(--navy)}
+  .btn.ghost:hover{background:var(--ivory)}
+  .statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:44px}
+  .stat{background:var(--ivory);border:1px solid var(--line);border-left:3px solid var(--gold);padding:14px 16px;border-radius:4px}
+  .stat b{display:block;font-family:var(--serif);font-size:23px;color:var(--navy)}
+  .stat span{font-size:12.5px;color:var(--grey)}
+
+  /* ---------- cards & grids ---------- */
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:22px;box-shadow:0 1px 3px rgba(14,42,71,.05)}
+  .card h3{font-family:var(--serif);font-size:18px}
+  .card p{color:var(--grey);font-size:14px;margin-top:8px}
+  .card .kfact{font-family:var(--mono);font-size:12.5px;color:var(--navy2);background:var(--ivory);display:inline-block;padding:3px 8px;border-radius:3px;margin-top:12px}
+  .navycard{background:var(--navy);color:#DCE6F0;border:none}
+  .navycard h3{color:#fff}
+  .navycard p{color:#B7C7D6}
+
+  ul.ticks{list-style:none;margin-top:10px}
+  ul.ticks li{padding:7px 0 7px 26px;position:relative;font-size:14.5px;color:#33404D;border-bottom:1px dashed var(--line)}
+  ul.ticks li:last-child{border-bottom:none}
+  ul.ticks li::before{content:'';position:absolute;left:2px;top:13px;width:12px;height:12px;background:var(--gold);clip-path:polygon(14% 44%,0 62%,40% 100%,100% 16%,84% 2%,40% 70%)}
+
+  table.tb{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
+  table.tb th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-size:12px;letter-spacing:.04em;font-weight:600;white-space:nowrap}
+  table.tb td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.tb tr:nth-child(even) td{background:var(--ivory)}
+  .num{font-family:var(--mono);font-size:12.8px;white-space:nowrap}
+  .tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2.5px 9px;border-radius:20px;letter-spacing:.03em;white-space:nowrap}
+  .p-ok{background:#E3EFE8;color:var(--green)} .p-watch{background:#F6ECD8;color:var(--amber)}
+  .p-bad{background:#F4E0DE;color:var(--red)} .p-grey{background:#E8EAED;color:var(--grey)}
+  .p-navy{background:#E1E9F2;color:var(--navy2)} .p-gold{background:#F5EBC9;color:#8A6E14}
+
+  /* ---------- market ---------- */
+  .mktstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:22px 0}
+  .mktstats .stat b{font-size:20px}
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+  .filters input,.filters select{padding:8px 11px;border:1px solid var(--line);border-radius:5px;font-size:13.5px;background:#fff;color:var(--ink);font-family:var(--sans)}
+  .filters input{min-width:220px}
+  #bondtable th{cursor:pointer;user-select:none}
+  #bondtable th:hover{background:var(--navy2)}
+  #bondtable tbody tr{cursor:pointer}
+  #bondtable tbody tr:hover td{background:#F0EBDC}
+  .sortmark{opacity:.7;font-size:10px}
+
+  /* drawer */
+  .drawer-back{position:fixed;inset:0;background:rgba(14,33,56,.45);z-index:90;display:none}
+  .drawer-back.open{display:block}
+  .drawer{position:fixed;top:0;right:-560px;width:min(540px,94vw);height:100vh;background:var(--paper);z-index:95;box-shadow:-8px 0 30px rgba(0,0,0,.25);transition:right .28s ease;overflow-y:auto}
+  .drawer.open{right:0}
+  .dhead{background:var(--navy);color:#fff;padding:22px 26px;position:relative}
+  .dhead h3{color:#fff;font-family:var(--serif);font-size:21px;margin:0 30px 4px 0}
+  .dhead .sub2{color:#A9BCCD;font-size:13px}
+  .dclose{position:absolute;top:16px;right:16px;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1}
+  .dbody{padding:22px 26px 50px}
+  .kv{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;margin:6px 0 16px}
+  .kv div{padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+  .kv b{display:block;font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 18px}
+  .chip{font-size:12px;background:var(--ivory);border:1px solid var(--line);color:#41505E;padding:4px 10px;border-radius:14px}
+  .dsec{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin:18px 0 8px}
+  .doc{display:flex;gap:9px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:5px;margin-bottom:7px;font-size:13.5px;background:#fff;color:var(--navy2)}
+  .doc small{margin-left:auto;color:var(--grey)}
+  .feed{font-size:13px;color:#41505E}
+  .feed div{padding:6px 0;border-bottom:1px dashed var(--line)}
+  .feed span{color:var(--grey);font-family:var(--mono);font-size:11.5px;margin-right:9px}
+
+  /* ---------- issuance ---------- */
+  .issuegrid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}
+  @media(max-width:980px){.issuegrid{grid-template-columns:1fr}}
+  .dealcard{background:var(--navy-deep);color:#D7E2EC;border-radius:8px;overflow:hidden;border:1px solid #1E3A57}
+  .dealhead{padding:22px 24px;border-bottom:1px solid #1E3A57;display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  .dealhead h3{color:#fff;font-family:var(--serif);font-size:21px}
+  .dealhead .sub2{color:#8FA6BA;font-size:13px;margin-top:3px}
+  .live{display:inline-flex;align-items:center;gap:7px;background:#12395B;color:#7BD9A8;font-size:12px;font-weight:700;padding:5px 12px;border-radius:16px;letter-spacing:.05em}
+  .live i{width:8px;height:8px;border-radius:50%;background:#48BB78;display:inline-block;animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .dealterms{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:#1E3A57}
+  .dealterms div{background:var(--navy-deep);padding:12px 16px}
+  .dealterms b{display:block;font-size:10.5px;color:#7E97AD;letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-bottom:3px}
+  .dealterms span{font-family:var(--mono);font-size:14px;color:#F2D77E}
+  .dbodyd{padding:20px 24px}
+  .covwrap{margin:6px 0 4px}
+  .covbar{height:26px;background:#12395B;border-radius:5px;overflow:hidden;display:flex;position:relative}
+  .covseg-a{background:var(--gold);height:100%;transition:width .5s}
+  .covseg-o{background:#3E7CB1;height:100%;transition:width .5s}
+  .covmarks{position:relative;height:16px;font-size:10.5px;color:#7E97AD;font-family:var(--mono)}
+  .covmarks span{position:absolute;transform:translateX(-50%)}
+  .covlabels{display:flex;justify-content:space-between;font-size:12px;color:#9FB3C8;margin-top:6px}
+  .booktable{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
+  .booktable th{color:#7E97AD;text-align:left;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid #1E3A57}
+  .booktable td{padding:6.5px 8px;border-bottom:1px solid #16324D;color:#C9D6E2}
+  .booktable tr.anchor td{color:#F2D77E}
+  .booktable tr.you td{background:#28425e;color:#fff;font-weight:600}
+  .booktable tr.hot td{color:#c99a9a}
+  .bookwrap{max-height:300px;overflow-y:auto;margin-top:4px}
+  .orderform{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:9px;margin-top:14px}
+  @media(max-width:640px){.orderform{grid-template-columns:1fr 1fr}}
+  .orderform select,.orderform input{background:#12395B;border:1px solid #2A4A69;color:#fff;padding:9px 10px;border-radius:5px;font-size:13px;font-family:var(--sans)}
+  .timeline{list-style:none;margin-top:8px}
+  .timeline li{display:flex;gap:12px;padding:7px 0;font-size:13.5px;color:#8FA6BA;align-items:baseline}
+  .timeline li b{color:#D7E2EC;font-weight:600}
+  .timeline li .tdot{width:11px;height:11px;border-radius:50%;background:#2A4A69;flex:none;position:relative;top:1px}
+  .timeline li.done .tdot{background:var(--gold)}
+  .timeline li.done{color:#C9D6E2}
+  .pricedstamp{border:2px solid var(--gold);color:var(--gold2);display:inline-block;padding:7px 16px;font-family:var(--serif);letter-spacing:.12em;font-size:15px;border-radius:4px;margin-top:12px;transform:rotate(-1.5deg)}
+
+  /* wizard */
+  .wiz{background:#fff;border:1px solid var(--line);border-radius:8px;padding:24px}
+  .wiz label{display:block;font-size:12px;font-weight:700;color:var(--navy);letter-spacing:.04em;text-transform:uppercase;margin:15px 0 5px}
+  .wiz select,.wiz input[type=number],.wiz input[type=text]{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:5px;font-size:14px;background:var(--paper);font-family:var(--sans)}
+  .wiz input[type=range]{width:100%;accent-color:var(--navy)}
+  .wizrow{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+  .rangeval{font-family:var(--mono);color:var(--navy2);font-size:13px}
+  .checkline{display:flex;gap:9px;align-items:flex-start;margin-top:16px;font-size:13.5px;color:#33404D}
+  .checkline input{margin-top:3px;accent-color:var(--navy)}
+  .verdict{border-radius:7px;padding:18px 20px;margin-top:20px;display:none}
+  .verdict.show{display:block}
+  .verdict.fit{background:#E9F3EE;border:1px solid #BFDCCB}
+  .verdict.partial{background:#FBF3DF;border:1px solid #E8D6A8}
+  .verdict.decline{background:#F8E9E7;border:1px solid #E4C2BE}
+  .verdict h3{font-family:var(--serif);font-size:19px}
+  .critlist{list-style:none;margin-top:10px;font-size:13.5px}
+  .critlist li{padding:4px 0;display:flex;gap:9px}
+  .critlist .cchip{flex:none;width:18px;height:18px;border-radius:50%;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:800;position:relative;top:2px}
+  .c-pass{background:var(--green)} .c-part{background:var(--amber)} .c-fail{background:var(--red)}
+  .indprice{margin-top:14px;background:var(--navy);color:#fff;border-radius:6px;padding:14px 18px}
+  .indprice b{font-family:var(--mono);font-size:22px;color:var(--gold2)}
+  .indprice small{color:#A9BCCD;display:block;margin-top:4px}
+
+  /* svg holders */
+  .svgwrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:6px;padding:18px 12px 8px;margin-top:16px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--grey);padding:8px 10px 6px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+  .caption{font-size:12.5px;color:var(--grey);padding:8px 10px 4px;max-width:90ch}
+
+  /* refi */
+  .refiyear{font-family:var(--serif);font-size:18px;color:var(--navy);margin:16px 0 6px}
+  .refirow{display:flex;gap:10px;flex-wrap:wrap}
+  .refichip{background:#fff;border:1px solid var(--line);border-left:3px solid var(--navy2);border-radius:5px;padding:8px 13px;font-size:13px}
+  .refichip b{color:var(--navy)} .refichip span{font-family:var(--mono);color:var(--grey);font-size:12px;display:block}
+
+  /* monitor + footer */
+  .monitor{background:var(--navy);border-radius:8px;color:#C9D6E2;padding:34px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+  @media(max-width:860px){.monitor{grid-template-columns:1fr}}
+  .monitor h2{color:#fff}
+  .monitor .mstats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .monitor .mstat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:13px 15px}
+  .monitor .mstat b{font-family:var(--serif);font-size:21px;color:var(--gold2);display:block}
+  .monitor .mstat span{font-size:12px;color:#9FB3C8}
+  .subscribe{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}
+  .subscribe input{flex:1;min-width:200px;padding:11px 13px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-size:14px}
+  .subscribe input::placeholder{color:#8FA6BA}
+  footer{background:var(--navy-deep);color:#8FA6BA;margin-top:0}
+  .fwrap{max-width:1200px;margin:0 auto;padding:44px 24px 30px;display:grid;grid-template-columns:1.3fr 1fr 1.4fr;gap:34px;font-size:13px}
+  @media(max-width:860px){.fwrap{grid-template-columns:1fr}}
+  footer h4{color:#fff;font-family:var(--serif);font-size:15px;margin-bottom:10px;letter-spacing:.04em}
+  footer .legal{font-size:11.5px;line-height:1.6;color:#6E869C}
+  .fbottom{border-top:1px solid #1E3A57;text-align:center;font-size:11.5px;color:#5E7690;padding:14px}
+  .ecos{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .ecos span{border:1px solid #2A4A69;border-radius:4px;padding:5px 10px;font-size:12px;color:#A9BCCD}
+
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;counter-reset:step}
+  .step{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px;position:relative;counter-increment:step}
+  .step::before{content:counter(step,decimal-leading-zero);font-family:var(--serif);color:var(--gold);font-size:21px;font-weight:700;display:block;margin-bottom:6px}
+  .step b{font-size:13.5px;color:var(--navy);display:block}
+  .step span{font-size:12px;color:var(--grey)}
+  .notice{font-size:12.5px;color:var(--grey);background:var(--ivory);border:1px solid var(--line);border-radius:5px;padding:10px 14px;margin-top:16px}
+</style>
+</head>
+<body>
+
+<div class="demobar">DEMONSTRATION ENVIRONMENT — fictitious &amp; illustrative data · not an offer, solicitation or investment advice · pre-registration preview</div>
+
+<header>
+  <div class="hwrap">
+    <div class="logo" onclick="showView('platform')">
+      <svg width="34" height="34" viewBox="0 0 34 34"><rect width="34" height="34" rx="5" fill="#C9A227"/><path d="M7 24 27 8M7 17 27 8M7 24 27 15" stroke="#0E2A47" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <div>
+        <div class="wm">VANILLA<span>BONDS</span></div>
+        <div class="tag">European Mid-Cap Bond Platform</div>
+      </div>
+    </div>
+    <nav>
+      <button id="nav-platform" class="active" onclick="showView('platform')">Platform</button>
+      <button id="nav-market" onclick="showView('market')">Market</button>
+      <button id="nav-issue" onclick="showView('issue')">New Issues</button>
+      <button class="cta-mini" onclick="showView('platform');setTimeout(()=>document.getElementById('investors').scrollIntoView(),60)">Founding Circle</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================= -->
+<!-- VIEW 1 — PLATFORM (informational)                              -->
+<!-- ============================================================= -->
+<section class="view active" id="view-platform">
+
+  <div class="hero">
+    <div class="eyebrow">Senior secured bonds · €20–75 million · DACH first</div>
+    <h1>Debt capital markets,<br>sized for the Mittelstand.</h1>
+    <p class="lede">VanillaBonds brings the proven Nordic bond format to continental Europe’s mid-caps: standardised senior secured bonds — priced, governed and tradeable — arranged in weeks, not quarters, and placed into a standing professional investor circle.</p>
+    <div class="herobtns">
+      <button class="btn gold" onclick="showView('market')">Explore the market</button>
+      <button class="btn primary" onclick="showView('issue')">Issue a bond</button>
+      <button class="btn ghost" onclick="showView('issue');setTimeout(()=>document.getElementById('bookbuild').scrollIntoView({behavior:'smooth'}),80)">Watch a live bookbuild</button>
+    </div>
+    <div class="statrow">
+      <div class="stat"><b id="hs-issuers">60</b><span>non-Nordic issuers tracked in our dataset</span></div>
+      <div class="stat"><b>E+450–975</b><span>coupon range in today’s mid-cap format</span></div>
+      <div class="stat"><b>1.0–1.5%</b><span>target all-in arranging fee (vs 2.5–5% historic)</span></div>
+      <div class="stat"><b>€20–75m</b><span>the issue size nobody serves — our beachhead</span></div>
+    </div>
+  </div>
+
+  <section class="block">
+    <div class="eyebrow">The problem</div>
+    <h2>Europe’s funding map has a hole in the middle</h2>
+    <div class="goldrule"></div>
+    <p class="sub">Bank syndicate desks don’t clear their cost base below roughly €75–100m. The Schuldschein sweet spot sits around a €205m average ticket — and its 2024–26 trust break (Varta, BayWa, KTM) pushed exactly the unrated, smaller and non-German names out. Syndicated high yield starts near €200m. In between sits the ordinary, healthy European mid-cap — with nowhere to issue.</p>
+    <div class="svgwrap">
+      <svg viewBox="0 0 720 258" width="720" height="258" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica,Arial,sans-serif">
+        <!-- axis -->
+        <line x1="30" y1="212" x2="690" y2="212" stroke="#5A6672" stroke-width="1.2"/>
+        <g fill="#5A6672" font-size="10.5" text-anchor="middle">
+          <text x="129" y="228">€10m</text><text x="261" y="228">€25m</text><text x="360" y="228">€50m</text>
+          <text x="459" y="228">€100m</text><text x="591" y="228">€250m</text><text x="690" y="228">€500m</text>
+          <text x="360" y="248" font-size="10" fill="#8A94A0">issue size (log scale)</text>
+        </g>
+        <g stroke="#D8DCE1" stroke-width="1"><line x1="129" y1="20" x2="129" y2="212"/><line x1="261" y1="20" x2="261" y2="212"/><line x1="360" y1="20" x2="360" y2="212"/><line x1="459" y1="20" x2="459" y2="212"/><line x1="591" y1="20" x2="591" y2="212"/></g>
+        <!-- rows -->
+        <rect x="30" y="26" width="257" height="26" rx="4" fill="#C8CDD3"/>
+        <text x="40" y="43" font-size="12" fill="#33404D" font-weight="bold">House-bank &amp; club loans</text>
+        <rect x="229" y="62" width="159" height="30" rx="4" fill="#C9A227"/>
+        <text x="238" y="82" font-size="12.5" fill="#0E2A47" font-weight="bold">THE GAP €20–75m</text>
+        <text x="396" y="82" font-size="11" fill="#8A6E14">← VanillaBonds beachhead</text>
+        <rect x="459" y="100" width="231" height="26" rx="4" fill="#1B4B7A"/>
+        <text x="468" y="117" font-size="12" fill="#fff" font-weight="bold">Bank DCM ≥ €75–100m</text>
+        <text x="451" y="117" font-size="10.5" fill="#5A6672" text-anchor="end">uneconomic below this line →</text>
+        <rect x="459" y="136" width="199" height="26" rx="4" fill="#7E97AD"/>
+        <text x="468" y="153" font-size="12" fill="#0E2A47" font-weight="bold">Schuldschein · avg €205m</text>
+        <text x="646" y="153" font-size="12" fill="#B0433C" font-weight="bold">⚡</text>
+        <rect x="559" y="172" width="131" height="26" rx="4" fill="#0E2A47"/>
+        <text x="567" y="189" font-size="12" fill="#fff" font-weight="bold">Synd. HY ≥€200m</text>
+        <text x="30" y="18" font-size="10.5" fill="#B0433C">⚡ Schuldschein trust break 2024–26: Varta ≈90% haircut · BayWa €800m+ restructuring · KTM 70% write-down</text>
+      </svg>
+      <div class="caption">Our own dataset of 60 verified non-Nordic issuers shows the format effectively does not exist below €25m and averages €100–110m market-wide — the deepest unserved gap lies between bank lending and the institutional formats. Design headroom to €300m; growth via repeat issuers (Katjes grew from ~€110m to €185m outstanding).</div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="eyebrow">Why now</div>
+    <h2>Three doors opened at once</h2>
+    <div class="goldrule"></div>
+    <div class="grid3">
+      <div class="card">
+        <h3>The Schuldschein trust break</h3>
+        <p>Varta (≈90% haircut via StaRUG cram-down), BayWa (€800m+ across ~255 holders) and KTM (70% write-down) broke the implicit-safety promise. The market didn’t shrink — ~€24bn in 2025 — but investors turned selective, pushing unrated, smaller and non-German names towards alternatives.</p>
+        <div class="kfact">We sell explicitly priced, governed, tradeable risk — never “safer”.</div>
+      </div>
+      <div class="card">
+        <h3>Banks can’t make small pay</h3>
+        <p>Investment-grade benchmark fees run 0.25–0.45%; mid-cap placements historically cost 2.5–5% all-in. Below ≈€75–100m no syndicate desk clears its cost base — so healthy mid-caps stay trapped in loan formats they have outgrown.</p>
+        <div class="kfact">Standardisation compresses the fee to 1.0–1.5% — then the coupon.</div>
+      </div>
+      <div class="card">
+        <h3>The buyers already exist</h3>
+        <p>Frankfurt manages &gt;€700m in dedicated Nordic HY money. Family offices doubled private-debt allocations to 4–5%. Green mandates are starved of real EUR mid-cap paper. And since KFM’s fund liquidation, standing German mid-cap bond demand has no home.</p>
+        <div class="kfact">Latent demand becomes tickets when analysis costs drop.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="eyebrow">The format</div>
+    <h2>One standard. Six to eight weeks. Tradeable from day one.</h2>
+    <div class="goldrule"></div>
+    <div class="grid2">
+      <div>
+        <ul class="ticks">
+          <li><b>Senior secured, trustee-governed</b> — Nordic Trustee model: if the platform disappeared tomorrow, a tradeable security with a trustee remains.</li>
+          <li><b>Floating-rate note, 3m EURIBOR + 450–975</b> — 3–4 year tenor, standard call schedule.</li>
+          <li><b>Covenants from a standard menu</b> — incurrence-based net leverage, FCCR, dividend basket, change-of-control put; co-written with the founding investor circle.</li>
+          <li><b>Standardised disclosure</b> — one data room, quarterly reporting through the platform, covenant certificates on file.</li>
+          <li><b>Listed &amp; tradeable</b> — Börse Frankfurt Open Market / Euronext Oslo; institutional denominations.</li>
+          <li><b>6–8 weeks from mandate to settlement</b> — one process, one document set, a standing professional book.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-family:var(--serif);font-size:18px">What arranging actually costs</h3>
+        <div class="tscroll" style="margin-top:10px">
+          <table class="tb">
+            <thead><tr><th>Channel</th><th>Arranging / placement fee</th><th>Basis</th></tr></thead>
+            <tbody>
+              <tr><td>Investment-grade benchmark</td><td class="num">0.25–0.45%</td><td>FCA market study, 793 deals</td></tr>
+              <tr><td>Syndicated high yield</td><td class="num">avg 1.25% (B ≈1.5%)</td><td>FCA market study, 306 deals</td></tr>
+              <tr><td>German Mittelstandsanleihen (2010–16)</td><td class="num">2.5–5% · all-in ≈4.5%</td><td>trade sources</td></tr>
+              <tr><td>Nordic-format mid-market today</td><td class="num">1.5–3%</td><td>practitioner estimate</td></tr>
+              <tr><td style="color:var(--navy)"><b>VanillaBonds target</b></td><td class="num"><b>1.0–1.5%</b></td><td>our target — to be proven</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:13px;color:var(--grey);margin-top:10px">The fee is the certain saving. The strategic one is coupon compression through broader competition in the book — the claim we will only make once our own deal data proves it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="eyebrow">The credit filter</div>
+    <h2>What we decline is the product</h2>
+    <div class="goldrule"></div>
+    <div class="grid3">
+      <div class="card navycard">
+        <h3>Visible minimum criteria</h3>
+        <p>Deal Profile #1 is published, hard and boring: DACH · energy-transition or demonstrable sustainability angle · €20–40m · EBITDA ≥ €8–10m · net leverage ≤ 3.5× · senior secured · 3–4 years · refinancing or capex trigger · ongoing disclosure.</p>
+      </div>
+      <div class="card">
+        <h3>Visible refusal</h3>
+        <p>Everything outside the profile is declined — visibly, even when it costs revenue. Declined issuers are, with consent, referred to private-credit partners. One avoidable default in the first ten deals is deadlier than ten missed deals.</p>
+      </div>
+      <div class="card">
+        <h3>Published rejection statistics</h3>
+        <p>Every quarter we publish anonymised filter data. This segment produces real defaults (our 60-name dataset contains one default and one standstill) — we price risk and govern it; we don’t pretend it away.</p>
+        <div class="kfact">Q2 2026 (demo): 24 reviewed → 9 met profile → 2 mandates in negotiation</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="investors">
+    <div class="eyebrow">Two sides, one standard</div>
+    <h2>For investors &amp; for issuers</h2>
+    <div class="goldrule"></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Investors — the Founding Circle</h3>
+        <p>8–12 anchor accounts — entrepreneur money, multi-family offices, green mandates, specialist bondpickers — co-write the standard and get what followers never will:</p>
+        <ul class="ticks">
+          <li><b>A standards seat:</b> the covenant menu, disclosure set and deal profile are written with you, not for you.</li>
+          <li><b>Guaranteed allocation:</b> good books in this format get oversubscribed (recent precedent: 3.6×) and scaled back — anchors keep their full ticket.</li>
+          <li><b>A filtered origination stream:</b> origination is every credit investor’s bottleneck; ours arrives standardised, monitored, trustee-governed.</li>
+          <li><b>The data:</b> comparable credit information across a segment that has none — plus the quarterly Monitor, free.</li>
+        </ul>
+        <div class="notice">Professional and semi-professional investors only. No retail, in any form.</div>
+      </div>
+      <div class="card">
+        <h3>Issuers — grow with your paper</h3>
+        <p>For CFOs of companies with €8m+ EBITDA who have outgrown bilateral loans but are invisible to bank DCM:</p>
+        <ul class="ticks">
+          <li><b>One process, 6–8 weeks:</b> standard documentation, one data room, a standing book — not a nine-month odyssey.</li>
+          <li><b>All-in target 1.0–1.5%</b> against 2.5–5% historic mid-cap placement costs; amortised over five years the difference is real money.</li>
+          <li><b>No bank balance-sheet dependency:</b> diversify funding while keeping your house bank for what it is good at.</li>
+          <li><b>Repeat issuance grows with you:</b> the format carries €20m experiments to €300m programmes — the second issue is the cheapest capital you will ever raise.</li>
+        </ul>
+        <div class="notice">Check your deal against Profile #1 in the <a href="#" onclick="showView('issue');return false">New Issues</a> section.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="eyebrow">Process</div>
+    <h2>Mandate to listing in six steps</h2>
+    <div class="goldrule"></div>
+    <div class="steps">
+      <div class="step"><b>Profile check</b><span>48-hour screen against the published deal profile — pass or referred.</span></div>
+      <div class="step"><b>Credit work</b><span>Data room, audited figures, monitoring set-up. Weeks 1–3.</span></div>
+      <div class="step"><b>Standard docs</b><span>Covenant menu, security package, trustee appointed. Weeks 3–5.</span></div>
+      <div class="step"><b>Bookbuild</b><span>Anchors pre-committed; 48-hour early look; open book. Weeks 5–7.</span></div>
+      <div class="step"><b>Pricing &amp; settlement</b><span>Priced on demand, settled T+5 via paying agent.</span></div>
+      <div class="step"><b>Listed &amp; monitored</b><span>Exchange listing, quarterly disclosure, covenant certificates.</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="monitor">
+      <div>
+        <div class="eyebrow" style="color:var(--gold2)">The Monitor</div>
+        <h2>DACH Nordic Bond Monitor</h2>
+        <p style="margin-top:10px;font-size:14.5px">The quarterly state of the continental mid-cap bond market: every new issue, coupon, spread, maturity and default — built on our 60-issuer dataset. The systematic coverage this segment lost when the last dedicated barometer stopped in 2023.</p>
+        <div class="subscribe">
+          <input type="email" placeholder="work email (demo — not stored)" id="monmail">
+          <button class="btn gold" onclick="fakeSubscribe()">Get the Monitor</button>
+        </div>
+        <div id="monthanks" style="display:none;color:#7BD9A8;font-size:13px;margin-top:10px">✓ Noted — in the live product you would now receive Monitor #1. (Demo: nothing was sent or stored.)</div>
+      </div>
+      <div class="mstats">
+        <div class="mstat"><b id="mon-iss">—</b><span>tracked issues outstanding</span></div>
+        <div class="mstat"><b id="mon-vol">—</b><span>tracked volume outstanding</span></div>
+        <div class="mstat"><b id="mon-spread">—</b><span>median indicative spread</span></div>
+        <div class="mstat"><b>2 / 60</b><span>defaults &amp; standstills in dataset</span></div>
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================= -->
+<!-- VIEW 2 — MARKET                                                -->
+<!-- ============================================================= -->
+<section class="view" id="view-market">
+  <div style="padding:44px 0 6px">
+    <div class="eyebrow">Secondary market · indicative levels · demo data as of 3 July 2026</div>
+    <h1 style="font-size:34px">The Market</h1>
+    <p class="sub" style="margin-top:10px">Continental issuers in the Nordic bond format, from our verified dataset. Prices, spreads and order-book depth shown here are illustrative. Click any line for terms, covenants and disclosure history.</p>
+  </div>
+
+  <div class="mktstats">
+    <div class="stat"><b id="ms-vol">—</b><span>outstanding (tracked)</span></div>
+    <div class="stat"><b id="ms-count">—</b><span>bonds listed</span></div>
+    <div class="stat"><b id="ms-medspread">—</b><span>median spread (FRN-equiv.)</span></div>
+    <div class="stat"><b id="ms-avgpx">—</b><span>average price</span></div>
+    <div class="stat"><b id="ms-dist">—</b><span>distressed</span></div>
+  </div>
+
+  <div class="filters">
+    <input type="text" id="f-search" placeholder="Search issuer, sector, ISIN…" oninput="renderTable()">
+    <select id="f-country" onchange="renderTable()"><option value="">All countries</option></select>
+    <select id="f-group" onchange="renderTable()"><option value="">All sectors</option></select>
+    <select id="f-status" onchange="renderTable()">
+      <option value="">All statuses</option><option>Performing</option><option>Watch</option>
+      <option>Maturing</option><option>Standstill</option><option>Default</option><option>Called</option>
+    </select>
+  </div>
+
+  <div class="tscroll">
+    <table class="tb" id="bondtable">
+      <thead><tr>
+        <th onclick="setSort('n')">Issuer <span class="sortmark" id="sm-n"></span></th>
+        <th onclick="setSort('c')">Ctry <span class="sortmark" id="sm-c"></span></th>
+        <th onclick="setSort('g')">Sector <span class="sortmark" id="sm-g"></span></th>
+        <th onclick="setSort('size')">Size €m <span class="sortmark" id="sm-size"></span></th>
+        <th onclick="setSort('cp')">Coupon <span class="sortmark" id="sm-cp"></span></th>
+        <th onclick="setSort('px')">Price <span class="sortmark" id="sm-px"></span></th>
+        <th onclick="setSort('yld')">Indic. yield <span class="sortmark" id="sm-yld"></span></th>
+        <th onclick="setSort('mat')">Maturity <span class="sortmark" id="sm-mat"></span></th>
+        <th>Status</th>
+      </tr></thead>
+      <tbody id="bondrows"></tbody>
+    </table>
+  </div>
+
+  <section class="block" style="border-bottom:none">
+    <div class="eyebrow">Market map</div>
+    <h2>Spread vs. size — why the gap exists</h2>
+    <div class="goldrule"></div>
+    <div class="svgwrap">
+      <div id="scatter"></div>
+      <div class="legend" id="scatterlegend"></div>
+      <div class="caption">Each dot is one tracked bond (FRN spread, or fixed coupon converted to a spread over 3m EURIBOR at 2.08%). The gold band marks the €20–75m beachhead: small issues pay wide spreads today precisely because analysis costs and thin books keep competition out — the compression opportunity the platform is built on.</div>
+    </div>
+  </section>
+
+  <section class="block" style="border-bottom:none;padding-top:10px">
+    <div class="eyebrow">Refinancing calendar</div>
+    <h2>Where the next mandates come from</h2>
+    <div class="goldrule"></div>
+    <p class="sub">Nordic FRNs typically refinance ~12 months before maturity via their call schedules — this calendar is nearer than it looks.</p>
+    <div class="refiyear">Active in 2026 <span style="font-size:12px;color:var(--grey)">(2027 maturities)</span></div>
+    <div class="refirow">
+      <div class="refichip"><b>Mutares</b><span>€250m · due Mar 2027</span></div>
+      <div class="refichip"><b>MEDIA Central</b><span>€200m · due Jun 2027</span></div>
+      <div class="refichip"><b>SLR Group</b><span>€75m · due Oct 2027</span></div>
+      <div class="refichip"><b>TEMPTON</b><span>€25m · due Nov 2026</span></div>
+    </div>
+    <div class="refiyear">Active in 2027 <span style="font-size:12px;color:var(--grey)">(2028 maturities)</span></div>
+    <div class="refirow">
+      <div class="refichip"><b>Katjes International</b><span>€185m · due Sep 2028</span></div>
+      <div class="refichip"><b>LR Health &amp; Beauty</b><span>€130m · due Mar 2028</span></div>
+      <div class="refichip"><b>Hörmann Industries</b><span>€50m · due Jul 2028</span></div>
+      <div class="refichip"><b>NWI Group</b><span>€50m · due Nov 2028</span></div>
+      <div class="refichip"><b>The Platform Group</b><span>€30m · due Jul 2028</span></div>
+      <div class="refichip"><b>Hertha BSC</b><span>€40m · due Nov 2028</span></div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================= -->
+<!-- VIEW 3 — NEW ISSUES                                            -->
+<!-- ============================================================= -->
+<section class="view" id="view-issue">
+  <div style="padding:44px 0 6px">
+    <div class="eyebrow">Primary market · demonstration</div>
+    <h1 style="font-size:34px">New Issues</h1>
+    <p class="sub" style="margin-top:10px">Left: a live bookbuild on a sample transaction — watch the book fill, place a demo order, price the deal. Right: the issuer side — check a company against Deal Profile #1 and get an indicative spread and all-in cost comparison.</p>
+  </div>
+
+  <div class="issuegrid">
+
+    <!-- ---------------- bookbuild ---------------- -->
+    <div class="dealcard" id="bookbuild">
+      <div class="dealhead">
+        <div>
+          <h3>Voltaria Grid Components GmbH</h3>
+          <div class="sub2">Fictional sample issuer · Landshut, DE · transformer components for grid build-out (TSO/DSO supply chain)</div>
+        </div>
+        <span class="live" id="bookstatus"><i></i> BOOKS OPEN</span>
+      </div>
+      <div class="dealterms">
+        <div><b>Size</b><span>€30m</span></div>
+        <div><b>Format</b><span>Sr. secured FRN</span></div>
+        <div><b>Guidance</b><span id="guidance">3mE + 525a</span></div>
+        <div><b>Tenor</b><span>3.75y (2030)</span></div>
+        <div><b>Use</b><span>Green capex</span></div>
+        <div><b>Leverage</b><span>2.7× net</span></div>
+      </div>
+      <div class="dbodyd">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+          <h3 style="color:#fff;font-family:var(--serif)">Order book</h3>
+          <div style="font-family:var(--mono);font-size:13px;color:#F2D77E" id="covnum">—</div>
+        </div>
+        <div class="covwrap">
+          <div class="covbar"><div class="covseg-a" id="seg-a" style="width:0%"></div><div class="covseg-o" id="seg-o" style="width:0%"></div></div>
+          <div class="covmarks"><span style="left:44.4%">1.0× (€30m)</span><span style="left:66.7%">1.5×</span><span style="left:88.9%">2.0×</span></div>
+          <div class="covlabels"><span><span style="color:#F2D77E">■</span> Anchors (pre-committed)</span><span><span style="color:#6FA7D6">■</span> Open book</span></div>
+        </div>
+
+        <div class="bookwrap">
+          <table class="booktable">
+            <thead><tr><th>Time</th><th>Account</th><th>Ticket</th><th>Limit</th></tr></thead>
+            <tbody id="bookrows"></tbody>
+          </table>
+        </div>
+
+        <div id="orderzone">
+          <div class="orderform">
+            <select id="ord-type">
+              <option>Family office</option><option>Multi-family office</option><option>Article 9 credit fund</option>
+              <option>Nordic HY fund</option><option>Specialist bondpicker</option><option>Private bank treasury</option>
+              <option>Event-driven credit</option>
+            </select>
+            <input type="number" id="ord-ticket" min="0.5" max="5" step="0.5" value="1.5" title="Ticket €m">
+            <select id="ord-limit"><option value="500">limit E+500</option><option value="510">limit E+510</option><option value="520" selected>limit E+520</option><option value="530">limit E+530</option><option value="540">reoffer / no limit</option></select>
+            <button class="btn gold" onclick="placeOrder()">Place order</button>
+          </div>
+          <div style="font-size:11.5px;color:#7E97AD;margin-top:7px">Demo order entry — joins the book as “You”. Tickets €0.5–5.0m.</div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="btn gold" id="pricebtn" onclick="priceDeal()" disabled>Price the deal</button>
+          <span style="font-size:12px;color:#7E97AD" id="pricehint">Pricing unlocks at 1.3× coverage.</span>
+        </div>
+        <div id="pricedout"></div>
+
+        <div class="dsec" style="color:#F2D77E;margin-top:22px">Deal timeline</div>
+        <ul class="timeline" id="dealtimeline">
+          <li class="done"><span class="tdot"></span><div><b>Mandated &amp; profile check passed</b> · 26 May 2026</div></li>
+          <li class="done"><span class="tdot"></span><div><b>Anchor early look (48h)</b> — €19.5m pre-committed (65%) · 30 Jun</div></li>
+          <li class="done" id="tl-open"><span class="tdot"></span><div><b>Books open</b> · 3 Jul, 09:00 CET</div></li>
+          <li id="tl-priced"><span class="tdot"></span><div><b>Pricing</b> — spread set inside guidance by book depth</div></li>
+          <li id="tl-alloc"><span class="tdot"></span><div><b>Allocations</b> — anchors full; open book pro-rata; hot money de-prioritised</div></li>
+          <li id="tl-settle"><span class="tdot"></span><div><b>Settlement T+5</b> — paying agent, trustee in place</div></li>
+          <li id="tl-list"><span class="tdot"></span><div><b>Listing</b> — Börse Frankfurt Open Market · ongoing disclosure via platform</div></li>
+        </ul>
+        <div style="font-size:11.5px;color:#7E97AD;margin-top:12px">Sample transaction with fictitious accounts. Allocation policy: anchors take no scale-back; event-driven/hot-money accounts are book-fill only, never the face of the market.</div>
+      </div>
+    </div>
+
+    <!-- ---------------- issuer wizard ---------------- -->
+    <div>
+      <div class="wiz">
+        <div class="eyebrow">For issuers</div>
+        <h2 style="font-size:22px">Check your deal against Profile&nbsp;#1</h2>
+        <p style="font-size:13.5px;color:var(--grey);margin-top:6px">The published filter for our first transactions. Answer honestly — everything outside the profile is declined visibly (and, with your consent, referred).</p>
+
+        <label>Sector</label>
+        <select id="w-sector">
+          <option value="et">Energy transition / cleantech supply chain</option>
+          <option value="ind">Industrial / manufacturing</option>
+          <option value="cons">Consumer &amp; food</option>
+          <option value="serv">Services / software</option>
+          <option value="health">Healthcare / life sciences</option>
+          <option value="re">Real estate SPV</option>
+          <option value="fin">Financial institution</option>
+          <option value="sport">Professional sports club</option>
+        </select>
+
+        <label>Issue size — <span class="rangeval" id="w-sizeval">€30m</span></label>
+        <input type="range" id="w-size" min="10" max="120" step="5" value="30" oninput="wizLive()">
+
+        <div class="wizrow">
+          <div><label>EBITDA (€m)</label><input type="number" id="w-ebitda" value="12" min="0" step="0.5" oninput="wizLive()"></div>
+          <div><label>Net debt after issue (€m)</label><input type="number" id="w-netdebt" value="34" min="0" step="1" oninput="wizLive()"></div>
+        </div>
+        <div style="font-size:12.5px;color:var(--grey);margin-top:6px">Implied net leverage: <b class="rangeval" id="w-lev">2.8×</b></div>
+
+        <div class="wizrow">
+          <div><label>Security</label>
+            <select id="w-sec"><option value="sec">Senior secured (assets / share pledges)</option><option value="unsec">Unsecured only</option></select></div>
+          <div><label>Tenor</label>
+            <select id="w-tenor"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>7</option></select></div>
+        </div>
+        <div class="wizrow">
+          <div><label>Use of proceeds</label>
+            <select id="w-use"><option value="refi">Refinancing</option><option value="capex">Capex / growth</option><option value="acq">Acquisition</option><option value="div">Dividend recap</option></select></div>
+          <div><label>Green / sustainability label</label>
+            <select id="w-green"><option value="no">No</option><option value="yes">Yes — SPO-backed framework</option></select></div>
+        </div>
+
+        <div class="checkline"><input type="checkbox" id="w-disc"><span>We commit to ongoing quarterly disclosure and covenant reporting through the platform.</span></div>
+
+        <div style="margin-top:20px"><button class="btn primary" onclick="runWizard()" style="width:100%">Run the profile check</button></div>
+
+        <div class="verdict" id="verdict"></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h3>Why anchors see your deal first</h3>
+        <p>Deal one is built demand-first: 60–80% of the book is pre-committed by a founding circle that co-wrote the covenant standard. You launch into certainty of placement, not into hope — the anchors underwrite <i>your company</i>, not the platform.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- drawer -->
+<div class="drawer-back" id="drawerback" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer"></aside>
+
+<footer>
+  <div class="fwrap">
+    <div>
+      <h4>VANILLABONDS <span style="color:var(--gold2);font-size:11px">platform demo</span></h4>
+      <p>Standardised senior secured bonds for European mid-caps, €20–75m, built on the Nordic format. The platform is what exists after deal three — until then, we sell one well-governed transaction at a time.</p>
+      <div class="ecos">
+        <span>Nordic Trustee (Frankfurt)</span><span>Licensed host / Haftungsdach</span><span>Paying agent</span><span>Börse Frankfurt · Euronext Oslo</span><span>Bond counsel</span>
+      </div>
+      <div style="font-size:11px;color:#5E7690;margin-top:8px">Target ecosystem — indicative, not contracted.</div>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p>Founders’ desk (demo)<br>contact@vanillabonds.com<br>Munich</p>
+      <p style="margin-top:12px;font-size:12px">Investor access: professional &amp; semi-professional only, KYC-gated.</p>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <p class="legal">This is a demonstration environment. All prices, order-book data, statistics, the “Voltaria” transaction and all account names are fictitious or illustrative; issuer names in the Market section derive from a public-source research dataset and their terms shown here are indicative reconstructions, not quotes. Nothing on this site constitutes an offer, solicitation, investment advice or investment brokerage. No activity requiring a licence under the KWG/WpIG is conducted; any future activity would take place only after registration under a licensed host (Haftungsdach) and within the limits of applicable law (incl. §54 KWG). Credit indications never replace an investor’s own analysis.</p>
+    </div>
+  </div>
+  <div class="fbottom">© 2026 VanillaBonds — demonstration build · data snapshot 3 July 2026 · built from the July 2026 business plan (Part II)</div>
+</footer>
+
+<script>
+/* ================= router ================= */
+function showView(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  const nb=document.getElementById('nav-'+v); if(nb) nb.classList.add('active');
+  window.scrollTo({top:0});
+  if(location.hash!=='#'+v) history.replaceState(null,'','#'+v);
+}
+window.addEventListener('load',()=>{const h=location.hash.replace('#','');if(['platform','market','issue'].includes(h))showView(h);});
+
+/* ================= market data (demo reconstruction from own dataset) ================= */
+const E3M = 2.08; // 3m EURIBOR assumption, %
+const BONDS = [
+ {n:"HomeToGo SE",c:"DE",s:"Travel marketplace",g:"Services",isin:"NO0013697268",size:75,t:"FRN",cp:450,iss:"2026-06",mat:"2031-06",px:100.4,st:"Performing"},
+ {n:"DEAG Deutsche Entertainment",c:"DE",s:"Live entertainment",g:"Services",isin:"NO0013639112",size:60,t:"FRN",cp:575,iss:"2025-04",mat:"2029-04",px:101.2,st:"Performing"},
+ {n:"Mutares SE & Co. KGaA",c:"DE",s:"Industrial holding",g:"Industrials",isin:"NO0013325407",size:250,t:"FRN",cp:625,iss:"2024-03",mat:"2027-03",px:102.1,st:"Performing"},
+ {n:"Muehlhan Holding",c:"DE",s:"Wind services",g:"Energy transition",isin:"NO0013682542",size:35,t:"FRN",cp:650,iss:"2025-11",mat:"2030-11",px:100.8,st:"Performing"},
+ {n:"Formycon AG",c:"DE",s:"Biosimilars",g:"Healthcare",isin:"NO0013586024",size:70,t:"FRN",cp:500,iss:"2025-07",mat:"2029-07",px:101.0,st:"Performing"},
+ {n:"Katjes International",c:"DE",s:"Confectionery",g:"Consumer",isin:"NO0012888769",size:185,t:"FIX",cp:6.75,iss:"2023-09",mat:"2028-09",px:103.4,st:"Performing"},
+ {n:"Karlsberg Brauerei",c:"DE",s:"Brewery",g:"Consumer",isin:"NO0013168005",size:50,t:"FIX",cp:7.25,iss:"2024-05",mat:"2029-05",px:102.6,st:"Performing"},
+ {n:"JDC Group AG",c:"DE",s:"Insurtech",g:"Services",isin:"NO0013618587",size:35,t:"FRN",cp:550,iss:"2025-05",mat:"2029-05",px:100.9,st:"Performing"},
+ {n:"The Platform Group",c:"DE",s:"E-commerce platforms",g:"Services",isin:"NO0013256834",size:30,t:"FIX",cp:8.875,iss:"2024-07",mat:"2028-07",px:101.8,st:"Performing"},
+ {n:"Hörmann Industries",c:"DE",s:"Diversified industrial",g:"Industrials",isin:"NO0012938325",size:50,t:"FIX",cp:6.25,iss:"2023-07",mat:"2028-07",px:100.7,st:"Performing"},
+ {n:"Homann Holzwerkstoffe",c:"DE",s:"Wood-based materials",g:"Industrials",isin:"NO0013536169",size:65,t:"FRN",cp:600,iss:"2025-03",mat:"2030-03",px:101.5,st:"Performing"},
+ {n:"NWI Group",c:"DE",s:"Industrial holding",g:"Industrials",isin:"NO0013355255",size:50,t:"FRN",cp:700,iss:"2024-11",mat:"2028-11",px:99.6,st:"Performing"},
+ {n:"Kolibri (Zeitfracht)",c:"DE",s:"Logistics / aviation",g:"Industrials",isin:"NO0013461384",size:45,t:"FRN",cp:750,iss:"2025-01",mat:"2029-01",px:100.2,st:"Performing"},
+ {n:"BOS GmbH & Co. KG",c:"DE",s:"Automotive supplier",g:"Industrials",isin:"NO0013515759",size:40,t:"FRN",cp:875,iss:"2025-02",mat:"2029-02",px:97.8,st:"Watch"},
+ {n:"MEDIA Central Holding",c:"DE",s:"Retail marketing",g:"Services",isin:"NO0012940347",size:200,t:"FRN",cp:725,iss:"2023-06",mat:"2027-06",px:100.9,st:"Performing"},
+ {n:"LR Health & Beauty",c:"DE",s:"Direct sales",g:"Consumer",isin:"NO0013149658",size:130,t:"FRN",cp:875,iss:"2024-03",mat:"2028-03",px:99.2,st:"Performing"},
+ {n:"BOOSTER Precision",c:"DE",s:"Precision auto components",g:"Industrials",isin:"NO0012713520",size:35,t:"FRN",cp:800,iss:"2023-05",mat:"2027-05",px:42.0,st:"Standstill"},
+ {n:"TEMPTON Personal",c:"DE",s:"Staffing",g:"Services",isin:"NO0011129496",size:25,t:"FRN",cp:675,iss:"2021-11",mat:"2026-11",px:100.1,st:"Maturing"},
+ {n:"LifeFit Group",c:"DE",s:"Fitness / health",g:"Consumer",isin:"NO0013252452",size:100,t:"FRN",cp:700,iss:"2024-08",mat:"2028-08",px:100.6,st:"Performing"},
+ {n:"BoldR Group",c:"DE",s:"Auto aftermarket",g:"Consumer",isin:"NO0013648295",size:30,t:"FRN",cp:725,iss:"2025-09",mat:"2030-09",px:100.3,st:"Performing"},
+ {n:"DWK Life Sciences (DURAN)",c:"DE",s:"Lab glassware",g:"Healthcare",isin:"NO0013696880",size:60,t:"FRN",cp:650,iss:"2025-05",mat:"2030-05",px:101.1,st:"Performing"},
+ {n:"Hertha BSC",c:"DE",s:"Football club",g:"Services",isin:"SE0011337054",size:40,t:"FIX",cp:6.5,iss:"2023-11",mat:"2028-11",px:96.8,st:"Watch"},
+ {n:"O3 Holding (KD Pharma)",c:"DE",s:"Pharma CDMO",g:"Healthcare",isin:"NO0013360552",size:75,t:"FRN",cp:775,iss:"2024-10",mat:"2028-10",px:99.8,st:"Performing"},
+ {n:"Secop Group",c:"DE",s:"Compressors",g:"Industrials",isin:"NO0013752634",size:100,t:"FRN",cp:700,iss:"2026-06",mat:"2031-06",px:100.0,st:"Performing"},
+ {n:"SLR Group",c:"DE",s:"Metal components",g:"Industrials",isin:"NO0013177949",size:75,t:"FRN",cp:825,iss:"2024-10",mat:"2027-10",px:98.9,st:"Performing"},
+ {n:"smava GmbH",c:"DE",s:"Consumer-credit fintech",g:"Services",isin:"NO0013531590",size:40,t:"FRN",cp:850,iss:"2025-05",mat:"2029-05",px:99.4,st:"Performing"},
+ {n:"Schletter Group",c:"DE",s:"Solar mounting systems",g:"Energy transition",isin:"NO0012530973",size:55,t:"FRN",cp:700,iss:"2022-06",mat:"2026-06",px:100.0,st:"Called"},
+ {n:"Okechamp",c:"PL",s:"Food processing",g:"Consumer",isin:"NO0013364380",size:40,t:"FRN",cp:900,iss:"2024-06",mat:"2028-06",px:18.5,st:"Default"},
+ {n:"Azerion Group N.V.",c:"NL",s:"Digital advertising",g:"Services",isin:"NO0013660357",size:300,t:"FRN",cp:650,iss:"2025-10",mat:"2029-10",px:101.3,st:"Performing"},
+ {n:"Arles I (Fletcher Hotels)",c:"NL",s:"Hospitality",g:"Consumer",isin:"NO0013684662",size:150,t:"FRN",cp:600,iss:"2025-12",mat:"2030-12",px:100.7,st:"Performing"},
+ {n:"Nexus Newco (Dayes)",c:"NL",s:"Consumer products",g:"Consumer",isin:"NO0013511766",size:40,t:"FRN",cp:625,iss:"2025-04",mat:"2030-04",px:100.5,st:"Performing"},
+ {n:"Flora Food Group",c:"NL",s:"Plant-based food",g:"Consumer",isin:"NO0013606426",size:300,t:"FIX",cp:8.625,iss:"2025-06",mat:"2031-06",px:102.2,st:"Performing"},
+ {n:"Advanzia Bank (T2)",c:"LU",s:"Credit-card bank",g:"Financials",isin:"NO0013583237",size:50,t:"FRN",cp:525,iss:"2025-06",mat:"2035-06",px:100.9,st:"Performing"},
+ {n:"3t Energy Group",c:"UK",s:"Energy training / simulation",g:"Energy transition",isin:"NO0013211136",size:45,t:"FRN",cp:750,iss:"2024-06",mat:"2028-06",px:100.4,st:"Performing"},
+ {n:"Loch Duart",c:"UK",s:"Salmon aquaculture",g:"Consumer",isin:"NO0013383984",size:25,t:"FRN",cp:800,iss:"2025-01",mat:"2029-01",px:99.7,st:"Performing"},
+ {n:"Serica Energy",c:"UK",s:"North Sea E&P",g:"Energy",isin:"NO0013742163",size:200,t:"FIX",cp:9.0,iss:"2026-05",mat:"2031-05",px:101.0,st:"Performing"},
+ {n:"Navigator Gas",c:"UK",s:"Gas carriers",g:"Shipping",isin:"NO0013379446",size:100,t:"FIX",cp:8.375,iss:"2024-10",mat:"2029-10",px:102.0,st:"Performing"},
+ {n:"Diana Shipping",c:"GR",s:"Dry bulk shipping",g:"Shipping",isin:"NO0013265835",size:150,t:"FIX",cp:8.75,iss:"2024-11",mat:"2029-11",px:101.6,st:"Performing"},
+ {n:"Fertiberia",c:"ES",s:"Green ammonia / fertilisers",g:"Energy transition",isin:"NO0013740894",size:125,t:"FRN",cp:700,iss:"2026-05",mat:"2030-05",px:100.2,st:"Performing"},
+ {n:"Gentoo Media",c:"MT",s:"iGaming platform",g:"Services",isin:"NO0013024018",size:100,t:"FRN",cp:725,iss:"2023-09",mat:"2027-09",px:101.1,st:"Performing"}
+];
+const GROUPCOL = {"Energy transition":"#2E7D5B","Industrials":"#1B4B7A","Consumer":"#C9A227","Services":"#8A6FA8","Healthcare":"#3E8E9E","Shipping":"#7C8B4F","Energy":"#A0522D","Financials":"#708090"};
+
+function effSpread(b){ return b.t==="FRN" ? b.cp : Math.round(b.cp*100 - E3M*100); }
+function coupStr(b){ return b.t==="FRN" ? ("3mE+"+b.cp) : (b.cp.toFixed(3).replace(/0+$/,'').replace(/\.$/,'')+"% fix"); }
+function yearsLeft(b){ const [y,m]=b.mat.split('-').map(Number); return Math.max(0.1,(y-2026)+(m-7)/12); }
+function indicYield(b){
+  if(b.st==="Default"||b.st==="Standstill") return null;
+  const c = b.t==="FRN" ? E3M+b.cp/100 : b.cp;
+  return c + (100-b.px)/yearsLeft(b);
+}
+function fmtM(v){ return v>=1000 ? "€"+(v/1000).toFixed(2)+"bn" : "€"+Math.round(v)+"m"; }
+
+/* ---------- stats + filters init ---------- */
+(function initMarket(){
+  const active = BONDS.filter(b=>b.st!=="Called");
+  const vol = active.reduce((a,b)=>a+b.size,0);
+  const spreads = active.filter(b=>b.st==="Performing"||b.st==="Watch"||b.st==="Maturing").map(effSpread).sort((a,b)=>a-b);
+  const med = spreads[Math.floor(spreads.length/2)];
+  const avgpx = active.filter(b=>b.st!=="Default"&&b.st!=="Standstill").reduce((a,b)=>a+b.px,0)/active.filter(b=>b.st!=="Default"&&b.st!=="Standstill").length;
+  document.getElementById('ms-vol').textContent = fmtM(vol);
+  document.getElementById('ms-count').textContent = active.length;
+  document.getElementById('ms-medspread').textContent = "E+"+med;
+  document.getElementById('ms-avgpx').textContent = avgpx.toFixed(1);
+  document.getElementById('ms-dist').textContent = active.filter(b=>b.st==="Default"||b.st==="Standstill").length;
+  document.getElementById('mon-iss').textContent = active.length;
+  document.getElementById('mon-vol').textContent = fmtM(vol);
+  document.getElementById('mon-spread').textContent = "E+"+med;
+  const cs=[...new Set(BONDS.map(b=>b.c))].sort(), gs=[...new Set(BONDS.map(b=>b.g))].sort();
+  cs.forEach(c=>document.getElementById('f-country').insertAdjacentHTML('beforeend',`<option>${c}</option>`));
+  gs.forEach(g=>document.getElementById('f-group').insertAdjacentHTML('beforeend',`<option>${g}</option>`));
+})();
+
+/* ---------- table ---------- */
+let sortKey="size", sortDir=-1;
+function setSort(k){ if(sortKey===k) sortDir*=-1; else {sortKey=k;sortDir=(k==="n"||k==="c"||k==="g")?1:-1;} renderTable(); }
+function sortVal(b,k){
+  if(k==="cp") return effSpread(b);
+  if(k==="yld"){const y=indicYield(b);return y==null?-1:y;}
+  if(k==="mat") return b.mat;
+  return b[k];
+}
+function statusPill(st){
+  const m={Performing:"p-ok",Watch:"p-watch",Maturing:"p-navy",Standstill:"p-bad",Default:"p-bad",Called:"p-grey"};
+  return `<span class="pill ${m[st]}">${st}</span>`;
+}
+function renderTable(){
+  const q=document.getElementById('f-search').value.toLowerCase();
+  const fc=document.getElementById('f-country').value, fg=document.getElementById('f-group').value, fs=document.getElementById('f-status').value;
+  let rows = BONDS.filter(b=>
+    (!q || (b.n+" "+b.s+" "+b.isin).toLowerCase().includes(q)) &&
+    (!fc||b.c===fc) && (!fg||b.g===fg) && (!fs||b.st===fs));
+  rows.sort((a,b)=>{const va=sortVal(a,sortKey),vb=sortVal(b,sortKey);return (va<vb?-1:va>vb?1:0)*sortDir;});
+  document.querySelectorAll('.sortmark').forEach(s=>s.textContent='');
+  const sm=document.getElementById('sm-'+sortKey); if(sm) sm.textContent = sortDir===1?'▲':'▼';
+  document.getElementById('bondrows').innerHTML = rows.map((b)=>{
+    const y=indicYield(b);
+    return `<tr onclick="openDrawer('${b.isin}')">
+      <td><b style="color:var(--navy)">${b.n}</b><br><span style="font-size:11px;color:var(--grey);font-family:var(--mono)">${b.isin}</span></td>
+      <td>${b.c}</td><td>${b.s}</td>
+      <td class="num">${b.size}</td>
+      <td class="num">${coupStr(b)}</td>
+      <td class="num">${b.px.toFixed(1)}</td>
+      <td class="num">${y==null?"—":y.toFixed(1)+"%"}</td>
+      <td class="num">${b.mat}</td>
+      <td>${statusPill(b.st)}</td></tr>`;
+  }).join('') || `<tr><td colspan="9" style="text-align:center;color:var(--grey);padding:26px">No bonds match the filter.</td></tr>`;
+}
+renderTable();
+
+/* ---------- scatter ---------- */
+(function scatter(){
+  const W=720,H=340,L=52,R=18,T=16,B=44;
+  const data=BONDS.filter(b=>b.st!=="Called"&&b.st!=="Default"&&b.st!=="Standstill");
+  const xmin=20,xmax=320,ymin=380,ymax=1000;
+  const X=v=>L+(Math.log10(v)-Math.log10(xmin))/(Math.log10(xmax)-Math.log10(xmin))*(W-L-R);
+  const Y=v=>T+(1-(v-ymin)/(ymax-ymin))*(H-T-B);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="Helvetica,Arial,sans-serif">`;
+  s+=`<rect x="${X(20)}" y="${T}" width="${X(75)-X(20)}" height="${H-T-B}" fill="#C9A227" opacity="0.13"/>`;
+  s+=`<text x="${(X(20)+X(75))/2}" y="${T+14}" font-size="10.5" fill="#8A6E14" text-anchor="middle" font-weight="bold">beachhead €20–75m</text>`;
+  [400,500,600,700,800,900,1000].forEach(v=>{s+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="#E7E4DA"/><text x="${L-7}" y="${Y(v)+3.5}" font-size="10" fill="#5A6672" text-anchor="end">${v}</text>`;});
+  [25,50,75,100,150,200,300].forEach(v=>{s+=`<line x1="${X(v)}" y1="${T}" x2="${X(v)}" y2="${H-B}" stroke="#F0EDE4"/><text x="${X(v)}" y="${H-B+16}" font-size="10" fill="#5A6672" text-anchor="middle">${v}</text>`;});
+  s+=`<text x="${(L+W-R)/2}" y="${H-6}" font-size="10.5" fill="#8A94A0" text-anchor="middle">issue size €m (log)</text>`;
+  s+=`<text x="14" y="${(T+H-B)/2}" font-size="10.5" fill="#8A94A0" text-anchor="middle" transform="rotate(-90 14 ${(T+H-B)/2})">spread over 3mE (bps)</text>`;
+  data.forEach(b=>{
+    const sp=Math.min(1000,Math.max(390,effSpread(b)));
+    const r=Math.max(4.5,Math.sqrt(b.size)/1.55);
+    s+=`<circle cx="${X(Math.min(320,b.size))}" cy="${Y(sp)}" r="${r}" fill="${GROUPCOL[b.g]}" opacity="0.75" stroke="#fff" stroke-width="1"><title>${b.n} — €${b.size}m · ${coupStr(b)} · ${b.mat}</title></circle>`;
+  });
+  s+='</svg>';
+  document.getElementById('scatter').innerHTML=s;
+  document.getElementById('scatterlegend').innerHTML=Object.entries(GROUPCOL).map(([g,c])=>`<span><i style="background:${c}"></i>${g}</span>`).join('');
+})();
+
+/* ---------- drawer ---------- */
+function seeded(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return function(){h=Math.imul(h^h>>>15,2246822507);h=Math.imul(h^h>>>13,3266489909);return ((h^=h>>>16)>>>0)/4294967296;};}
+function sparkline(b){
+  const rnd=seeded(b.isin),n=40,W=470,H=80;let pts=[],v=100;
+  for(let i=0;i<n;i++){v+=(rnd()-0.5)*1.6;pts.push(v);}
+  const end=b.px; const start=pts[0];
+  pts=pts.map((p,i)=>p+(end-start-(pts[n-1]-start))*(i/(n-1))); // blend to end at px
+  const mn=Math.min(...pts),mx=Math.max(...pts),rg=Math.max(2,mx-mn);
+  const xy=pts.map((p,i)=>`${(i/(n-1))*W},${H-8-((p-mn)/rg)*(H-16)}`).join(' ');
+  const col=(b.st==="Default"||b.st==="Standstill")?"#B0433C":"#1B4B7A";
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}"><polyline points="${xy}" fill="none" stroke="${col}" stroke-width="2"/><circle cx="${W}" cy="${H-8-((pts[n-1]-mn)/rg)*(H-16)}" r="3.5" fill="#C9A227"/></svg>`;
+}
+function openDrawer(isin){
+  const b=BONDS.find(x=>x.isin===isin); if(!b) return;
+  const y=indicYield(b);
+  const dist=(b.st==="Default"||b.st==="Standstill");
+  const covs = b.t==="FRN"
+    ? ["Incurrence: net leverage ≤ 3.5×","FCCR ≥ 2.0×","Dividend basket 50% of net profit","Change of control put @ 101","Security: share & asset pledges"]
+    : ["Incurrence: net leverage ≤ 3.5×","Negative pledge","Dividend restriction","Change of control put @ 101"];
+  const ladder = dist
+    ? `<div class="feed"><div><span>—</span>No regular market — trading by appointment via desk.</div></div>`
+    : `<table class="tb"><thead><tr><th>Bid size</th><th>Bid</th><th>Ask</th><th>Ask size</th></tr></thead><tbody>
+       <tr><td class="num">1,000k</td><td class="num">${(b.px-0.35).toFixed(2)}</td><td class="num">${(b.px+0.30).toFixed(2)}</td><td class="num">750k</td></tr>
+       <tr><td class="num">500k</td><td class="num">${(b.px-0.65).toFixed(2)}</td><td class="num">${(b.px+0.60).toFixed(2)}</td><td class="num">1,250k</td></tr>
+       <tr><td class="num">2,000k</td><td class="num">${(b.px-1.00).toFixed(2)}</td><td class="num">${(b.px+0.95).toFixed(2)}</td><td class="num">2,000k</td></tr></tbody></table>`;
+  const feed = dist
+    ? `<div><span>12 May 26</span>Standstill / restructuring update published to bondholders</div>
+       <div><span>28 Apr 26</span>Bondholder meeting convened by trustee</div>
+       <div><span>26 Feb 26</span>Covenant breach notified — trustee engaged</div>`
+    : `<div><span>28 Apr 26</span>Q1-2026 report published · covenant certificate filed</div>
+       <div><span>26 Feb 26</span>FY-2025 audited results published</div>
+       <div><span>30 Oct 25</span>Q3-2025 report published · covenants in compliance</div>`;
+  document.getElementById('drawer').innerHTML=`
+    <div class="dhead"><button class="dclose" onclick="closeDrawer()">×</button>
+      <h3>${b.n}</h3><div class="sub2">${b.s} · ${b.c} · ${statusPill(b.st)}</div></div>
+    <div class="dbody">
+      <div class="dsec">Terms</div>
+      <div class="kv">
+        <div><b>ISIN</b><span class="num">${b.isin}</span></div><div><b>Size</b><span class="num">€${b.size}m</span></div>
+        <div><b>Coupon</b><span class="num">${coupStr(b)}</span></div><div><b>All-in (today)</b><span class="num">${b.t==="FRN"?(E3M+b.cp/100).toFixed(2)+"%":b.cp.toFixed(2)+"%"}</span></div>
+        <div><b>Issued</b><span class="num">${b.iss}</span></div><div><b>Maturity</b><span class="num">${b.mat}</span></div>
+        <div><b>Indic. price</b><span class="num">${b.px.toFixed(1)}</span></div><div><b>Indic. yield</b><span class="num">${y==null?"—":y.toFixed(1)+"%"}</span></div>
+        <div><b>Format</b><span>Senior secured ${b.t}</span></div><div><b>Trustee</b><span>Nordic Trustee</span></div>
+      </div>
+      <div class="dsec">Price history (indicative)</div>
+      ${sparkline(b)}
+      <div class="dsec">Covenant package (standard menu)</div>
+      <div class="chips">${covs.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
+      <div class="dsec">Order book (demo)</div>
+      ${ladder}
+      <div class="dsec">Disclosure feed</div>
+      <div class="feed">${feed}</div>
+      <div class="dsec">Documents</div>
+      <div class="doc">📄 Terms &amp; Conditions <small>demo</small></div>
+      <div class="doc">📄 Security &amp; trustee documentation <small>demo</small></div>
+      <div class="doc">📄 Latest covenant certificate <small>demo</small></div>
+      <div style="font-size:11.5px;color:var(--grey);margin-top:14px">Issuer from our public-source research dataset; terms and levels shown are indicative demo reconstructions, not quotes.</div>
+    </div>`;
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerback').classList.add('open');
+}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerback').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==="Escape")closeDrawer();});
+
+/* ================= bookbuild ================= */
+const TARGET=30;
+const ANCHORS=[
+ {t:"09:00",a:"Founding family holding (Munich)",ty:"anchor",m:4.0,l:"anchor"},
+ {t:"09:00",a:"Entrepreneur family office (Bavaria)",ty:"anchor",m:2.5,l:"anchor"},
+ {t:"09:00",a:"Entrepreneur family office (Hamburg)",ty:"anchor",m:2.0,l:"anchor"},
+ {t:"09:00",a:"Multi-family office KVG (Hamburg) — 11 families pooled",ty:"anchor",m:5.0,l:"anchor"},
+ {t:"09:00",a:"Article 9 clean-energy debt fund (Kassel)",ty:"anchor",m:4.0,l:"anchor"},
+ {t:"09:00",a:"Specialist HY bondpicker (Münster)",ty:"anchor",m:2.0,l:"anchor"}
+];
+const POOL=[
+ ["Nordic HY fund (Frankfurt)",1.0,3.0,505,530,false],
+ ["Multi-family office (Cologne)",0.5,2.0,510,535,false],
+ ["Family office (Zurich)",0.5,1.5,510,540,false],
+ ["Private bank treasury (Vienna)",1.0,2.0,515,540,false],
+ ["Asset manager (Amsterdam)",1.0,3.0,505,535,false],
+ ["Nordic HY fund (Oslo)",1.0,2.5,500,530,false],
+ ["Pensionskasse advisor (observer→order)",0.5,1.0,520,540,false],
+ ["Credit opportunities desk (London)",2.0,4.0,495,515,true],
+ ["Event-driven fund (London)",1.5,3.5,495,510,true],
+ ["Family office (Salzburg)",0.5,1.5,515,540,false],
+ ["Green bond fund (Paris)",1.0,2.5,505,530,false],
+ ["Wealth manager (Luxembourg)",0.5,2.0,515,540,false]
+];
+let book=[...ANCHORS.map(a=>({...a}))], priced=false, feedTimer=null, poolIdx=0, clockMin=2;
+function bookTotals(){
+  const anch=book.filter(o=>o.ty==="anchor").reduce((a,o)=>a+o.m,0);
+  const open=book.filter(o=>o.ty!=="anchor").reduce((a,o)=>a+o.m,0);
+  return {anch,open,tot:anch+open,cov:(anch+open)/TARGET};
+}
+function renderBook(){
+  const {anch,open,tot,cov}=bookTotals();
+  const cap=2.25; // bar scale: 2.25x
+  document.getElementById('seg-a').style.width=Math.min(100,(anch/TARGET)/cap*100)+"%";
+  document.getElementById('seg-o').style.width=Math.min(100-((anch/TARGET)/cap*100),(open/TARGET)/cap*100)+"%";
+  document.getElementById('covnum').textContent=`€${tot.toFixed(1)}m of €${TARGET}m — ${cov.toFixed(2)}× covered`;
+  document.getElementById('bookrows').innerHTML=[...book].reverse().map(o=>{
+    const cls=o.you?"you":(o.ty==="anchor"?"anchor":(o.hot?"hot":""));
+    const lim=o.l==="anchor"?"anchor ⚓":(o.l==="none"?"reoffer":"E+"+o.l);
+    return `<tr class="${cls}"><td class="num">${o.t}</td><td>${o.a}${o.you?" — YOU":""}${o.hot?" ⚠":""}</td><td class="num">€${o.m.toFixed(1)}m</td><td class="num">${lim}</td></tr>`;
+  }).join('');
+  const btn=document.getElementById('pricebtn');
+  if(!priced){ btn.disabled = cov<1.3;
+    document.getElementById('pricehint').textContent = cov<1.3?"Pricing unlocks at 1.3× coverage.":"Book is "+cov.toFixed(2)+"× covered — you can price.";
+  }
+}
+function tick(){
+  if(priced||poolIdx>=POOL.length){clearInterval(feedTimer);if(!priced)document.getElementById('bookstatus').innerHTML='<i></i> BOOKS SUBJECT';return;}
+  const p=POOL[poolIdx++];
+  const rnd=Math.random;
+  const m=Math.round((p[1]+rnd()*(p[2]-p[1]))*2)/2;
+  const l=Math.round((p[3]+rnd()*(p[4]-p[3]))/5)*5;
+  clockMin+=Math.floor(2+rnd()*9);
+  const t="09:"+String(Math.min(59,clockMin)).padStart(2,'0');
+  book.push({t,a:p[0],ty:"open",m,l,hot:p[5]});
+  renderBook();
+}
+function placeOrder(){
+  if(priced) return;
+  const ty=document.getElementById('ord-type').value;
+  let m=parseFloat(document.getElementById('ord-ticket').value)||1.0; m=Math.min(5,Math.max(0.5,m));
+  const lv=document.getElementById('ord-limit').value;
+  clockMin+=1;
+  book.push({t:"09:"+String(Math.min(59,clockMin)).padStart(2,'0'),a:ty+" (demo)",ty:"open",m,l:lv==="540"?"none":parseInt(lv),hot:ty==="Event-driven credit",you:true});
+  renderBook();
+}
+function priceDeal(){
+  if(priced) return;
+  priced=true; clearInterval(feedTimer);
+  const {cov,anch}=bookTotals();
+  const final=Math.max(505,525-Math.min(20,Math.floor(Math.max(0,cov-1)*20)));
+  document.getElementById('bookstatus').innerHTML='<i style="animation:none;background:#C9A227"></i> PRICED';
+  document.getElementById('guidance').textContent="3mE + "+final+" (final)";
+  document.getElementById('orderzone').style.display="none";
+  document.getElementById('pricebtn').style.display="none";
+  document.getElementById('pricehint').style.display="none";
+  // allocations: anchors full; open book pro-rata on remainder; hot money halved first
+  const rem=Math.max(0,TARGET-anch);
+  const open=book.filter(o=>o.ty!=="anchor");
+  const eligible=open.filter(o=>!(o.l!=="none"&&o.l<final)); // limits below final drop out
+  const wsum=eligible.reduce((a,o)=>a+(o.hot?o.m*0.35:o.m),0)||1;
+  let rows=book.map(o=>{
+    let alloc;
+    if(o.ty==="anchor") alloc=o.m;
+    else if(o.l!=="none"&&o.l<final) alloc=0;
+    else alloc=Math.min(o.m,(o.hot?o.m*0.35:o.m)/wsum*rem);
+    return {...o,alloc};
+  });
+  const allocated=rows.reduce((a,o)=>a+o.alloc,0);
+  document.getElementById('pricedout').innerHTML=`
+    <div class="pricedstamp">PRICED · 3mE + ${final} · ${cov.toFixed(2)}× COVERED</div>
+    <div class="dsec" style="color:#F2D77E;margin-top:18px">Allocations</div>
+    <div class="bookwrap"><table class="booktable">
+      <thead><tr><th>Account</th><th>Order</th><th>Allocated</th><th>Fill</th></tr></thead><tbody>
+      ${rows.map(o=>`<tr class="${o.you?'you':(o.ty==='anchor'?'anchor':(o.hot?'hot':''))}">
+        <td>${o.a}${o.you?" — YOU":""}${o.ty==='anchor'?' ⚓':''}</td>
+        <td class="num">€${o.m.toFixed(1)}m</td>
+        <td class="num">€${o.alloc.toFixed(2)}m</td>
+        <td class="num">${Math.round(o.alloc/o.m*100)}%</td></tr>`).join('')}
+      </tbody></table></div>
+    <div style="font-size:12px;color:#9FB3C8;margin-top:10px">€${allocated.toFixed(1)}m allocated of €${TARGET}m. Anchors: no scale-back (founding-circle guarantee). Event-driven accounts ⚠ scaled hard per allocation policy. Limits above the final spread dropped out of the book.</div>`;
+  ["tl-priced","tl-alloc","tl-settle","tl-list"].forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add('done'),300+i*600));
+}
+renderBook();
+feedTimer=setInterval(tick,2100);
+
+/* ================= issuer wizard ================= */
+function wizLive(){
+  const s=document.getElementById('w-size').value;
+  document.getElementById('w-sizeval').textContent="€"+s+"m";
+  const e=parseFloat(document.getElementById('w-ebitda').value)||0;
+  const nd=parseFloat(document.getElementById('w-netdebt').value)||0;
+  document.getElementById('w-lev').textContent = e>0 ? (nd/e).toFixed(1)+"×" : "—";
+}
+function crit(state,text){const c=state==="pass"?"c-pass":state==="part"?"c-part":"c-fail";const g=state==="pass"?"✓":state==="part"?"!":"✕";return `<li><span class="cchip ${c}">${g}</span><span>${text}</span></li>`;}
+function runWizard(){
+  const sector=document.getElementById('w-sector').value;
+  const size=parseInt(document.getElementById('w-size').value);
+  const ebitda=parseFloat(document.getElementById('w-ebitda').value)||0;
+  const netdebt=parseFloat(document.getElementById('w-netdebt').value)||0;
+  const lev=ebitda>0?netdebt/ebitda:99;
+  const secd=document.getElementById('w-sec').value==="sec";
+  const tenor=parseInt(document.getElementById('w-tenor').value);
+  const use=document.getElementById('w-use').value;
+  const green=document.getElementById('w-green').value==="yes";
+  const disc=document.getElementById('w-disc').checked;
+  let cr=[], fails=0, parts=0;
+  const add=(st,tx)=>{cr.push(crit(st,tx)); if(st==="fail")fails++; if(st==="part")parts++;};
+
+  if(["re","fin","sport"].includes(sector)) add("fail","Sector: outside the platform profile (real-estate SPVs, financials and sports clubs are not arranged).");
+  else if(sector==="et") add("pass","Sector: energy transition — exactly the start niche.");
+  else add("pass","Sector: core mid-cap — eligible (energy transition prioritised in phase 1).");
+
+  if(size>=20&&size<=75) add("pass",`Size €${size}m: inside the €20–75m beachhead.`);
+  else if(size<20) add("part",`Size €${size}m: below €20m the format barely exists — possible only as an explicitly labelled experiment.`);
+  else add("part",`Size €${size}m: above the beachhead — feasible (format carries to €300m), typically as a repeat issuer.`);
+
+  if(ebitda>=8) add("pass",`EBITDA €${ebitda}m: meets the ≥ €8–10m floor.`);
+  else if(ebitda>=6) add("part",`EBITDA €${ebitda}m: below the €8m floor — borderline.`);
+  else add("fail",`EBITDA €${ebitda}m: too small for a liquid institutional book.`);
+
+  if(lev<=3.5) add("pass",`Net leverage ${lev.toFixed(1)}×: within the ≤ 3.5× incurrence standard.`);
+  else if(lev<=4.25) add("part",`Net leverage ${lev.toFixed(1)}×: above 3.5× — needs a deleveraging path or more security.`);
+  else add("fail",`Net leverage ${lev.toFixed(1)}×: outside the profile.`);
+
+  if(secd) add("pass","Senior secured: security package available.");
+  else add("fail","Unsecured: Profile #1 is senior secured only.");
+
+  if(tenor>=3&&tenor<=4) add("pass",`Tenor ${tenor}y: standard.`);
+  else if(tenor===2||tenor===5) add("part",`Tenor ${tenor}y: outside the 3–4y standard — case by case.`);
+  else add("fail",`Tenor ${tenor}y: not offered in the standard format.`);
+
+  if(use==="refi"||use==="capex") add("pass","Use of proceeds: refinancing / capex — the profile trigger.");
+  else if(use==="acq") add("part","Acquisition financing: possible with committed equity and pro-forma covenants.");
+  else add("fail","Dividend recap: declined visibly. Not in deal one, not later.");
+
+  if(disc) add("pass","Ongoing disclosure: committed.");
+  else add("fail","Ongoing disclosure through the platform is non-negotiable.");
+
+  const v=document.getElementById('verdict');
+  let cls,head,body;
+  if(fails>0){cls="decline";head="Outside Profile #1 — declined visibly";
+    body=`This deal would be refused as the profile stands — and that refusal (anonymised) becomes part of our published filter statistics. With your consent we refer out-of-profile deals to partner private-credit funds; a decline here is a lead there.`;}
+  else if(parts>0){cls="partial";head="Borderline — talk to us";
+    body=`Most criteria pass; the flagged items decide it. Typical paths: adjust size or security, evidence a deleveraging path, or queue for Profile #2 once the first deals have printed.`;}
+  else{cls="fit";head="Fits Profile #1";
+    body=`This profile is what the founding investor circle pre-committed against. Next step in the live product: a 48-hour intro call and data-room checklist.`;}
+
+  let priceHtml="";
+  if(fails===0){
+    let x=575;
+    if(sector==="et")x-=25; if(sector==="cons")x+=15; if(sector==="ind")x+=10;
+    x+=Math.max(-35,Math.min(200,Math.round(70*(lev-2.5))));
+    if(size<25)x+=40; else if(size>=50)x-=20;
+    if(ebitda<10)x+=35; else if(ebitda>=20)x-=25;
+    if(green)x-=20;
+    if(use==="acq")x+=40; if(use==="capex")x+=10;
+    if(tenor===5)x+=15; if(tenor===2)x-=10;
+    x=Math.round(Math.min(975,Math.max(450,x))/5)*5;
+    const allin=(E3M+x/100).toFixed(1);
+    const fee=1.25, feeAmort=fee/5*100;
+    const ut=(E3M+6.0).toFixed(1);
+    priceHtml=`<div class="indprice">Indicative pricing: <b>3mE + ${x} area</b> (≈ ${allin}% all-in today; band ±40bp — the book decides)
+      <small>Platform fee target 1.0–1.5% upfront (≈ ${feeAmort.toFixed(0)}bp p.a. over 5y). Compare: unitranche ≈ ${ut}%+ with 2% OID; Schuldschein margins are lower but access for unrated ≤€75m names is post-2024 uncertain; bank club loans price tighter yet amortise, carry maintenance covenants and consume house-bank capacity. An indication never replaces the investor's own analysis.</small></div>`;
+  }
+  v.className="verdict show "+cls;
+  v.innerHTML=`<h3>${head}</h3><ul class="critlist">${cr.join('')}</ul><p style="font-size:13.5px;margin-top:10px;color:#33404D">${body}</p>${priceHtml}`;
+  v.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+wizLive();
+
+/* misc */
+function fakeSubscribe(){document.getElementById('monthanks').style.display="block";}
+document.getElementById('hs-issuers').textContent="60";
+</script>
+</body>
+</html>
