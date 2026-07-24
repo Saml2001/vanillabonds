@@ -49,9 +49,9 @@
   h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,46px);line-height:1.12;color:var(--navy);font-weight:700}
   h2{font-family:var(--serif);font-size:27px;color:var(--navy);margin-bottom:6px}
   h3{font-size:16px;color:var(--navy);margin-bottom:6px}
-  .lede{font-size:17.5px;color:var(--grey);max-width:66ch;margin-top:14px}
+  .lede{font-size:17.5px;color:var(--grey);margin-top:14px}
   section.block{padding:54px 0;border-bottom:1px solid var(--line)}
-  .sub{color:var(--grey);max-width:88ch;margin-bottom:22px}
+  .sub{color:var(--grey);margin-bottom:22px}
   .goldrule{width:64px;height:3px;background:var(--gold);margin:14px 0 18px}
 
   /* ---------- hero ---------- */
@@ -290,7 +290,7 @@
     <div class="goldrule"></div>
     <p class="sub">Bank syndicate desks don’t clear their cost base below roughly €75–100m. The Schuldschein sweet spot sits around a €205m average ticket — and its 2024–26 trust break (Varta, BayWa, KTM) pushed exactly the unrated, smaller and non-German names out. Syndicated high yield starts near €200m. In between sits the ordinary, healthy European mid-cap — with nowhere to issue.</p>
     <div class="svgwrap">
-      <svg viewBox="0 0 720 258" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica,Arial,sans-serif">
+      <svg viewBox="0 0 720 258" style="width:100%;max-width:920px;height:auto;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica,Arial,sans-serif">
         <!-- axis -->
         <line x1="30" y1="212" x2="690" y2="212" stroke="#5A6672" stroke-width="1.2"/>
         <g fill="#5A6672" font-size="10.5" text-anchor="middle">
@@ -842,7 +842,7 @@ renderTable();
   const xmin=20,xmax=320,ymin=380,ymax=1000;
   const X=v=>L+(Math.log10(v)-Math.log10(xmin))/(Math.log10(xmax)-Math.log10(xmin))*(W-L-R);
   const Y=v=>T+(1-(v-ymin)/(ymax-ymin))*(H-T-B);
-  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" font-family="Helvetica,Arial,sans-serif">`;
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:920px;height:auto;display:block;margin:0 auto" font-family="Helvetica,Arial,sans-serif">`;
   s+=`<rect x="${X(20)}" y="${T}" width="${X(100)-X(20)}" height="${H-T-B}" fill="#C9A227" opacity="0.13"/>`;
   s+=`<text x="${(X(20)+X(100))/2}" y="${T+14}" font-size="10.5" fill="#8A6E14" text-anchor="middle" font-weight="bold">the missing middle €20–100m</text>`;
   [400,500,600,700,800,900,1000].forEach(v=>{s+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="#E7E4DA"/><text x="${L-7}" y="${Y(v)+3.5}" font-size="10" fill="#5A6672" text-anchor="end">${v}</text>`;});
