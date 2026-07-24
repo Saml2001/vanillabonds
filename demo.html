@@ -260,7 +260,7 @@
 <section class="view active" id="view-platform">
 
   <div class="hero">
-    <div class="eyebrow">Senior secured bonds · €20–75 million · DACH first</div>
+    <div class="eyebrow">Senior secured bonds · €20–100 million · DACH first</div>
     <h1>Debt capital markets,<br>sized for the Mittelstand.</h1>
     <p class="lede">VanillaBonds brings the proven Nordic bond format to continental Europe’s mid-caps: standardised senior secured bonds — priced, governed and tradeable — arranged in weeks, not quarters, and placed into a standing professional investor circle.</p>
     <div class="herobtns">
@@ -272,7 +272,7 @@
       <div class="stat"><b id="hs-issuers">60</b><span>non-Nordic issuers tracked in our dataset</span></div>
       <div class="stat"><b>E+450–975</b><span>coupon range in today’s mid-cap format</span></div>
       <div class="stat"><b>1.0–1.5%</b><span>target all-in arranging fee (vs 2.5–5% historic)</span></div>
-      <div class="stat"><b>€20–75m</b><span>the issue size nobody serves — our beachhead</span></div>
+      <div class="stat"><b>€20–100m</b><span>the issue size nobody serves — the missing middle</span></div>
     </div>
   </div>
 
@@ -295,10 +295,10 @@
         <rect x="30" y="26" width="257" height="26" rx="4" fill="#C8CDD3"/>
         <text x="40" y="43" font-size="12" fill="#33404D" font-weight="bold">House-bank &amp; club loans</text>
         <rect x="229" y="62" width="159" height="30" rx="4" fill="#C9A227"/>
-        <text x="238" y="82" font-size="12.5" fill="#0E2A47" font-weight="bold">THE GAP €20–75m</text>
-        <text x="396" y="82" font-size="11" fill="#8A6E14">← VanillaBonds beachhead</text>
+        <text x="238" y="82" font-size="12.5" fill="#0E2A47" font-weight="bold">THE GAP €20–100m</text>
+        <text x="396" y="82" font-size="11" fill="#8A6E14">← VanillaBonds band</text>
         <rect x="459" y="100" width="231" height="26" rx="4" fill="#1B4B7A"/>
-        <text x="468" y="117" font-size="12" fill="#fff" font-weight="bold">Bank DCM ≥ €75–100m</text>
+        <text x="468" y="117" font-size="12" fill="#fff" font-weight="bold">Bank DCM ≥ €100m</text>
         <text x="451" y="117" font-size="10.5" fill="#5A6672" text-anchor="end">uneconomic below this line →</text>
         <rect x="459" y="136" width="199" height="26" rx="4" fill="#7E97AD"/>
         <text x="468" y="153" font-size="12" fill="#0E2A47" font-weight="bold">Schuldschein · avg €205m</text>
@@ -508,7 +508,7 @@
     <div class="svgwrap">
       <div id="scatter"></div>
       <div class="legend" id="scatterlegend"></div>
-      <div class="caption">Each dot is one tracked bond (FRN spread, or fixed coupon converted to a spread over 3m EURIBOR at 2.08%). The gold band marks the €20–75m beachhead: small issues pay wide spreads today precisely because analysis costs and thin books keep competition out — the compression opportunity the platform is built on.</div>
+      <div class="caption">Each dot is one tracked bond (FRN spread, or fixed coupon converted to a spread over 3m EURIBOR at 2.08%). The gold band marks the €20–100m missing middle: small issues pay wide spreads today precisely because analysis costs and thin books keep competition out — the compression opportunity the platform is built on.</div>
     </div>
   </section>
 
@@ -683,7 +683,7 @@
   <div class="fwrap">
     <div>
       <h4>VANILLABONDS <span style="color:var(--gold2);font-size:11px">platform demo</span></h4>
-      <p>Standardised senior secured bonds for European mid-caps, €20–75m, built on the Nordic format. The platform is what exists after deal three — until then, we sell one well-governed transaction at a time.</p>
+      <p>Standardised senior secured bonds for European mid-caps, €20–100m, built on the Nordic format. The platform is what exists after deal three — until then, we sell one well-governed transaction at a time.</p>
       <div class="ecos">
         <span>Nordic Trustee (Frankfurt)</span><span>Licensed host / Haftungsdach</span><span>Paying agent</span><span>Börse Frankfurt · Euronext Oslo</span><span>Bond counsel</span>
       </div>
@@ -835,8 +835,8 @@ renderTable();
   const X=v=>L+(Math.log10(v)-Math.log10(xmin))/(Math.log10(xmax)-Math.log10(xmin))*(W-L-R);
   const Y=v=>T+(1-(v-ymin)/(ymax-ymin))*(H-T-B);
   let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="Helvetica,Arial,sans-serif">`;
-  s+=`<rect x="${X(20)}" y="${T}" width="${X(75)-X(20)}" height="${H-T-B}" fill="#C9A227" opacity="0.13"/>`;
-  s+=`<text x="${(X(20)+X(75))/2}" y="${T+14}" font-size="10.5" fill="#8A6E14" text-anchor="middle" font-weight="bold">beachhead €20–75m</text>`;
+  s+=`<rect x="${X(20)}" y="${T}" width="${X(100)-X(20)}" height="${H-T-B}" fill="#C9A227" opacity="0.13"/>`;
+  s+=`<text x="${(X(20)+X(100))/2}" y="${T+14}" font-size="10.5" fill="#8A6E14" text-anchor="middle" font-weight="bold">the missing middle €20–100m</text>`;
   [400,500,600,700,800,900,1000].forEach(v=>{s+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="#E7E4DA"/><text x="${L-7}" y="${Y(v)+3.5}" font-size="10" fill="#5A6672" text-anchor="end">${v}</text>`;});
   [25,50,75,100,150,200,300].forEach(v=>{s+=`<line x1="${X(v)}" y1="${T}" x2="${X(v)}" y2="${H-B}" stroke="#F0EDE4"/><text x="${X(v)}" y="${H-B+16}" font-size="10" fill="#5A6672" text-anchor="middle">${v}</text>`;});
   s+=`<text x="${(L+W-R)/2}" y="${H-6}" font-size="10.5" fill="#8A94A0" text-anchor="middle">issue size €m (log)</text>`;
@@ -1048,9 +1048,9 @@ function runWizard(){
   else if(sector==="et") add("pass","Sector: energy transition — exactly the start niche.");
   else add("pass","Sector: core mid-cap — eligible (energy transition prioritised in phase 1).");
 
-  if(size>=20&&size<=75) add("pass",`Size €${size}m: inside the €20–75m beachhead.`);
+  if(size>=20&&size<=100) add("pass",`Size €${size}m: inside the €20–100m band.`);
   else if(size<20) add("part",`Size €${size}m: below €20m the format barely exists — possible only as an explicitly labelled experiment.`);
-  else add("part",`Size €${size}m: above the beachhead — feasible (format carries to €300m), typically as a repeat issuer.`);
+  else add("part",`Size €${size}m: above the core band — feasible (format carries to €300m), typically as a repeat issuer.`);
 
   if(ebitda>=8) add("pass",`EBITDA €${ebitda}m: meets the ≥ €8–10m floor.`);
   else if(ebitda>=6) add("part",`EBITDA €${ebitda}m: below the €8m floor — borderline.`);

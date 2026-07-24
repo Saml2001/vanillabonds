@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VanillaBonds — Standardised bonds for European mid-caps</title>
-<meta name="description" content="VanillaBonds brings the proven Nordic bond format to continental Europe's mid-caps: standardised senior secured bonds, €20–75m, arranged in weeks and tradeable from day one.">
-<meta property="og:title" content="VanillaBonds — Standardised bonds for European mid-caps">
-<meta property="og:description" content="The proven Nordic bond format for continental Europe's mid-caps. Senior secured, €20–75m, governed by a trustee, tradeable from day one.">
+<title>VanillaBonds — The missing middle in European corporate debt</title>
+<meta name="description" content="VanillaBonds arranges standardised, tradeable bonds for the €20–100M financing gap — the missing middle of European corporate debt — under the proven Nordic bond framework, executed with a licensed partner.">
+<meta property="og:title" content="VanillaBonds — The missing middle in European corporate debt">
+<meta property="og:description" content="A tradeable-bond platform for the €20–100M financing gap. Nordic framework, licensed partner, facts not judgments. The capital exists — the allocation is broken.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://vanillabonds.com">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230E2A47'/%3E%3Cpath d='M16 18 L32 50 L48 18 L40 18 L32 36 L24 18 Z' fill='%23C9A227'/%3E%3C/svg%3E">
@@ -36,13 +36,13 @@
   nav a:hover{color:#fff;background:rgba(255,255,255,.07)}
   nav a.cta{background:transparent;border:1px solid var(--gold);color:var(--gold2);margin-left:8px}
   nav a.cta:hover{background:var(--gold);color:var(--navy)}
-  @media(max-width:720px){nav a:not(.cta){display:none}}
+  @media(max-width:760px){nav a:not(.cta){display:none}}
 
   main{max-width:1100px;margin:0 auto;padding:0 24px}
   .eyebrow{color:#B07A1E;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
   h1{font-family:var(--serif);font-size:clamp(32px,5vw,50px);line-height:1.1;color:var(--navy);font-weight:700}
   h2{font-family:var(--serif);font-size:28px;color:var(--navy);margin-bottom:6px}
-  .lede{font-size:18px;color:var(--grey);max-width:64ch;margin-top:16px}
+  .lede{font-size:18px;color:var(--grey);max-width:66ch;margin-top:16px}
   .goldrule{width:64px;height:3px;background:var(--gold);margin:14px 0 20px}
   section.block{padding:58px 0;border-bottom:1px solid var(--line)}
   .sub{color:var(--grey);max-width:72ch;margin-bottom:24px}
@@ -60,12 +60,21 @@
   .stat span{font-size:12.5px;color:var(--grey)}
 
   .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
   .card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:24px;box-shadow:0 1px 3px rgba(14,42,71,.05)}
   .card h3{font-family:var(--serif);font-size:18px;color:var(--navy);margin-bottom:8px}
   .card p{color:var(--grey);font-size:14px}
   .card .n{font-family:var(--serif);font-size:15px;color:var(--gold);font-weight:700;letter-spacing:.06em;margin-bottom:10px;display:block}
   .punch{margin-top:22px;background:var(--navy);color:#EAF0F6;border-radius:6px;padding:18px 22px;font-size:15.5px}
   .punch b{color:var(--gold2)}
+
+  .whynow{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:8px}
+  .wn{background:var(--ivory);border:1px solid var(--line);border-radius:6px;padding:22px}
+  .wn b{display:block;font-family:var(--serif);font-size:30px;color:var(--navy)}
+  .wn span{font-size:13px;color:var(--grey)}
+  .wn.pos{background:var(--navy);border:none}
+  .wn.pos b{font-size:16px;color:var(--gold2);font-family:var(--sans);letter-spacing:.08em;text-transform:uppercase}
+  .wn.pos span{color:#C9D6E2;font-size:13.5px}
 
   .roadmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;margin-top:26px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
   .rstep{background:#fff;padding:20px;border-right:1px solid var(--line);position:relative}
@@ -76,13 +85,23 @@
   .rstep.now{background:var(--ivory);border-top:3px solid var(--gold)}
   @media(max-width:720px){.rstep{border-right:none;border-bottom:1px solid var(--line)}}
 
+  .honest{margin-top:26px;border:1px dashed var(--gold);border-radius:6px;padding:20px 24px;background:#FBF8EF}
+  .honest h3{font-family:var(--serif);color:var(--navy);font-size:17px;margin-bottom:6px}
+  .honest p{font-size:14px;color:#4A5560}
+
+  ul.doors{list-style:none;margin:18px 0 26px}
+  ul.doors li{padding:9px 0 9px 28px;position:relative;font-size:15px;color:#DCE6F0;border-bottom:1px dashed rgba(255,255,255,.15)}
+  ul.doors li:last-child{border-bottom:none}
+  ul.doors li::before{content:'';position:absolute;left:2px;top:15px;width:12px;height:12px;background:var(--gold);clip-path:polygon(14% 44%,0 62%,40% 100%,100% 16%,84% 2%,40% 70%)}
+
   .ctaband{background:var(--navy);border-radius:8px;margin:58px 0;padding:44px 40px;color:#DCE6F0}
   .ctaband h2{color:#fff}
-  .ctaband p{color:#B7C7D6;max-width:64ch;margin:10px 0 24px}
+  .ctaband p{color:#B7C7D6;max-width:66ch;margin:10px 0 6px}
   .ctaband .mail{font-family:var(--serif);font-size:20px;color:var(--gold2);text-decoration:none}
   .ctaband .mail:hover{text-decoration:underline}
+  .ctaband .who{font-size:13px;color:#8FA6BA;margin-top:10px}
 
-  footer{border-top:1px solid var(--line);margin-top:0;padding:34px 24px 46px;background:var(--ivory)}
+  footer{border-top:1px solid var(--line);padding:34px 24px 46px;background:var(--ivory)}
   .fwrap{max-width:1100px;margin:0 auto}
   .fine{font-size:12px;color:var(--grey);max-width:100ch;line-height:1.6}
   .fbottom{max-width:1100px;margin:18px auto 0;font-size:12.5px;color:var(--grey);display:flex;gap:18px;flex-wrap:wrap}
@@ -98,12 +117,13 @@
       <svg width="34" height="34" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0E2A47" stroke="#C9A227" stroke-width="3"/><path d="M16 18 L32 50 L48 18 L40 18 L32 36 L24 18 Z" fill="#C9A227"/></svg>
       <div>
         <div class="wm">VANILLA<span>BONDS</span></div>
-        <div class="tag">European mid-cap bond platform</div>
+        <div class="tag">Tradeable bonds for European mid-caps</div>
       </div>
     </a>
     <nav>
       <a href="#gap">The gap</a>
-      <a href="#build">What we build</a>
+      <a href="#why">Why now</a>
+      <a href="#build">Platform</a>
       <a href="#stand">Where we stand</a>
       <a class="cta" href="demo.html">Platform demo</a>
     </nav>
@@ -113,107 +133,143 @@
 <main id="top">
 
   <section class="hero">
-    <div class="eyebrow">Senior secured bonds · €20–75 million · Nordic format · DACH first</div>
-    <h1>Debt capital markets,<br>sized for the Mittelstand.</h1>
-    <p class="lede">VanillaBonds brings the proven Nordic bond format to continental Europe’s mid-caps: standardised senior secured bonds — priced, governed and tradeable — arranged in weeks, not quarters, and placed with a standing circle of professional investors.</p>
+    <div class="eyebrow">Tradeable bonds · €20–100 million · Nordic framework · Munich</div>
+    <h1>The missing middle in<br>European corporate debt.</h1>
+    <p class="lede">Established, cash-flow-generating European mid-caps that need €20–100&nbsp;million of debt fall between two stools: too large for retail platforms, below the public bond market’s radar. VanillaBonds arranges standardised, tradeable bonds for exactly that band — under the proven Nordic bond framework, executed with a licensed partner. The capital exists; the allocation is broken.</p>
     <div class="herobtns">
       <a class="btn gold" href="demo.html">View the platform demo</a>
       <a class="btn ghost" href="#contact">Get in touch</a>
     </div>
     <div class="statrow">
-      <div class="stat"><b>60</b><span>non-Nordic European issuers already using the Nordic format, tracked in our dataset</span></div>
-      <div class="stat"><b>&gt;90%</b><span>of German SME high-yield volume already issues in Nordic format</span></div>
-      <div class="stat"><b>€21.8bn</b><span>Nordic high-yield issuance in 2025 — a record year</span></div>
-      <div class="stat"><b>6–8 weeks</b><span>mandate to settlement on standardised documentation</span></div>
+      <div class="stat"><b>€20–100m</b><span>the debt band where the European market fails twice — banks say no, funds add a fee layer</span></div>
+      <div class="stat"><b>~€250m</b><span>where public bond-market benchmark economics start — mid-caps sit far below the radar</span></div>
+      <div class="stat"><b>~50,000</b><span>European mid-caps stuck between bank credit and the public bond market</span></div>
+      <div class="stat"><b>&gt;90%</b><span>of German SME high-yield volume already issues in the Nordic format we build on</span></div>
     </div>
   </section>
 
   <section class="block" id="gap">
     <div class="eyebrow">The problem</div>
-    <h2>Europe’s funding map has a hole in the middle</h2>
+    <h2>A structural gap — not a shortage of capital</h2>
     <div class="goldrule"></div>
-    <p class="sub">Three channels serve European corporate debt — and each one stops short of the ordinary mid-cap.</p>
+    <p class="sub">Europe’s funding map has a hole in the middle, and each existing channel stops short of it.</p>
     <div class="grid3">
       <div class="card">
-        <span class="n">01 — BANK SYNDICATES</span>
-        <h3>Don’t clear below ~€75–100m</h3>
-        <p>Syndicate desks carry a cost base that doesn’t work on small tickets. Below the threshold, issuers are left with club loans on bank terms — slow, covenant-heavy, and capital-constrained as banks retreat from mid-cap risk.</p>
+        <span class="n">BELOW THE GAP</span>
+        <h3>Retail &amp; crowdfunding platforms</h3>
+        <p>Built for small tickets — orders of magnitude too small for a €20–100m issuance by an established company.</p>
       </div>
       <div class="card">
-        <span class="n">02 — SCHULDSCHEIN</span>
-        <h3>A conservative pool that just lost trust</h3>
-        <p>The 2024–26 restructurings (Varta, BayWa, KTM) hit a generalist investor base with no trustee, no collective action clauses and no exit. Unrated, smaller and non-German names are being shown the door.</p>
+        <span class="n">ABOVE THE GAP</span>
+        <h3>The public bond market</h3>
+        <p>Benchmark economics — rating, prospectus, syndicate — start near €250m. Below that, the market barely looks. And banks are retreating from holding mid-cap credit: capital rules made it expensive, not the companies worse.</p>
       </div>
       <div class="card">
-        <span class="n">03 — SYNDICATED HIGH YIELD</span>
-        <h3>Starts near €200m</h3>
-        <p>Rated, prospectus-based benchmark issuance is built for large caps. The documentation, rating and marketing cost simply doesn’t amortise on a €30m deal.</p>
+        <span class="n">WHAT REMAINS</span>
+        <h3>Slow, bilateral, locked</h3>
+        <p>House-bank loans, Schuldschein and private credit — mostly untradeable, single-lender, and reserved for credit that bank models read as investment grade. Investors reach this segment only through fund wrappers whose fees eat 1.5–2.5% of the return.</p>
       </div>
     </div>
-    <div class="punch">In between sits the ordinary, healthy European mid-cap — with nowhere to issue. <b>The €20–75m band is where we operate</b>, on a format that already works: over 90% of German SME high yield has quietly moved to Nordic documentation.</div>
+    <div class="punch">The missing middle: <b>€20–100m of debt for proven mid-caps.</b> The root cause is arranger cost structures that make deals this size unprofitable — an allocation problem, not a capital-shortage problem. Standardisation is what removes it.</div>
+  </section>
+
+  <section class="block" id="why">
+    <div class="eyebrow">Why now</div>
+    <h2>The diagnosis is top-down. The gap is bottom-up.</h2>
+    <div class="goldrule"></div>
+    <p class="sub">Europe’s own competitiveness agenda — from the Draghi report to the Savings and Investments Union — names exactly this problem: the continent doesn’t lack capital, it lacks an efficient market that turns savings into investment. Then delivery stalls. That stall is our reason to exist.</p>
+    <div class="whynow">
+      <div class="wn"><b>€800bn</b><span>per year in additional investment the Draghi report says Europe needs — to be mobilised through capital-markets integration.</span></div>
+      <div class="wn"><b>~15%</b><span>of the report’s recommendations fully implemented by early 2026. The diagnosis is accepted; delivery is stuck.</span></div>
+      <div class="wn pos"><b>Our position</b><span>We don’t wait for the Capital Markets Union. We build a working mechanism inside today’s framework — for the companies the gap hits now.</span></div>
+    </div>
   </section>
 
   <section class="block" id="build">
     <div class="eyebrow">The platform</div>
-    <h2>One standard. One process. One investor circle.</h2>
+    <h2>Arrange, don’t disintermediate</h2>
     <div class="goldrule"></div>
+    <p class="sub">Platforms that tried to replace the banks failed — not on technology, but on missing investor networks and credibility. We do the opposite: an asset-light platform that structures standardised, tradeable bonds under the Nordic bond framework, anchored to a licensed host and arranger as key partner.</p>
     <div class="grid3">
       <div class="card">
         <h3>One standard</h3>
-        <p>Nordic bond terms: senior secured, trustee-governed, majority decisions through collective action clauses, a fixed covenant menu. Documentation is standardised, so counsel reviews the delta — not two hundred pages from scratch.</p>
+        <p>Nordic bond terms, proven at scale: senior secured, trustee-governed, majority decisions through collective action clauses, a fixed covenant menu. Standard documentation per deal, so counsel reviews the delta — not two hundred pages from scratch.</p>
       </div>
       <div class="card">
         <h3>One process</h3>
-        <p>Mandate to settlement in six to eight weeks. No prospectus and no mandatory rating in the professional segment (€100,000 minimum denominations). ISIN, Euroclear/Clearstream settlement and paying agent through established providers — tradeable from day one.</p>
+        <p>Mandate to settlement in weeks, not quarters. €100,000 minimum denominations, qualified investors only, prospectus-exempt. ISIN and Euroclear/Clearstream settlement through established paying agents — tradeable from day one.</p>
       </div>
       <div class="card">
-        <h3>One investor circle</h3>
-        <p>Professional and institutional investors onboard once, then see standardised, comparable deal flow matched to their domain — instead of repeating per-deal paperwork for every single ticket.</p>
+        <h3>Facts, not judgments</h3>
+        <p>Each deal ships with a dossier of verifiable facts — trade registers, confirmed collateral, annual accounts. It organises the facts; it does not render a credit judgment. Investors run their own credit work, faster, on comparable paper.</p>
       </div>
     </div>
+    <div class="grid2" style="margin-top:18px">
+      <div class="card">
+        <span class="n">FOR ISSUERS</span>
+        <h3>Institutional debt at an underserved ticket</h3>
+        <p>Debt without dilution and without a single controlling lender — at a size that cannot pay for a bank’s bond desk today. Standardisation cuts the fixed cost per issuance; that is what makes the ticket viable.</p>
+      </div>
+      <div class="card">
+        <span class="n">FOR INVESTORS</span>
+        <h3>Direct access, full coupon, an exit</h3>
+        <p>Access to a segment that is hard to reach directly — today it runs through fund wrappers with a 1.5–2.5% fee layer. Buy direct at €100k denominations, keep the full coupon, and trade out when needed: the exit route private credit lacks.</p>
+      </div>
+    </div>
+    <div class="punch">Asset-light by design: <b>we never lend, never hold the bonds, never touch client money.</b> The mid-cap is the issuer; the trustee, paying agent, auditors and counsel stay independent — their independence is the value.</div>
   </section>
 
   <section class="block" id="stand">
     <div class="eyebrow">Honest stage</div>
     <h2>Where we stand</h2>
     <div class="goldrule"></div>
-    <p class="sub">We build in the open and label our stage precisely. The format is proven and the dataset is real; the company is young. First transactions will be arranged together with a licensed partner while our own authorisation is prepared.</p>
+    <p class="sub">We separate what we can already stand behind from what we still have to earn. Today: business plan and legal architecture drafted, the regulatory perimeter mapped (arranger model, qualified investors only), a verified dataset of 60 non-Nordic European issuers already using the Nordic format — and a working platform demo. Now running: structured validation interviews with credit funds, family offices and mid-cap CFOs.</p>
+    <div class="honest">
+      <h3>The part we won’t pretend about</h3>
+      <p>The hardest question isn’t finding the companies — it’s the first investor. We know who they are: professional investors who want this credit and can’t get near it today. What we haven’t proven is that one of them goes first. Wanting in isn’t the same as writing the first cheque — that is exactly the assumption we are testing now, and we’d rather kill the model cleanly than pretend.</p>
+    </div>
     <div class="roadmap">
       <div class="rstep now">
-        <div class="when">NOW — 2026</div>
-        <h3>Formation &amp; groundwork</h3>
-        <p>Company in formation (Munich). Format, issuer dataset and platform demo built; regulatory pathway mapped with counsel.</p>
+        <div class="when">NOW — Q4 2026</div>
+        <h3>Foundation</h3>
+        <p>Company formation (Munich), core team lock-in, regulatory groundwork and validation interviews on both sides of the market.</p>
       </div>
       <div class="rstep">
         <div class="when">H1 2027</div>
-        <h3>Partner phase</h3>
-        <p>First mandates arranged under the umbrella of a licensed partner firm. Founding circle of investors and first issuers assembled.</p>
+        <h3>Umbrella &amp; pipeline</h3>
+        <p>Appointed-representative agreement under an established licensed firm; first pilot-issuer origination; founding circle of investors.</p>
       </div>
       <div class="rstep">
         <div class="when">H2 2027</div>
         <h3>First issuance</h3>
-        <p>First standardised senior secured bond placed, settled and tradeable — the reference transaction for everything after it.</p>
+        <p>First live standardised bond placed and settled under the umbrella structure — the reference transaction for everything after it.</p>
       </div>
       <div class="rstep">
         <div class="when">2028 →</div>
-        <h3>Own licence &amp; scale</h3>
-        <p>Own MiFID authorisation, repeat issuers, new domains — deal sizes growing from ~€30m toward €250m.</p>
+        <h3>Own the rails</h3>
+        <p>Own arranger licence, repeat issuers, new domains — a market-based financing rail, replicable sector by sector, country by country.</p>
       </div>
     </div>
   </section>
 
   <div class="ctaband" id="contact">
     <div class="eyebrow" style="color:var(--gold2)">Contact</div>
-    <h2>Talk to us</h2>
-    <p>We’re speaking with mid-cap CFOs, professional investors, and arranging and documentation partners across DACH and the Nordics. If that’s you, we’d like to hear from you.</p>
+    <h2>Open a door</h2>
+    <p>We’re speaking with professional investors, mid-cap CFOs and partners across DACH and the Nordics. Three doors matter most right now:</p>
+    <ul class="doors">
+      <li>Professional investors — credit funds, family offices, ESG and specialist credit funds — for structured validation conversations at the €20–100m ticket.</li>
+      <li>A Mittelstand CFO with a €20–100m financing or refinancing question, open to a pilot conversation.</li>
+      <li>Licensed securities institutes open to an appointed-representative partnership, and practitioners in Nordic trustee &amp; documentation work.</li>
+    </ul>
     <a class="mail" href="mailto:contact@vanillabonds.com">contact@vanillabonds.com</a>
+    <div class="who">Sam Lakmaker &amp; Finn Goerlich · Munich</div>
   </div>
 
 </main>
 
 <footer>
   <div class="fwrap">
-    <p class="fine">VanillaBonds is the working name of a company in formation (Munich, Germany). The content of this website is provided for general information only. Nothing on this site constitutes an offer of securities, a solicitation of an offer, investment advice or an investment recommendation. Any future offering would be addressed exclusively to professional investors within the meaning of MiFID II, with minimum denominations of €100,000, in reliance on applicable prospectus exemptions. The platform demo linked from this page is a demonstration environment showing fictitious, illustrative data only.</p>
+    <p class="fine">VanillaBonds is the working name of a company in formation (Munich, Germany). The content of this website is provided for general information only. Nothing on this site constitutes an offer of securities, a solicitation of an offer, investment advice or an investment recommendation. Any future offering would be addressed exclusively to qualified/professional investors within the meaning of MiFID II, with minimum denominations of €100,000, in reliance on applicable prospectus exemptions, and would be arranged together with an appropriately licensed partner firm. Market figures are drawn from public sources (incl. the 2024 Draghi report and Nordic market statistics) and our own issuer dataset; they describe the market, not an investment proposition. The platform demo linked from this page is a demonstration environment showing fictitious, illustrative data only.</p>
     <div class="fbottom">
       <span>© 2026 VanillaBonds</span>
       <a href="demo.html">Platform demo</a>
