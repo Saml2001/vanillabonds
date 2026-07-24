@@ -58,13 +58,17 @@
   .btn.gold:hover{background:var(--gold2)}
   .btn.ghost{background:none;border:1.5px solid var(--navy);color:var(--navy)}
   .btn.ghost:hover{background:var(--ivory)}
-  .statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:48px}
+  .statrow{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:48px}
+  @media(min-width:1000px){.statrow{grid-template-columns:repeat(4,1fr)}}
+  @media(max-width:540px){.statrow{grid-template-columns:1fr}}
   .stat{background:var(--ivory);border:1px solid var(--line);border-left:3px solid var(--gold);padding:15px 17px;border-radius:4px}
   .stat b{display:block;font-family:var(--serif);font-size:23px;color:var(--navy)}
   .stat span{font-size:12.5px;color:var(--grey)}
 
-  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+  .grid3{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:900px){.grid3{grid-template-columns:repeat(3,1fr)}}
+  .grid2{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:760px){.grid2{grid-template-columns:repeat(2,1fr)}}
   .card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:24px;box-shadow:0 1px 3px rgba(14,42,71,.05)}
   .card h3{font-family:var(--serif);font-size:18px;color:var(--navy);margin-bottom:8px}
   .card p{color:var(--grey);font-size:14px}
@@ -72,7 +76,8 @@
   .punch{margin-top:22px;background:var(--navy);color:#EAF0F6;border-radius:6px;padding:18px 22px;font-size:15.5px}
   .punch b{color:var(--gold2)}
 
-  .whynow{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:8px}
+  .whynow{display:grid;grid-template-columns:1fr;gap:18px;margin-top:8px}
+  @media(min-width:900px){.whynow{grid-template-columns:repeat(3,1fr)}}
   .wn{background:var(--ivory);border:1px solid var(--line);border-radius:6px;padding:22px}
   .wn b{display:block;font-family:var(--serif);font-size:30px;color:var(--navy)}
   .wn span{font-size:13px;color:var(--grey)}
@@ -80,14 +85,14 @@
   .wn.pos b{font-size:16px;color:var(--gold2);font-family:var(--sans);letter-spacing:.08em;text-transform:uppercase}
   .wn.pos span{color:#C9D6E2;font-size:13.5px}
 
-  .roadmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;margin-top:26px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
-  .rstep{background:#fff;padding:20px;border-right:1px solid var(--line);position:relative}
-  .rstep:last-child{border-right:none}
+  .roadmap{display:grid;grid-template-columns:1fr;gap:14px;margin-top:26px}
+  @media(min-width:640px){.roadmap{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:1000px){.roadmap{grid-template-columns:repeat(4,1fr)}}
+  .rstep{background:#fff;padding:20px;border:1px solid var(--line);border-radius:6px}
   .rstep .when{font-family:var(--mono);font-size:12px;color:#B07A1E;font-weight:700;letter-spacing:.05em}
   .rstep h3{font-family:var(--serif);font-size:16px;color:var(--navy);margin:6px 0 6px}
   .rstep p{font-size:13px;color:var(--grey)}
   .rstep.now{background:var(--ivory);border-top:3px solid var(--gold)}
-  @media(max-width:720px){.rstep{border-right:none;border-bottom:1px solid var(--line)}}
 
   .honest{margin-top:26px;border:1px dashed var(--gold);border-radius:6px;padding:20px 24px;background:#FBF8EF}
   .honest h3{font-family:var(--serif);color:var(--navy);font-size:17px;margin-bottom:6px}
@@ -118,7 +123,7 @@
 <header>
   <div class="hwrap">
     <a class="logo" href="#top">
-      <svg width="34" height="34" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0E2A47" stroke="#1B4B7A" stroke-width="1"/><path fill="#C9A227" d="M17 15h7l8 28.5h-7zM40 15h7l-8 28.5h-7zM14 43.5h36V49H14z"/></svg>
+      <svg width="34" height="34" viewBox="0 0 64 64"><rect x="1.25" y="1.25" width="61.5" height="61.5" rx="10.75" fill="#0E2A47" stroke="#C9A227" stroke-width="2.5"/><path fill="#C9A227" d="M17 15h7l8 28.5h-7zM40 15h7l-8 28.5h-7zM14 43.5h36V49H14z"/></svg>
       <div>
         <div class="wm">VANILLA<span>BONDS</span></div>
         <div class="tag">Tradeable bonds for European mid-caps</div>
@@ -161,7 +166,7 @@
       <div class="card">
         <span class="n">BELOW THE GAP</span>
         <h3>Retail &amp; crowdfunding platforms</h3>
-        <p>Built for small tickets — orders of magnitude too small for a €20–100m issuance by an established company.</p>
+        <p>Built for small tickets and retail investors — orders of magnitude too small for a €20–100m issuance, and without the qualified-investor base a deal that size needs to clear.</p>
       </div>
       <div class="card">
         <span class="n">ABOVE THE GAP</span>
@@ -171,7 +176,7 @@
       <div class="card">
         <span class="n">WHAT REMAINS</span>
         <h3>Slow, bilateral, locked</h3>
-        <p>House-bank loans, Schuldschein and private credit — mostly untradeable, single-lender, and reserved for credit that bank models read as investment grade. Investors reach this segment only through fund wrappers whose fees eat 1.5–2.5% of the return.</p>
+        <p>House-bank loans, Schuldschein and private credit — untradeable, single-lender, and reserved for credit that bank models read as investment grade. Investors reach the segment only through funds whose fees eat 1.5–2.5% of the return.</p>
       </div>
     </div>
     <div class="punch">The missing middle: <b>€20–100m of debt for proven mid-caps.</b> The root cause is arranger cost structures that make deals this size unprofitable — an allocation problem, not a capital-shortage problem. Standardisation is what removes it.</div>
@@ -217,7 +222,7 @@
       <div class="card">
         <span class="n">FOR INVESTORS</span>
         <h3>Direct access, full coupon, an exit</h3>
-        <p>Access to a segment that is hard to reach directly — today it runs through fund wrappers with a 1.5–2.5% fee layer. Buy direct at €100k denominations, keep the full coupon, and trade out when needed: the exit route private credit lacks.</p>
+        <p>Direct access to a segment that today runs through fund wrappers with a 1.5–2.5% fee layer. Buy at €100k denominations, keep the full coupon, trade out when needed — the exit private credit lacks.</p>
       </div>
     </div>
     <div class="punch">Asset-light by design: <b>we never lend, never hold the bonds, never touch client money.</b> The mid-cap is the issuer; the trustee, paying agent, auditors and counsel stay independent — their independence is the value.</div>
