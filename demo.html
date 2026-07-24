@@ -482,6 +482,15 @@
     <div class="stat"><b id="ms-dist">—</b><span>distressed</span></div>
   </div>
 
+  <div class="eyebrow" style="margin-top:20px">New-issue statistics · trailing 12 months</div>
+  <div class="mktstats" style="margin-top:10px">
+    <div class="stat"><b id="ni-count">—</b><span>new issues priced</span></div>
+    <div class="stat"><b id="ni-vol">—</b><span>volume printed</span></div>
+    <div class="stat"><b id="ni-tenor">—</b><span>average tenor at issue</span></div>
+    <div class="stat"><b id="ni-spread">—</b><span>median spread at issue (FRN-equiv.)</span></div>
+    <div class="stat"><b id="ni-cover">—</b><span>average order-book cover, where disclosed</span></div>
+  </div>
+
   <div class="filters">
     <input type="text" id="f-search" placeholder="Search issuer, sector, ISIN…" oninput="renderTable()">
     <select id="f-country" onchange="renderTable()"><option value="">All countries</option></select>
@@ -501,7 +510,9 @@
         <th onclick="setSort('size')">Size €m <span class="sortmark" id="sm-size"></span></th>
         <th onclick="setSort('cp')">Coupon <span class="sortmark" id="sm-cp"></span></th>
         <th onclick="setSort('px')">Price <span class="sortmark" id="sm-px"></span></th>
+        <th onclick="setSort('perf')">Δ par <span class="sortmark" id="sm-perf"></span></th>
         <th onclick="setSort('yld')">Indic. yield <span class="sortmark" id="sm-yld"></span></th>
+        <th onclick="setSort('bk')">Books <span class="sortmark" id="sm-bk"></span></th>
         <th onclick="setSort('mat')">Maturity <span class="sortmark" id="sm-mat"></span></th>
         <th>Status</th>
       </tr></thead>
@@ -524,23 +535,18 @@
     <div class="eyebrow">Refinancing calendar</div>
     <h2>Where the next mandates come from</h2>
     <div class="goldrule"></div>
-    <p class="sub">Nordic FRNs typically refinance ~12 months before maturity via their call schedules — this calendar is nearer than it looks.</p>
-    <div class="refiyear">Active in 2026 <span style="font-size:12px;color:var(--grey)">(2027 maturities)</span></div>
-    <div class="refirow">
-      <div class="refichip"><b>Mutares</b><span>€250m · due Mar 2027</span></div>
-      <div class="refichip"><b>MEDIA Central</b><span>€200m · due Jun 2027</span></div>
-      <div class="refichip"><b>SLR Group</b><span>€75m · due Oct 2027</span></div>
-      <div class="refichip"><b>TEMPTON</b><span>€25m · due Nov 2026</span></div>
+    <p class="sub">Nordic FRNs typically refinance ~12 months before maturity via their call schedules — this calendar is nearer than it looks. Every bar below is origination: the deals must be refinanced somewhere, and the incumbent arranger has no structural lock-in.</p>
+    <div class="mktstats" style="margin:0 0 10px">
+      <div class="stat"><b id="rf-vol">—</b><span>tracked volume maturing 2026–2028</span></div>
+      <div class="stat"><b id="rf-near">—</b><span>refi windows already open (maturity ≤ 12 months out)</span></div>
+      <div class="stat"><b id="rf-wall">—</b><span>the 2029–2030 wall behind it</span></div>
     </div>
-    <div class="refiyear">Active in 2027 <span style="font-size:12px;color:var(--grey)">(2028 maturities)</span></div>
-    <div class="refirow">
-      <div class="refichip"><b>Katjes International</b><span>€185m · due Sep 2028</span></div>
-      <div class="refichip"><b>LR Health &amp; Beauty</b><span>€130m · due Mar 2028</span></div>
-      <div class="refichip"><b>Hörmann Industries</b><span>€50m · due Jul 2028</span></div>
-      <div class="refichip"><b>NWI Group</b><span>€50m · due Nov 2028</span></div>
-      <div class="refichip"><b>The Platform Group</b><span>€30m · due Jul 2028</span></div>
-      <div class="refichip"><b>Hertha BSC</b><span>€40m · due Nov 2028</span></div>
+    <div class="svgwrap">
+      <div id="refibar"></div>
+      <div class="caption">Maturing tracked volume by year (performing and watch names; called, defaulted and standstill lines excluded). Gold bars: maturities whose ~12-months-early refi window opens by mid-2027 — live mandate conversations. Demo data as of July 2026.</div>
     </div>
+    <div class="refiyear">Next refi conversations <span style="font-size:12px;color:var(--grey)">(maturities within 30 months · window = maturity − 12m)</span></div>
+    <div class="refirow" id="refichips"></div>
   </section>
 </section>
 
@@ -805,6 +811,8 @@ function sortVal(b,k){
   if(k==="cp") return effSpread(b);
   if(k==="yld"){const y=indicYield(b);return y==null?-1:y;}
   if(k==="mat") return b.mat;
+  if(k==="perf") return b.px-100;
+  if(k==="bk") return BOOKS[b.isin]||0;
   return b[k];
 }
 function statusPill(st){
@@ -828,12 +836,79 @@ function renderTable(){
       <td class="num">${b.size}</td>
       <td class="num">${coupStr(b)}</td>
       <td class="num">${b.px.toFixed(1)}</td>
+      <td class="num">${perfCell(b)}</td>
       <td class="num">${y==null?"—":y.toFixed(1)+"%"}</td>
+      <td class="num">${BOOKS[b.isin]?BOOKS[b.isin].toFixed(1)+"x":'<span style="color:#9AA4AE">n.d.</span>'}</td>
       <td class="num">${b.mat}</td>
       <td>${statusPill(b.st)}</td></tr>`;
-  }).join('') || `<tr><td colspan="9" style="text-align:center;color:var(--grey);padding:26px">No bonds match the filter.</td></tr>`;
+  }).join('') || `<tr><td colspan="11" style="text-align:center;color:var(--grey);padding:26px">No bonds match the filter.</td></tr>`;
 }
+
+/* ---------- DCM-grade layer: books, performance, new-issue stats, refi radar ---------- */
+const BOOKS = {
+ NO0013697268:2.4, NO0013639112:1.8, NO0013325407:2.9, NO0013682542:1.6, NO0013586024:2.1,
+ NO0012888769:3.6, NO0013168005:2.7, NO0013618587:2.2, NO0013256834:1.9, NO0012938325:2.4,
+ NO0013536169:2.0, NO0013355255:1.4, NO0013461384:1.5, NO0012940347:2.6, NO0013149658:3.1,
+ NO0013252452:2.3, NO0013648295:1.3, NO0013696880:2.8, NO0013360552:1.7, NO0013752634:3.2,
+ NO0013177949:1.6, NO0013531590:1.8, NO0013660357:3.4, NO0013684662:2.5, NO0013606426:4.1,
+ NO0013583237:2.2, NO0013211136:1.9, NO0013742163:3.0, NO0013379446:2.6, NO0013265835:2.9,
+ NO0013740894:2.1, NO0013024018:2.5
+};
+const AS_OF_YM = "2026-07";
+function perfCell(b){const d=b.px-100;const c=d>0.05?"var(--green)":d<-0.05?"var(--red)":"var(--grey)";return `<span style="color:${c};font-weight:600">${d>0?"+":""}${d.toFixed(1)}</span>`;}
+function fmtMY(ym){const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const p=ym.split("-");return M[+p[1]-1]+" "+p[0];}
+function ymDiffYears(a,b){const x=a.split("-").map(Number),y=b.split("-").map(Number);return (y[0]-x[0])+(y[1]-x[1])/12;}
+function ymAddMonths(ym,n){let p=ym.split("-").map(Number),y=p[0],m=p[1]+n;while(m<1){m+=12;y--;}while(m>12){m-=12;y++;}return y+"-"+String(m).padStart(2,"0");}
 renderTable();
+
+(function newIssueStats(){
+  const ni = BONDS.filter(b=>b.iss>=ymAddMonths(AS_OF_YM,-12));
+  if(!ni.length) return;
+  const vol = ni.reduce((s,b)=>s+b.size,0);
+  const tenor = ni.reduce((s,b)=>s+ymDiffYears(b.iss,b.mat),0)/ni.length;
+  const sp = ni.map(effSpread).sort((a,b)=>a-b);
+  const med = sp.length%2?sp[(sp.length-1)/2]:(sp[sp.length/2-1]+sp[sp.length/2])/2;
+  const cov = ni.filter(b=>BOOKS[b.isin]);
+  const set=(id,v)=>document.getElementById(id).textContent=v;
+  set('ni-count', ni.length);
+  set('ni-vol', fmtM(vol));
+  set('ni-tenor', tenor.toFixed(1)+"y");
+  set('ni-spread', "E+"+Math.round(med));
+  set('ni-cover', cov.length?(cov.reduce((s,b)=>s+BOOKS[b.isin],0)/cov.length).toFixed(1)+"×":"n.d.");
+})();
+
+(function refiRadar(){
+  const live = BONDS.filter(b=>["Called","Default","Standstill"].indexOf(b.st)===-1);
+  const byYear = {};
+  live.forEach(b=>{const y=Math.min(+b.mat.slice(0,4),2032);byYear[y]=byYear[y]||{v:0,n:0};byYear[y].v+=b.size;byYear[y].n++;});
+  const years=[2026,2027,2028,2029,2030,2031,2032];
+  const gv=y=>byYear[y]?byYear[y].v:0;
+  const windowOpen=live.filter(b=>b.mat<=ymAddMonths(AS_OF_YM,12));
+  const set=(id,v)=>document.getElementById(id).textContent=v;
+  set('rf-vol', fmtM(gv(2026)+gv(2027)+gv(2028)));
+  set('rf-near', windowOpen.length+" issuers · "+fmtM(windowOpen.reduce((s,b)=>s+b.size,0)));
+  set('rf-wall', fmtM(gv(2029)+gv(2030)));
+  const W=720,H=250,L=46,R=10,T=26,B=40;
+  const max=Math.max.apply(null,years.map(gv));
+  const bw=(W-L-R)/years.length;
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:920px;height:auto;display:block;margin:0 auto" font-family="Helvetica,Arial,sans-serif">`;
+  [0.25,0.5,0.75,1].forEach(f=>{const y=T+(1-f)*(H-T-B);s+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#EFECE3"/><text x="${L-6}" y="${y+3.5}" font-size="9.5" fill="#8A94A0" text-anchor="end">${Math.round(max*f)}</text>`;});
+  years.forEach((yr,i)=>{
+    const d=byYear[yr]||{v:0,n:0};
+    const h=max?d.v/max*(H-T-B):0;
+    const x=L+i*bw+bw*0.14, w=bw*0.72, y=H-B-h;
+    const gold=(yr-1)<=2027;
+    s+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="4" fill="${gold?"#C9A227":"#1B4B7A"}"/>`;
+    if(d.v) s+=`<text x="${(x+w/2).toFixed(1)}" y="${(y-6).toFixed(1)}" font-size="11" fill="#0E2A47" font-weight="bold" text-anchor="middle">€${d.v}m</text>`;
+    s+=`<text x="${(x+w/2).toFixed(1)}" y="${H-B+16}" font-size="10.5" fill="#5A6672" text-anchor="middle">${yr===2032?"2032+":yr}</text>`;
+    if(d.n) s+=`<text x="${(x+w/2).toFixed(1)}" y="${H-B+29}" font-size="9.5" fill="#8A94A0" text-anchor="middle">${d.n} deal${d.n>1?"s":""}</text>`;
+  });
+  s+=`<text x="${L}" y="14" font-size="10.5" fill="#8A94A0">maturing volume €m · demo data</text></svg>`;
+  document.getElementById('refibar').innerHTML=s;
+  const chips=live.filter(b=>b.mat<=ymAddMonths(AS_OF_YM,30)).sort((a,b)=>a.mat<b.mat?-1:1).slice(0,12);
+  document.getElementById('refichips').innerHTML=chips.map(b=>
+    `<div class="refichip"><b>${b.n}</b><span>€${b.size}m · due ${fmtMY(b.mat)} · window from ${fmtMY(ymAddMonths(b.mat,-12))}</span></div>`).join('');
+})();
 
 /* ---------- scatter ---------- */
 (function scatter(){
