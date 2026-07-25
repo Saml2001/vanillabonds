@@ -29,7 +29,9 @@
   body{font-family:var(--sans);color:var(--ink);background:var(--paper);font-size:15.5px;line-height:1.55}
 
   header{background:var(--navy);position:sticky;top:0;z-index:50;border-bottom:3px solid var(--gold)}
-  .hwrap{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:26px;padding:14px 24px}
+  .hwrap{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:26px;padding:14px 24px}
+  nav{flex:1;justify-content:flex-end}
+  .logo{flex-shrink:0}
   .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
   .logo svg{display:block}
   .logo .wm{color:#fff;font-family:var(--serif);font-size:21px;letter-spacing:.12em;font-weight:700}
@@ -40,7 +42,7 @@
   nav a:hover{color:#fff;background:rgba(255,255,255,.07)}
   nav a.cta{background:transparent;border:1px solid var(--gold);color:var(--gold2);margin-left:8px}
   nav a.cta:hover{background:var(--gold);color:var(--navy)}
-  @media(max-width:760px){nav a:not(.cta){display:none}}
+  @media(max-width:760px){nav a:not(.cta):not(.navkeep){display:none}.hwrap{flex-wrap:wrap;gap:8px 26px;padding:12px 16px}}
 
   main{max-width:1100px;margin:0 auto;padding:0 24px}
   .eyebrow{color:#B07A1E;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
@@ -59,7 +61,7 @@
   .btn.ghost{background:none;border:1.5px solid var(--navy);color:var(--navy)}
   .btn.ghost:hover{background:var(--ivory)}
   .statrow{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:48px}
-  @media(min-width:1000px){.statrow{grid-template-columns:repeat(4,1fr)}}
+  @media(min-width:760px){.statrow{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:540px){.statrow{grid-template-columns:1fr}}
   .stat{background:var(--ivory);border:1px solid var(--line);border-left:3px solid var(--gold);padding:15px 17px;border-radius:4px}
   .stat b{display:block;font-family:var(--serif);font-size:23px;color:var(--navy)}
@@ -116,6 +118,37 @@
   .fbottom{max-width:1100px;margin:18px auto 0;font-size:12.5px;color:var(--grey);display:flex;gap:18px;flex-wrap:wrap}
   .fbottom a{color:var(--navy2);text-decoration:none}
   .fbottom a:hover{text-decoration:underline}
+
+  /* ---------- platform-explainer additions (moved from the demo) ---------- */
+  .card .kfact{font-family:var(--mono);font-size:12.5px;color:var(--navy2);background:var(--ivory);display:inline-block;padding:3px 8px;border-radius:3px;margin-top:12px}
+  .navycard{background:var(--navy);color:#DCE6F0;border:none}
+  .navycard h3{color:#fff}
+  .navycard p{color:#B7C7D6}
+  ul.ticks{list-style:none;margin-top:10px;padding-left:0}
+  ul.ticks li{padding:7px 0 7px 26px;position:relative;font-size:14.5px;color:#33404D;border-bottom:1px dashed var(--line)}
+  ul.ticks li:last-child{border-bottom:none}
+  ul.ticks li::before{content:'';position:absolute;left:2px;top:13px;width:12px;height:12px;background:var(--gold);clip-path:polygon(14% 44%,0 62%,40% 100%,100% 16%,84% 2%,40% 70%)}
+  table.tb{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
+  table.tb th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-size:12px;letter-spacing:.04em;font-weight:600;white-space:nowrap}
+  table.tb td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.tb tr:nth-child(even) td{background:var(--ivory)}
+  .num{font-family:var(--mono);font-size:12.8px;white-space:nowrap}
+  .tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+  .svgwrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:6px;padding:18px 12px 8px;margin-top:16px}
+  .caption{font-size:12.5px;color:var(--grey);padding:8px 10px 4px;max-width:90ch}
+  .notice{font-size:12.5px;color:var(--grey);background:var(--ivory);border:1px solid var(--line);border-radius:5px;padding:10px 14px;margin-top:16px}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;counter-reset:step}
+  .step{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px;position:relative;counter-increment:step}
+  .step::before{content:counter(step,decimal-leading-zero);font-family:var(--serif);color:var(--gold);font-size:21px;font-weight:700;display:block;margin-bottom:6px}
+  .step b{font-size:13.5px;color:var(--navy);display:block}
+  .step span{font-size:12px;color:var(--grey)}
+  .monitor{background:var(--navy);border-radius:8px;color:#C9D6E2;padding:34px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+  @media(max-width:860px){.monitor{grid-template-columns:1fr}}
+  .monitor h2{color:#fff}
+  .monitor .mstats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .monitor .mstat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:13px 15px}
+  .monitor .mstat b{font-family:var(--serif);font-size:21px;color:var(--gold2);display:block}
+  .monitor .mstat span{font-size:12px;color:#9FB3C8}
 </style>
 </head>
 <body>
@@ -130,10 +163,11 @@
       </div>
     </a>
     <nav>
-      <a href="#gap">The gap</a>
       <a href="#why">Why now</a>
       <a href="#build">Platform</a>
+      <a href="#investors">Investors</a>
       <a href="#stand">Where we stand</a>
+      <a class="navkeep" href="demo.html#pricing">Pricing</a>
       <a class="cta" href="demo.html">Platform demo</a>
     </nav>
   </div>
@@ -153,7 +187,6 @@
       <div class="stat"><b>€20–100m</b><span>the debt band where the European market fails twice — banks say no, funds add a fee layer</span></div>
       <div class="stat"><b>~€250m</b><span>where public bond-market benchmark economics start — mid-caps sit far below the radar</span></div>
       <div class="stat"><b>~50,000</b><span>European mid-caps stuck between bank credit and the public bond market</span></div>
-      <div class="stat"><b>&gt;90%</b><span>of German SME high-yield volume already issues in the Nordic format we build on</span></div>
     </div>
   </section>
 
@@ -179,6 +212,34 @@
         <p>House-bank loans, Schuldschein and private credit — untradeable, single-lender, and reserved for credit that bank models read as investment grade. Investors reach the segment only through funds whose fees eat 1.5–2.5% of the return.</p>
       </div>
     </div>
+    <div class="svgwrap">
+      <svg viewBox="0 0 720 258" style="width:100%;max-width:920px;height:auto;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica,Arial,sans-serif">
+        <!-- axis -->
+        <line x1="30" y1="212" x2="690" y2="212" stroke="#5A6672" stroke-width="1.2"/>
+        <g fill="#5A6672" font-size="10.5" text-anchor="middle">
+          <text x="129" y="228">€10m</text><text x="261" y="228">€25m</text><text x="360" y="228">€50m</text>
+          <text x="459" y="228">€100m</text><text x="591" y="228">€250m</text><text x="690" y="228">€500m</text>
+          <text x="360" y="248" font-size="10" fill="#8A94A0">issue size (log scale)</text>
+        </g>
+        <g stroke="#D8DCE1" stroke-width="1"><line x1="129" y1="20" x2="129" y2="212"/><line x1="261" y1="20" x2="261" y2="212"/><line x1="360" y1="20" x2="360" y2="212"/><line x1="459" y1="20" x2="459" y2="212"/><line x1="591" y1="20" x2="591" y2="212"/></g>
+        <!-- rows -->
+        <rect x="30" y="26" width="257" height="26" rx="4" fill="#C8CDD3"/>
+        <text x="40" y="43" font-size="12" fill="#33404D" font-weight="bold">House-bank &amp; club loans</text>
+        <rect x="229" y="62" width="230" height="30" rx="4" fill="#C9A227"/>
+        <text x="238" y="82" font-size="12.5" fill="#0E2A47" font-weight="bold">THE GAP €20–100m</text>
+        <text x="467" y="82" font-size="11" fill="#8A6E14">← VanillaBonds band</text>
+        <rect x="459" y="100" width="231" height="26" rx="4" fill="#1B4B7A"/>
+        <text x="468" y="117" font-size="12" fill="#fff" font-weight="bold">Bank DCM ≥ €100m</text>
+        <text x="451" y="117" font-size="10.5" fill="#5A6672" text-anchor="end">uneconomic below this line →</text>
+        <rect x="459" y="136" width="199" height="26" rx="4" fill="#7E97AD"/>
+        <text x="468" y="153" font-size="12" fill="#0E2A47" font-weight="bold">Schuldschein · avg €205m</text>
+        <text x="646" y="153" font-size="12" fill="#B0433C" font-weight="bold">⚡</text>
+        <rect x="559" y="172" width="131" height="26" rx="4" fill="#0E2A47"/>
+        <text x="567" y="189" font-size="12" fill="#fff" font-weight="bold">Synd. HY ≥€200m</text>
+        <text x="30" y="18" font-size="10.5" fill="#B0433C">⚡ Schuldschein trust break 2024–26: Varta ≈90% haircut · BayWa €800m+ restructuring · KTM 70% write-down</text>
+      </svg>
+      <div class="caption">Our own dataset of 60 verified non-Nordic issuers shows the format effectively does not exist below €25m and averages €100–110m market-wide — the deepest unserved gap lies between bank lending and the institutional formats. Design headroom to €300m; growth via repeat issuers (Katjes grew from ~€110m to €185m outstanding).</div>
+    </div>
     <div class="punch">The missing middle: <b>€20–100m of debt for proven mid-caps.</b> The root cause is arranger cost structures that make deals this size unprofitable — an allocation problem, not a capital-shortage problem. Standardisation is what removes it.</div>
   </section>
 
@@ -191,6 +252,24 @@
       <div class="wn"><b>€800bn</b><span>per year in additional investment the Draghi report says Europe needs — to be mobilised through capital-markets integration.</span></div>
       <div class="wn"><b>~15%</b><span>of the report’s recommendations fully implemented by early 2026. The diagnosis is accepted; delivery is stuck.</span></div>
       <div class="wn pos"><b>Our position</b><span>We don’t wait for the Capital Markets Union. We build a working mechanism inside today’s framework — for the companies the gap hits now.</span></div>
+    </div>
+    <p class="sub" style="margin:30px 0 0">And bottom-up, three doors opened at once:</p>
+    <div class="grid3" style="margin-top:16px">
+      <div class="card">
+        <h3>The Schuldschein trust break</h3>
+        <p>Varta (≈90% haircut via StaRUG cram-down), BayWa (€800m+ across ~255 holders) and KTM (70% write-down) broke the implicit-safety promise. The market didn’t shrink — ~€24bn in 2025 — but investors turned selective, pushing unrated, smaller and non-German names towards alternatives.</p>
+        <div class="kfact">We sell explicitly priced, governed, tradeable risk — never “safer”.</div>
+      </div>
+      <div class="card">
+        <h3>Banks can’t make small pay</h3>
+        <p>Investment-grade benchmark fees run 0.25–0.45%; mid-cap placements historically cost 2.5–5% all-in. Below ≈€75–100m no syndicate desk clears its cost base — so healthy mid-caps stay trapped in loan formats they have outgrown.</p>
+        <div class="kfact">Standardisation compresses the fee to 1.0–1.5% — then the coupon.</div>
+      </div>
+      <div class="card">
+        <h3>The buyers already exist</h3>
+        <p>Frankfurt manages &gt;€700m in dedicated Nordic HY money. Family offices doubled private-debt allocations to 4–5%. Green mandates are starved of real EUR mid-cap paper. And since KFM’s fund liquidation, standing German mid-cap bond demand has no home.</p>
+        <div class="kfact">Latent demand becomes tickets when analysis costs drop.</div>
+      </div>
     </div>
   </section>
 
@@ -226,6 +305,122 @@
       </div>
     </div>
     <div class="punch">Asset-light by design: <b>we never lend, never hold the bonds, never touch client money.</b> The mid-cap is the issuer; the trustee, paying agent, auditors and counsel stay independent — their independence is the value.</div>
+  </section>
+
+  <section class="block" id="format">
+    <div class="eyebrow">The format</div>
+    <h2>One standard. Six to eight weeks. Tradeable from day one.</h2>
+    <div class="goldrule"></div>
+    <div class="grid2">
+      <div>
+        <ul class="ticks">
+          <li><b>Senior secured, trustee-governed</b> — Nordic Trustee model: if the platform disappeared tomorrow, a tradeable security with a trustee remains.</li>
+          <li><b>Floating-rate note, 3m EURIBOR + 450–975</b> — 3–4 year tenor, standard call schedule.</li>
+          <li><b>Covenants from a standard menu</b> — incurrence-based net leverage, FCCR, dividend basket, change-of-control put; co-written with the founding investor circle.</li>
+          <li><b>Standardised disclosure</b> — one data room, quarterly reporting through the platform, covenant certificates on file.</li>
+          <li><b>Listed &amp; tradeable</b> — Börse Frankfurt Open Market / Euronext Oslo; institutional denominations.</li>
+          <li><b>6–8 weeks from mandate to settlement</b> — one process, one document set, a standing professional book.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-family:var(--serif);font-size:18px">What arranging actually costs</h3>
+        <div class="tscroll" style="margin-top:10px">
+          <table class="tb">
+            <thead><tr><th>Channel</th><th>Arranging / placement fee</th><th>Basis</th></tr></thead>
+            <tbody>
+              <tr><td>Investment-grade benchmark</td><td class="num">0.25–0.45%</td><td>FCA market study, 793 deals</td></tr>
+              <tr><td>Syndicated high yield</td><td class="num">avg 1.25% (B ≈1.5%)</td><td>FCA market study, 306 deals</td></tr>
+              <tr><td>German Mittelstandsanleihen (2010–16)</td><td class="num">2.5–5% · all-in ≈4.5%</td><td>trade sources</td></tr>
+              <tr><td>Nordic-format mid-market today</td><td class="num">1.5–3%</td><td>practitioner estimate</td></tr>
+              <tr><td style="color:var(--navy)"><b>VanillaBonds target</b></td><td class="num"><b>1.0–1.5%</b></td><td>our target — to be proven</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:13px;color:var(--grey);margin-top:10px">The fee is the certain saving. The strategic one is coupon compression through broader competition in the book — the claim we will only make once our own deal data proves it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="filter">
+    <div class="eyebrow">The credit filter</div>
+    <h2>What we decline is the product</h2>
+    <div class="goldrule"></div>
+    <div class="grid3">
+      <div class="card navycard">
+        <h3>Visible minimum criteria</h3>
+        <p>Deal Profile #1 is published, hard and boring: DACH · energy-transition or demonstrable sustainability angle · €20–40m · EBITDA ≥ €8–10m · net leverage ≤ 3.5× · senior secured · 3–4 years · refinancing or capex trigger · ongoing disclosure.</p>
+      </div>
+      <div class="card">
+        <h3>Visible refusal</h3>
+        <p>Everything outside the profile is declined — visibly, even when it costs revenue. Declined issuers are, with consent, referred to private-credit partners. One avoidable default in the first ten deals is deadlier than ten missed deals.</p>
+      </div>
+      <div class="card">
+        <h3>Published rejection statistics</h3>
+        <p>Every quarter we publish anonymised filter data. This segment produces real defaults (our 60-name dataset contains one default and one standstill) — we price risk and govern it; we don’t pretend it away.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="investors">
+    <div class="eyebrow">Two sides, one standard</div>
+    <h2>For investors &amp; for issuers</h2>
+    <div class="goldrule"></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Investors — the Founding Circle</h3>
+        <p>8–12 anchor accounts — entrepreneur money, multi-family offices, green mandates, specialist bondpickers — co-write the standard and get what followers never will:</p>
+        <ul class="ticks">
+          <li><b>A standards seat:</b> the covenant menu, disclosure set and deal profile are written with you, not for you.</li>
+          <li><b>Guaranteed allocation:</b> good books in this format get oversubscribed (recent precedent: 3.6×) and scaled back — anchors keep their full ticket.</li>
+          <li><b>A filtered origination stream:</b> origination is every credit investor’s bottleneck; ours arrives standardised, monitored, trustee-governed.</li>
+          <li><b>The data:</b> comparable credit information across a segment that has none — plus the quarterly Monitor, free.</li>
+        </ul>
+        <div class="notice">Professional and semi-professional investors only. No retail, in any form.</div>
+      </div>
+      <div class="card">
+        <h3>Issuers — grow with your paper</h3>
+        <p>For CFOs of companies with €8m+ EBITDA who have outgrown bilateral loans but are invisible to bank DCM:</p>
+        <ul class="ticks">
+          <li><b>One process, 6–8 weeks:</b> standard documentation, one data room, a standing book — not a nine-month odyssey.</li>
+          <li><b>All-in target 1.0–1.5%</b> against 2.5–5% historic mid-cap placement costs; amortised over five years the difference is real money.</li>
+          <li><b>No bank balance-sheet dependency:</b> diversify funding while keeping your house bank for what it is good at.</li>
+          <li><b>Repeat issuance grows with you:</b> the format carries €20m experiments to €300m programmes — the second issue is the cheapest capital you will ever raise.</li>
+        </ul>
+        <div class="notice">Check your deal against Profile #1 in the <a href="demo.html#issue">New Issues demo</a>, or get an instant level from the <a href="demo.html#pricing">indicative pricing tool</a>.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="process">
+    <div class="eyebrow">Process</div>
+    <h2>Mandate to listing in six steps</h2>
+    <div class="goldrule"></div>
+    <div class="steps">
+      <div class="step"><b>Profile check</b><span>48-hour screen against the published deal profile — pass or referred.</span></div>
+      <div class="step"><b>Credit work</b><span>Data room, audited figures, monitoring set-up. Weeks 1–3.</span></div>
+      <div class="step"><b>Standard docs</b><span>Covenant menu, security package, trustee appointed. Weeks 3–5.</span></div>
+      <div class="step"><b>Bookbuild</b><span>Anchors pre-committed; 48-hour early look; open book. Weeks 5–7.</span></div>
+      <div class="step"><b>Pricing &amp; settlement</b><span>Priced on demand, settled T+5 via paying agent.</span></div>
+      <div class="step"><b>Listed &amp; monitored</b><span>Exchange listing, quarterly disclosure, covenant certificates.</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="monitor">
+    <div class="monitor">
+      <div>
+        <div class="eyebrow" style="color:var(--gold2)">The Monitor</div>
+        <h2>DACH Nordic Bond Monitor</h2>
+        <p style="margin-top:10px;font-size:14.5px">The quarterly state of the continental mid-cap bond market: every new issue, coupon, spread, maturity and default — built on our 60-issuer dataset. The systematic coverage this segment lost when the last dedicated barometer stopped in 2023.</p>
+        <div style="margin-top:18px"><a class="btn gold" href="mailto:contact@vanillabonds.com?subject=DACH%20Nordic%20Bond%20Monitor%20%E2%80%94%20subscribe">Get the Monitor</a></div>
+        <div style="font-size:11px;color:#8FA6BA;margin-top:10px">Dataset snapshot: July 2026.</div>
+      </div>
+      <div class="mstats">
+        <div class="mstat"><b>39</b><span>tracked issues outstanding</span></div>
+        <div class="mstat"><b>€3.58bn</b><span>tracked volume outstanding</span></div>
+        <div class="mstat"><b>E+667</b><span>median indicative spread</span></div>
+        <div class="mstat"><b>2 / 60</b><span>defaults &amp; standstills in dataset</span></div>
+      </div>
+    </div>
   </section>
 
   <section class="block" id="stand">
@@ -282,6 +477,7 @@
     <div class="fbottom">
       <span>© 2026 VanillaBonds</span>
       <a href="demo.html">Platform demo</a>
+      <a href="demo.html#pricing">Indicative pricing</a>
       <a href="mailto:contact@vanillabonds.com">contact@vanillabonds.com</a>
     </div>
   </div>

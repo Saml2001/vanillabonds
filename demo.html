@@ -10,32 +10,36 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
   :root{
+    --bg:#07131F; --panel:#0D2136; --panel2:#0A1C2F;
     --navy:#0E2A47; --navy2:#1B4B7A; --navy-deep:#0B2138;
     --gold:#C9A227; --gold2:#E7C55A;
-    --ivory:#F7F4EC; --paper:#FDFCF8;
-    --ink:#16202B; --grey:#5A6672; --line:#E3E0D6;
-    --green:#2E7D5B; --red:#B0433C; --amber:#B07A1E;
+    --ivory:#0F2439; --paper:#0C1F33;
+    --ink:#DCE7F1; --grey:#93A9BD; --mut:#64809A; --line:#1B3450; --line2:#27476A;
+    --green:#4CC38A; --red:#E5645A; --amber:#E0B84C;
     --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
     --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{font-family:var(--sans);color:var(--ink);background:var(--paper);font-size:15.5px;line-height:1.55}
+  body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:15.5px;line-height:1.55}
+  ::selection{background:rgba(201,162,39,.35)}
 
   /* ---------- demo banner + header ---------- */
   .demobar{background:var(--gold);color:var(--navy);font-size:12px;font-weight:600;text-align:center;padding:5px 14px;letter-spacing:.02em}
   header{background:var(--navy);position:sticky;top:0;z-index:50;border-bottom:3px solid var(--gold)}
   .hwrap{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:26px;padding:14px 24px}
-  .logo{display:flex;align-items:center;gap:11px;cursor:pointer}
+  .logo{display:flex;align-items:center;gap:11px;cursor:pointer;text-decoration:none}
   .logo svg{display:block}
   .logo .wm{color:#fff;font-family:var(--serif);font-size:21px;letter-spacing:.14em;font-weight:700}
   .logo .wm span{color:var(--gold2)}
   .logo .tag{color:#9FB3C8;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
-  nav{display:flex;gap:4px;margin-left:auto}
-  nav button{background:none;border:none;color:#C9D6E2;font-size:14px;font-weight:600;padding:9px 15px;cursor:pointer;border-radius:4px;font-family:var(--sans)}
-  nav button:hover{color:#fff;background:rgba(255,255,255,.07)}
+  nav{display:flex;gap:4px;margin-left:auto;align-items:center;flex-wrap:wrap}
+  nav button,nav a{background:none;border:none;color:#C9D6E2;font-size:14px;font-weight:600;padding:9px 15px;cursor:pointer;border-radius:4px;font-family:var(--sans);text-decoration:none}
+  nav button:hover,nav a:hover{color:#fff;background:rgba(255,255,255,.07)}
   nav button.active{color:var(--navy);background:var(--gold)}
+  .navsep{width:1px;height:22px;background:rgba(255,255,255,.22);margin:0 6px}
+  @media(max-width:760px){.navsep{display:none}.hwrap{flex-wrap:wrap;gap:8px 26px;padding:12px 16px}}
   .cta-mini{background:transparent;border:1px solid var(--gold);color:var(--gold2)!important;margin-left:8px}
   .cta-mini:hover{background:var(--gold);color:var(--navy)!important}
 
@@ -46,9 +50,9 @@
 
   /* ---------- typography blocks ---------- */
   .eyebrow{color:var(--amber);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
-  h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,46px);line-height:1.12;color:var(--navy);font-weight:700}
-  h2{font-family:var(--serif);font-size:27px;color:var(--navy);margin-bottom:6px}
-  h3{font-size:16px;color:var(--navy);margin-bottom:6px}
+  h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,46px);line-height:1.12;color:#F2F7FB;font-weight:700}
+  h2{font-family:var(--serif);font-size:27px;color:#F2F7FB;margin-bottom:6px}
+  h3{font-size:16px;color:#E7EFF7;margin-bottom:6px}
   .lede{font-size:17.5px;color:var(--grey);margin-top:14px}
   section.block{padding:54px 0;border-bottom:1px solid var(--line)}
   .sub{color:var(--grey);margin-bottom:22px}
@@ -58,17 +62,17 @@
   .hero{padding:64px 0 46px;border-bottom:1px solid var(--line)}
   .herobtns{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
   .btn{display:inline-block;padding:12px 22px;border-radius:5px;font-weight:700;font-size:14.5px;cursor:pointer;border:none;font-family:var(--sans);text-decoration:none}
-  .btn.primary{background:var(--navy);color:#fff}
-  .btn.primary:hover{background:var(--navy2)}
-  .btn.gold{background:var(--gold);color:var(--navy)}
+  .btn.primary{background:var(--navy2);color:#fff}
+  .btn.primary:hover{background:#276099}
+  .btn.gold{background:var(--gold);color:#0A1B2E}
   .btn.gold:hover{background:var(--gold2)}
-  .btn.ghost{background:none;border:1.5px solid var(--navy);color:var(--navy)}
-  .btn.ghost:hover{background:var(--ivory)}
+  .btn.ghost{background:none;border:1.5px solid #46698E;color:#C9D6E2}
+  .btn.ghost:hover{background:rgba(255,255,255,.06)}
   .statrow{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:44px}
   @media(min-width:1000px){.statrow{grid-template-columns:repeat(4,1fr)}}
   @media(max-width:540px){.statrow{grid-template-columns:1fr}}
-  .stat{background:var(--ivory);border:1px solid var(--line);border-left:3px solid var(--gold);padding:14px 16px;border-radius:4px}
-  .stat b{display:block;font-family:var(--serif);font-size:23px;color:var(--navy)}
+  .stat{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);padding:14px 16px;border-radius:4px}
+  .stat b{display:block;font-family:var(--serif);font-size:23px;color:var(--gold2)}
   .stat span{font-size:12.5px;color:var(--grey)}
 
   /* ---------- cards & grids ---------- */
@@ -76,49 +80,50 @@
   @media(min-width:900px){.grid3{grid-template-columns:repeat(3,1fr)}}
   .grid2{display:grid;grid-template-columns:1fr;gap:18px}
   @media(min-width:760px){.grid2{grid-template-columns:repeat(2,1fr)}}
-  .card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:22px;box-shadow:0 1px 3px rgba(14,42,71,.05)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
   .card h3{font-family:var(--serif);font-size:18px}
   .card p{color:var(--grey);font-size:14px;margin-top:8px}
-  .card .kfact{font-family:var(--mono);font-size:12.5px;color:var(--navy2);background:var(--ivory);display:inline-block;padding:3px 8px;border-radius:3px;margin-top:12px}
-  .navycard{background:var(--navy);color:#DCE6F0;border:none}
+  .card .kfact{font-family:var(--mono);font-size:12.5px;color:#8FC1E9;background:var(--panel2);display:inline-block;padding:3px 8px;border-radius:3px;margin-top:12px}
+  .navycard{background:#10304F;color:#DCE6F0;border:none}
   .navycard h3{color:#fff}
   .navycard p{color:#B7C7D6}
 
   ul.ticks{list-style:none;margin-top:10px}
-  ul.ticks li{padding:7px 0 7px 26px;position:relative;font-size:14.5px;color:#33404D;border-bottom:1px dashed var(--line)}
+  ul.ticks li{padding:7px 0 7px 26px;position:relative;font-size:14.5px;color:#B9CBDC;border-bottom:1px dashed var(--line)}
   ul.ticks li:last-child{border-bottom:none}
   ul.ticks li::before{content:'';position:absolute;left:2px;top:13px;width:12px;height:12px;background:var(--gold);clip-path:polygon(14% 44%,0 62%,40% 100%,100% 16%,84% 2%,40% 70%)}
 
-  table.tb{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
-  table.tb th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-size:12px;letter-spacing:.04em;font-weight:600;white-space:nowrap}
+  table.tb{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel)}
+  table.tb th{background:var(--panel2);color:#B7C9DA;text-align:left;padding:9px 12px;font-size:12px;letter-spacing:.04em;font-weight:600;white-space:nowrap}
   table.tb td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-  table.tb tr:nth-child(even) td{background:var(--ivory)}
-  .num{font-family:var(--mono);font-size:12.8px;white-space:nowrap}
-  .tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+  table.tb tr:nth-child(even) td{background:rgba(255,255,255,.025)}
+  .num{font-family:var(--mono);font-size:12.8px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
 
   .pill{display:inline-block;font-size:11px;font-weight:700;padding:2.5px 9px;border-radius:20px;letter-spacing:.03em;white-space:nowrap}
-  .p-ok{background:#E3EFE8;color:var(--green)} .p-watch{background:#F6ECD8;color:var(--amber)}
-  .p-bad{background:#F4E0DE;color:var(--red)} .p-grey{background:#E8EAED;color:var(--grey)}
-  .p-navy{background:#E1E9F2;color:var(--navy2)} .p-gold{background:#F5EBC9;color:#8A6E14}
+  .p-ok{background:rgba(76,195,138,.16);color:#6FD8A6} .p-watch{background:rgba(224,184,76,.16);color:#E9C86A}
+  .p-bad{background:rgba(229,100,90,.18);color:#F09A92} .p-grey{background:rgba(160,180,200,.16);color:#A9BCCD}
+  .p-navy{background:rgba(111,167,214,.18);color:#8FC1E9} .p-gold{background:rgba(201,162,39,.2);color:#E7C55A}
 
   /* ---------- market ---------- */
   .mktstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:22px 0}
   .mktstats .stat b{font-size:20px}
   .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-  .filters input,.filters select{padding:8px 11px;border:1px solid var(--line);border-radius:5px;font-size:13.5px;background:#fff;color:var(--ink);font-family:var(--sans)}
+  .filters input,.filters select{padding:8px 11px;border:1px solid var(--line2);border-radius:5px;font-size:13.5px;background:var(--panel2);color:var(--ink);font-family:var(--sans)}
+  .filters input::placeholder{color:var(--mut)}
   .filters input{min-width:220px}
   #bondtable th{cursor:pointer;user-select:none}
   #bondtable th:hover{background:var(--navy2)}
   #bondtable tbody tr{cursor:pointer}
-  #bondtable tbody tr:hover td{background:#F0EBDC}
+  #bondtable tbody tr:hover td{background:rgba(201,162,39,.08)}
   .sortmark{opacity:.7;font-size:10px}
 
   /* drawer */
   .drawer-back{position:fixed;inset:0;background:rgba(14,33,56,.45);z-index:90;display:none}
   .drawer-back.open{display:block}
-  .drawer{position:fixed;top:0;right:-560px;width:min(540px,94vw);height:100vh;background:var(--paper);z-index:95;box-shadow:-8px 0 30px rgba(0,0,0,.25);transition:right .28s ease;overflow-y:auto}
+  .drawer{position:fixed;top:0;right:-560px;width:min(540px,94vw);height:100vh;background:var(--paper);z-index:95;box-shadow:-8px 0 30px rgba(0,0,0,.55);border-left:1px solid var(--line2);transition:right .28s ease;overflow-y:auto}
   .drawer.open{right:0}
-  .dhead{background:var(--navy);color:#fff;padding:22px 26px;position:relative}
+  .dhead{background:var(--navy);color:#fff;padding:22px 26px;position:relative;border-bottom:2px solid var(--gold)}
   .dhead h3{color:#fff;font-family:var(--serif);font-size:21px;margin:0 30px 4px 0}
   .dhead .sub2{color:#A9BCCD;font-size:13px}
   .dclose{position:absolute;top:16px;right:16px;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1}
@@ -127,18 +132,18 @@
   .kv div{padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
   .kv b{display:block;font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
   .chips{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 18px}
-  .chip{font-size:12px;background:var(--ivory);border:1px solid var(--line);color:#41505E;padding:4px 10px;border-radius:14px}
+  .chip{font-size:12px;background:var(--panel2);border:1px solid var(--line2);color:#A9BFD2;padding:4px 10px;border-radius:14px}
   .dsec{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin:18px 0 8px}
-  .doc{display:flex;gap:9px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:5px;margin-bottom:7px;font-size:13.5px;background:#fff;color:var(--navy2)}
-  .doc small{margin-left:auto;color:var(--grey)}
-  .feed{font-size:13px;color:#41505E}
+  .doc{display:flex;gap:9px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:5px;margin-bottom:7px;font-size:13.5px;background:var(--panel2);color:#9FC0DE}
+  .doc small{margin-left:auto;color:var(--mut)}
+  .feed{font-size:13px;color:#A9BFD2}
   .feed div{padding:6px 0;border-bottom:1px dashed var(--line)}
-  .feed span{color:var(--grey);font-family:var(--mono);font-size:11.5px;margin-right:9px}
+  .feed span{color:var(--mut);font-family:var(--mono);font-size:11.5px;margin-right:9px}
 
   /* ---------- issuance ---------- */
   .issuegrid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}
   @media(max-width:980px){.issuegrid{grid-template-columns:1fr}}
-  .dealcard{background:var(--navy-deep);color:#D7E2EC;border-radius:8px;overflow:hidden;border:1px solid #1E3A57}
+  .dealcard{background:#0B1F33;color:#D7E2EC;border-radius:8px;overflow:hidden;border:1px solid var(--line2);box-shadow:0 14px 40px rgba(0,0,0,.4)}
   .dealhead{padding:22px 24px;border-bottom:1px solid #1E3A57;display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
   .dealhead h3{color:#fff;font-family:var(--serif);font-size:21px}
   .dealhead .sub2{color:#8FA6BA;font-size:13px;margin-top:3px}
@@ -176,39 +181,39 @@
   .pricedstamp{border:2px solid var(--gold);color:var(--gold2);display:inline-block;padding:7px 16px;font-family:var(--serif);letter-spacing:.12em;font-size:15px;border-radius:4px;margin-top:12px;transform:rotate(-1.5deg)}
 
   /* wizard */
-  .wiz{background:#fff;border:1px solid var(--line);border-radius:8px;padding:24px}
-  .wiz label{display:block;font-size:12px;font-weight:700;color:var(--navy);letter-spacing:.04em;text-transform:uppercase;margin:15px 0 5px}
-  .wiz select,.wiz input[type=number],.wiz input[type=text]{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:5px;font-size:14px;background:var(--paper);font-family:var(--sans)}
-  .wiz input[type=range]{width:100%;accent-color:var(--navy)}
+  .wiz{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:24px}
+  .wiz label{display:block;font-size:12px;font-weight:700;color:#9DB2C6;letter-spacing:.04em;text-transform:uppercase;margin:15px 0 5px}
+  .wiz select,.wiz input[type=number],.wiz input[type=text]{width:100%;padding:10px 11px;border:1px solid var(--line2);border-radius:5px;font-size:14px;background:var(--panel2);color:var(--ink);font-family:var(--sans)}
+  .wiz input[type=range]{width:100%;accent-color:var(--gold)}
   .wizrow{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
-  .rangeval{font-family:var(--mono);color:var(--navy2);font-size:13px}
-  .checkline{display:flex;gap:9px;align-items:flex-start;margin-top:16px;font-size:13.5px;color:#33404D}
-  .checkline input{margin-top:3px;accent-color:var(--navy)}
+  .rangeval{font-family:var(--mono);color:#8FC1E9;font-size:13px}
+  .checkline{display:flex;gap:9px;align-items:flex-start;margin-top:16px;font-size:13.5px;color:#B9CBDC}
+  .checkline input{margin-top:3px;accent-color:var(--gold)}
   .verdict{border-radius:7px;padding:18px 20px;margin-top:20px;display:none}
   .verdict.show{display:block}
-  .verdict.fit{background:#E9F3EE;border:1px solid #BFDCCB}
-  .verdict.partial{background:#FBF3DF;border:1px solid #E8D6A8}
-  .verdict.decline{background:#F8E9E7;border:1px solid #E4C2BE}
+  .verdict.fit{background:rgba(76,195,138,.09);border:1px solid rgba(76,195,138,.35)}
+  .verdict.partial{background:rgba(224,184,76,.09);border:1px solid rgba(224,184,76,.35)}
+  .verdict.decline{background:rgba(229,100,90,.09);border:1px solid rgba(229,100,90,.35)}
   .verdict h3{font-family:var(--serif);font-size:19px}
-  .critlist{list-style:none;margin-top:10px;font-size:13.5px}
+  .critlist{list-style:none;margin-top:10px;font-size:13.5px;color:#C6D5E2}
   .critlist li{padding:4px 0;display:flex;gap:9px}
   .critlist .cchip{flex:none;width:18px;height:18px;border-radius:50%;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:800;position:relative;top:2px}
   .c-pass{background:var(--green)} .c-part{background:var(--amber)} .c-fail{background:var(--red)}
-  .indprice{margin-top:14px;background:var(--navy);color:#fff;border-radius:6px;padding:14px 18px}
+  .indprice{margin-top:14px;background:var(--navy);color:#fff;border-radius:6px;padding:14px 18px;border:1px solid var(--line2);border-left:3px solid var(--gold)}
   .indprice b{font-family:var(--mono);font-size:22px;color:var(--gold2)}
   .indprice small{color:#A9BCCD;display:block;margin-top:4px}
 
   /* svg holders */
-  .svgwrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:6px;padding:18px 12px 8px;margin-top:16px}
+  .svgwrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px 12px 8px;margin-top:16px}
   .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--grey);padding:8px 10px 6px}
   .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
-  .caption{font-size:12.5px;color:var(--grey);padding:8px 10px 4px;max-width:90ch}
+  .caption{font-size:12.5px;color:var(--mut);padding:8px 10px 4px;max-width:90ch}
 
   /* refi */
-  .refiyear{font-family:var(--serif);font-size:18px;color:var(--navy);margin:16px 0 6px}
+  .refiyear{font-family:var(--serif);font-size:18px;color:#F2F7FB;margin:16px 0 6px}
   .refirow{display:flex;gap:10px;flex-wrap:wrap}
-  .refichip{background:#fff;border:1px solid var(--line);border-left:3px solid var(--navy2);border-radius:5px;padding:8px 13px;font-size:13px}
-  .refichip b{color:var(--navy)} .refichip span{font-family:var(--mono);color:var(--grey);font-size:12px;display:block}
+  .refichip{background:var(--panel);border:1px solid var(--line);border-left:3px solid #3E7CB1;border-radius:5px;padding:8px 13px;font-size:13px}
+  .refichip b{color:#DCE7F1} .refichip span{font-family:var(--mono);color:var(--mut);font-size:12px;display:block}
 
   /* monitor + footer */
   .monitor{background:var(--navy);border-radius:8px;color:#C9D6E2;padding:34px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
@@ -227,15 +232,158 @@
   footer h4{color:#fff;font-family:var(--serif);font-size:15px;margin-bottom:10px;letter-spacing:.04em}
   footer .legal{font-size:11.5px;line-height:1.6;color:#6E869C}
   .fbottom{border-top:1px solid #1E3A57;text-align:center;font-size:11.5px;color:#5E7690;padding:14px}
+  .fbottom a{color:#A9BCCD}
+
+  /* ---------- pricing view (ported indicative-pricing tool) ---------- */
+  #view-pricing .hero{padding:52px 0 34px;border-bottom:none}
+  #view-pricing h1{font-size:clamp(28px,4vw,40px)}
+  #view-pricing .lede{font-size:17px;max-width:78ch}
+  #view-pricing .goldrule{margin:14px 0 0}
+  #view-pricing .modes{display:inline-flex;margin-top:24px;border:1px solid var(--line2);border-radius:6px;overflow:hidden;background:var(--panel)}
+  #view-pricing .mode{padding:11px 20px;border:none;background:transparent;font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--grey);cursor:pointer;letter-spacing:.02em}
+  #view-pricing .mode.active{background:var(--gold);color:#0A1B2E;box-shadow:none}
+  #view-pricing .mode:not(.active):hover{color:#fff}
+  #view-pricing .colL{display:grid;gap:22px;align-content:start}
+  #view-pricing .tool{display:grid;grid-template-columns:1fr;gap:22px;margin:26px 0 14px}
+  @media(min-width:980px){#view-pricing .tool{grid-template-columns:380px 1fr;align-items:start}}
+  #view-pricing .panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  #view-pricing .panel .phead{background:var(--navy);color:#fff;font-family:var(--serif);font-size:16px;padding:12px 18px;border-radius:6px 6px 0 0}
+  #view-pricing .panel .phead small{display:block;font-family:var(--sans);font-size:11.5px;color:#9FB3C8;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+  #view-pricing .pbody{padding:18px}
+  #view-pricing label{display:block;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--grey);margin:13px 0 5px}
+  #view-pricing label:first-child{margin-top:0}
+  #view-pricing .pbody input,#view-pricing .pbody select{width:100%;padding:9px 11px;border:1px solid var(--line2);border-radius:4px;font-size:14.5px;font-family:var(--sans);background:var(--panel2);color:var(--ink)}
+  #view-pricing .pbody input:focus,#view-pricing .pbody select:focus{outline:2px solid var(--gold2);border-color:var(--gold)}
+  #view-pricing .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  #view-pricing .hint{font-size:12px;color:var(--grey);margin-top:6px}
+  #view-pricing .samplenote{background:rgba(201,162,39,.07);border:1px dashed var(--gold);border-radius:4px;padding:9px 12px;font-size:12.5px;color:#B9CBDC;margin-bottom:14px}
+  #view-pricing .profile{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 18px;background:var(--panel2);border-bottom:1px solid var(--line)}
+  #view-pricing .chip{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:6px 11px;font-size:12.5px;color:var(--grey)}
+  #view-pricing .chip b{color:#DCE7F1;font-family:var(--mono);font-size:13px}
+  #view-pricing .chip.bucket{border-left:3px solid var(--gold);background:var(--navy);color:#C9D6E2}
+  #view-pricing .chip.bucket b{color:var(--gold2)}
+  #view-pricing .headline{padding:18px;border-bottom:1px solid var(--line)}
+  #view-pricing .headline .big{font-family:var(--serif);font-size:30px;color:#F2F7FB}
+  #view-pricing .headline .big span{color:var(--amber)}
+  #view-pricing .headline .sub{font-size:13.5px;color:var(--grey);margin-top:3px;margin-bottom:0}
+  #view-pricing .twrap{overflow-x:auto;padding:6px 18px 2px}
+  #view-pricing .twrap table{width:100%;border-collapse:collapse;font-size:13.5px}
+  #view-pricing .twrap th,#view-pricing .twrap td{padding:8px 10px;text-align:right;white-space:nowrap}
+  #view-pricing .twrap th:first-child,#view-pricing .twrap td:first-child{text-align:left;color:var(--grey);font-weight:600;font-size:12.5px}
+  #view-pricing .twrap thead th{background:var(--navy);color:#fff;font-family:var(--mono);font-size:12.5px;letter-spacing:.04em}
+  #view-pricing .twrap thead th:first-child{background:var(--navy);color:var(--gold2);font-family:var(--sans);text-transform:uppercase;font-size:11px}
+  #view-pricing .twrap tbody tr:nth-child(even){background:rgba(255,255,255,.025)}
+  #view-pricing .twrap tbody td{font-family:var(--mono);color:var(--ink)}
+  #view-pricing td.hl,#view-pricing th.hl{background:rgba(201,162,39,.13) !important;border-left:1px solid var(--gold);border-right:1px solid var(--gold)}
+  #view-pricing thead th.hl{background:var(--gold) !important;color:#0A1B2E}
+  #view-pricing tr.key td{font-weight:700;color:#fff}
+  #view-pricing .tfoot{font-size:11.5px;color:var(--mut);padding:8px 18px 14px}
+  #view-pricing .chartwrap{padding:6px 18px 16px}
+  #view-pricing .chartwrap h3{font-family:var(--serif);font-size:15px;color:#F2F7FB;margin:8px 0 4px}
+  #view-pricing .chartwrap svg{width:100%;height:auto;display:block}
+  #view-pricing .noquote{padding:26px 22px;font-size:14.5px;color:#B9CBDC}
+  #view-pricing .noquote b{display:block;font-family:var(--serif);font-size:18px;color:#F2F7FB;margin-bottom:6px}
+  #view-pricing .ctarow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:16px 18px;border-top:1px solid var(--line);background:var(--panel2);border-radius:0 0 6px 6px}
+  #view-pricing .ctarow span{font-size:12.5px;color:var(--mut)}
+  #view-pricing .method{margin:34px 0 0;display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:900px){#view-pricing .method{grid-template-columns:repeat(3,1fr)}}
+  #view-pricing .mstep{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:20px}
+  #view-pricing .mstep .n{font-family:var(--serif);font-size:15px;color:var(--gold2);font-weight:700;letter-spacing:.06em;display:block;margin-bottom:8px}
+  #view-pricing .mstep h3{font-family:var(--serif);font-size:16px;color:#F2F7FB;margin-bottom:6px}
+  #view-pricing .mstep p{font-size:13.5px;color:var(--grey)}
+  #view-pricing .honest{margin:26px 0 54px;border:1px dashed var(--gold);border-radius:6px;padding:18px 22px;background:rgba(201,162,39,.05);font-size:13px;color:var(--grey);line-height:1.6}
+  #view-pricing .honest b{color:#F2F7FB}
   .ecos{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   .ecos span{border:1px solid #2A4A69;border-radius:4px;padding:5px 10px;font-size:12px;color:#A9BCCD}
 
   .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;counter-reset:step}
-  .step{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px;position:relative;counter-increment:step}
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;position:relative;counter-increment:step}
   .step::before{content:counter(step,decimal-leading-zero);font-family:var(--serif);color:var(--gold);font-size:21px;font-weight:700;display:block;margin-bottom:6px}
-  .step b{font-size:13.5px;color:var(--navy);display:block}
+  .step b{font-size:13.5px;color:#E7EFF7;display:block}
   .step span{font-size:12px;color:var(--grey)}
-  .notice{font-size:12.5px;color:var(--grey);background:var(--ivory);border:1px solid var(--line);border-radius:5px;padding:10px 14px;margin-top:16px}
+  .notice{font-size:12.5px;color:var(--grey);background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:10px 14px;margin-top:16px}
+
+  /* ---------- deal journey (scroll story) ---------- */
+  .jhero{padding:64px 0 8px;max-width:900px}
+  .jhero .lede{max-width:66ch}
+  .jhero a{color:var(--gold2)}
+  .scrollcue{margin-top:30px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);display:flex;align-items:center;gap:10px}
+  .scrollcue::after{content:'↓';color:var(--gold2);font-size:15px;animation:cue 1.6s ease-in-out infinite}
+  @keyframes cue{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+  .jwrap{display:grid;grid-template-columns:minmax(300px,5fr) 7fr;gap:clamp(24px,4vw,60px);align-items:start;margin-top:20px}
+  .jstep{min-height:86vh;display:flex;flex-direction:column;justify-content:center;padding:10vh 0;opacity:.3;transition:opacity .35s}
+  .jstep.on{opacity:1}
+  .jstep .wk{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--gold2);border:1px solid rgba(201,162,39,.45);background:rgba(201,162,39,.07);display:inline-block;align-self:flex-start;padding:4px 10px;border-radius:3px;margin-bottom:14px}
+  .jstep h2{font-size:clamp(23px,2.5vw,31px);line-height:1.16}
+  .jstep p{color:var(--grey);margin-top:12px;font-size:15px;max-width:52ch}
+  ul.jfacts{list-style:none;margin-top:14px}
+  ul.jfacts li{padding:7px 0 7px 24px;position:relative;color:#B9CBDC;font-size:13.5px;border-bottom:1px dashed var(--line)}
+  ul.jfacts li:last-child{border-bottom:none}
+  ul.jfacts li::before{content:'';position:absolute;left:2px;top:13px;width:11px;height:11px;background:var(--gold);clip-path:polygon(14% 44%,0 62%,40% 100%,100% 16%,84% 2%,40% 70%)}
+  .jstep.long{min-height:280vh;justify-content:flex-start;padding-top:22vh}
+  .jbeat{margin-top:52vh;border-left:3px solid var(--gold);background:var(--panel);border-radius:0 6px 6px 0;padding:13px 16px;font-size:13.5px;color:#B9CBDC;opacity:.25;transform:translateY(6px);transition:opacity .4s,transform .4s;max-width:46ch}
+  .jbeat b{color:#F2F7FB}.jbeat .num{color:var(--gold2)}
+  .jbeat.on{opacity:1;transform:none}
+  .jstage{position:sticky;top:calc(var(--hdr,70px) + 16px);height:calc(100vh - var(--hdr,70px) - 40px);min-height:520px}
+  .jscene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateY(16px);transition:opacity .45s,transform .45s,visibility 0s .45s;pointer-events:none}
+  .jscene.on{opacity:1;visibility:visible;transform:none;transition:opacity .45s,transform .45s,visibility 0s;pointer-events:auto}
+  .jcard{width:min(600px,100%);max-height:100%;overflow:hidden;background:linear-gradient(180deg,#0D2136,#0A1B2E);border:1px solid var(--line2);border-radius:10px;padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .jchead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--mut);text-transform:uppercase;margin-bottom:14px}
+  .jchead .jclock{color:var(--gold2);font-size:13px}
+  .jchk{display:flex;gap:10px;align-items:baseline;padding:8px 2px;border-bottom:1px dashed var(--line);font-size:13.5px;color:#C6D5E2;opacity:0;transform:translateX(-8px);transition:opacity .4s,transform .4s}
+  .jchk i{font-style:normal;flex:none;width:18px;height:18px;border-radius:50%;background:var(--green);color:#04121A;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;position:relative;top:2px}
+  .jscene.on .jchk{opacity:1;transform:none}
+  .jscene.on .jchk:nth-child(2){transition-delay:.1s}.jscene.on .jchk:nth-child(3){transition-delay:.25s}.jscene.on .jchk:nth-child(4){transition-delay:.4s}.jscene.on .jchk:nth-child(5){transition-delay:.55s}.jscene.on .jchk:nth-child(6){transition-delay:.7s}
+  .jpricechip{margin-top:16px;background:var(--navy);border:1px solid var(--line2);border-left:3px solid var(--gold);border-radius:6px;padding:12px 16px;font-size:13.5px;color:#C9D6E2;opacity:0;transform:translateY(8px);transition:opacity .5s .85s,transform .5s .85s}
+  .jpricechip b{font-family:var(--mono);font-size:19px;color:var(--gold2);display:block;margin-bottom:2px}
+  .jpricechip small{color:#8FA6BA;display:block;margin-top:4px}
+  .jscene.on .jpricechip{opacity:1;transform:none}
+  .jdoc{display:flex;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:5px;margin-bottom:7px;font-size:13px;background:var(--panel2);color:#C6D5E2;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+  .jdoc .tag{margin-left:auto;flex:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;padding:2px 8px;border-radius:10px;background:rgba(201,162,39,.15);color:var(--gold2)}
+  .jdoc .tag.ind{background:rgba(111,167,214,.16);color:#8FC1E9}
+  .jscene.on .jdoc{opacity:1;transform:none}
+  .jscene.on .jdoc:nth-of-type(2){transition-delay:.12s}.jscene.on .jdoc:nth-of-type(3){transition-delay:.24s}.jscene.on .jdoc:nth-of-type(4){transition-delay:.36s}.jscene.on .jdoc:nth-of-type(5){transition-delay:.48s}.jscene.on .jdoc:nth-of-type(6){transition-delay:.6s}.jscene.on .jdoc:nth-of-type(7){transition-delay:.72s}
+  .janchor{display:flex;justify-content:space-between;gap:10px;padding:7.5px 2px;border-bottom:1px dashed var(--line);font-size:13px;color:#C9D6E2;opacity:0;transition:opacity .4s}
+  .janchor .num{color:#F2D77E}
+  .jscene.on .janchor{opacity:1}
+  .jscene.on .covseg-a{transition:width 1s .3s}
+  .jfoot{font-size:11.5px;color:var(--mut);margin-top:14px}
+  .jbookwrap{max-height:min(300px,34vh);overflow-y:auto;margin-top:10px;scrollbar-width:thin}
+  .jbookwrap tr{display:none}
+  .jbookwrap tr.vis{display:table-row}
+  .jguide{display:inline-block;font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:4px;background:var(--panel2);border:1px solid var(--line2);color:#C9D6E2}
+  .jguide.rev{background:rgba(201,162,39,.15);border-color:var(--gold);color:var(--gold2)}
+  .joversub{display:none;font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:4px 10px;border-radius:4px;background:rgba(76,195,138,.15);border:1px solid rgba(76,195,138,.4);color:#6FD8A6}
+  .joversub.on{display:inline-block}
+  .jstamp{border:2px solid var(--gold);color:var(--gold2);display:inline-block;padding:7px 16px;font-family:var(--serif);letter-spacing:.12em;font-size:14px;border-radius:4px;margin-bottom:14px;transform:rotate(-1.5deg)}
+  .jdvp{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center;margin:14px 0}
+  .jdvp .box{background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:12px 10px;text-align:center;font-size:12px;color:#C9D6E2}
+  .jdvp .box b{display:block;font-size:12.5px;color:#F2F7FB;margin-bottom:2px}
+  .jdvp .arr{font-family:var(--mono);font-size:11px;color:var(--gold2);text-align:center;line-height:1.3}
+  .jdvp .arr span{display:block;color:#8FC1E9}
+  .jtomb{margin-top:16px;border:1.5px solid var(--gold);border-radius:6px;padding:16px 18px;text-align:center;background:var(--navy)}
+  .jtomb .t1{font-family:var(--serif);letter-spacing:.14em;color:#F2F7FB;font-size:15px}
+  .jtomb .t2{font-family:var(--mono);font-size:12px;color:var(--gold2);margin-top:6px}
+  .jtomb .t3{font-size:10.5px;color:#8FA6BA;letter-spacing:.14em;margin-top:8px;text-transform:uppercase}
+  .jgauge{margin:10px 0 4px}
+  .jgauge .glabel{display:flex;justify-content:space-between;font-size:12px;color:var(--grey);margin-bottom:5px}
+  .jgauge .gbar{height:10px;border-radius:5px;background:var(--panel2);overflow:hidden;position:relative}
+  .jgauge .gbar i{position:absolute;inset:0 auto 0 0;width:71%;background:linear-gradient(90deg,#2E7D5B,var(--green));border-radius:5px}
+  .jkick{margin-top:14px;border-left:3px solid var(--gold);padding:10px 14px;background:var(--panel2);font-size:13px;color:#C9D6E2;font-style:italic}
+  .jout{padding:40px 0 30px;border-top:1px solid var(--line);margin-top:10px}
+  .jout .statrow{margin-top:24px}
+  @media(max-width:900px){
+    header{position:static}
+    .jwrap{display:flex;flex-direction:column}
+    .jstage{order:-1;position:sticky;top:8px;z-index:30;height:auto;min-height:0;background:linear-gradient(180deg,var(--bg) 90%,rgba(7,19,31,0));padding:8px 0 16px}
+    .jscene{position:relative;inset:auto;display:none}
+    .jscene.on{display:flex}
+    .jcard{padding:16px 16px}
+    .jstep{min-height:66vh;padding:6vh 0}
+    .jstep.long{min-height:240vh}
+    .jbeat{margin-top:42vh}
+    .jbookwrap{max-height:24vh}
+  }
 </style>
 </head>
 <body>
@@ -244,18 +392,21 @@
 
 <header>
   <div class="hwrap">
-    <div class="logo" onclick="showView('platform')">
+    <a class="logo" href="index.html" title="Back to vanillabonds.com">
       <svg width="34" height="34" viewBox="0 0 64 64"><rect x="1.25" y="1.25" width="61.5" height="61.5" rx="10.75" fill="#0E2A47" stroke="#C9A227" stroke-width="2.5"/><path fill="#C9A227" d="M17 15h7l8 28.5h-7zM40 15h7l-8 28.5h-7zM14 43.5h36V49H14z"/></svg>
       <div>
         <div class="wm">VANILLA<span>BONDS</span></div>
         <div class="tag">European Mid-Cap Bond Platform</div>
       </div>
-    </div>
+    </a>
     <nav>
-      <button id="nav-platform" class="active" onclick="showView('platform')">Platform</button>
+      <button id="nav-journey" class="active" onclick="showView('journey')">Deal Journey</button>
       <button id="nav-market" onclick="showView('market')">Market</button>
       <button id="nav-issue" onclick="showView('issue')">New Issues</button>
-      <button class="cta-mini" onclick="showView('platform');setTimeout(()=>document.getElementById('investors').scrollIntoView(),60)">Founding Circle</button>
+      <button id="nav-pricing" onclick="showView('pricing')">Pricing</button>
+      <a class="cta-mini" href="index.html#investors">Founding Circle</a>
+      <span class="navsep"></span>
+      <a href="index.html">← Back to site</a>
     </nav>
   </div>
 </header>
@@ -263,204 +414,239 @@
 <main>
 
 <!-- ============================================================= -->
-<!-- VIEW 1 — PLATFORM (informational)                              -->
+<!-- VIEW 1 — DEAL JOURNEY (scroll story)                           -->
 <!-- ============================================================= -->
-<section class="view active" id="view-platform">
+<section class="view active" id="view-journey">
 
-  <div class="hero">
-    <div class="eyebrow">Senior secured bonds · €20–100 million · DACH first</div>
-    <h1>Debt capital markets,<br>sized for the Mittelstand.</h1>
-    <p class="lede">VanillaBonds brings the proven Nordic bond format to continental Europe’s mid-caps: standardised senior secured bonds — priced, governed and tradeable — arranged in weeks, not quarters, and placed into a standing professional investor circle.</p>
-    <div class="herobtns">
-      <button class="btn gold" onclick="showView('market')">Explore the market</button>
-      <button class="btn primary" onclick="showView('issue')">Issue a bond</button>
-      <button class="btn ghost" onclick="showView('issue');setTimeout(()=>document.getElementById('bookbuild').scrollIntoView({behavior:'smooth'}),80)">Watch a live bookbuild</button>
+  <div class="jhero">
+    <div class="eyebrow">The deal journey · demonstration</div>
+    <h1>From first call to settled bond.<br>Six weeks, one standard.</h1>
+    <p class="lede">Scroll through a complete issuance exactly as the platform runs it — the fictional €30m Voltaria transaction from first contact to life after settlement. Every screen in this story is live elsewhere in the demo: place your own order in <a href="#issue" onclick="showView('issue');return false">New Issues</a>, price your own bond in <a href="#pricing" onclick="showView('pricing');return false">Pricing</a>.</p>
+    <div class="scrollcue">Scroll — the deal runs as you go</div>
+  </div>
+
+  <div class="jwrap">
+    <div class="jsteps">
+
+      <div class="jstep on" data-scene="0">
+        <span class="wk">WEEK 1</span>
+        <h2>First contact — and a number on the table.</h2>
+        <p>A CFO sends six figures from the last annual report. The platform answers with the two things banks make mid-caps wait for: a pass or fail against the published credit profile, and an indicative pricing range from the same engine that runs the Pricing tab.</p>
+        <ul class="jfacts">
+          <li>Profile #1: sector · €20–100m · EBITDA ≥ €8m · ≤ 3.5× net leverage · security · disclosure</li>
+          <li>Indicative range in sixty seconds — orientation, never advice</li>
+          <li>48 hours to a go / no-go; declines are visible and, with consent, referred</li>
+        </ul>
+      </div>
+
+      <div class="jstep" data-scene="1">
+        <span class="wk">WEEKS 2–3</span>
+        <h2>Mandate signed. The standard does the drafting.</h2>
+        <p>No bespoke documentation. Nordic Bond Terms as the template, a fixed covenant menu, the trustee structure the market already trades. Counsel reviews the delta, not the document — that is where six weeks instead of six months comes from.</p>
+        <ul class="jfacts">
+          <li>One senior-secured template, four schedules — assembled, not drafted</li>
+          <li>Independent by design: trustee, legal opinion, audit stay external</li>
+          <li>ISIN and paying agent contracted — client money never touches the platform</li>
+        </ul>
+      </div>
+
+      <div class="jstep" data-scene="2">
+        <span class="wk">WEEKS 4–5</span>
+        <h2>The anchor early look.</h2>
+        <p>Forty-eight hours before anyone else, the founding circle — investors who co-wrote the covenant standard — sees the deal. They commit at no scale-back. Voltaria launches with 65% of the book already hard.</p>
+        <ul class="jfacts">
+          <li>€19.5m of €30m pre-committed before books open</li>
+          <li>Anchors underwrite the company, not the platform</li>
+          <li>Launch into certainty of placement, not into hope</li>
+        </ul>
+      </div>
+
+      <div class="jstep long" data-scene="3" id="jstep-book">
+        <div>
+          <span class="wk">WEEK 6 · DEAL DAY</span>
+          <h2>Books open, 09:00.</h2>
+          <p>Now watch the right-hand side. Every order timestamped, every limit visible — to the platform and to the issuer. Keep scrolling: the book builds as the day runs.</p>
+        </div>
+        <div class="jbeat" data-at="0.30"><b>09:34</b> — through <span class="num">€30m</span>. Sixty-five percent walked in the door at nine; the open book covered the rest before ten.</div>
+        <div class="jbeat" data-at="0.58"><b>12:38</b> — <span class="num">1.6×</span> covered and climbing. Guidance revises to 3mE + 505–515; hot-money limits below the range start falling away.</div>
+        <div class="jbeat" data-at="0.86"><b>15:04</b> — books subject at <span class="num">2.0×</span>. Nothing left to negotiate: depth set the price.</div>
+      </div>
+
+      <div class="jstep" data-scene="4">
+        <span class="wk">DEAL DAY · 15:30</span>
+        <h2>Priced — and allocated at the issuer's table.</h2>
+        <p>Final terms 3mE + 505: twenty basis points inside guidance, because sixty million of demand chased thirty. Allocation follows the published policy, and the issuer signs off the register it will live with for four years.</p>
+        <ul class="jfacts">
+          <li>Anchors: full allocation, never scaled — the founding-circle guarantee</li>
+          <li>Real-money accounts: pro-rata on the remainder</li>
+          <li>Event-driven money: book-fill only, never the face of the market</li>
+        </ul>
+      </div>
+
+      <div class="jstep" data-scene="5">
+        <span class="wk">WEEK 7 · T+5</span>
+        <h2>Settlement. Delivery versus payment.</h2>
+        <p>Cash and bonds swap simultaneously in the settlement system: investors' money reaches Voltaria through the independent paying agent — a settlement bank, not the platform, which has no client-money permission by design. Our fee is a separate invoice, like any adviser's.</p>
+        <ul class="jfacts">
+          <li>Proceeds go straight to the issuer — the platform is never in the payment chain</li>
+          <li>Arranging fee 1.25%, invoiced separately — the platform's only economics</li>
+          <li>Security perfected before funds flow; the trustee holds it for bondholders</li>
+          <li>A transferable, trustee-administered line from day one</li>
+        </ul>
+      </div>
+
+      <div class="jstep" data-scene="6">
+        <span class="wk">EVERY QUARTER AFTER</span>
+        <h2>Governance stays visible.</h2>
+        <p>This is where mid-cap debt historically goes wrong — so it is designed as the platform's strongest screen. Reports and covenant certificates land on the platform, every holder reads the same numbers, and if credit sours, bondholders act through one trustee with collective decisions.</p>
+        <ul class="jfacts">
+          <li>Quarterly disclosure and covenant certificates, platform-published</li>
+          <li>One trustee, majority voting, security — tested Nordic machinery</li>
+          <li>Secondary indications stay on screen — paper you can leave</li>
+        </ul>
+      </div>
+
     </div>
-    <div class="statrow">
-      <div class="stat"><b id="hs-issuers">60</b><span>non-Nordic issuers tracked in our dataset</span></div>
-      <div class="stat"><b>E+450–975</b><span>coupon range in today’s mid-cap format</span></div>
-      <div class="stat"><b>1.0–1.5%</b><span>target all-in arranging fee (vs 2.5–5% historic)</span></div>
-      <div class="stat"><b>€20–100m</b><span>the issue size nobody serves — the missing middle</span></div>
+
+    <div class="jstage" id="jstage">
+
+      <div class="jscene on" data-scene="0">
+        <div class="jcard">
+          <div class="jchead"><span>Profile #1 · eligibility check</span><span class="jclock">Hour 31 of 48</span></div>
+          <div class="jchk"><i>✓</i><span>Energy-transition supply chain — the start niche</span></div>
+          <div class="jchk"><i>✓</i><span>€30m target — inside the €20–100m band</span></div>
+          <div class="jchk"><i>✓</i><span>EBITDA €12m — clears the €8m floor</span></div>
+          <div class="jchk"><i>✓</i><span>Net leverage 2.7× — within the 3.5× standard</span></div>
+          <div class="jchk"><i>✓</i><span>Senior secured · quarterly disclosure committed</span></div>
+          <div class="jpricechip"><b>3mE + 525 area</b>€30m · 3.75y senior secured green FRN<small>Same engine as the Pricing tab. Indicative orientation — not advice, not a rating, not a commitment to arrange.</small></div>
+        </div>
+      </div>
+
+      <div class="jscene" data-scene="1">
+        <div class="jcard">
+          <div class="jchead"><span>Documentation · assembled from the standard</span><span class="jclock">Day 9</span></div>
+          <div class="jdoc">📄 Nordic Bond Terms — senior secured template<span class="tag">STANDARD</span></div>
+          <div class="jdoc">📄 Covenant schedule — ≤3.5× incurrence · FCCR ≥2.0× · CoC put @101<span class="tag">MENU</span></div>
+          <div class="jdoc">📄 Security package — share &amp; asset pledges, held by trustee<span class="tag">SCHEDULE</span></div>
+          <div class="jdoc">🏛 Bond trustee engaged — Nordic Trustee model<span class="tag ind">INDEPENDENT</span></div>
+          <div class="jdoc">🔢 ISIN &amp; paying agent — Nordic-format, Euroclear-reachable<span class="tag ind">CONTRACTED</span></div>
+          <div class="jdoc">⚖️ Counsel — delta review on fixed fee<span class="tag ind">INDEPENDENT</span></div>
+          <div class="jfoot">Assembled in days, not drafted in weeks — the standard is the product. Target ecosystem shown; indicative, not contracted.</div>
+        </div>
+      </div>
+
+      <div class="jscene" data-scene="2">
+        <div class="jcard">
+          <div class="jchead"><span>Anchor early look · 48h window</span><span class="jclock">65% committed</span></div>
+          <div class="covwrap">
+            <div class="covbar"><div class="covseg-a" id="janchseg" style="width:0%"></div></div>
+            <div class="covlabels"><span><span style="color:#F2D77E">■</span> Pre-committed — €19.5m of €30m</span><span>no scale-back</span></div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="janchor"><span>⚓ Single-family office (Stuttgart)</span><span class="num">€4.0m</span></div>
+            <div class="janchor" style="transition-delay:.15s"><span>⚓ Entrepreneur family office (Bavaria)</span><span class="num">€2.5m</span></div>
+            <div class="janchor" style="transition-delay:.3s"><span>⚓ Entrepreneur family office (Hamburg)</span><span class="num">€2.0m</span></div>
+            <div class="janchor" style="transition-delay:.45s"><span>⚓ Multi-family office KVG (Hamburg) — 11 families</span><span class="num">€5.0m</span></div>
+            <div class="janchor" style="transition-delay:.6s"><span>⚓ Article 9 clean-energy debt fund (Kassel)</span><span class="num">€4.0m</span></div>
+            <div class="janchor" style="transition-delay:.75s"><span>⚓ Specialist HY bondpicker (Münster)</span><span class="num">€2.0m</span></div>
+          </div>
+          <div class="jfoot">Fictitious accounts, illustrative of the founding-circle model.</div>
+        </div>
+      </div>
+
+      <div class="jscene" data-scene="3">
+        <div class="jcard">
+          <div class="jchead"><span class="live" id="jbookstatus"><i></i> BOOKS OPEN</span><span class="jclock" id="jclock">09:00</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+            <span class="jguide" id="jguide">Guidance 3mE + 525 area</span>
+            <span class="joversub" id="joversub">OVERSUBSCRIBED</span>
+          </div>
+          <div class="covwrap">
+            <div class="covbar"><div class="covseg-a" id="jseg-a" style="width:0%"></div><div class="covseg-o" id="jseg-o" style="width:0%"></div></div>
+            <div class="covlabels"><span><span style="color:#F2D77E">■</span> Anchors</span><span id="jcovnum">€19.5m of €30m — 0.65×</span><span><span style="color:#6FA7D6">■</span> Open book</span></div>
+          </div>
+          <div class="jbookwrap">
+            <table class="booktable">
+              <thead><tr><th>Time</th><th>Account</th><th>Ticket</th><th>Limit</th></tr></thead>
+              <tbody id="jbookrows"></tbody>
+            </table>
+          </div>
+          <div class="jfoot">Anchors sit in the book from 09:00. Fictitious accounts; illustrative bookbuild.</div>
+        </div>
+      </div>
+
+      <div class="jscene" data-scene="4">
+        <div class="jcard">
+          <div class="jstamp">PRICED · 3mE + 505 · 2.0× COVERED</div>
+          <table class="booktable jalloc">
+            <thead><tr><th>Account group</th><th>Orders</th><th>Allocated</th><th>Fill</th></tr></thead>
+            <tbody>
+              <tr class="anchor"><td>Founding-circle anchors ⚓ (6 accounts)</td><td class="num">€19.5m</td><td class="num">€19.5m</td><td class="num">100%</td></tr>
+              <tr><td>Real-money open book (16 accounts)</td><td class="num">€32.5m</td><td class="num">€9.7m</td><td class="num">≈30%</td></tr>
+              <tr class="hot"><td>Event-driven / fast money ⚠ (2 accounts)</td><td class="num">€8.0m</td><td class="num">€0.8m</td><td class="num">10%</td></tr>
+              <tr><td style="color:#F2F7FB;font-weight:700">Total</td><td class="num">€60.0m</td><td class="num">€30.0m</td><td class="num">—</td></tr>
+            </tbody>
+          </table>
+          <div class="jfoot">Published allocation policy: anchors never scaled; limits inside the final spread drop out; event-driven accounts are book-fill only. The issuer sees the full book and signs off its register.</div>
+        </div>
+      </div>
+
+      <div class="jscene" data-scene="5">
+        <div class="jcard">
+          <div class="jchead"><span>Settlement · delivery versus payment</span><span class="jclock">T+5</span></div>
+          <div class="jdvp">
+            <div class="box"><b>Investors</b>24 allocated accounts</div>
+            <div class="arr">€30.0m →<span>← bonds (CSD)</span></div>
+            <div class="box"><b>Independent paying agent</b>settlement bank · DvP</div>
+            <div class="arr">€30.0m →<span>proceeds, same day</span></div>
+            <div class="box"><b>Voltaria</b>issuer</div>
+          </div>
+          <div class="chips">
+            <span class="chip">Platform outside the payment chain</span><span class="chip">Euroclear / Nordic CSD</span><span class="chip">Security held by trustee</span><span class="chip">Green capex — SPO framework</span>
+          </div>
+          <div class="jtomb">
+            <div class="t1">VOLTARIA GRID COMPONENTS</div>
+            <div class="t2">€30,000,000 · Senior Secured Green FRN · 3mE + 505 · due 2030</div>
+            <div class="t3">arranged on VanillaBonds · July 2026 · demonstration</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="jscene" data-scene="6">
+        <div class="jcard">
+          <div class="jchead"><span>Life after settlement</span><span class="jclock">Quarter by quarter</span></div>
+          <div class="jgauge">
+            <div class="glabel"><span>Incurrence covenant — net leverage</span><span>2.5× of ≤ 3.5×</span></div>
+            <div class="gbar"><i></i></div>
+          </div>
+          <div class="feed" style="margin-top:12px">
+            <div><span>28 Oct 26</span>Q3 report + covenant certificate — in compliance</div>
+            <div><span>26 Feb 27</span>FY-2026 audited results published</div>
+            <div><span>12 Apr 27</span>Green allocation report — SPO framework</div>
+            <div><span>weekly</span>Secondary indication quoted — last 100.8</div>
+          </div>
+          <div class="jkick">Elsewhere, a soured credit means dozens of bilateral claims and no exit. Here it means one trustee, collective decisions, security — and a price on the screen.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <section class="block">
-    <div class="eyebrow">The problem</div>
-    <h2>Europe’s funding map has a hole in the middle</h2>
-    <div class="goldrule"></div>
-    <p class="sub">Bank syndicate desks don’t clear their cost base below roughly €75–100m. The Schuldschein sweet spot sits around a €205m average ticket — and its 2024–26 trust break (Varta, BayWa, KTM) pushed exactly the unrated, smaller and non-German names out. Syndicated high yield starts near €200m. In between sits the ordinary, healthy European mid-cap — with nowhere to issue.</p>
-    <div class="svgwrap">
-      <svg viewBox="0 0 720 258" style="width:100%;max-width:920px;height:auto;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica,Arial,sans-serif">
-        <!-- axis -->
-        <line x1="30" y1="212" x2="690" y2="212" stroke="#5A6672" stroke-width="1.2"/>
-        <g fill="#5A6672" font-size="10.5" text-anchor="middle">
-          <text x="129" y="228">€10m</text><text x="261" y="228">€25m</text><text x="360" y="228">€50m</text>
-          <text x="459" y="228">€100m</text><text x="591" y="228">€250m</text><text x="690" y="228">€500m</text>
-          <text x="360" y="248" font-size="10" fill="#8A94A0">issue size (log scale)</text>
-        </g>
-        <g stroke="#D8DCE1" stroke-width="1"><line x1="129" y1="20" x2="129" y2="212"/><line x1="261" y1="20" x2="261" y2="212"/><line x1="360" y1="20" x2="360" y2="212"/><line x1="459" y1="20" x2="459" y2="212"/><line x1="591" y1="20" x2="591" y2="212"/></g>
-        <!-- rows -->
-        <rect x="30" y="26" width="257" height="26" rx="4" fill="#C8CDD3"/>
-        <text x="40" y="43" font-size="12" fill="#33404D" font-weight="bold">House-bank &amp; club loans</text>
-        <rect x="229" y="62" width="230" height="30" rx="4" fill="#C9A227"/>
-        <text x="238" y="82" font-size="12.5" fill="#0E2A47" font-weight="bold">THE GAP €20–100m</text>
-        <text x="467" y="82" font-size="11" fill="#8A6E14">← VanillaBonds band</text>
-        <rect x="459" y="100" width="231" height="26" rx="4" fill="#1B4B7A"/>
-        <text x="468" y="117" font-size="12" fill="#fff" font-weight="bold">Bank DCM ≥ €100m</text>
-        <text x="451" y="117" font-size="10.5" fill="#5A6672" text-anchor="end">uneconomic below this line →</text>
-        <rect x="459" y="136" width="199" height="26" rx="4" fill="#7E97AD"/>
-        <text x="468" y="153" font-size="12" fill="#0E2A47" font-weight="bold">Schuldschein · avg €205m</text>
-        <text x="646" y="153" font-size="12" fill="#B0433C" font-weight="bold">⚡</text>
-        <rect x="559" y="172" width="131" height="26" rx="4" fill="#0E2A47"/>
-        <text x="567" y="189" font-size="12" fill="#fff" font-weight="bold">Synd. HY ≥€200m</text>
-        <text x="30" y="18" font-size="10.5" fill="#B0433C">⚡ Schuldschein trust break 2024–26: Varta ≈90% haircut · BayWa €800m+ restructuring · KTM 70% write-down</text>
-      </svg>
-      <div class="caption">Our own dataset of 60 verified non-Nordic issuers shows the format effectively does not exist below €25m and averages €100–110m market-wide — the deepest unserved gap lies between bank lending and the institutional formats. Design headroom to €300m; growth via repeat issuers (Katjes grew from ~€110m to €185m outstanding).</div>
+  <div class="jout">
+    <div class="eyebrow">The point</div>
+    <h2>Six weeks end to end — then transparent for life.</h2>
+    <div class="statrow">
+      <div class="stat"><b>6 weeks</b><span>first call → settled bond</span></div>
+      <div class="stat"><b>65%</b><span>pre-committed before books opened</span></div>
+      <div class="stat"><b>2.0×</b><span>final order-book coverage</span></div>
+      <div class="stat"><b>T+5</b><span>DvP settlement — platform never touches the money</span></div>
     </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">Why now</div>
-    <h2>Three doors opened at once</h2>
-    <div class="goldrule"></div>
-    <div class="grid3">
-      <div class="card">
-        <h3>The Schuldschein trust break</h3>
-        <p>Varta (≈90% haircut via StaRUG cram-down), BayWa (€800m+ across ~255 holders) and KTM (70% write-down) broke the implicit-safety promise. The market didn’t shrink — ~€24bn in 2025 — but investors turned selective, pushing unrated, smaller and non-German names towards alternatives.</p>
-        <div class="kfact">We sell explicitly priced, governed, tradeable risk — never “safer”.</div>
-      </div>
-      <div class="card">
-        <h3>Banks can’t make small pay</h3>
-        <p>Investment-grade benchmark fees run 0.25–0.45%; mid-cap placements historically cost 2.5–5% all-in. Below ≈€75–100m no syndicate desk clears its cost base — so healthy mid-caps stay trapped in loan formats they have outgrown.</p>
-        <div class="kfact">Standardisation compresses the fee to 1.0–1.5% — then the coupon.</div>
-      </div>
-      <div class="card">
-        <h3>The buyers already exist</h3>
-        <p>Frankfurt manages &gt;€700m in dedicated Nordic HY money. Family offices doubled private-debt allocations to 4–5%. Green mandates are starved of real EUR mid-cap paper. And since KFM’s fund liquidation, standing German mid-cap bond demand has no home.</p>
-        <div class="kfact">Latent demand becomes tickets when analysis costs drop.</div>
-      </div>
+    <div class="herobtns">
+      <button class="btn gold" onclick="showView('issue')">Run the bookbuild yourself</button>
+      <button class="btn primary" onclick="showView('market')">Explore the market</button>
+      <button class="btn ghost" onclick="showView('pricing')">Price a bond</button>
     </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">The format</div>
-    <h2>One standard. Six to eight weeks. Tradeable from day one.</h2>
-    <div class="goldrule"></div>
-    <div class="grid2">
-      <div>
-        <ul class="ticks">
-          <li><b>Senior secured, trustee-governed</b> — Nordic Trustee model: if the platform disappeared tomorrow, a tradeable security with a trustee remains.</li>
-          <li><b>Floating-rate note, 3m EURIBOR + 450–975</b> — 3–4 year tenor, standard call schedule.</li>
-          <li><b>Covenants from a standard menu</b> — incurrence-based net leverage, FCCR, dividend basket, change-of-control put; co-written with the founding investor circle.</li>
-          <li><b>Standardised disclosure</b> — one data room, quarterly reporting through the platform, covenant certificates on file.</li>
-          <li><b>Listed &amp; tradeable</b> — Börse Frankfurt Open Market / Euronext Oslo; institutional denominations.</li>
-          <li><b>6–8 weeks from mandate to settlement</b> — one process, one document set, a standing professional book.</li>
-        </ul>
-      </div>
-      <div>
-        <h3 style="font-family:var(--serif);font-size:18px">What arranging actually costs</h3>
-        <div class="tscroll" style="margin-top:10px">
-          <table class="tb">
-            <thead><tr><th>Channel</th><th>Arranging / placement fee</th><th>Basis</th></tr></thead>
-            <tbody>
-              <tr><td>Investment-grade benchmark</td><td class="num">0.25–0.45%</td><td>FCA market study, 793 deals</td></tr>
-              <tr><td>Syndicated high yield</td><td class="num">avg 1.25% (B ≈1.5%)</td><td>FCA market study, 306 deals</td></tr>
-              <tr><td>German Mittelstandsanleihen (2010–16)</td><td class="num">2.5–5% · all-in ≈4.5%</td><td>trade sources</td></tr>
-              <tr><td>Nordic-format mid-market today</td><td class="num">1.5–3%</td><td>practitioner estimate</td></tr>
-              <tr><td style="color:var(--navy)"><b>VanillaBonds target</b></td><td class="num"><b>1.0–1.5%</b></td><td>our target — to be proven</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="font-size:13px;color:var(--grey);margin-top:10px">The fee is the certain saving. The strategic one is coupon compression through broader competition in the book — the claim we will only make once our own deal data proves it.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">The credit filter</div>
-    <h2>What we decline is the product</h2>
-    <div class="goldrule"></div>
-    <div class="grid3">
-      <div class="card navycard">
-        <h3>Visible minimum criteria</h3>
-        <p>Deal Profile #1 is published, hard and boring: DACH · energy-transition or demonstrable sustainability angle · €20–40m · EBITDA ≥ €8–10m · net leverage ≤ 3.5× · senior secured · 3–4 years · refinancing or capex trigger · ongoing disclosure.</p>
-      </div>
-      <div class="card">
-        <h3>Visible refusal</h3>
-        <p>Everything outside the profile is declined — visibly, even when it costs revenue. Declined issuers are, with consent, referred to private-credit partners. One avoidable default in the first ten deals is deadlier than ten missed deals.</p>
-      </div>
-      <div class="card">
-        <h3>Published rejection statistics</h3>
-        <p>Every quarter we publish anonymised filter data. This segment produces real defaults (our 60-name dataset contains one default and one standstill) — we price risk and govern it; we don’t pretend it away.</p>
-        <div class="kfact">Q2 2026 (demo): 24 reviewed → 9 met profile → 2 mandates in negotiation</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="block" id="investors">
-    <div class="eyebrow">Two sides, one standard</div>
-    <h2>For investors &amp; for issuers</h2>
-    <div class="goldrule"></div>
-    <div class="grid2">
-      <div class="card">
-        <h3>Investors — the Founding Circle</h3>
-        <p>8–12 anchor accounts — entrepreneur money, multi-family offices, green mandates, specialist bondpickers — co-write the standard and get what followers never will:</p>
-        <ul class="ticks">
-          <li><b>A standards seat:</b> the covenant menu, disclosure set and deal profile are written with you, not for you.</li>
-          <li><b>Guaranteed allocation:</b> good books in this format get oversubscribed (recent precedent: 3.6×) and scaled back — anchors keep their full ticket.</li>
-          <li><b>A filtered origination stream:</b> origination is every credit investor’s bottleneck; ours arrives standardised, monitored, trustee-governed.</li>
-          <li><b>The data:</b> comparable credit information across a segment that has none — plus the quarterly Monitor, free.</li>
-        </ul>
-        <div class="notice">Professional and semi-professional investors only. No retail, in any form.</div>
-      </div>
-      <div class="card">
-        <h3>Issuers — grow with your paper</h3>
-        <p>For CFOs of companies with €8m+ EBITDA who have outgrown bilateral loans but are invisible to bank DCM:</p>
-        <ul class="ticks">
-          <li><b>One process, 6–8 weeks:</b> standard documentation, one data room, a standing book — not a nine-month odyssey.</li>
-          <li><b>All-in target 1.0–1.5%</b> against 2.5–5% historic mid-cap placement costs; amortised over five years the difference is real money.</li>
-          <li><b>No bank balance-sheet dependency:</b> diversify funding while keeping your house bank for what it is good at.</li>
-          <li><b>Repeat issuance grows with you:</b> the format carries €20m experiments to €300m programmes — the second issue is the cheapest capital you will ever raise.</li>
-        </ul>
-        <div class="notice">Check your deal against Profile #1 in the <a href="#" onclick="showView('issue');return false">New Issues</a> section.</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="eyebrow">Process</div>
-    <h2>Mandate to listing in six steps</h2>
-    <div class="goldrule"></div>
-    <div class="steps">
-      <div class="step"><b>Profile check</b><span>48-hour screen against the published deal profile — pass or referred.</span></div>
-      <div class="step"><b>Credit work</b><span>Data room, audited figures, monitoring set-up. Weeks 1–3.</span></div>
-      <div class="step"><b>Standard docs</b><span>Covenant menu, security package, trustee appointed. Weeks 3–5.</span></div>
-      <div class="step"><b>Bookbuild</b><span>Anchors pre-committed; 48-hour early look; open book. Weeks 5–7.</span></div>
-      <div class="step"><b>Pricing &amp; settlement</b><span>Priced on demand, settled T+5 via paying agent.</span></div>
-      <div class="step"><b>Listed &amp; monitored</b><span>Exchange listing, quarterly disclosure, covenant certificates.</span></div>
-    </div>
-  </section>
-
-  <section class="block">
-    <div class="monitor">
-      <div>
-        <div class="eyebrow" style="color:var(--gold2)">The Monitor</div>
-        <h2>DACH Nordic Bond Monitor</h2>
-        <p style="margin-top:10px;font-size:14.5px">The quarterly state of the continental mid-cap bond market: every new issue, coupon, spread, maturity and default — built on our 60-issuer dataset. The systematic coverage this segment lost when the last dedicated barometer stopped in 2023.</p>
-        <div class="subscribe">
-          <input type="email" placeholder="work email (demo — not stored)" id="monmail">
-          <button class="btn gold" onclick="fakeSubscribe()">Get the Monitor</button>
-        </div>
-        <div id="monthanks" style="display:none;color:#7BD9A8;font-size:13px;margin-top:10px">✓ Noted — in the live product you would now receive Monitor #1. (Demo: nothing was sent or stored.)</div>
-      </div>
-      <div class="mstats">
-        <div class="mstat"><b id="mon-iss">—</b><span>tracked issues outstanding</span></div>
-        <div class="mstat"><b id="mon-vol">—</b><span>tracked volume outstanding</span></div>
-        <div class="mstat"><b id="mon-spread">—</b><span>median indicative spread</span></div>
-        <div class="mstat"><b>2 / 60</b><span>defaults &amp; standstills in dataset</span></div>
-      </div>
-    </div>
-  </section>
+  </div>
 
 </section>
 
@@ -687,6 +873,105 @@
   </div>
 </section>
 
+<!-- ============================================================= -->
+<!-- VIEW 4 — PRICING (indicative pricing tool)                     -->
+<!-- ============================================================= -->
+<section class="view" id="view-pricing">
+  <section class="hero" id="tool">
+    <div class="eyebrow" id="heroEyebrow">Senior bond pricing indications</div>
+    <h1 id="heroH1">What would your bond cost?<br>An indication in sixty seconds.</h1>
+    <p class="lede" id="heroLede">When a bank syndicate desk pitches a rated issuer, it shows one page: comparable bonds, fair value, a new-issue premium, and the resulting spread, yield and coupon per tenor. Mid-caps never get that page. This tool runs the same mechanics for an unrated €20–100m senior issue in the Nordic format — from six numbers you already know.</p>
+    <div class="goldrule"></div>
+    <div class="modes" role="tablist">
+      <button class="mode active" data-m="issuer" role="tab">Issuer — price my bond</button>
+      <button class="mode" data-m="inv" role="tab">Investor — price it your way</button>
+    </div>
+  </section>
+
+  <section class="tool">
+    <div class="colL">
+    <div class="panel">
+      <div class="phead" id="dealhead">Your company<small>All figures group level, last twelve months</small></div>
+      <div class="pbody">
+        <div class="samplenote">No real data at hand? Pick a <b>sample profile</b> in the company field to see how it works.</div>
+        <label for="cname">Company name</label>
+        <input id="cname" list="samples" placeholder="Type your company name…" autocomplete="off">
+        <datalist id="samples"></datalist>
+        <div class="frow">
+          <div>
+            <label for="country">Country</label>
+            <select id="country">
+              <option>Germany</option><option>Netherlands</option><option>Austria</option>
+              <option>Belgium</option><option>France</option><option>Nordics</option><option>Other Europe</option>
+            </select>
+          </div>
+          <div>
+            <label for="sector">Sector profile</label>
+            <select id="sector">
+              <option value="defensive">Defensive (food, health, utilities-like)</option>
+              <option value="neutral" selected>Neutral (services, logistics, niche industrials)</option>
+              <option value="cyclical">Cyclical (machinery, construction, consumer discretionary)</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div><label for="rev">Revenue (€m)</label><input id="rev" type="number" min="0" step="1" placeholder="e.g. 180"></div>
+          <div><label for="ebitda">EBITDA (€m)</label><input id="ebitda" type="number" min="0" step="0.5" placeholder="e.g. 24"></div>
+        </div>
+        <div class="frow">
+          <div><label for="nd">Net debt (€m)</label><input id="nd" type="number" step="1" placeholder="e.g. 55"></div>
+          <div><label for="int">Cash interest p.a. (€m)</label><input id="int" type="number" min="0" step="0.1" placeholder="e.g. 4.5"></div>
+        </div>
+        <div class="frow">
+          <div><label for="size">Target issue size (€m)</label><input id="size" type="number" min="20" max="100" step="5" value="40"></div>
+          <div>
+            <label for="tenor">Preferred tenor</label>
+            <select id="tenor"><option value="3">3 years</option><option value="4">4 years</option><option value="5" selected>5 years</option><option value="7">7 years</option></select>
+          </div>
+        </div>
+        <label for="debut">Bond market track record</label>
+        <select id="debut"><option value="1" selected>Debut issue — first bond</option><option value="0">Repeat issuer — outstanding or redeemed bonds</option></select>
+        <p class="hint">Net debt after the new issue is assumed unchanged (refinancing). For growth funding, add the new money to net debt.</p>
+      </div>
+    </div>
+
+    <div class="panel" id="invpanel" style="display:none">
+      <div class="phead">Your parameters<small>Every lever optional — defaults mirror the model</small></div>
+      <div class="pbody">
+        <label for="basis">Accounts basis</label>
+        <select id="basis">
+          <option value="ifrs">IFRS 16 — leases on balance sheet (as entered)</option>
+          <option value="hgb">HGB / local GAAP — add 0.75× EBITDA to net debt</option>
+        </select>
+        <p class="hint">HGB keeps operating leases off balance sheet; the adjustment restates leverage toward IFRS 16 before scoring.</p>
+        <label for="bover">Credit bucket</label>
+        <select id="bover">
+          <option value="">Model bucket — let the figures decide</option>
+          <option>BB+ area</option><option>BB area</option><option>BB− area</option><option>B+ area</option><option>B area</option>
+        </select>
+        <div class="frow">
+          <div><label for="myilliq">Your illiquidity premium (bps)</label><input id="myilliq" type="number" step="5" placeholder="model default"></div>
+          <div><label for="myadj">Your adjustment (± bps)</label><input id="myadj" type="number" step="5" placeholder="0"></div>
+        </div>
+        <label for="hurdle">Your hurdle — minimum spread (bps over mid-swaps)</label>
+        <input id="hurdle" type="number" min="0" step="5" placeholder="optional, e.g. 550">
+        <p class="hint">A hold-to-maturity book can run a lower illiquidity premium than one that wants exit optionality. The hurdle is checked mechanically against the deal's indicated level — nothing here is a recommendation.</p>
+      </div>
+    </div>
+    </div>
+
+    <div class="panel" id="result"><!-- filled by JS --></div>
+  </section>
+
+  <section class="method">
+    <div class="mstep"><span class="n">STEP 1</span><h3>Fair value from the credit profile</h3><p>Leverage, interest cover, scale and sector cyclicality are scored and mapped to a crossover / high-yield spread curve per tenor — the mid-cap equivalent of reading fair value off an issuer's secondary curve. Issues below €50m carry an explicit illiquidity premium rather than a hidden one.</p></div>
+    <div class="mstep"><span class="n">STEP 2</span><h3>New-issue premium</h3><p>Nobody prices a new bond exactly at fair value. A debut mid-cap pays a modestly larger concession than a repeat issuer — we show it as its own line, exactly as a syndicate desk would, so you see what is credit and what is newness.</p></div>
+    <div class="mstep"><span class="n">STEP 3</span><h3>Swaps in, coupon out</h3><p>Re-offer spread over euro mid-swaps gives the indicative yield; rounding down to the nearest eighth gives the coupon a lead manager would print at the low end of the range. Fixed-rate shown; Nordic-format floaters (3m EURIBOR + margin) use the same spread.</p></div>
+  </section>
+
+  <div class="honest"><b>What this is — and is not.</b> These are model-based indicative levels for issuer orientation, generated from the figures you enter, which are not stored or transmitted. This page is not an offer, a recommendation or investment advice, and no level here is a commitment to arrange or place. The credit profile shown is a pricing bucket derived from the figures you enter — it is not a credit rating within the meaning of the EU CRA Regulation, and VanillaBonds does not issue credit ratings. A firm indication follows a credit assessment and reflects market conditions at launch; any issue is executed with a licensed partner. Mid-swap levels are indicative desk marks, refreshed periodically, not a live feed. In the investor view, comparisons and hurdle checks apply parameters set by you to the same arithmetic — they are mechanical screens for professional investors, not investment advice, a recommendation or a solicitation to buy or sell any instrument. The investment decision remains yours.</div>
+</section>
+
 </main>
 
 <!-- drawer -->
@@ -713,7 +998,7 @@
       <p class="legal">This is a demonstration environment. All prices, order-book data, statistics, the “Voltaria” transaction and all account names are fictitious or illustrative; issuer names in the Market section derive from a public-source research dataset and their terms shown here are indicative reconstructions, not quotes. Nothing on this site constitutes an offer, solicitation, investment advice or investment brokerage. No activity requiring a licence under the KWG/WpIG is conducted; any future activity would take place only after registration under a licensed host (Haftungsdach) and within the limits of applicable law (incl. §54 KWG). Credit indications never replace an investor’s own analysis.</p>
     </div>
   </div>
-  <div class="fbottom">© 2026 VanillaBonds — demonstration build · data snapshot 3 July 2026 · built from the July 2026 business plan (Part II)</div>
+  <div class="fbottom">© 2026 VanillaBonds — demonstration build · <a href="index.html">vanillabonds.com</a> · <a href="#pricing" onclick="showView('pricing');return false">indicative pricing</a> · data snapshot 3 July 2026 · built from the July 2026 business plan (Part II)</div>
 </footer>
 
 <script>
@@ -725,8 +1010,9 @@ function showView(v){
   const nb=document.getElementById('nav-'+v); if(nb) nb.classList.add('active');
   window.scrollTo({top:0});
   if(location.hash!=='#'+v) history.replaceState(null,'','#'+v);
+  if(v==='journey'&&window.journeyTick) requestAnimationFrame(journeyTick);
 }
-window.addEventListener('load',()=>{const h=location.hash.replace('#','');if(['platform','market','issue'].includes(h))showView(h);});
+window.addEventListener('load',()=>{let h=location.hash.replace('#','');if(h==='platform')h='market';if(['journey','market','issue','pricing'].includes(h))showView(h);});
 
 /* ================= market data (demo reconstruction from own dataset) ================= */
 const E3M = 2.08; // 3m EURIBOR assumption, %
@@ -772,7 +1058,7 @@ const BONDS = [
  {n:"Fertiberia",c:"ES",s:"Green ammonia / fertilisers",g:"Energy transition",isin:"NO0013740894",size:125,t:"FRN",cp:700,iss:"2026-05",mat:"2030-05",px:100.2,st:"Performing"},
  {n:"Gentoo Media",c:"MT",s:"iGaming platform",g:"Services",isin:"NO0013024018",size:100,t:"FRN",cp:725,iss:"2023-09",mat:"2027-09",px:101.1,st:"Performing"}
 ];
-const GROUPCOL = {"Energy transition":"#2E7D5B","Industrials":"#1B4B7A","Consumer":"#C9A227","Services":"#8A6FA8","Healthcare":"#3E8E9E","Shipping":"#7C8B4F","Energy":"#A0522D","Financials":"#708090"};
+const GROUPCOL = {"Energy transition":"#4CAF7D","Industrials":"#5B8FC7","Consumer":"#C9A227","Services":"#A98FD0","Healthcare":"#55B0C4","Shipping":"#9AAD62","Energy":"#C77B4A","Financials":"#8FA0B0"};
 
 function effSpread(b){ return b.t==="FRN" ? b.cp : Math.round(b.cp*100 - E3M*100); }
 function coupStr(b){ return b.t==="FRN" ? ("3mE+"+b.cp) : (b.cp.toFixed(3).replace(/0+$/,'').replace(/\.$/,'')+"% fix"); }
@@ -796,9 +1082,6 @@ function fmtM(v){ return v>=1000 ? "€"+(v/1000).toFixed(2)+"bn" : "€"+Math.r
   document.getElementById('ms-medspread').textContent = "E+"+med;
   document.getElementById('ms-avgpx').textContent = avgpx.toFixed(1);
   document.getElementById('ms-dist').textContent = active.filter(b=>b.st==="Default"||b.st==="Standstill").length;
-  document.getElementById('mon-iss').textContent = active.length;
-  document.getElementById('mon-vol').textContent = fmtM(vol);
-  document.getElementById('mon-spread').textContent = "E+"+med;
   const cs=[...new Set(BONDS.map(b=>b.c))].sort(), gs=[...new Set(BONDS.map(b=>b.g))].sort();
   cs.forEach(c=>document.getElementById('f-country').insertAdjacentHTML('beforeend',`<option>${c}</option>`));
   gs.forEach(g=>document.getElementById('f-group').insertAdjacentHTML('beforeend',`<option>${g}</option>`));
@@ -831,7 +1114,7 @@ function renderTable(){
   document.getElementById('bondrows').innerHTML = rows.map((b)=>{
     const y=indicYield(b);
     return `<tr onclick="openDrawer('${b.isin}')">
-      <td><b style="color:var(--navy)">${b.n}</b><br><span style="font-size:11px;color:var(--grey);font-family:var(--mono)">${b.isin}</span></td>
+      <td><b style="color:#F2F7FB">${b.n}</b><br><span style="font-size:11px;color:var(--mut);font-family:var(--mono)">${b.isin}</span></td>
       <td>${b.c}</td><td>${b.s}</td>
       <td class="num">${b.size}</td>
       <td class="num">${coupStr(b)}</td>
@@ -892,18 +1175,18 @@ renderTable();
   const max=Math.max.apply(null,years.map(gv));
   const bw=(W-L-R)/years.length;
   let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:920px;height:auto;display:block;margin:0 auto" font-family="Helvetica,Arial,sans-serif">`;
-  [0.25,0.5,0.75,1].forEach(f=>{const y=T+(1-f)*(H-T-B);s+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#EFECE3"/><text x="${L-6}" y="${y+3.5}" font-size="9.5" fill="#8A94A0" text-anchor="end">${Math.round(max*f)}</text>`;});
+  [0.25,0.5,0.75,1].forEach(f=>{const y=T+(1-f)*(H-T-B);s+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#16324D"/><text x="${L-6}" y="${y+3.5}" font-size="9.5" fill="#7E97AD" text-anchor="end">${Math.round(max*f)}</text>`;});
   years.forEach((yr,i)=>{
     const d=byYear[yr]||{v:0,n:0};
     const h=max?d.v/max*(H-T-B):0;
     const x=L+i*bw+bw*0.14, w=bw*0.72, y=H-B-h;
     const gold=(yr-1)<=2027;
-    s+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="4" fill="${gold?"#C9A227":"#1B4B7A"}"/>`;
-    if(d.v) s+=`<text x="${(x+w/2).toFixed(1)}" y="${(y-6).toFixed(1)}" font-size="11" fill="#0E2A47" font-weight="bold" text-anchor="middle">€${d.v}m</text>`;
-    s+=`<text x="${(x+w/2).toFixed(1)}" y="${H-B+16}" font-size="10.5" fill="#5A6672" text-anchor="middle">${yr===2032?"2032+":yr}</text>`;
-    if(d.n) s+=`<text x="${(x+w/2).toFixed(1)}" y="${H-B+29}" font-size="9.5" fill="#8A94A0" text-anchor="middle">${d.n} deal${d.n>1?"s":""}</text>`;
+    s+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="4" fill="${gold?"#C9A227":"#3E7CB1"}"/>`;
+    if(d.v) s+=`<text x="${(x+w/2).toFixed(1)}" y="${(y-6).toFixed(1)}" font-size="11" fill="#E7C55A" font-weight="bold" text-anchor="middle">€${d.v}m</text>`;
+    s+=`<text x="${(x+w/2).toFixed(1)}" y="${H-B+16}" font-size="10.5" fill="#9DB2C6" text-anchor="middle">${yr===2032?"2032+":yr}</text>`;
+    if(d.n) s+=`<text x="${(x+w/2).toFixed(1)}" y="${H-B+29}" font-size="9.5" fill="#64809A" text-anchor="middle">${d.n} deal${d.n>1?"s":""}</text>`;
   });
-  s+=`<text x="${L}" y="14" font-size="10.5" fill="#8A94A0">maturing volume €m · demo data</text></svg>`;
+  s+=`<text x="${L}" y="14" font-size="10.5" fill="#64809A">maturing volume €m · demo data</text></svg>`;
   document.getElementById('refibar').innerHTML=s;
   const chips=live.filter(b=>b.mat<=ymAddMonths(AS_OF_YM,30)).sort((a,b)=>a.mat<b.mat?-1:1).slice(0,12);
   document.getElementById('refichips').innerHTML=chips.map(b=>
@@ -918,16 +1201,16 @@ renderTable();
   const X=v=>L+(Math.log10(v)-Math.log10(xmin))/(Math.log10(xmax)-Math.log10(xmin))*(W-L-R);
   const Y=v=>T+(1-(v-ymin)/(ymax-ymin))*(H-T-B);
   let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:920px;height:auto;display:block;margin:0 auto" font-family="Helvetica,Arial,sans-serif">`;
-  s+=`<rect x="${X(20)}" y="${T}" width="${X(100)-X(20)}" height="${H-T-B}" fill="#C9A227" opacity="0.13"/>`;
-  s+=`<text x="${(X(20)+X(100))/2}" y="${T+14}" font-size="10.5" fill="#8A6E14" text-anchor="middle" font-weight="bold">the missing middle €20–100m</text>`;
-  [400,500,600,700,800,900,1000].forEach(v=>{s+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="#E7E4DA"/><text x="${L-7}" y="${Y(v)+3.5}" font-size="10" fill="#5A6672" text-anchor="end">${v}</text>`;});
-  [25,50,75,100,150,200,300].forEach(v=>{s+=`<line x1="${X(v)}" y1="${T}" x2="${X(v)}" y2="${H-B}" stroke="#F0EDE4"/><text x="${X(v)}" y="${H-B+16}" font-size="10" fill="#5A6672" text-anchor="middle">${v}</text>`;});
-  s+=`<text x="${(L+W-R)/2}" y="${H-6}" font-size="10.5" fill="#8A94A0" text-anchor="middle">issue size €m (log)</text>`;
-  s+=`<text x="14" y="${(T+H-B)/2}" font-size="10.5" fill="#8A94A0" text-anchor="middle" transform="rotate(-90 14 ${(T+H-B)/2})">spread over 3mE (bps)</text>`;
+  s+=`<rect x="${X(20)}" y="${T}" width="${X(100)-X(20)}" height="${H-T-B}" fill="#C9A227" opacity="0.1"/>`;
+  s+=`<text x="${(X(20)+X(100))/2}" y="${T+14}" font-size="10.5" fill="#E7C55A" text-anchor="middle" font-weight="bold">the missing middle €20–100m</text>`;
+  [400,500,600,700,800,900,1000].forEach(v=>{s+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="#16324D"/><text x="${L-7}" y="${Y(v)+3.5}" font-size="10" fill="#7E97AD" text-anchor="end">${v}</text>`;});
+  [25,50,75,100,150,200,300].forEach(v=>{s+=`<line x1="${X(v)}" y1="${T}" x2="${X(v)}" y2="${H-B}" stroke="#122A40"/><text x="${X(v)}" y="${H-B+16}" font-size="10" fill="#7E97AD" text-anchor="middle">${v}</text>`;});
+  s+=`<text x="${(L+W-R)/2}" y="${H-6}" font-size="10.5" fill="#64809A" text-anchor="middle">issue size €m (log)</text>`;
+  s+=`<text x="14" y="${(T+H-B)/2}" font-size="10.5" fill="#64809A" text-anchor="middle" transform="rotate(-90 14 ${(T+H-B)/2})">spread over 3mE (bps)</text>`;
   data.forEach(b=>{
     const sp=Math.min(1000,Math.max(390,effSpread(b)));
     const r=Math.max(4.5,Math.sqrt(b.size)/1.55);
-    s+=`<circle cx="${X(Math.min(320,b.size))}" cy="${Y(sp)}" r="${r}" fill="${GROUPCOL[b.g]}" opacity="0.75" stroke="#fff" stroke-width="1"><title>${b.n} — €${b.size}m · ${coupStr(b)} · ${b.mat}</title></circle>`;
+    s+=`<circle cx="${X(Math.min(320,b.size))}" cy="${Y(sp)}" r="${r}" fill="${GROUPCOL[b.g]}" opacity="0.8" stroke="#07131F" stroke-width="1"><title>${b.n} — €${b.size}m · ${coupStr(b)} · ${b.mat}</title></circle>`;
   });
   s+='</svg>';
   document.getElementById('scatter').innerHTML=s;
@@ -943,7 +1226,7 @@ function sparkline(b){
   pts=pts.map((p,i)=>p+(end-start-(pts[n-1]-start))*(i/(n-1))); // blend to end at px
   const mn=Math.min(...pts),mx=Math.max(...pts),rg=Math.max(2,mx-mn);
   const xy=pts.map((p,i)=>`${(i/(n-1))*W},${H-8-((p-mn)/rg)*(H-16)}`).join(' ');
-  const col=(b.st==="Default"||b.st==="Standstill")?"#B0433C":"#1B4B7A";
+  const col=(b.st==="Default"||b.st==="Standstill")?"#E5645A":"#6FA7D6";
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}"><polyline points="${xy}" fill="none" stroke="${col}" stroke-width="2"/><circle cx="${W}" cy="${H-8-((pts[n-1]-mn)/rg)*(H-16)}" r="3.5" fill="#C9A227"/></svg>`;
 }
 function openDrawer(isin){
@@ -1001,7 +1284,7 @@ document.addEventListener('keydown',e=>{if(e.key==="Escape")closeDrawer();});
 /* ================= bookbuild ================= */
 const TARGET=30;
 const ANCHORS=[
- {t:"09:00",a:"Founding family holding (Munich)",ty:"anchor",m:4.0,l:"anchor"},
+ {t:"09:00",a:"Single-family office (Stuttgart)",ty:"anchor",m:4.0,l:"anchor"},
  {t:"09:00",a:"Entrepreneur family office (Bavaria)",ty:"anchor",m:2.5,l:"anchor"},
  {t:"09:00",a:"Entrepreneur family office (Hamburg)",ty:"anchor",m:2.0,l:"anchor"},
  {t:"09:00",a:"Multi-family office KVG (Hamburg) — 11 families pooled",ty:"anchor",m:5.0,l:"anchor"},
@@ -1184,14 +1467,278 @@ function runWizard(){
       <small>Platform fee target 1.0–1.5% upfront (≈ ${feeAmort.toFixed(0)}bp p.a. over 5y). Compare: unitranche ≈ ${ut}%+ with 2% OID; Schuldschein margins are lower but access for unrated ≤€75m names is post-2024 uncertain; bank club loans price tighter yet amortise, carry maintenance covenants and consume house-bank capacity. An indication never replaces the investor's own analysis.</small></div>`;
   }
   v.className="verdict show "+cls;
-  v.innerHTML=`<h3>${head}</h3><ul class="critlist">${cr.join('')}</ul><p style="font-size:13.5px;margin-top:10px;color:#33404D">${body}</p>${priceHtml}`;
+  v.innerHTML=`<h3>${head}</h3><ul class="critlist">${cr.join('')}</ul><p style="font-size:13.5px;margin-top:10px;color:var(--grey)">${body}</p>${priceHtml}`;
   v.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 wizLive();
 
-/* misc */
-function fakeSubscribe(){document.getElementById('monthanks').style.display="block";}
-document.getElementById('hs-issuers').textContent="60";
+/* ================= pricing view (ported indicative-pricing tool) ================= */
+/* ---------- market parameters (edit here) ---------- */
+const MS = {3:2.25, 4:2.35, 5:2.45, 7:2.60};              // EUR mid-swaps %, indicative desk marks
+const MS_ASOF = 'July 2026';
+const TENORS = [3,4,5,7];
+const TMULT  = {3:.87, 4:.94, 5:1.00, 7:1.12};            // tenor shape of the spread curve
+const BUCKETS = [                                          // 5y base spread per credit bucket, bps
+  {min:80, label:'BB+ area', base:250, color:'#57B98A'},
+  {min:65, label:'BB area',  base:315, color:'#6FA7D6'},
+  {min:50, label:'BB− area', base:400, color:'#E0B84C'},
+  {min:35, label:'B+ area',  base:525, color:'#D99A5B'},
+  {min:0,  label:'B area',   base:675, color:'#E5776C'}];
+const SECTOR_PTS = {defensive:15, neutral:10, cyclical:5};
+const sizePrem  = s => s < 30 ? 50 : s < 50 ? 25 : 0;      // illiquidity premium, bps
+const nipBand   = debut => debut ? [15,25] : [10,15];      // new-issue premium, bps
+
+/* ---------- sample profiles ---------- */
+const SAMPLES = [
+  {name:'Sample — Süddeutsche Maschinenbau GmbH', country:'Germany',     sector:'cyclical',  rev:180, ebitda:24, nd:55, int:4.5, size:40, tenor:5, debut:1},
+  {name:'Sample — Veluwe Food Group B.V.',        country:'Netherlands', sector:'defensive', rev:240, ebitda:32, nd:64, int:4.0, size:60, tenor:5, debut:1},
+  {name:'Sample — Alpenlogistik AG',              country:'Austria',     sector:'neutral',   rev:300, ebitda:28, nd:98, int:8.0, size:45, tenor:4, debut:1},
+  {name:'Sample — Hanse Health Services SE',      country:'Germany',     sector:'defensive', rev:150, ebitda:21, nd:34, int:2.2, size:35, tenor:5, debut:0}];
+document.getElementById('samples').innerHTML = SAMPLES.map(s=>`<option value="${s.name}">`).join('');
+
+/* ---------- engine ---------- */
+const clamp = (x,a,b) => Math.max(a, Math.min(b, x));
+const fmt   = x => x.toFixed(3).replace(/0+$/,'').replace(/\.$/,'.0');
+
+function scoreProfile(p){
+  const lev = p.nd / p.ebitda, cov = p.int > 0 ? p.ebitda / p.int : 12;
+  const pts = clamp(40*(5.5-lev)/4, 0, 40)                 // leverage: ≤1.5× full marks, ≥5.5× zero
+            + clamp(25*(cov-1.5)/6.5, 0, 25)               // cover: ≥8× full marks, ≤1.5× zero
+            + 4 + 16*clamp((p.ebitda-5)/45, 0, 1)          // scale: €5m → €50m EBITDA
+            + SECTOR_PTS[p.sector];
+  return {score:Math.round(pts), lev, cov, bucket:BUCKETS.find(b => pts >= b.min)};
+}
+
+function priceTenor(bucket, p, t){
+  const fv = Math.round(bucket.base * TMULT[t]) + sizePrem(p.size);
+  const [n0,n1] = nipBand(p.debut);
+  const yl = MS[t] + (fv+n0)/100, yh = MS[t] + (fv+n1)/100;
+  return {t, fv, n0, n1, re0:fv+n0, re1:fv+n1, ms:MS[t], yl, yh, cpn:Math.floor(yl*8)/8};
+}
+
+/* ---------- rendering ---------- */
+function curveSvg(rows, bucket, chosen, reqF){
+  const X = t => 60 + (t-3)*(440/4), Y = s => 265 - (clamp(s,100,750)-100)*(240/650);
+  let g = '';
+  for(let s=100; s<=700; s+=100) g += `<line x1="60" y1="${Y(s)}" x2="510" y2="${Y(s)}" stroke="#16324D"/><text x="52" y="${Y(s)+4}" font-size="10" fill="#7E97AD" text-anchor="end">${s}</text>`;
+  TENORS.forEach(t => g += `<text x="${X(t)}" y="284" font-size="10" fill="#7E97AD" text-anchor="middle">${t}y</text>`);
+  BUCKETS.forEach(b => {
+    const pts = TENORS.map(t => `${X(t)},${Y(b.base*TMULT[t])}`).join(' ');
+    const on = b === bucket;
+    g += `<polyline points="${pts}" fill="none" stroke="${b.color}" stroke-width="${on?3:1.3}" opacity="${on?1:.38}"/>`
+       + `<text x="514" y="${Y(b.base*TMULT[7])+4}" font-size="10.5" font-weight="${on?700:400}" fill="${b.color}" opacity="${on?1:.55}">${b.label}</text>`;
+  });
+  rows.forEach(r => {
+    const mid = (r.re0+r.re1)/2, on = r.t === chosen;
+    g += `<rect x="${X(r.t)-4}" y="${Y(mid)-4}" width="8" height="8" transform="rotate(45 ${X(r.t)} ${Y(mid)})" fill="${on?'#C9A227':'#0B1F33'}" stroke="#C9D6E2" stroke-width="1.4"/>`;
+  });
+  if(reqF) g += `<polyline points="${TENORS.map(t=>`${X(t)},${Y(reqF(t))}`).join(' ')}" fill="none" stroke="#E2ECF5" stroke-width="2" stroke-dasharray="6 4"/>`
+              + `<line x1="330" y1="21" x2="360" y2="21" stroke="#E2ECF5" stroke-width="2" stroke-dasharray="6 4"/><text x="366" y="25" font-size="11" fill="#C9D6E2">Your required level</text>`;
+  g += `<rect x="60" y="16" width="10" height="10" transform="rotate(45 65 21)" fill="#C9A227" stroke="#C9D6E2" stroke-width="1.4"/><text x="76" y="25" font-size="11" fill="#C9D6E2">${reqF?'The deal (re-offer, mid)':'Your new issue (re-offer, mid of range)'}</text>`;
+  return `<svg viewBox="0 0 585 295" role="img" aria-label="Indicative spread curves by credit bucket">${g}<text x="18" y="150" font-size="10.5" fill="#7E97AD" transform="rotate(-90 18 150)" text-anchor="middle">I-spread (bps)</text></svg>`;
+}
+
+function render(){
+  const g = id => document.getElementById(id);
+  const p = {name:g('cname').value.trim(), country:g('country').value, sector:g('sector').value,
+             rev:+g('rev').value, ebitda:+g('ebitda').value, nd:+g('nd').value, int:+g('int').value,
+             size:+g('size').value || 40, tenor:+g('tenor').value, debut:+g('debut').value};
+  const R = g('result');
+
+  if(!(p.ebitda > 0) || !(p.rev > 0) || isNaN(p.nd) || !(p.int >= 0) || g('nd').value === ''){
+    R.innerHTML = `<div class="phead">Indicative pricing<small>Senior secured · Nordic format · EUR</small></div>
+      <div class="noquote"><b>Enter your figures — the indication appears instantly.</b>
+      Revenue, EBITDA, net debt and cash interest are all it takes. Everything runs in your browser; nothing you type is stored or sent anywhere.</div>`;
+    return;
+  }
+
+  const s = scoreProfile(p);
+  const who = p.name || 'your company';
+
+  if(s.score < 25){
+    R.innerHTML = `<div class="phead">Indicative pricing — ${who}<small>Senior secured · Nordic format · EUR</small></div>
+      <div class="noquote"><b>This profile needs a conversation, not a calculator.</b>
+      At ${s.lev.toFixed(1)}× net leverage and ${s.cov.toFixed(1)}× interest cover, an instant indication would be guesswork. Structure — security, amortisation, a smaller tranche — moves the answer more than any model.
+      </div><div class="ctarow"><a class="btn gold" href="mailto:contact@vanillabonds.com?subject=${encodeURIComponent('Structuring conversation — '+who)}">Talk to us instead</a></div>`;
+    return;
+  }
+
+  const rows = TENORS.map(t => priceTenor(s.bucket, p, t));
+  const sel  = rows.find(r => r.t === p.tenor);
+  if(MODE === 'inv'){ R.innerHTML = investorHTML(p, s, rows, sel); return; }
+  const hl   = t => t === p.tenor ? ' class="hl"' : '';
+  const line = (lbl, f, key) => `<tr${key?' class="key"':''}><td>${lbl}</td>${rows.map(r=>`<td${hl(r.t)}>${f(r)}</td>`).join('')}</tr>`;
+
+  R.innerHTML = `
+    <div class="phead">Indicative pricing — ${who}<small>Senior secured · Nordic format · EUR · fixed rate</small></div>
+    <div class="profile">
+      <div class="chip bucket">Credit profile <b>${s.bucket.label}</b></div>
+      <div class="chip">Score <b>${s.score}/100</b></div>
+      <div class="chip">Net leverage <b>${s.lev.toFixed(1)}×</b></div>
+      <div class="chip">Interest cover <b>${s.cov.toFixed(1)}×</b></div>
+      <div class="chip">Size premium <b>${sizePrem(p.size) ? '+'+sizePrem(p.size)+' bps' : 'none'}</b></div>
+    </div>
+    <div class="headline">
+      <div class="big">${fmt(sel.cpn)}% <span>area</span> · ${sel.t}-year</div>
+      <div class="sub">Indicative coupon at the low end of a ${sel.yl.toFixed(2)}–${sel.yh.toFixed(2)}% yield range — mid-swaps + ${sel.re0}–${sel.re1} bps re-offer spread.</div>
+    </div>
+    <div class="twrap"><table>
+      <thead><tr><th>EUR bond pricing</th>${rows.map(r=>`<th${hl(r.t)}>${r.t}.0y</th>`).join('')}</tr></thead>
+      <tbody>
+        ${line('Fair value (bps)', r=>r.fv)}
+        ${line('New-issue premium (bps)', r=>`${r.n0}–${r.n1}`)}
+        ${line('Re-offer spread (bps)', r=>`${r.re0}–${r.re1}`, true)}
+        ${line('Mid-swap (%)', r=>r.ms.toFixed(3))}
+        ${line('Indicative yield (%)', r=>`${r.yl.toFixed(2)}–${r.yh.toFixed(2)}`)}
+        ${line('Coupon (low end, %)', r=>fmt(r.cpn), true)}
+      </tbody>
+    </table></div>
+    <div class="tfoot">Mid-swaps as of ${MS_ASOF}, indicative desk marks. Floating-rate alternative: 3m EURIBOR + re-offer spread.</div>
+    <div class="chartwrap"><h3>Where you sit on the curve</h3>${curveSvg(rows, s.bucket, p.tenor)}</div>
+    <div class="ctarow">
+      <a class="btn gold" href="mailto:contact@vanillabonds.com?subject=${encodeURIComponent('Firm indication request — '+who)}&body=${encodeURIComponent(`Company: ${who}\nCountry: ${p.country}\nSector: ${p.sector}\nRevenue: €${p.rev}m · EBITDA: €${p.ebitda}m · Net debt: €${p.nd}m · Cash interest: €${p.int}m\nTarget: €${p.size}m, ${p.tenor}y, ${p.debut?'debut':'repeat'}\nTool indication: ${fmt(sel.cpn)}% area (${sel.re0}–${sel.re1} bps over mid-swaps)\n\nPlease contact me about a firm indication.`)}">Request a firm indication</a>
+      <span>One email — your inputs and this indication, pre-filled. Sent only if you press send.</span>
+    </div>`;
+}
+
+function investorHTML(p, s, rows, sel){
+  const g = id => document.getElementById(id);
+  const who = p.name || 'the issuer';
+  const hgb = g('basis').value === 'hgb';
+  const sA  = hgb ? scoreProfile({...p, nd: p.nd + 0.75*p.ebitda}) : s;
+  const ov  = g('bover').value;
+  const myB = ov ? BUCKETS.find(b => b.label === ov) : sA.bucket;
+  const illiq = g('myilliq').value === '' ? sizePrem(p.size) : +g('myilliq').value;
+  const adj  = +g('myadj').value || 0;
+  const req  = t => Math.round(myB.base*TMULT[t]) + illiq + adj;
+  const mid  = Math.round((sel.re0+sel.re1)/2), myReq = req(p.tenor), d = mid - myReq;
+  const reqY = MS[p.tenor] + myReq/100;
+  const h = +g('hurdle').value || 0, hd = mid - h;
+  const row = (lbl,a,b,key) => `<tr${key?' class="key"':''}><td>${lbl}</td><td>${a}</td><td class="hl">${b}</td></tr>`;
+  return `
+    <div class="phead">The deal against your parameters — ${who}<small>Senior secured · Nordic format · EUR · self-directed screen</small></div>
+    <div class="profile">
+      <div class="chip">Model bucket <b>${s.bucket.label}</b></div>
+      <div class="chip bucket">Your bucket <b>${myB.label}</b></div>
+      <div class="chip">Net leverage <b>${s.lev.toFixed(1)}×${hgb ? ' → '+sA.lev.toFixed(1)+'× lease-adj.' : ''}</b></div>
+      <div class="chip">Interest cover <b>${s.cov.toFixed(1)}×</b></div>
+    </div>
+    <div class="headline">
+      <div class="big" style="color:${d >= 0 ? '#57C68F' : '#F08A80'}">${d >= 0 ? '+' : '−'}${Math.abs(d)} bps <span>vs your required level</span></div>
+      <div class="sub">Indicated re-offer MS+${sel.re0}–${sel.re1} (mid ${mid}) at ${p.tenor} years, against the MS+${myReq} your parameters require.${h ? (hd >= 0 ? ` Clears your MS+${h} hurdle by ${hd} bps.` : ` Misses your MS+${h} hurdle by ${Math.abs(hd)} bps.`) : ''}</div>
+    </div>
+    <div class="twrap"><table>
+      <thead><tr><th>${p.tenor}.0y comparison</th><th>Model</th><th class="hl">Your parameters</th></tr></thead>
+      <tbody>
+        ${row('Credit bucket', s.bucket.label, myB.label)}
+        ${row('Bucket spread (bps)', Math.round(s.bucket.base*TMULT[p.tenor]), Math.round(myB.base*TMULT[p.tenor]))}
+        ${row('Illiquidity premium (bps)', '+'+sizePrem(p.size), '+'+illiq)}
+        ${row('Your adjustment (bps)', '—', (adj >= 0 ? '+' : '−')+Math.abs(adj))}
+        ${row('New-issue premium (bps)', `+${sel.n0}–${sel.n1}`, '—')}
+        ${row('Re-offer / required (bps)', `${sel.re0}–${sel.re1}`, myReq, true)}
+        ${row('Indicative yield (%)', `${sel.yl.toFixed(2)}–${sel.yh.toFixed(2)}`, reqY.toFixed(2), true)}
+      </tbody>
+    </table></div>
+    <div class="tfoot">Model column: the indication shown to the issuer. Your column: the same arithmetic on parameters you set. Mid-swaps as of ${MS_ASOF}.</div>
+    <div class="chartwrap"><h3>The deal against your required curve</h3>${curveSvg(rows, s.bucket, p.tenor, req)}</div>
+    <div class="ctarow">
+      <a class="btn gold" href="mailto:contact@vanillabonds.com?subject=${encodeURIComponent('Deal file request — '+who)}&body=${encodeURIComponent(`Deal: ${who} (${p.country}, ${p.sector})\nFigures: revenue €${p.rev}m · EBITDA €${p.ebitda}m · net debt €${p.nd}m · cash interest €${p.int}m\nTerms: €${p.size}m, ${p.tenor}y, ${p.debut ? 'debut' : 'repeat'}\nModel indication: MS+${sel.re0}–${sel.re1}\nMy parameters: ${myB.label}, illiquidity +${illiq} bps, adjustment ${adj} bps${h ? `, hurdle MS+${h}` : ''}${hgb ? ', HGB lease adjustment on' : ''}\nMy required level: MS+${myReq} (${reqY.toFixed(2)}%)\nMargin vs my parameters: ${d >= 0 ? '+' : ''}${d} bps\n\nPlease send the standardised deal file.`)}">Request the full deal file</a>
+      <span>Self-directed comparison on your parameters — not a recommendation. Email sent only if you press send.</span>
+    </div>`;
+}
+
+const HERO = {
+  issuer:{e:'Senior bond pricing indications', h:'What would your bond cost?<br>An indication in sixty seconds.',
+    l:'When a bank syndicate desk pitches a rated issuer, it shows one page: comparable bonds, fair value, a new-issue premium, and the resulting spread, yield and coupon per tenor. Mid-caps never get that page. This tool runs the same mechanics for an unrated €20–100m senior issue in the Nordic format — from six numbers you already know.',
+    d:'Your company', ds:'All figures group level, last twelve months'},
+  inv:{e:'Investor screen — self-directed', h:'Price the deal your way.<br>Same arithmetic, your parameters.',
+    l:'Enter the deal as presented, then set your levers — your bucket view, the illiquidity premium you require, your adjustment, your hurdle. The screen shows where the deal’s indicated level sits against the level you require, mechanically. The parameters are yours, the judgment stays yours, and nothing you enter leaves your browser.',
+    d:'The deal', ds:'Issuer figures — group level, LTM'}};
+let MODE = 'issuer';
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => {
+  MODE = b.dataset.m;
+  document.querySelectorAll('.mode').forEach(x => x.classList.toggle('active', x.dataset.m === MODE));
+  const t = HERO[MODE];
+  document.getElementById('heroEyebrow').textContent = t.e;
+  document.getElementById('heroH1').innerHTML = t.h;
+  document.getElementById('heroLede').textContent = t.l;
+  document.getElementById('dealhead').innerHTML = `${t.d}<small>${t.ds}</small>`;
+  document.getElementById('invpanel').style.display = MODE === 'inv' ? '' : 'none';
+  render();
+}));
+
+const fill = s => { for(const [k,v] of Object.entries({cname:'name',country:'country',sector:'sector',rev:'rev',ebitda:'ebitda',nd:'nd',int:'int',size:'size',tenor:'tenor',debut:'debut'})) document.getElementById(k).value = s[v]; };
+document.getElementById('cname').addEventListener('input', e => { const s = SAMPLES.find(x => x.name === e.target.value); if(s) fill(s); render(); });
+document.querySelectorAll('#view-pricing input,#view-pricing select').forEach(el => el.addEventListener('input', render));
+render();
+
+/* ================= deal journey (scroll story) ================= */
+const JANCH_M = 19.5, JTARGET = 30, JCAP = 2.25; // bar scale, same as the live bookbuild
+const JBOOK = [ // [time, account, €m, limit, hot]
+ ["09:02","Nordic HY fund (Frankfurt)",2.5,"E+510"],
+ ["09:07","Multi-family office (Cologne)",1.5,"E+520"],
+ ["09:11","Asset manager (Amsterdam)",3.5,"E+505"],
+ ["09:18","Family office (Zurich)",1.0,"E+520"],
+ ["09:26","Green bond fund (Paris)",2.5,"E+510"],
+ ["09:34","Private bank treasury (Vienna)",1.5,"E+525"],
+ ["09:41","Family office (Düsseldorf)",1.0,"E+515"],
+ ["09:51","Nordic HY fund (Oslo)",3.0,"E+505"],
+ ["10:22","Credit opportunities desk (London)",4.0,"E+495",1],
+ ["10:48","Family office (Salzburg)",1.0,"E+530"],
+ ["11:15","Wealth manager (Luxembourg)",1.5,"E+520"],
+ ["11:52","Pensionskasse advisor (Munich)",1.0,"E+525"],
+ ["12:38","Event-driven fund (London)",4.0,"E+500",1],
+ ["13:05","MFO KVG (Hamburg) — top-up",3.0,"reoffer"],
+ ["13:41","Specialist bondpicker (Münster) — top-up",1.5,"reoffer"],
+ ["14:19","Article 9 debt fund (Kassel) — top-up",3.0,"reoffer"],
+ ["14:47","Asset manager (Copenhagen)",3.0,"E+505"],
+ ["15:04","Nordic pension buy-side (Stockholm)",2.0,"reoffer"]
+];
+const jsteps=[...document.querySelectorAll('.jstep')];
+const jscenes=[...document.querySelectorAll('.jscene')];
+const jbody=document.getElementById('jbookrows');
+jbody.innerHTML=JBOOK.map(o=>`<tr class="${o[4]?'hot':''}"><td class="num">${o[0]}</td><td>${o[1]}${o[4]?' ⚠':''}</td><td class="num">€${o[2].toFixed(1)}m</td><td class="num">${o[3]}</td></tr>`).join('');
+const jrows=[...jbody.children];
+let jscene=-1, jbookN=-1;
+function jSetScene(i){
+  if(i===jscene) return; jscene=i;
+  jsteps.forEach(s=>s.classList.toggle('on',+s.dataset.scene===i));
+  jscenes.forEach(s=>s.classList.toggle('on',+s.dataset.scene===i));
+  if(i>=2) document.getElementById('janchseg').style.width=(JANCH_M/JTARGET*100)+"%";
+}
+function jSetBook(p){
+  const n=Math.max(0,Math.min(JBOOK.length,Math.floor(p*(JBOOK.length+1))));
+  if(n===jbookN) return; jbookN=n;
+  jrows.forEach((tr,i)=>tr.classList.toggle('vis',i<n));
+  const open=JBOOK.slice(0,n).reduce((a,o)=>a+o[2],0), cov=(JANCH_M+open)/JTARGET;
+  document.getElementById('jseg-a').style.width=(JANCH_M/JTARGET/JCAP*100)+"%";
+  document.getElementById('jseg-o').style.width=(open/JTARGET/JCAP*100)+"%";
+  document.getElementById('jcovnum').textContent=`€${(JANCH_M+open).toFixed(1)}m of €${JTARGET}m — ${cov.toFixed(2)}×`;
+  document.getElementById('jclock').textContent=n?JBOOK[n-1][0]:"09:00";
+  const g=document.getElementById('jguide');
+  if(cov>=1.5){g.classList.add('rev');g.textContent="Guidance revised — 3mE + 505–515";}
+  else{g.classList.remove('rev');g.textContent="Guidance 3mE + 525 area";}
+  document.getElementById('joversub').classList.toggle('on',cov>=1.5);
+  document.getElementById('jbookstatus').innerHTML=n>=JBOOK.length?'<i style="animation:none;background:#C9A227"></i> BOOKS SUBJECT':'<i></i> BOOKS OPEN';
+  const w=document.querySelector('.jbookwrap'); if(w) w.scrollTop=w.scrollHeight;
+}
+function journeyTick(){
+  if(!document.getElementById('view-journey').classList.contains('active')) return;
+  const mid=innerHeight*0.52; let act=0;
+  jsteps.forEach(s=>{if(s.getBoundingClientRect().top<mid) act=+s.dataset.scene;});
+  jSetScene(act);
+  const bs=document.getElementById('jstep-book'), r=bs.getBoundingClientRect();
+  const span=Math.max(1,r.height-innerHeight*0.75);
+  const p=Math.max(0,Math.min(1,(mid-r.top-innerHeight*0.1)/span));
+  jSetBook(act>3?1:act<3?0:p);
+  bs.querySelectorAll('.jbeat').forEach(b=>b.classList.toggle('on',p>=+b.dataset.at));
+}
+function setHdr(){document.documentElement.style.setProperty('--hdr',document.querySelector('header').offsetHeight+'px');}
+let jraf=false;
+addEventListener('scroll',()=>{if(!jraf){jraf=true;requestAnimationFrame(()=>{jraf=false;journeyTick();});}},{passive:true});
+addEventListener('resize',()=>{setHdr();journeyTick();});
+setHdr();
+journeyTick();
 </script>
 </body>
 </html>
