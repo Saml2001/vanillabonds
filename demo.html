@@ -8,6 +8,7 @@
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b35423f3-28a6-4369-baf8-eceb897d0f2e"></script>
 <style>
   :root{
     --bg:#07131F; --panel:#0D2136; --panel2:#0A1C2F;
@@ -433,7 +434,8 @@
         <h2>First contact — and a number on the table.</h2>
         <p>A CFO sends six figures from the last annual report. The platform answers with the two things banks make mid-caps wait for: a pass or fail against the published credit profile, and an indicative pricing range from the same engine that runs the Pricing tab.</p>
         <ul class="jfacts">
-          <li>Profile #1: sector · €20–100m · EBITDA ≥ €8m · ≤ 3.5× net leverage · security · disclosure</li>
+          <li>Profile #1: Germany first · energy transition &amp; industrial · €20–100m · EBITDA ≥ €8m · ≤ 3.5× net leverage · security · disclosure</li>
+          <li>The AI fact sheet builds the dossier from primary sources — every figure sourced, every figure signed off. Preparation drops from weeks to hours</li>
           <li>Indicative range in sixty seconds — orientation, never advice</li>
           <li>48 hours to a go / no-go; declines are visible and, with consent, referred</li>
         </ul>
@@ -489,7 +491,8 @@
         <p>Cash and bonds swap simultaneously in the settlement system: investors' money reaches Voltaria through the independent paying agent — a settlement bank, not the platform, which has no client-money permission by design. Our fee is a separate invoice, like any adviser's.</p>
         <ul class="jfacts">
           <li>Proceeds go straight to the issuer — the platform is never in the payment chain</li>
-          <li>Arranging fee 1.25%, invoiced separately — the platform's only economics</li>
+          <li>Transaction fee 1.25% (target band 1.0–1.5%), issuer-paid and invoiced separately — shared with or paid through the licensed partner</li>
+          <li>A monitoring retainer keeps the dossier current for as long as the bond is live — zero investor fees, on this deal or any other</li>
           <li>Security perfected before funds flow; the trustee holds it for bondholders</li>
           <li>A transferable, trustee-administered line from day one</li>
         </ul>
@@ -794,7 +797,8 @@
             <select id="ord-limit"><option value="500">limit E+500</option><option value="510">limit E+510</option><option value="520" selected>limit E+520</option><option value="530">limit E+530</option><option value="540">reoffer / no limit</option></select>
             <button class="btn gold" onclick="placeOrder()">Place order</button>
           </div>
-          <div style="font-size:11.5px;color:#7E97AD;margin-top:7px">Demo order entry — joins the book as “You”. Tickets €0.5–5.0m.</div>
+          <div style="font-size:11.5px;color:#7E97AD;margin-top:7px">Demo order entry — joins the book as “You”. Tickets €0.5–5.0m, in €100,000 minimum denominations, qualified investors only.</div>
+          <div style="font-size:11.5px;color:#7E97AD;margin-top:5px">No investor fee, on this deal or any other — all platform revenue comes from the issuer side. You keep the full coupon; the fund route into this segment costs 1.5–2.5%.</div>
         </div>
 
         <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
@@ -944,10 +948,10 @@
           <option value="hgb">HGB / local GAAP — add 0.75× EBITDA to net debt</option>
         </select>
         <p class="hint">HGB keeps operating leases off balance sheet; the adjustment restates leverage toward IFRS 16 before scoring.</p>
-        <label for="bover">Credit bucket</label>
+        <label for="bover">Comparable peer band</label>
         <select id="bover">
-          <option value="">Model bucket — let the figures decide</option>
-          <option>BB+ area</option><option>BB area</option><option>BB− area</option><option>B+ area</option><option>B area</option>
+          <option value="">Model band — let the figures decide</option>
+          <option>Band 1 · 250 area</option><option>Band 2 · 315 area</option><option>Band 3 · 400 area</option><option>Band 4 · 525 area</option><option>Band 5 · 675 area</option>
         </select>
         <div class="frow">
           <div><label for="myilliq">Your illiquidity premium (bps)</label><input id="myilliq" type="number" step="5" placeholder="model default"></div>
@@ -969,7 +973,7 @@
     <div class="mstep"><span class="n">STEP 3</span><h3>Swaps in, coupon out</h3><p>Re-offer spread over euro mid-swaps gives the indicative yield; rounding down to the nearest eighth gives the coupon a lead manager would print at the low end of the range. Fixed-rate shown; Nordic-format floaters (3m EURIBOR + margin) use the same spread.</p></div>
   </section>
 
-  <div class="honest"><b>What this is — and is not.</b> These are model-based indicative levels for issuer orientation, generated from the figures you enter, which are not stored or transmitted. This page is not an offer, a recommendation or investment advice, and no level here is a commitment to arrange or place. The credit profile shown is a pricing bucket derived from the figures you enter — it is not a credit rating within the meaning of the EU CRA Regulation, and VanillaBonds does not issue credit ratings. A firm indication follows a credit assessment and reflects market conditions at launch; any issue is executed with a licensed partner. Mid-swap levels are indicative desk marks, refreshed periodically, not a live feed. In the investor view, comparisons and hurdle checks apply parameters set by you to the same arithmetic — they are mechanical screens for professional investors, not investment advice, a recommendation or a solicitation to buy or sell any instrument. The investment decision remains yours.</div>
+  <div class="honest"><b>What this is — and is not.</b> These are model-based indicative levels for issuer orientation, generated from the figures you enter, which are not stored or transmitted. This page is not an offer, a recommendation or investment advice, and no level here is a commitment to arrange or place. The peer band shown is a pricing cohort derived mechanically from the figures you enter — it is not a credit rating, a credit score or a ranking of creditworthiness within the meaning of the EU CRA Regulation, and VanillaBonds neither issues nor produces credit ratings. A firm indication follows a credit assessment and reflects market conditions at launch; any issue is executed with a licensed partner. Mid-swap levels are indicative desk marks, refreshed periodically, not a live feed. In the investor view, comparisons and hurdle checks apply parameters set by you to the same arithmetic — they are mechanical screens for professional investors, not investment advice, a recommendation or a solicitation to buy or sell any instrument. The investment decision remains yours.</div>
 </section>
 
 </main>
@@ -991,7 +995,7 @@
     <div>
       <h4>Contact</h4>
       <p>Founders’ desk (demo)<br>contact@vanillabonds.com<br>Munich</p>
-      <p style="margin-top:12px;font-size:12px">Investor access: professional &amp; semi-professional only, KYC-gated.</p>
+      <p style="margin-top:12px;font-size:12px">Investor access: qualified/professional investors within the meaning of MiFID II only, KYC-gated. €100,000 minimum denomination. No retail, in any form.</p>
     </div>
     <div>
       <h4>Legal</h4>
@@ -1010,6 +1014,7 @@ function showView(v){
   const nb=document.getElementById('nav-'+v); if(nb) nb.classList.add('active');
   window.scrollTo({top:0});
   if(location.hash!=='#'+v) history.replaceState(null,'','#'+v);
+  if(window.umami) umami.track('view-'+v);
   if(v==='journey'&&window.journeyTick) requestAnimationFrame(journeyTick);
 }
 window.addEventListener('load',()=>{let h=location.hash.replace('#','');if(h==='platform')h='market';if(['journey','market','issue','pricing'].includes(h))showView(h);});
@@ -1412,7 +1417,8 @@ function runWizard(){
 
   if(["re","fin","sport"].includes(sector)) add("fail","Sector: outside the platform profile (real-estate SPVs, financials and sports clubs are not arranged).");
   else if(sector==="et") add("pass","Sector: energy transition — exactly the start niche.");
-  else add("pass","Sector: core mid-cap — eligible (energy transition prioritised in phase 1).");
+  else if(sector==="ind") add("pass","Sector: industrial mid-cap — inside the first segment alongside energy transition.");
+  else add("part","Sector: outside the first segment — the initial wedge is German energy-transition and industrial mid-caps. Eligible once the first transactions have printed.");
 
   if(size>=20&&size<=100) add("pass",`Size €${size}m: inside the €20–100m band.`);
   else if(size<20) add("part",`Size €${size}m: below €20m the format barely exists — possible only as an explicitly labelled experiment.`);
@@ -1433,8 +1439,8 @@ function runWizard(){
   else if(tenor===2||tenor===5) add("part",`Tenor ${tenor}y: outside the 3–4y standard — case by case.`);
   else add("fail",`Tenor ${tenor}y: not offered in the standard format.`);
 
-  if(use==="refi"||use==="capex") add("pass","Use of proceeds: refinancing / capex — the profile trigger.");
-  else if(use==="acq") add("part","Acquisition financing: possible with committed equity and pro-forma covenants.");
+  if(use==="refi"||use==="capex") add("pass","Use of proceeds: refinancing / bundled capex programme — a profile trigger. A single machine leases fine; that deal isn't ours.");
+  else if(use==="acq") add("pass","Acquisition financing: a core profile trigger — company-scale programmes are exactly what asset finance cannot reach. Committed equity and pro-forma covenants apply.");
   else add("fail","Dividend recap: declined visibly. Not in deal one, not later.");
 
   if(disc) add("pass","Ongoing disclosure: committed.");
@@ -1478,12 +1484,12 @@ const MS = {3:2.25, 4:2.35, 5:2.45, 7:2.60};              // EUR mid-swaps %, in
 const MS_ASOF = 'July 2026';
 const TENORS = [3,4,5,7];
 const TMULT  = {3:.87, 4:.94, 5:1.00, 7:1.12};            // tenor shape of the spread curve
-const BUCKETS = [                                          // 5y base spread per credit bucket, bps
-  {min:80, label:'BB+ area', base:250, color:'#57B98A'},
-  {min:65, label:'BB area',  base:315, color:'#6FA7D6'},
-  {min:50, label:'BB− area', base:400, color:'#E0B84C'},
-  {min:35, label:'B+ area',  base:525, color:'#D99A5B'},
-  {min:0,  label:'B area',   base:675, color:'#E5776C'}];
+const BUCKETS = [                                          // 5y base spread per peer band, bps — pricing cohorts, deliberately NOT rating notation (CRA Reg.)
+  {min:80, label:'Band 1 · 250 area', base:250, color:'#57B98A'},
+  {min:65, label:'Band 2 · 315 area', base:315, color:'#6FA7D6'},
+  {min:50, label:'Band 3 · 400 area', base:400, color:'#E0B84C'},
+  {min:35, label:'Band 4 · 525 area', base:525, color:'#D99A5B'},
+  {min:0,  label:'Band 5 · 675 area', base:675, color:'#E5776C'}];
 const SECTOR_PTS = {defensive:15, neutral:10, cyclical:5};
 const sizePrem  = s => s < 30 ? 50 : s < 50 ? 25 : 0;      // illiquidity premium, bps
 const nipBand   = debut => debut ? [15,25] : [10,15];      // new-issue premium, bps
@@ -1572,8 +1578,7 @@ function render(){
   R.innerHTML = `
     <div class="phead">Indicative pricing — ${who}<small>Senior secured · Nordic format · EUR · fixed rate</small></div>
     <div class="profile">
-      <div class="chip bucket">Credit profile <b>${s.bucket.label}</b></div>
-      <div class="chip">Score <b>${s.score}/100</b></div>
+      <div class="chip bucket">Comparable peer band <b>${s.bucket.label}</b></div>
       <div class="chip">Net leverage <b>${s.lev.toFixed(1)}×</b></div>
       <div class="chip">Interest cover <b>${s.cov.toFixed(1)}×</b></div>
       <div class="chip">Size premium <b>${sizePrem(p.size) ? '+'+sizePrem(p.size)+' bps' : 'none'}</b></div>
@@ -1618,8 +1623,8 @@ function investorHTML(p, s, rows, sel){
   return `
     <div class="phead">The deal against your parameters — ${who}<small>Senior secured · Nordic format · EUR · self-directed screen</small></div>
     <div class="profile">
-      <div class="chip">Model bucket <b>${s.bucket.label}</b></div>
-      <div class="chip bucket">Your bucket <b>${myB.label}</b></div>
+      <div class="chip">Model band <b>${s.bucket.label}</b></div>
+      <div class="chip bucket">Your band <b>${myB.label}</b></div>
       <div class="chip">Net leverage <b>${s.lev.toFixed(1)}×${hgb ? ' → '+sA.lev.toFixed(1)+'× lease-adj.' : ''}</b></div>
       <div class="chip">Interest cover <b>${s.cov.toFixed(1)}×</b></div>
     </div>
@@ -1630,8 +1635,8 @@ function investorHTML(p, s, rows, sel){
     <div class="twrap"><table>
       <thead><tr><th>${p.tenor}.0y comparison</th><th>Model</th><th class="hl">Your parameters</th></tr></thead>
       <tbody>
-        ${row('Credit bucket', s.bucket.label, myB.label)}
-        ${row('Bucket spread (bps)', Math.round(s.bucket.base*TMULT[p.tenor]), Math.round(myB.base*TMULT[p.tenor]))}
+        ${row('Comparable peer band', s.bucket.label, myB.label)}
+        ${row('Band spread (bps)', Math.round(s.bucket.base*TMULT[p.tenor]), Math.round(myB.base*TMULT[p.tenor]))}
         ${row('Illiquidity premium (bps)', '+'+sizePrem(p.size), '+'+illiq)}
         ${row('Your adjustment (bps)', '—', (adj >= 0 ? '+' : '−')+Math.abs(adj))}
         ${row('New-issue premium (bps)', `+${sel.n0}–${sel.n1}`, '—')}
