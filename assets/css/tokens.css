@@ -1,0 +1,154 @@
+/* ==========================================================================
+   VanillaBonds v6 — design tokens
+   The single source of visual truth. Every stylesheet consumes these
+   variables; no colour or size value is hardcoded anywhere else.
+   Re-skin the site by editing this file only.
+   ========================================================================== */
+
+:root {
+  /* ---- primitives: colour ---------------------------------------------- */
+  --vb-white:        #FFFFFF;
+  --vb-gold:         #C9A227;  /* primary accent — rules, borders, underlines, text on navy only */
+  --vb-gold-dim:     #856B19;  /* gold carrying text on white — spec'd #9A7C1D measured
+                                  3.98:1 (fails the 4.5 floor); darkened to 5.10:1 */
+  --vb-navy:         #0D1B2A;  /* secondary accent, footer ground, demo ground */
+  --vb-navy-raised:  #13253A;  /* raised surface on navy grounds */
+  --vb-ink-900:      #14202E;  /* body ink on light */
+  --vb-ink-500:      #5A6672;  /* muted ink on light */
+  --vb-ink-inv:      #E8ECF1;  /* body ink on navy */
+  --vb-ink-inv-mut:  #9AA8B8;  /* muted ink on navy */
+  --vb-line-warm:    #E4E0D4;  /* hairlines on light */
+  --vb-line-navy:    #24374D;  /* hairlines on navy */
+
+  /* status hues (demo pills, wizard verdicts) — decided fresh for v6 */
+  --vb-pos:          #4AB187;
+  --vb-warn:         #D89A3D;
+  --vb-neg:          #E06A62;  /* 4.73:1 on navy-raised (#D95F57 measured 4.23, failed) */
+  --vb-info:         #6C9BC9;
+  --vb-neutral:      #8A97A5;
+
+  /* data-display palette (demo charts; anchor/open book bars) */
+  --vb-data-a:       #C9A227;  /* anchor / highlight series = gold */
+  --vb-data-b:       #6C9BC9;  /* second series (open book) */
+  --vb-chart-1:      #4AB187;  /* energy transition */
+  --vb-chart-2:      #6C9BC9;  /* industrials */
+  --vb-chart-3:      #C9A227;  /* consumer */
+  --vb-chart-4:      #A08BC8;  /* services */
+  --vb-chart-5:      #56B4C4;  /* healthcare */
+  --vb-chart-6:      #9DAE62;  /* shipping */
+  --vb-chart-7:      #C7804E;  /* energy */
+  --vb-chart-8:      #8A97A5;  /* financials */
+
+  /* ---- semantic: theme (light defaults; demo scope overrides below) ---- */
+  --vb-ground:        var(--vb-white);
+  --vb-ground-raised: var(--vb-white);
+  --vb-ink:           var(--vb-ink-900);
+  --vb-ink-muted:     var(--vb-ink-500);
+  --vb-hairline:      var(--vb-line-warm);
+  --vb-accent:        var(--vb-gold);      /* non-text accent uses */
+  --vb-accent-ink:    var(--vb-gold-dim);  /* accent when it carries text */
+  --vb-link-ink:      var(--vb-ink-900);
+  --vb-link-line:     var(--vb-gold);
+  --vb-focus:         var(--vb-gold-dim);
+
+  /* inverse surface (navy footer on light pages) */
+  --vb-inv-ground:    var(--vb-navy);
+  --vb-inv-ink:       var(--vb-ink-inv);
+  --vb-inv-ink-muted: var(--vb-ink-inv-mut);
+  --vb-inv-hairline:  var(--vb-line-navy);
+
+  /* hero video overlay: navy at 65% — measured worst-frame headline contrast
+     4.58:1 with #E8ECF1 text, ~5.4:1 with white; 60% failed at 3.87:1 */
+  --vb-overlay:       rgba(13, 27, 42, 0.65);
+
+  /* ---- type ------------------------------------------------------------ */
+  --vb-font-body:    "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  --vb-font-display: var(--vb-font-body);  /* display = Source Sans 3 600 (Gate-1 choice a) */
+  --vb-font-mono:    "IBM Plex Mono", "SF Mono", Menlo, monospace;
+
+  /* 1.250 minor-third scale, 1rem = 16px */
+  --vb-text-0: 0.8rem;    /* 12.8px — legal, eyebrows, table meta */
+  --vb-text-1: 1rem;      /* 16px  — body */
+  --vb-text-2: 1.25rem;   /* 20px  — lead, h4 */
+  --vb-text-3: 1.563rem;  /* 25px  — h3 */
+  --vb-text-4: 1.953rem;  /* 31px  — h2 */
+  --vb-text-5: 2.441rem;  /* 39px  — h1 mobile / section display */
+  --vb-text-6: 3.052rem;  /* 49px  — h1 desktop */
+  --vb-text-7: 3.815rem;  /* 61px  — hero display, 1440+ only */
+
+  --vb-w-light: 300;
+  --vb-w-reg:   400;
+  --vb-w-semi:  600;
+  --vb-w-mono-med: 500;
+
+  --vb-lh-display: 1.12;
+  --vb-lh-heading: 1.25;
+  --vb-lh-body:    1.55;
+
+  --vb-ls-eyebrow: 0.14em;   /* uppercase kickers */
+  --vb-ls-wide:    0.06em;   /* wordmark, small caps-ish labels */
+
+  /* ---- space (8px base; -05 is the half-step) -------------------------- */
+  --vb-space-05: 4px;
+  --vb-space-1:  8px;
+  --vb-space-2:  16px;
+  --vb-space-3:  24px;
+  --vb-space-4:  32px;
+  --vb-space-5:  48px;
+  --vb-space-6:  64px;
+  --vb-space-7:  96px;
+  --vb-space-8:  128px;
+
+  /* ---- layout ---------------------------------------------------------- */
+  --vb-container: 1160px;
+  --vb-measure:   64ch;      /* prose max-measure */
+  --vb-nav-h:     64px;
+
+  /* ---- shape ----------------------------------------------------------- */
+  --vb-radius:    2px;
+  --vb-radius-0:  0px;
+  --vb-hairline-w: 1px;
+  --vb-rule-w:     2px;
+
+  /* ---- motion ---------------------------------------------------------- */
+  --vb-dur-1: 120ms;         /* hover, focus, underline */
+  --vb-dur-2: 240ms;         /* reveals, drawer, header state */
+  --vb-ease:  cubic-bezier(0.3, 0, 0.35, 1);
+
+  /* ---- stacking -------------------------------------------------------- */
+  --vb-z-nav:    100;
+  --vb-z-drawer: 200;
+}
+
+/* ==========================================================================
+   Dark theme — demo.html only. <html data-theme="demo">.
+   Token substitution only: no separate dark stylesheet, no .dark- classes.
+   ========================================================================== */
+[data-theme="demo"] {
+  --vb-ground:        var(--vb-navy);
+  --vb-ground-raised: var(--vb-navy-raised);
+  --vb-ink:           var(--vb-ink-inv);
+  --vb-ink-muted:     var(--vb-ink-inv-mut);
+  --vb-hairline:      var(--vb-line-navy);
+  --vb-accent:        var(--vb-gold);
+  --vb-accent-ink:    var(--vb-gold);      /* full gold may carry text on navy */
+  --vb-link-ink:      var(--vb-ink-inv);
+  --vb-link-line:     var(--vb-gold);
+  --vb-focus:         var(--vb-gold);
+
+  /* inverse surface flips back to light-on-navy context (rarely used in demo) */
+  --vb-inv-ground:    var(--vb-navy-raised);
+  --vb-inv-ink:       var(--vb-ink-inv);
+  --vb-inv-ink-muted: var(--vb-ink-inv-mut);
+  --vb-inv-hairline:  var(--vb-line-navy);
+}
+
+/* ==========================================================================
+   Motion policy lives with the tokens: reduced motion zeroes every duration.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --vb-dur-1: 0ms;
+    --vb-dur-2: 0ms;
+  }
+}

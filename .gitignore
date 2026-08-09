@@ -1,0 +1,14 @@
+# dev-only material — never ships
+research/
+node_modules/
+test-website-v6.command
+.DS_Store
+
+# raw supplied media sources (only encoded derivatives ship).
+# Raw hero is .mov, raw logo is .jpeg, raw pitch carries its original name —
+# derivatives use .mp4/.webm/.jpg/.png, so these patterns cannot collide.
+*.mov
+*.jpeg
+VanillaBonds Pitch*
+Website Pitch*
+WebsitePitch*
