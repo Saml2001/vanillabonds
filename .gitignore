@@ -1,7 +1,7 @@
 # dev-only material — never ships
 research/
 node_modules/
-test-website-v6.command
+test-website-v7.command
 .DS_Store
 
 # raw supplied media sources (only encoded derivatives ship).
@@ -12,3 +12,4 @@ test-website-v6.command
 VanillaBonds Pitch*
 Website Pitch*
 WebsitePitch*
+VanillaBonds Logo*
