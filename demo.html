@@ -282,9 +282,9 @@
 <!-- ============================================================= -->
 <section class="view" id="view-market">
   <div style="padding:44px 0 6px">
-    <div class="eyebrow">Secondary market · indicative levels · demo data as of 3 July 2026</div>
+    <div class="eyebrow">Secondary market · issuer data verified August 2026 · prices indicative</div>
     <h1 style="font-size:var(--vb-text-4)">The Market</h1>
-    <p class="sub" style="margin-top:10px">Continental issuers in the Nordic bond format, from our verified dataset. Prices, spreads and order-book depth shown here are illustrative. Click any line for terms, covenants and disclosure history.</p>
+    <p class="sub" style="margin-top:10px">Every outstanding EUR bond in the Nordic format from a continental European issuer, as far as public sources reach — 38 lines from our own verified dataset. Issuer, ISIN, size, dates and coupon are source-checked; sizes are total issued after taps. Prices, spreads to market and order-book depth are illustrative. Click any line for terms, covenants and disclosure history.</p>
   </div>
 
   <div class="mktstats">
@@ -623,10 +623,10 @@
     </div>
     <div>
       <h4>Legal</h4>
-      <p class="legal">This is a demonstration environment. All prices, order-book data, statistics, the “Voltaria” transaction and all account names are fictitious or illustrative; issuer names in the Market section derive from a public-source research dataset and their terms shown here are indicative reconstructions, not quotes. Nothing on this site constitutes an offer, solicitation, investment advice or investment brokerage. No activity requiring a licence under the KWG/WpIG is conducted; any future activity would take place only after registration under a licensed host (Haftungsdach) and within the limits of applicable law (incl. §54 KWG). Credit indications never replace an investor’s own analysis.</p>
+      <p class="legal">This is a demonstration environment. The “Voltaria” transaction, all account names, all prices, order-book and trading data are fictitious or illustrative. The Market section is different: issuer names, ISINs, issue and maturity dates, and issue sizes are taken from our own verified research dataset of EUR-denominated Nordic-format bonds by non-Nordic issuers (38 outstanding lines, source-checked against issuer terms and conditions, exchange master data and issuer announcements, August 2026). Issue sizes are total issued after taps, not framework limits. Coupon margins are as disclosed, except for four (BoldR, Muehlhan, Arles I, TEMPTON 2026) derived or estimated where the margin is not public; TEMPTON’s 2026 refinancing bond is shown with its ISIN pending, as it is not yet in free sources. Prices, spreads to market and any performance shown against them remain simulated. Nothing on this site constitutes an offer, solicitation, investment advice or investment brokerage. No activity requiring a licence under the KWG/WpIG is conducted; any future activity would take place only after registration under a licensed host (Haftungsdach) and within the limits of applicable law (incl. §54 KWG). Credit indications never replace an investor’s own analysis.</p>
     </div>
   </div>
-  <div class="fbottom">© 2026 VanillaBonds — demonstration build · <a href="index.html">vanillabonds.com</a> · <a href="#pricing" onclick="showView('pricing');return false">indicative pricing</a> · data snapshot 3 July 2026 · built from the July 2026 business plan (Part II)</div>
+  <div class="fbottom">© 2026 VanillaBonds — demonstration build · <a href="index.html">vanillabonds.com</a> · <a href="#pricing" onclick="showView('pricing');return false">indicative pricing</a> · market data verified 28 August 2026 · built from the July 2026 business plan (Part II)</div>
 </footer>
 
 <script>
@@ -656,46 +656,44 @@ window.addEventListener('load',()=>{let h=location.hash.replace('#','');if(h==='
 /* ================= market data (demo reconstruction from own dataset) ================= */
 const E3M = 2.08; // 3m EURIBOR assumption, %
 const BONDS = [
- {n:"HomeToGo SE",c:"DE",s:"Travel marketplace",g:"Services",isin:"NO0013697268",size:75,t:"FRN",cp:450,iss:"2026-06",mat:"2031-06",px:100.4,st:"Performing"},
- {n:"DEAG Deutsche Entertainment",c:"DE",s:"Live entertainment",g:"Services",isin:"NO0013639112",size:60,t:"FRN",cp:575,iss:"2025-04",mat:"2029-04",px:101.2,st:"Performing"},
- {n:"Mutares SE & Co. KGaA",c:"DE",s:"Industrial holding",g:"Industrials",isin:"NO0013325407",size:250,t:"FRN",cp:625,iss:"2024-03",mat:"2027-03",px:102.1,st:"Performing"},
- {n:"Muehlhan Holding",c:"DE",s:"Wind services",g:"Energy transition",isin:"NO0013682542",size:35,t:"FRN",cp:650,iss:"2025-11",mat:"2030-11",px:100.8,st:"Performing"},
- {n:"Formycon AG",c:"DE",s:"Biosimilars",g:"Healthcare",isin:"NO0013586024",size:70,t:"FRN",cp:500,iss:"2025-07",mat:"2029-07",px:101.0,st:"Performing"},
- {n:"Katjes International",c:"DE",s:"Confectionery",g:"Consumer",isin:"NO0012888769",size:185,t:"FIX",cp:6.75,iss:"2023-09",mat:"2028-09",px:103.4,st:"Performing"},
- {n:"Karlsberg Brauerei",c:"DE",s:"Brewery",g:"Consumer",isin:"NO0013168005",size:50,t:"FIX",cp:7.25,iss:"2024-05",mat:"2029-05",px:102.6,st:"Performing"},
- {n:"JDC Group AG",c:"DE",s:"Insurtech",g:"Services",isin:"NO0013618587",size:35,t:"FRN",cp:550,iss:"2025-05",mat:"2029-05",px:100.9,st:"Performing"},
- {n:"The Platform Group",c:"DE",s:"E-commerce platforms",g:"Services",isin:"NO0013256834",size:30,t:"FIX",cp:8.875,iss:"2024-07",mat:"2028-07",px:101.8,st:"Performing"},
- {n:"Hörmann Industries",c:"DE",s:"Diversified industrial",g:"Industrials",isin:"NO0012938325",size:50,t:"FIX",cp:6.25,iss:"2023-07",mat:"2028-07",px:100.7,st:"Performing"},
- {n:"Homann Holzwerkstoffe",c:"DE",s:"Wood-based materials",g:"Industrials",isin:"NO0013536169",size:65,t:"FRN",cp:600,iss:"2025-03",mat:"2030-03",px:101.5,st:"Performing"},
- {n:"NWI Group",c:"DE",s:"Industrial holding",g:"Industrials",isin:"NO0013355255",size:50,t:"FRN",cp:700,iss:"2024-11",mat:"2028-11",px:99.6,st:"Performing"},
- {n:"Kolibri (Zeitfracht)",c:"DE",s:"Logistics / aviation",g:"Industrials",isin:"NO0013461384",size:45,t:"FRN",cp:750,iss:"2025-01",mat:"2029-01",px:100.2,st:"Performing"},
- {n:"BOS GmbH & Co. KG",c:"DE",s:"Automotive supplier",g:"Industrials",isin:"NO0013515759",size:40,t:"FRN",cp:875,iss:"2025-02",mat:"2029-02",px:97.8,st:"Watch"},
- {n:"MEDIA Central Holding",c:"DE",s:"Retail marketing",g:"Services",isin:"NO0012940347",size:200,t:"FRN",cp:725,iss:"2023-06",mat:"2027-06",px:100.9,st:"Performing"},
- {n:"LR Health & Beauty",c:"DE",s:"Direct sales",g:"Consumer",isin:"NO0013149658",size:130,t:"FRN",cp:875,iss:"2024-03",mat:"2028-03",px:99.2,st:"Performing"},
- {n:"BOOSTER Precision",c:"DE",s:"Precision auto components",g:"Industrials",isin:"NO0012713520",size:35,t:"FRN",cp:800,iss:"2023-05",mat:"2027-05",px:42.0,st:"Standstill"},
- {n:"TEMPTON Personal",c:"DE",s:"Staffing",g:"Services",isin:"NO0011129496",size:25,t:"FRN",cp:675,iss:"2021-11",mat:"2026-11",px:100.1,st:"Maturing"},
- {n:"LifeFit Group",c:"DE",s:"Fitness / health",g:"Consumer",isin:"NO0013252452",size:100,t:"FRN",cp:700,iss:"2024-08",mat:"2028-08",px:100.6,st:"Performing"},
- {n:"BoldR Group",c:"DE",s:"Auto aftermarket",g:"Consumer",isin:"NO0013648295",size:30,t:"FRN",cp:725,iss:"2025-09",mat:"2030-09",px:100.3,st:"Performing"},
- {n:"DWK Life Sciences (DURAN)",c:"DE",s:"Lab glassware",g:"Healthcare",isin:"NO0013696880",size:60,t:"FRN",cp:650,iss:"2025-05",mat:"2030-05",px:101.1,st:"Performing"},
- {n:"Hertha BSC",c:"DE",s:"Football club",g:"Services",isin:"SE0011337054",size:40,t:"FIX",cp:6.5,iss:"2023-11",mat:"2028-11",px:96.8,st:"Watch"},
- {n:"O3 Holding (KD Pharma)",c:"DE",s:"Pharma CDMO",g:"Healthcare",isin:"NO0013360552",size:75,t:"FRN",cp:775,iss:"2024-10",mat:"2028-10",px:99.8,st:"Performing"},
- {n:"Secop Group",c:"DE",s:"Compressors",g:"Industrials",isin:"NO0013752634",size:100,t:"FRN",cp:700,iss:"2026-06",mat:"2031-06",px:100.0,st:"Performing"},
- {n:"SLR Group",c:"DE",s:"Metal components",g:"Industrials",isin:"NO0013177949",size:75,t:"FRN",cp:825,iss:"2024-10",mat:"2027-10",px:98.9,st:"Performing"},
- {n:"smava GmbH",c:"DE",s:"Consumer-credit fintech",g:"Services",isin:"NO0013531590",size:40,t:"FRN",cp:850,iss:"2025-05",mat:"2029-05",px:99.4,st:"Performing"},
- {n:"Schletter Group",c:"DE",s:"Solar mounting systems",g:"Energy transition",isin:"NO0012530973",size:55,t:"FRN",cp:700,iss:"2022-06",mat:"2026-06",px:100.0,st:"Called"},
- {n:"Okechamp",c:"PL",s:"Food processing",g:"Consumer",isin:"NO0013364380",size:40,t:"FRN",cp:900,iss:"2024-06",mat:"2028-06",px:18.5,st:"Default"},
- {n:"Azerion Group N.V.",c:"NL",s:"Digital advertising",g:"Services",isin:"NO0013660357",size:300,t:"FRN",cp:650,iss:"2025-10",mat:"2029-10",px:101.3,st:"Performing"},
- {n:"Arles I (Fletcher Hotels)",c:"NL",s:"Hospitality",g:"Consumer",isin:"NO0013684662",size:150,t:"FRN",cp:600,iss:"2025-12",mat:"2030-12",px:100.7,st:"Performing"},
- {n:"Nexus Newco (Dayes)",c:"NL",s:"Consumer products",g:"Consumer",isin:"NO0013511766",size:40,t:"FRN",cp:625,iss:"2025-04",mat:"2030-04",px:100.5,st:"Performing"},
- {n:"Flora Food Group",c:"NL",s:"Plant-based food",g:"Consumer",isin:"NO0013606426",size:300,t:"FIX",cp:8.625,iss:"2025-06",mat:"2031-06",px:102.2,st:"Performing"},
- {n:"Advanzia Bank (T2)",c:"LU",s:"Credit-card bank",g:"Financials",isin:"NO0013583237",size:50,t:"FRN",cp:525,iss:"2025-06",mat:"2035-06",px:100.9,st:"Performing"},
- {n:"3t Energy Group",c:"UK",s:"Energy training / simulation",g:"Energy transition",isin:"NO0013211136",size:45,t:"FRN",cp:750,iss:"2024-06",mat:"2028-06",px:100.4,st:"Performing"},
- {n:"Loch Duart",c:"UK",s:"Salmon aquaculture",g:"Consumer",isin:"NO0013383984",size:25,t:"FRN",cp:800,iss:"2025-01",mat:"2029-01",px:99.7,st:"Performing"},
- {n:"Serica Energy",c:"UK",s:"North Sea E&P",g:"Energy",isin:"NO0013742163",size:200,t:"FIX",cp:9.0,iss:"2026-05",mat:"2031-05",px:101.0,st:"Performing"},
- {n:"Navigator Gas",c:"UK",s:"Gas carriers",g:"Shipping",isin:"NO0013379446",size:100,t:"FIX",cp:8.375,iss:"2024-10",mat:"2029-10",px:102.0,st:"Performing"},
- {n:"Diana Shipping",c:"GR",s:"Dry bulk shipping",g:"Shipping",isin:"NO0013265835",size:150,t:"FIX",cp:8.75,iss:"2024-11",mat:"2029-11",px:101.6,st:"Performing"},
- {n:"Fertiberia",c:"ES",s:"Green ammonia / fertilisers",g:"Energy transition",isin:"NO0013740894",size:125,t:"FRN",cp:700,iss:"2026-05",mat:"2030-05",px:100.2,st:"Performing"},
- {n:"Gentoo Media",c:"MT",s:"iGaming platform",g:"Services",isin:"NO0013024018",size:100,t:"FRN",cp:725,iss:"2023-09",mat:"2027-09",px:101.1,st:"Performing"}
+ {n:"BOOSTER Precision",c:"DE",s:"Precision automotive",g:"Industrials",isin:"NO0012713520",size:53,t:"FRN",cp:900,iss:"2022-11",mat:"2026-11",px:42.0,st:"Standstill"},
+ {n:"BOS GmbH & Co. KG",c:"DE",s:"Automotive components",g:"Industrials",isin:"NO0013515759",size:150,t:"FRN",cp:900,iss:"2025-06",mat:"2029-06",px:97.8,st:"Watch"},
+ {n:"BoldR Group",c:"DE",s:"Towbars / auto parts e-comm.",g:"Consumer",isin:"NO0013648295",size:110,t:"FRN",cp:650,iss:"2025-09",mat:"2030-09",px:100.3,st:"Performing"},
+ {n:"DEAG Deutsche Entertainment",c:"DE",s:"Live entertainment",g:"Services",isin:"NO0013639112",size:75,t:"Fixed",cp:7.75,iss:"2025-10",mat:"2029-10",px:101.2,st:"Performing"},
+ {n:"DWK Life Sciences (DURAN)",c:"DE",s:"Laboratory glass",g:"Healthcare",isin:"NO0013696880",size:230,t:"Fixed",cp:8.513,iss:"2025-05",mat:"2030-05",px:101.1,st:"Performing"},
+ {n:"Formycon AG",c:"DE",s:"Biosimilars",g:"Healthcare",isin:"NO0013586024",size:70,t:"FRN",cp:700,iss:"2025-07",mat:"2029-07",px:101.0,st:"Performing"},
+ {n:"Homann Holzwerkstoffe",c:"DE",s:"Wood materials",g:"Industrials",isin:"NO0013536169",size:120,t:"Fixed",cp:7.5,iss:"2025-06",mat:"2032-06",px:101.5,st:"Performing"},
+ {n:"HomeToGo SE",c:"DE",s:"Travel marketplace",g:"Services",isin:"NO0013697268",size:101,t:"FRN",cp:775,iss:"2026-02",mat:"2031-03",px:100.4,st:"Performing"},
+ {n:"Hörmann Industries",c:"DE",s:"Diversified industrial",g:"Industrials",isin:"NO0012938325",size:50,t:"Fixed",cp:7.0,iss:"2023-07",mat:"2028-07",px:100.7,st:"Performing"},
+ {n:"JDC Group AG",c:"DE",s:"Insurance brokerage",g:"Financials",isin:"NO0013618587",size:70,t:"FRN",cp:450,iss:"2025-08",mat:"2029-08",px:100.9,st:"Performing"},
+ {n:"Karlsberg Brauerei",c:"DE",s:"Brewery",g:"Consumer",isin:"NO0013168005",size:55,t:"Fixed",cp:6.0,iss:"2024-05",mat:"2029-05",px:102.6,st:"Performing"},
+ {n:"Katjes International",c:"DE",s:"Confectionery",g:"Consumer",isin:"NO0012888769",size:200,t:"Fixed",cp:6.75,iss:"2023-09",mat:"2028-09",px:103.4,st:"Performing"},
+ {n:"Kolibri (Zeitfracht)",c:"DE",s:"Logistics / aviation",g:"Services",isin:"NO0013461384",size:145,t:"FRN",cp:700,iss:"2025-02",mat:"2029-02",px:100.2,st:"Performing"},
+ {n:"Konzmann (Nexus Bidco)",c:"DE",s:"Technical building services",g:"Industrials",isin:"NO0013683466",size:85,t:"FRN",cp:650,iss:"2025-10",mat:"2030-10",px:100.6,st:"Performing"},
+ {n:"LR Health & Beauty",c:"DE",s:"Direct-sales cosmetics",g:"Consumer",isin:"NO0013149658",size:130,t:"FRN",cp:750,iss:"2024-03",mat:"2028-03",px:99.2,st:"Performing"},
+ {n:"LifeFit Group",c:"DE",s:"Fitness clubs",g:"Consumer",isin:"NO0013252452",size:230,t:"FRN",cp:700,iss:"2024-08",mat:"2029-08",px:100.6,st:"Performing"},
+ {n:"MEDIA Central Holding",c:"DE",s:"Retail media / promotions",g:"Services",isin:"NO0012940347",size:200,t:"FRN",cp:975,iss:"2023-06",mat:"2027-06",px:100.9,st:"Performing"},
+ {n:"Muehlhan Holding",c:"DE",s:"Industrial / wind services",g:"Industrials",isin:"NO0013682542",size:320,t:"FRN",cp:590,iss:"2025-10",mat:"2030-05",px:100.8,st:"Performing"},
+ {n:"Mutares SE & Co. KGaA",c:"DE",s:"PE / industrial holding",g:"Financials",isin:"NO0013325407",size:135,t:"FRN",cp:625,iss:"2024-09",mat:"2029-09",px:102.1,st:"Performing"},
+ {n:"Mutares SE & Co. KGaA",c:"DE",s:"PE / industrial holding",g:"Financials",isin:"NO0012530965",size:250,t:"FRN",cp:850,iss:"2023-03",mat:"2027-03",px:101.5,st:"Performing"},
+ {n:"NWI Group",c:"DE",s:"Industrial holding",g:"Industrials",isin:"NO0013355255",size:50,t:"FRN",cp:575,iss:"2024-11",mat:"2028-11",px:99.6,st:"Performing"},
+ {n:"O3 Holding (KD Pharma)",c:"DE",s:"Omega-3 / pharma ingredients",g:"Healthcare",isin:"NO0013360552",size:180,t:"FRN",cp:525,iss:"2024-10",mat:"2029-10",px:99.8,st:"Performing"},
+ {n:"SLR Group",c:"DE",s:"Ductile iron castings",g:"Industrials",isin:"NO0013177949",size:75,t:"FRN",cp:700,iss:"2024-04",mat:"2027-10",px:98.9,st:"Performing"},
+ {n:"Secop Group",c:"DE",s:"Compressors / refrigeration",g:"Industrials",isin:"NO0013752634",size:60,t:"FRN",cp:700,iss:"2026-06",mat:"2029-06",px:100.0,st:"Performing"},
+ {n:"Secop Group",c:"DE",s:"Compressors / refrigeration",g:"Industrials",isin:"NO0012923194",size:50,t:"FRN",cp:840,iss:"2023-06",mat:"2026-12",px:100.2,st:"Maturing"},
+ {n:"Telio Group",c:"DE",s:"Prison communications",g:"Services",isin:"NO0013593913",size:250,t:"FRN",cp:670,iss:"2026-05",mat:"2030-05",px:100.3,st:"Performing"},
+ {n:"The Platform Group",c:"DE",s:"E-commerce platform",g:"Services",isin:"NO0013256834",size:70,t:"Fixed",cp:8.875,iss:"2024-07",mat:"2028-07",px:101.8,st:"Performing"},
+ {n:"smava GmbH",c:"DE",s:"Consumer-credit marketplace",g:"Financials",isin:"NO0013531590",size:200,t:"FRN",cp:700,iss:"2025-05",mat:"2029-05",px:99.4,st:"Performing"},
+ {n:"Keenfinity (Boston Bidco)",c:"DE",s:"Security / building tech",g:"Industrials",isin:"NO0013738609",size:325,t:"FRN",cp:600,iss:"2026-03",mat:"2030-03",px:100.5,st:"Performing"},
+ {n:"TIER Mobility (Dott)",c:"DE",s:"Micromobility",g:"Services",isin:"NO0013516369",size:70,t:"FRN",cp:800,iss:"2025-10",mat:"2029-10",px:100.1,st:"Performing"},
+ {n:"TEMPTON Personaldienstl.",c:"DE",s:"Staffing / HR services",g:"Services",isin:"pending",size:30,t:"FRN",cp:700,iss:"2026-05",mat:"2030-05",px:100.0,st:"Performing"},
+ {n:"Gentoo Media",c:"MT",s:"iGaming platform",g:"Services",isin:"NO0013024018",size:60,t:"FRN",cp:725,iss:"2023-12",mat:"2026-12",px:101.1,st:"Maturing"},
+ {n:"Arles I (Fletcher Hotels)",c:"NL",s:"Hotels",g:"Consumer",isin:"NO0013684662",size:225,t:"FRN",cp:650,iss:"2025-11",mat:"2030-11",px:100.7,st:"Performing"},
+ {n:"Azerion Group N.V.",c:"NL",s:"Digital advertising / gaming",g:"Services",isin:"NO0013660357",size:225,t:"FRN",cp:550,iss:"2025-10",mat:"2029-10",px:101.3,st:"Performing"},
+ {n:"Flora Food Group",c:"NL",s:"Plant-based foods",g:"Consumer",isin:"NO0013606426",size:400,t:"Fixed",cp:8.625,iss:"2025-06",mat:"2031-04",px:102.2,st:"Performing"},
+ {n:"Nexus Newco (Dayes)",c:"NL",s:"Consumer products",g:"Consumer",isin:"NO0013511766",size:250,t:"FRN",cp:650,iss:"2025-06",mat:"2030-06",px:100.5,st:"Performing"},
+ {n:"Okechamp",c:"PL",s:"Mushroom processing",g:"Consumer",isin:"NO0013364380",size:55,t:"FRN",cp:750,iss:"2024-11",mat:"2028-11",px:18.5,st:"Default"},
+ {n:"Fertiberia",c:"ES",s:"Fertilisers / green ammonia",g:"Energy transition",isin:"NO0013740894",size:300,t:"FRN",cp:500,iss:"2026-05",mat:"2031-05",px:100.2,st:"Performing"},
 ];
 const GROUPCOL = {"Energy transition":PAL.chart[0],"Industrials":PAL.chart[1],"Consumer":PAL.chart[2],"Services":PAL.chart[3],"Healthcare":PAL.chart[4],"Shipping":PAL.chart[5],"Energy":PAL.chart[6],"Financials":PAL.chart[7]};
 
