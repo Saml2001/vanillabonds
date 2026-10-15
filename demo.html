@@ -10,6 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/demo.css">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b35423f3-28a6-4369-baf8-eceb897d0f2e"></script>
 </head>
 <body>
 
@@ -649,6 +650,7 @@ function showView(v){
   const nb=document.getElementById('nav-'+v); if(nb) nb.classList.add('active');
   window.scrollTo({top:0});
   if(location.hash!=='#'+v) history.replaceState(null,'','#'+v);
+  if(window.umami) umami.track('view-'+v);
   if(v==='journey'&&window.journeyTick) requestAnimationFrame(journeyTick);
 }
 window.addEventListener('load',()=>{let h=location.hash.replace('#','');if(h==='platform')h='market';if(['journey','market','issue','pricing'].includes(h))showView(h);});
