@@ -42,6 +42,7 @@
   /* ---- semantic: theme (light defaults; demo scope overrides below) ---- */
   --vb-ground:        var(--vb-white);
   --vb-ground-raised: var(--vb-white);
+  --vb-ground-alt:    #F7F5F0;             /* warm paper for alternating sections */
   --vb-ink:           var(--vb-ink-900);
   --vb-ink-muted:     var(--vb-ink-500);
   --vb-hairline:      var(--vb-line-warm);
@@ -127,6 +128,7 @@
 [data-theme="demo"] {
   --vb-ground:        var(--vb-navy);
   --vb-ground-raised: var(--vb-navy-raised);
+  --vb-ground-alt:    var(--vb-navy-raised);
   --vb-ink:           var(--vb-ink-inv);
   --vb-ink-muted:     var(--vb-ink-inv-mut);
   --vb-hairline:      var(--vb-line-navy);

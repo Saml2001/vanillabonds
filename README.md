@@ -1,11 +1,10 @@
 # vanillabonds.com — v6
 
-Single-page marketing site for VanillaBonds UG (haftungsbeschränkt), Munich, plus the
+Single-page marketing site for VanillaBonds, a Munich startup, plus the
 platform demo. Static HTML/CSS/JS, no build step, deployed via GitHub Pages.
 
 - `index.html` — the site (one page; light theme)
 - `demo.html` — platform demo (dark theme via `data-theme="demo"`; all data fictitious/illustrative)
-- `impressum.html` / `datenschutz.html` — legal (register data pending, marked [TODO])
 - `issuers.html` / `investors.html` / `pricing.html` — redirect stubs for retired URLs
 - `assets/css/tokens.css` — every colour/size/duration token (`--vb-*`); re-skin by editing this file only
 - `assets/css/site.css` / `demo.css` — components per theme; no hardcoded values
