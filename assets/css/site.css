@@ -165,7 +165,6 @@ a:hover { color: var(--vb-accent-ink); }
 .btn-primary { background: var(--vb-navy); border: var(--vb-hairline-w) solid var(--vb-navy); color: var(--vb-ink-inv); }
 .btn-primary:hover { background: var(--vb-ground); color: var(--vb-navy); }
 .demo-cta { margin-top: var(--vb-space-4); }
-.demo-walk { margin-top: var(--vb-space-3); }
 
 /* ---- sections ------------------------------------------------------------- */
 .section { padding-top: var(--vb-space-7); padding-bottom: var(--vb-space-7); border-top: var(--vb-hairline-w) solid var(--vb-hairline); }
