@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VanillaBonds — Platform demo</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="b35423f3-28a6-4369-baf8-eceb897d0f2e"></script>
+<style>
+  @font-face { font-family: "Source Sans 3"; src: url("assets/fonts/SourceSans3VF-Upright.otf.woff2") format("woff2-variations"); font-weight: 200 900; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+  :root {
+    --navy: var(--vb-navy); --navy-2: var(--vb-navy-raised);
+    --ivory: var(--vb-ground-alt); --paper: var(--vb-white);
+    --gold: var(--vb-gold); --gold-ink: var(--vb-gold-dim);
+    --border: var(--vb-line-warm); --ink: var(--vb-ink-900); --ink-2: #3A4654; --muted: var(--vb-ink-500);
+    --blue: var(--vb-data-b);
+    --sans: var(--vb-font-body); --mono: var(--vb-font-mono);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans); font-size: 15px; line-height: 1.55;
+    color: var(--ink); background: var(--ivory);
+  }
+  button { font: inherit; color: inherit; }
+  a { color: var(--navy); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---------- Header & navigation ---------- */
+  .site-header { background: var(--navy); color: var(--paper); }
+  .header-inner {
+    max-width: 1160px; margin: 0 auto; padding: 0 32px;
+    display: flex; align-items: stretch; justify-content: space-between; gap: 24px;
+  }
+  .wordmark {
+    display: flex; align-items: center; font-size: 19px; letter-spacing: 0.02em; padding: 18px 0;
+    background: none; border: 0; cursor: pointer;
+  }
+  .wordmark .v { color: var(--paper); }
+  .wordmark .b { color: var(--gold); }
+  .primary-nav ul { list-style: none; margin: 0; padding: 0; display: flex; height: 100%; }
+  .primary-nav button {
+    height: 100%; background: none; border: 0; cursor: pointer;
+    padding: 0 18px; color: #C9D1DA; font-size: 14px;
+    border-bottom: 2px solid transparent; border-top: 2px solid transparent;
+  }
+  .primary-nav button:hover { color: var(--paper); background: var(--navy-2); }
+  .primary-nav button[aria-current="page"] { color: var(--paper); border-bottom-color: var(--gold); }
+  .primary-nav button:focus-visible, .wordmark:focus-visible, .btn:focus-visible, .chip-link:focus-visible,
+  .crumb-link:focus-visible, .bar-hit:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  main { max-width: 1160px; margin: 0 auto; padding: 40px 32px 72px; }
+  .screen[hidden] { display: none; }
+
+  /* ---------- Breadcrumb / context bar ---------- */
+  .crumbs {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px 24px; flex-wrap: wrap;
+    margin: -12px 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  .crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; }
+  .crumbs li { display: flex; align-items: center; color: var(--muted); }
+  .crumbs li + li::before { content: "›"; color: var(--gold); margin: 0 10px; }
+  .crumbs li[aria-current="page"] { color: var(--ink); }
+  .crumb-link { background: none; border: 0; padding: 2px 0; cursor: pointer; color: var(--navy); font-size: 13px; }
+  .crumb-link:hover { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
+  .crumb-back { font-weight: 600; }
+  .crumbs .context { display: flex; align-items: center; gap: 10px; color: var(--muted); }
+
+  /* ---------- Typography ---------- */
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--gold); margin: 0 0 8px;
+  }
+  .label {
+    font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 4px;
+  }
+  h1 { font-weight: 300; font-size: 34px; line-height: 1.15; color: var(--navy); margin: 0 0 10px; }
+  h2 { font-weight: 300; font-size: 23px; line-height: 1.25; color: var(--navy); margin: 0 0 14px; }
+  h3 { font-weight: 600; font-size: 14px; color: var(--navy); margin: 0 0 6px; }
+  p { margin: 0 0 10px; }
+  .lede { font-size: 16px; color: var(--ink-2); max-width: 720px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 12.5px; }
+
+  /* ---------- Shared components ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--navy); background: var(--navy); color: var(--paper);
+    padding: 10px 18px; border-radius: 2px; cursor: pointer; font-size: 14px; text-decoration: none;
+  }
+  .btn:hover { background: var(--navy-2); }
+  .btn.light { background: var(--paper); color: var(--navy); border-color: var(--paper); }
+  .btn.light:hover { background: var(--ivory); }
+  .btn .arr { color: var(--gold); }
+  .status-chip {
+    display: inline-block; font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.05em;
+    text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--gold); color: var(--gold-ink); white-space: nowrap;
+  }
+  .status-chip.review { border-color: var(--navy-2); color: var(--navy-2); }
+  .status-chip.ready { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  .on-navy .status-chip { color: var(--gold); border-color: var(--gold); background: transparent; }
+  .on-navy .status-chip.ready { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+  .section { border-top: 1px solid var(--border); padding-top: 22px; margin-top: 40px; scroll-margin-top: 16px; }
+  .panel { background: var(--paper); border: 1px solid var(--border); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th {
+    text-align: left; font-family: var(--sans); font-weight: 500; font-size: 11px;
+    letter-spacing: 0.03em; text-transform: uppercase; color: var(--muted);
+    padding: 9px 10px; border-bottom: 1px solid var(--navy); white-space: nowrap;
+  }
+  td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .table-scroll { overflow-x: auto; }
+  tr.calc td { background: #EFECE4; }
+  tr.calc td:first-child { font-style: italic; }
+  .unit { font-family: var(--sans); font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+  .na { color: var(--muted); }
+  .term-status { font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; color: var(--muted); }
+  .term-status.discussion { color: var(--gold-ink); }
+  .tbd { color: var(--muted); font-style: italic; }
+  .kv td:first-child { width: 30%; color: var(--muted); }
+  th.rowhead { font-family: var(--sans); text-transform: none; letter-spacing: 0; font-size: 13.5px; color: var(--ink); border-bottom: 1px solid var(--border); font-weight: 400; white-space: normal; }
+
+  /* ---------- Screen 1: Opportunities (compact listing) ---------- */
+  .list-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-top: 22px; padding-bottom: 8px; border-bottom: 1px solid var(--navy); }
+  .demo-note { font-size: 12.5px; color: var(--muted); margin: 10px 0 0; }
+  .opp-list { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .opp {
+    position: relative; background: var(--paper);
+    border: 1px solid var(--border); border-left: 3px solid var(--border);
+    transition: border-color 0.15s ease;
+  }
+  .opp:hover, .opp:focus-within { border-color: #BDB8AA; border-left-color: var(--gold); }
+  .opp-summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 24px; padding: 16px 22px 14px; }
+  .opp-id { min-width: 0; }
+  .opp h2 { font-size: 20px; font-weight: 400; line-height: 1.25; margin: 0; }
+  .meta-line { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .meta-line span + span::before { content: "·"; margin: 0 8px; color: var(--gold); }
+  .opp .meta-line { margin: 2px 0 0; }
+  .opp-desc { font-size: 13px; color: var(--ink-2); margin: 6px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .opp .chips { align-self: start; }
+  .opp-metrics {
+    grid-column: 1 / -1; display: flex; align-items: flex-start; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--border);
+  }
+  .opp-metrics .mlist { display: contents; }
+  .opp-metrics .m { padding: 0 22px; border-left: 1px solid var(--border); }
+  .opp-metrics .m:first-child { padding-left: 0; border-left: 0; }
+  .opp-metrics dt { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; white-space: nowrap; }
+  .opp-metrics dd { margin: 0; font-size: 16px; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; line-height: 26px; }
+  .opp-metrics .m.issue dd { font-size: 21px; font-weight: 400; color: var(--navy); }
+  /* Primary button, same treatment as .btn */
+  .opp-action {
+    margin-left: auto; align-self: center; display: inline-flex; align-items: center;
+    border: 1px solid var(--navy); background: var(--navy); color: var(--paper);
+    padding: 10px 18px; border-radius: 2px; cursor: pointer; font-size: 14px; white-space: nowrap;
+    transition: background-color 0.15s ease;
+  }
+  .opp-action .arr { color: var(--gold); margin-left: 8px; transition: transform 0.15s ease; }
+  .opp:hover .opp-action, .opp-action:hover, .opp-action:focus-visible { background: var(--navy-2); }
+  .opp:hover .opp-action .arr, .opp-action:focus-visible .arr { transform: translateX(3px); }
+  .opp-action::after { content: ""; position: absolute; inset: 0; }        /* whole card is the click target */
+  .opp-action:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .opp:focus-within { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .opp:hover:not(:focus-within) { outline: none; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+
+  /* Anchor footer (bottom of each card) */
+  .opp-anchor { background: #F1EEE6; border-top: 1px solid var(--border); padding: 10px 22px 11px; }
+  .af-top, .af-bottom { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 20px; flex-wrap: wrap; }
+  .af-title { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); }
+  .af-sum { font-size: 13.5px; font-weight: 600; color: var(--navy); font-variant-numeric: tabular-nums; }
+  .opp-anchor .anchor-bar { height: 6px; margin: 7px 0 7px; background: #DEDAD0; }
+  .opp-anchor .anchor-bar .seg { border-right-color: #F1EEE6; }
+  .opp-anchor .seg-rest { background: #DEDAD0; }
+  .af-facts { font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .legend-compact { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); }
+  .legend-compact li { display: inline-flex; align-items: center; gap: 5px; }
+  .legend-compact .sw { width: 10px; height: 10px; display: inline-block; border: 1px solid rgba(9, 30, 52, 0.2); }
+  .case-note { margin-top: 26px; font-size: 12.5px; color: var(--muted); max-width: 760px; }
+
+  /* ---------- Dossier readiness chip ---------- */
+  .dossier-chip {
+    display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 3px 8px; border: 1px solid var(--border); color: var(--ink-2); background: #FFFFFF;
+  }
+  .dossier-chip i { width: 8px; height: 8px; border: 1.5px solid var(--navy); display: inline-block; }
+  .dossier-chip.complete { border-color: var(--navy); color: var(--navy); }
+  .dossier-chip.complete i { background: var(--navy); }
+  .on-navy .dossier-chip { background: transparent; border-color: #3C5A7A; color: #D5DCE3; }
+  .on-navy .dossier-chip i { border-color: #D5DCE3; }
+  .on-navy .dossier-chip.complete { border-color: #D5DCE3; color: var(--paper); }
+  .on-navy .dossier-chip.complete i { background: #D5DCE3; }
+
+  /* ---------- Anchor participation bar & legend ---------- */
+  .anchor-bar { display: flex; height: 12px; background: #E7E5DF; overflow: hidden; }
+  .anchor-bar.large { height: 18px; }
+  .anchor-bar .seg { display: block; height: 100%; border-right: 2px solid var(--paper); box-sizing: border-box; }
+  .anchor-bar .seg:last-child { border-right: 0; }
+  .seg-binding { background: var(--navy); }
+  .seg-conditional { background: var(--gold); }
+  .seg-indicative { background: repeating-linear-gradient(135deg, var(--navy-2) 0 2px, #DCE2E8 2px 5px); }
+  .seg-discussion { background: repeating-linear-gradient(135deg, var(--gold) 0 1.5px, #F3EEDF 1.5px 5px); }
+  .seg-rest { background: #E7E5DF; }
+  .anchor-legend { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--ink-2); }
+  .anchor-legend li { display: inline-flex; align-items: center; gap: 6px; }
+  .anchor-legend .sw { width: 12px; height: 12px; display: inline-block; border: 1px solid rgba(9, 30, 52, 0.25); }
+  .anchor-legend .lg-val { font-variant-numeric: tabular-nums; color: var(--muted); }
+
+  /* ---------- Anchor section (Investment Overview, compact) ---------- */
+  .anchor-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 8px 24px; flex-wrap: wrap; }
+  .anchor-head h2 { margin: 0 0 2px; }
+  .anchor-head .sub { font-size: 13px; color: var(--muted); margin: 0; }
+  .anchor-badge { font-size: 15px; font-weight: 600; color: var(--navy); font-variant-numeric: tabular-nums; padding: 2px 0 2px 12px; border-left: 2px solid var(--gold); }
+  #sec-anchors .anchor-bar { height: 8px; margin: 14px 0 0; }
+  #sec-anchors .legend-compact { margin-top: 8px; font-size: 12px; }
+  .anchor-figs { display: flex; flex-wrap: wrap; gap: 6px 0; margin: 14px 0 4px; padding: 0; list-style: none; }
+  .anchor-figs li { padding: 0 20px; border-left: 1px solid var(--border); font-size: 13px; color: var(--ink-2); }
+  .anchor-figs li:first-child { padding-left: 0; border-left: 0; }
+  .anchor-figs .v { font-size: 17px; font-weight: 500; color: var(--navy); font-variant-numeric: tabular-nums; margin-right: 5px; }
+  .anchor-table { margin-top: 10px; font-size: 13px; }
+  .anchor-table th { border-bottom-color: var(--border); padding: 7px 10px; }
+  .anchor-table td { padding: 8px 10px; }
+  .anchor-table th:first-child, .anchor-table td:first-child { padding-left: 0; }
+  .anchor-table .inst { color: var(--ink); font-weight: 500; }
+  .anchor-table .cond { color: var(--ink-2); font-size: 12.5px; }
+  .anchor-note { font-size: 12px; color: var(--muted); margin: 10px 0 0; }
+  .stage { font-size: 12.5px; color: var(--ink); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+  .stage i { width: 10px; height: 10px; display: inline-block; border: 1px solid rgba(9, 30, 52, 0.2); }
+  .anchor-disclaimer { font-size: 12.5px; color: var(--ink-2); border-left: 2px solid var(--gold); padding: 8px 12px; margin-top: 14px; background: var(--paper); }
+  .empty-state { padding: 14px 16px; background: var(--paper); border: 1px dashed var(--border); color: var(--muted); }
+
+  /* ---------- Dossier status panel (Documents & Dossier) ---------- */
+  .dossier-status { margin-top: 22px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 0; background: var(--paper); border: 1px solid var(--border); }
+  .dossier-status > div { padding: 20px 22px; }
+  .dossier-status > div + div { border-left: 1px solid var(--border); }
+  .checklist { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .checklist li { display: grid; grid-template-columns: 18px 1fr auto; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+  .checklist .mk { font-family: var(--sans); color: var(--navy); }
+  .checklist li.open .mk { color: var(--gold-ink); }
+  .checklist .st { font-family: var(--sans); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .checklist li.open .st { color: var(--gold-ink); }
+
+  /* ---------- Screen 2: Investment Overview ---------- */
+  .hero { background: var(--navy); color: var(--paper); padding: 34px 36px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 36px; }
+  .hero h1 { color: var(--paper); }
+  .hero .meta-line { color: #9DAAB8; }
+  .hero p.desc { color: #D5DCE3; max-width: 640px; }
+  .hero-facts { border-left: 1px solid #22405F; padding-left: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .hero-facts .label { color: #8C9AAB; }
+  .hero-facts .val { font-size: 20px; font-weight: 300; }
+  .jump { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 18px 0 0; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .chip-link { background: none; border: 0; padding: 4px 0; cursor: pointer; font-size: 13px; color: var(--ink-2); }
+  .chip-link:hover { color: var(--navy); text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 4px; }
+
+  .metrics { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .metric { background: var(--paper); padding: 16px 16px 14px; }
+  .metric .val { font-size: 25px; font-weight: 300; color: var(--navy); font-variant-numeric: tabular-nums; }
+  .metric .sub { font-size: 11.5px; color: var(--muted); }
+
+  .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 26px; }
+  .chart { background: var(--paper); border: 1px solid var(--border); padding: 18px 20px 12px; position: relative; }
+  .chart h3 { margin-bottom: 2px; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart .grid line { stroke: #E4E3DF; stroke-width: 1; }
+  .chart .zero { stroke: #9AA1A9; stroke-width: 1; }
+  .chart .axis-text { font-family: var(--sans); font-size: 10.5px; font-variant-numeric: tabular-nums; fill: var(--muted); }
+  .chart .val-text { font-size: 12px; fill: var(--ink); font-weight: 600; }
+  .chart .bar { fill: var(--navy-2); }
+  .chart .bar.latest { fill: var(--navy); }
+  .bar-hit { fill: transparent; cursor: default; }
+  .bar-group:hover .bar, .bar-group:focus-within .bar { fill: #2B4D72; }
+  .tooltip {
+    position: absolute; pointer-events: none; background: var(--navy); color: var(--paper);
+    font-size: 12px; padding: 6px 9px; white-space: nowrap; transform: translate(-50%, -100%);
+    border-top: 2px solid var(--gold);
+  }
+  .tooltip[hidden] { display: none; }
+  .tooltip .ty { font-family: var(--sans); font-size: 10.5px; color: #B9C3CE; display: block; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .facts-list { margin: 0; }
+  .facts-list div { display: grid; grid-template-columns: 34% 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .facts-list dt { color: var(--muted); }
+  .facts-list dd { margin: 0; }
+
+  .diligence { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .diligence li { background: var(--paper); padding: 18px 20px; }
+  .diligence h3 { display: flex; gap: 10px; align-items: baseline; }
+  .diligence h3 .n { font-family: var(--sans); font-size: 11px; color: var(--gold); font-weight: 400; }
+  .diligence p { color: var(--ink-2); font-size: 13.5px; margin: 0; }
+  .diligence .ref { display: block; margin-top: 8px; font-family: var(--sans); font-size: 10.5px; color: var(--muted); letter-spacing: 0.03em; }
+  .overview-foot { margin-top: 36px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 20px 24px; background: var(--paper); border: 1px solid var(--border); }
+
+  /* ---------- Screen 3: Documents & Dossier ---------- */
+  .dossier-band { margin-top: 26px; background: var(--navy); color: var(--paper); padding: 26px 30px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .dossier-band h2 { color: var(--paper); margin-bottom: 4px; }
+  .dossier-band p { color: #B9C3CE; margin: 0; max-width: 620px; font-size: 13.5px; }
+  .ref-only { font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .doc-id { font-family: var(--mono); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+  .req-list { list-style: none; margin: 0; padding: 0; }
+  .req-list li { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .req-list .st { font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold-ink); white-space: nowrap; }
+  .method { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .method p { font-size: 13px; color: var(--ink-2); }
+
+  /* ---------- Print-only investor dossier ---------- */
+  #print-dossier { display: none; }
+  .paper { color: var(--ink); font-size: 12.5px; }
+  .paper .doc-head { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 18px; }
+  .paper .doc-head .wm { font-size: 17px; letter-spacing: 0.02em; }
+  .paper .doc-head .wm .v { color: var(--navy); }
+  .paper .doc-head .wm .b { color: var(--gold); }
+  .paper .doc-head .date { font-family: var(--sans); font-size: 9.5px; color: var(--muted); letter-spacing: 0.05em; }
+  .paper .title-band { background: var(--navy); color: var(--paper); padding: 16px 18px; margin-bottom: 16px; }
+  .paper .title-band h1 { color: var(--paper); font-size: 22px; margin-bottom: 4px; }
+  .paper .title-band .eyebrow { color: var(--gold); }
+  .paper .title-band .meta { font-family: var(--sans); font-size: 10px; color: #B9C3CE; letter-spacing: 0.04em; }
+  .paper .dsec { margin-top: 18px; }
+  .paper .dsec-head .eyebrow { border-top: 1px solid var(--border); padding-top: 10px; margin-bottom: 4px; }
+  .paper table { font-size: 11px; }
+  .paper td, .paper th { padding: 5px 6px; }
+  .paper td { overflow-wrap: anywhere; }
+  .paper .note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+  .paper ul { margin: 0; padding-left: 16px; }
+  .paper li { margin-bottom: 4px; }
+  .paper .disclaimer { font-size: 10.5px; color: var(--ink-2); background: var(--ivory); padding: 12px 14px; border-left: 2px solid var(--gold); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1100px) {
+    .opp-metrics .m { padding: 0 16px; }
+  }
+  @media (max-width: 1000px) {
+    .metrics { grid-template-columns: repeat(3, 1fr); }
+    /* Metrics wrap into a tidy grid; the action moves to its own line. */
+    .opp-metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px 0; align-items: start; }
+    .opp-action { grid-column: 1 / -1; justify-self: start; margin-left: 0; margin-top: 2px; }
+  }
+  @media (max-width: 820px) {
+    .header-inner { padding: 0 16px; }
+    .wordmark { padding: 14px 0; }
+    .primary-nav button { padding: 0 4px 0 12px; }
+    main { padding: 28px 16px 56px; }
+    h1 { font-size: 28px; }
+    .hero, .charts, .two-col, .diligence, .method { grid-template-columns: 1fr; }
+    .opp-summary { grid-template-columns: 1fr; padding: 14px 16px 12px; }
+    .opp .chips { justify-content: flex-start; margin-top: 8px; grid-row: 2; }
+    .opp-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .opp-metrics .m { padding: 0 12px; }
+    .opp-metrics .m:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
+    .opp-anchor { padding: 10px 16px 11px; }
+    .dossier-status { grid-template-columns: 1fr; }
+    .dossier-status > div + div { border-left: 0; border-top: 1px solid var(--border); }
+    .hero-facts { border-left: 0; border-top: 1px solid #22405F; padding: 18px 0 0; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .hero { padding: 24px 20px; }
+    .facts-list div { grid-template-columns: 1fr; gap: 2px; }
+    .crumbs .context { display: none; }
+    /* Anchor institutions become stacked entries instead of a wide table. */
+    .anchor-table thead { display: none; }
+    .anchor-table, .anchor-table tbody, .anchor-table tr, .anchor-table td { display: block; width: 100%; }
+    .anchor-table tr { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .anchor-table td { padding: 0 !important; border: 0; text-align: left; white-space: normal; }
+    .anchor-table td.inst { grid-column: 1; overflow-wrap: anywhere; }
+    .anchor-table td.amt { grid-column: 2; grid-row: 1; text-align: right; }
+    .anchor-table td.share { grid-column: 2; grid-row: 2; text-align: right; color: var(--muted); }
+    .anchor-table td.type { grid-column: 1; grid-row: 2; color: var(--muted); font-size: 12.5px; }
+    .anchor-table td.st, .anchor-table td.cond { grid-column: 1 / -1; }
+    .anchor-table td.st { margin-top: 4px; }
+    .anchor-figs li { padding: 0 14px; }
+  }
+  @media (max-width: 480px) {
+    .opp-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .opp-metrics .m:nth-child(3n + 1) { padding-left: 12px; border-left: 1px solid var(--border); }
+    .opp-metrics .m:nth-child(2n + 1) { padding-left: 0; border-left: 0; }
+    .opp-metrics .m.issue { grid-column: 1 / -1; }
+    .opp-metrics .m.issue + .m { padding-left: 0; border-left: 0; }
+    .opp-metrics .m.issue + .m + .m { padding-left: 12px; border-left: 1px solid var(--border); }
+    .opp-metrics .m.issue + .m + .m + .m { padding-left: 0; border-left: 0; }
+    .opp-metrics .m.issue + .m + .m + .m + .m { padding-left: 12px; border-left: 1px solid var(--border); }
+    .list-meta { flex-wrap: wrap; gap: 2px 16px; }
+    .list-meta p { white-space: nowrap; }
+    .anchor-figs { flex-direction: column; gap: 4px; }
+    .anchor-figs li { padding: 0; border-left: 0; }
+  }
+
+  /* ---------- Platform layer: demo bar, roles, company view, access panels ---------- */
+  .demobar { background: var(--paper); color: var(--gold-ink); font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em; text-align: center; padding: 5px 24px; border-bottom: 1px solid var(--border); text-transform: uppercase; }
+  .header-inner { gap: 24px; }
+  .primary-nav { margin-right: auto; }
+  .header-side { display: flex; align-items: center; gap: 18px; font-size: 13px; }
+  .back-link { color: #C9D1DA; text-decoration: none; white-space: nowrap; }
+  .back-link:hover { color: var(--paper); }
+  .role-box { display: flex; align-items: center; gap: 12px; }
+  .role-tag { color: var(--gold); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+  .link-btn { background: none; border: 0; padding: 0; cursor: pointer; color: #C9D1DA; font-size: 13px; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; white-space: nowrap; }
+  .link-btn:hover { color: var(--paper); text-decoration-color: var(--gold); }
+  .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
+  .role-card { position: relative; text-align: left; background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--navy); padding: 22px 24px 52px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+  .role-card:hover, .role-card:focus-visible { border-color: var(--gold); border-top-color: var(--gold); }
+  .role-card h2 { margin: 0; font-weight: 400; font-size: 21px; }
+  .role-card p { margin: 0; color: var(--ink-2); font-size: 14px; }
+  .role-card .meta { position: absolute; left: 24px; bottom: 18px; font-size: 12px; color: var(--muted); }
+  .role-card .arr { position: absolute; right: 22px; bottom: 14px; color: var(--gold); font-size: 20px; }
+  .flow { list-style: none; counter-reset: fl; margin: 40px 0 0; padding: 22px 0 0; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .flow li { counter-increment: fl; position: relative; padding-left: 30px; }
+  .flow li::before { content: counter(fl, decimal-leading-zero); position: absolute; left: 0; top: 2px; font-family: var(--mono); font-size: 12px; color: var(--gold-ink); }
+  .flow h3 { margin: 0 0 4px; } .flow p { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .role-note { margin-top: 16px; padding: 12px 16px; background: var(--paper); border-left: 3px solid var(--gold); font-size: 13.5px; color: var(--ink-2); max-width: 760px; }
+  .notice { margin-bottom: 16px; padding: 12px 16px; background: var(--paper); border: 1px solid var(--gold); font-size: 13.5px; color: var(--ink-2); }
+  .phase-chip { display: inline-flex; align-items: center; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 9px; border: 1px solid var(--gold); color: var(--gold-ink); white-space: nowrap; }
+  .phase-chip.open { background: var(--gold); color: var(--navy); }
+  .on-navy .phase-chip { color: var(--gold); } .on-navy .phase-chip.open { color: var(--navy); }
+  .opp.teaser { border-left-color: var(--border); background: var(--ivory); }
+  .opp.teaser h2 { color: var(--ink-2); } .opp.teaser .opp-desc { white-space: normal; }
+  .opp-locked { align-self: center; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .access { margin-top: 24px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; padding: 22px 26px; background: var(--paper); border: 1px solid var(--border); border-left: 3px solid var(--gold); }
+  .access.closed { display: block; border-left-color: var(--border); }
+  .access h2 { margin-bottom: 8px; } .access p { margin: 0 0 8px; color: var(--ink-2); font-size: 14px; }
+  .access-act { border-left: 1px solid var(--border); padding-left: 26px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .access-act .val { font-size: 22px; font-weight: 300; color: var(--navy); }
+  .field { display: flex; gap: 8px; width: 100%; }
+  .field input { flex: 1; min-width: 0; font: inherit; padding: 9px 12px; border: 1px solid var(--border); background: var(--paper); color: var(--ink); }
+  .field input:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .seg-orders { background: var(--blue); }
+  .btn.small { padding: 6px 12px; font-size: 12.5px; }
+  .st-ok { color: var(--navy); font-size: 12.5px; } .st-open { color: var(--gold-ink); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; }
+  tr.done td { color: var(--muted); } td.act { white-space: nowrap; text-align: right; }
+  .qa { list-style: none; margin: 0; padding: 0; }
+  .qa li { display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .qa h3 { font-weight: 400; font-size: 15px; } .qa .ans { margin: 0 0 4px; padding: 9px 12px; background: var(--paper); border: 1px solid var(--border); }
+  .confirm { margin-top: 18px; padding: 18px 22px; background: var(--paper); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .confirm p { margin: 0; max-width: 620px; }
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .timeline li { border-top: 2px solid var(--border); padding-top: 12px; }
+  .timeline li.done { border-top-color: var(--navy); } .timeline li.now { border-top-color: var(--gold); }
+  .timeline li.now h3::after { content: "now"; margin-left: 8px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-ink); }
+  .timeline .when { font-family: var(--mono); font-size: 11.5px; color: var(--muted); } .timeline p { margin: 4px 0 0; font-size: 13px; color: var(--ink-2); }
+  .site-foot { max-width: 1160px; margin: 0 auto; padding: 0 32px 40px; font-size: 12px; color: var(--muted); }
+  .site-foot p { margin: 0; max-width: 900px; }
+  /* ---------- Deal journey and market ---------- */
+  .start-links { margin: 18px 0 0; font-size: 14px; color: var(--ink-2); }
+  .jdeal { margin-top: 26px; background: var(--navy); color: var(--paper); padding: 26px 30px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; align-items: center; }
+  .jdeal h2 { color: var(--paper); margin-bottom: 6px; } .jdeal p { color: #B9C3CE; margin: 0; font-size: 14px; }
+  .jdeal .anchor-bar { background: #22405F; } .jdeal .seg { border-right-color: var(--navy); } .jdeal .seg-binding { background: var(--gold); }
+  .jdeal .anchor-legend { color: #D5DCE3; } .jdeal .anchor-legend .lg-val { color: #9DAAB8; } .jdeal .anchor-legend .sw { border-color: transparent; }
+  .jstages { list-style: none; margin: 18px 0 0; padding: 0; counter-reset: js; }
+  .jstages li { counter-increment: js; display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; padding: 30px 0 30px 56px; border-top: 1px solid var(--border); position: relative; }
+  .jstages li::before { content: counter(js); position: absolute; left: 0; top: 30px; width: 34px; height: 34px; border-radius: 50%; background: var(--navy); color: var(--paper); font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .jstages li::after { content: ""; position: absolute; left: 16px; top: 72px; bottom: -1px; width: 2px; background: var(--border); }
+  .jstages li:last-child::after { display: none; }
+  .jwhen { font-family: var(--mono); font-size: 12px; color: var(--gold-ink); letter-spacing: 0.06em; text-transform: uppercase; margin: 6px 0 4px; }
+  .jstages h2 { margin-bottom: 8px; } .jlead { font-size: 17px; font-weight: 300; color: var(--navy); margin: 0 0 10px; } .jmain p { color: var(--ink-2); } .jlink { margin-top: 6px; color: var(--navy); }
+  .who { margin: 0; } .who div { display: grid; grid-template-columns: 120px 1fr; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px; } .who dt { color: var(--muted); } .who dd { margin: 0; }
+  .jout, .jdealline { font-size: 13.5px; margin: 12px 0 0; color: var(--ink-2); } .jdealline { padding: 10px 14px; background: var(--paper); border-left: 3px solid var(--gold); }
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; } .rules p { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .mstats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid var(--border); border-left: 1px solid var(--border); margin-top: 16px; }
+  .mstat { background: var(--paper); padding: 14px 16px 12px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); } .mstat b { display: block; font-weight: 300; font-size: 24px; color: var(--navy); font-variant-numeric: tabular-nums; } .mstat span { font-size: 11.5px; color: var(--muted); }
+  .mfilters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+  .mfilters input, .mfilters select { font: inherit; font-size: 13.5px; padding: 8px 12px; border: 1px solid var(--border); background: var(--paper); color: var(--ink); } .mfilters input { flex: 1; min-width: 220px; }
+  .mfilters input:focus-visible, .mfilters select:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .mtable th .sort { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-transform: inherit; letter-spacing: inherit; white-space: nowrap; }
+  .mtable th .sort:hover { color: var(--navy); } .mtable td.up { color: #2E7D5B; } .mtable td.down { color: #B4423A; } .mtable td strong { font-weight: 600; color: var(--ink); }
+  .pill { display: inline-block; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 8px; border: 1px solid; white-space: nowrap; }
+  .pill.ok { color: var(--navy); border-color: var(--navy); } .pill.watch { color: var(--gold-ink); border-color: var(--gold); } .pill.info { color: #3F6FA3; border-color: #6C9BC9; } .pill.bad { color: #B4423A; border-color: #B4423A; } .pill.grey { color: var(--muted); border-color: var(--border); }
+  .mchart { width: 100%; max-width: 920px; height: auto; display: block; margin: 14px auto 0; font-family: var(--mono); }
+  .mchart .grid { stroke: var(--border); } .mchart .axis { fill: var(--muted); font-size: 10px; } .mchart .band { fill: var(--gold); opacity: 0.14; } .mchart .band-label { fill: var(--gold-ink); font-size: 10.5px; font-weight: 600; }
+  .mchart circle { stroke: var(--paper); stroke-width: 1; opacity: 0.85; } .mchart .bar-label { fill: var(--gold-ink); font-size: 11px; font-weight: 600; }
+  .mlegend { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--ink-2); } .mlegend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+  .refichips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; } .refichip { background: var(--paper); border: 1px solid var(--border); padding: 8px 12px; font-size: 12.5px; } .refichip b { display: block; color: var(--navy); font-weight: 600; } .refichip span { color: var(--muted); }
+  @media (max-width: 820px) {
+    .roles, .flow, .access, .qa li, .timeline, .jdeal, .jstages li, .rules { grid-template-columns: 1fr; }
+    .jstages li { padding-left: 46px; gap: 18px; } .who div { grid-template-columns: 1fr; gap: 2px; }
+    .flow { gap: 14px; }
+    .access-act { border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: 14px; }
+    .demobar { font-size: 10px; letter-spacing: 0.04em; padding: 4px 12px; }
+    .header-inner { flex-wrap: wrap; padding: 0 16px; gap: 0 16px; }
+    .wordmark { padding: 14px 0; }
+    .primary-nav button { white-space: nowrap; padding: 0 12px; }
+    .header-side { flex: 1 0 100%; justify-content: space-between; gap: 12px; padding: 0 0 10px; border-top: 1px solid #22405F; padding-top: 8px; }
+    .back-link { display: inline; }
+    main { padding: 28px 16px 56px; } .site-foot { padding: 0 16px 32px; }
+  }
+
+  /* ---------- Print: selected issuer's dossier only ---------- */
+  @page {
+    size: A4;
+    margin: 16mm 15mm 18mm;
+    @bottom-left { content: "VanillaBonds · Investor dossier · Illustrative case"; font-family: Inter, "Helvetica Neue", Arial, sans-serif; font-size: 7.5pt; color: #6B7280; }
+    @bottom-right { content: "Page " counter(page) " of " counter(pages); font-family: Inter, "Helvetica Neue", Arial, sans-serif; font-size: 7.5pt; color: #6B7280; }
+  }
+  @media print {
+    html, body { background: #fff !important; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .site-header, .demobar, .site-foot { display: none !important; }
+    body.has-dossier main { display: none !important; }
+    body.has-dossier #print-dossier { display: block !important; }
+    .paper { font-size: 9.5pt; }
+    .paper table { font-size: 8.5pt; }
+    .paper tr, .paper .disclaimer, .paper .title-band, .paper .keep { break-inside: avoid; page-break-inside: avoid; }
+    .paper .dsec-head { break-after: avoid; page-break-after: avoid; }
+    .paper thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+<div class="demobar">Demonstration environment — fictional companies, institutions and figures · not an offer, solicitation or investment advice</div>
+<header class="site-header">
+  <div class="header-inner">
+    <button type="button" class="wordmark" data-route="home" aria-label="VanillaBonds — platform demo"><span class="v">VANILLA</span><span class="b">BONDS</span></button>
+    <nav class="primary-nav" aria-label="Primary"><ul id="nav-list"></ul></nav>
+    <div class="header-side"><div class="role-box" id="role-box"></div><a class="back-link" href="index.html">← Back to site</a></div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="screen" id="screen-start" aria-labelledby="h-start" hidden></section>
+  <section class="screen" id="screen-company" aria-labelledby="h-company" hidden></section>
+  <section class="screen" id="screen-journey" aria-labelledby="h-journey" hidden></section>
+  <section class="screen" id="screen-market" aria-labelledby="h-market" hidden></section>
+  <section class="screen" id="screen-opportunities" aria-labelledby="h-opportunities" hidden></section>
+  <section class="screen" id="screen-overview" aria-labelledby="h-overview" hidden></section>
+  <section class="screen" id="screen-documents" aria-labelledby="h-documents" hidden></section>
+</main>
+
+<article id="print-dossier" class="paper" aria-hidden="true"></article>
+<footer class="site-foot"><p>Platform demonstration. All companies, institutions, documents, figures and participation amounts are fictional and illustrative. Nothing on this page is an offer of securities, investment advice or a solicitation of an offer. Any future offering would be addressed to professional investors within the meaning of MiFID&nbsp;II only, in minimum denominations of €100,000. Files chosen in the company view stay in your browser; nothing is uploaded. © 2026 VanillaBonds.</p></footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     DATA — read-only snapshot of three illustrative (fictional) issuers.
+     Reported figures only; every ratio is calculated by the shared
+     functions below. Source documents and page numbers are fictional
+     placeholders: no documents exist or have been uploaded.
+
+     Per issuer:
+       company      profile (name, country, sector, description, ownership, management, purpose)
+       docs         source document index (issuer-specific reference IDs)
+       finDocs      [latest-year doc, prior-year doc, five-year-summary doc]
+       finRows      reported figures, EUR m; pages = [latest, prior, summary] page in finDocs
+       bond         proposed terms; st 'proposed' | 'discussion'; empty value = open
+       facts        key facts with source; link = [finRow, yearIndex]; profile = label in
+                    "Company & operations"; empty value = information requested
+       requests     documents requested; st 'outstanding' | 'received'
+       diligence    issuer-specific questions; text supports {{tokens}} resolved from data;
+                    shown while any item in `open` remains open (or always: true)
+     ========================================================= */
+  var YEARS = [2021, 2022, 2023, 2024, 2025];
+  var LAST = YEARS.length - 1;
+
+  var OPPORTUNITIES = ({
+
+    /* ---------------- 1. Van Dijk (existing case, unchanged figures) ---------------- */
+    'van-dijk': {
+      id: 'van-dijk',
+      status: { label: 'Preliminary', cls: '' },          // commercial / financing stage
+      dossierStatus: 'prepared',                          // information package: 'prepared' | 'complete'
+      issueEURm: 50,
+      anchors: [
+        { name: 'Northbridge European Credit Fund', institutionType: 'Institutional credit fund', amountEURm: 12.5, status: 'conditional',
+          conditions: 'Subject to final documentation, satisfactory due diligence and agreed pricing.' },
+        { name: 'Meridian Private Debt Partners', institutionType: 'Private debt investment manager', amountEURm: 10, status: 'conditional',
+          conditions: 'Subject to final investment committee approval and final documentation.' }
+      ],
+      company: {
+        name: 'Van Dijk Industrial Components B.V.',
+        country: 'Netherlands',
+        industry: 'Industrial manufacturing',
+        description: 'Designs and manufactures precision-machined components, hydraulic sub-assemblies and drive-train parts for European OEMs in agricultural machinery, material handling and energy equipment. Three production sites; around 70% of revenue is generated outside the Netherlands.',
+        ownership: '100% owned by Van Dijk Holding B.V., a second-generation family holding company.',
+        management: [
+          { role: 'CEO', name: 'M. van Dijk', since: 2014 },
+          { role: 'CFO', name: 'E. Bakker', since: 2019 },
+          { role: 'COO', name: 'J. Kowalski', since: 2021 }
+        ],
+        financingPurpose: 'Refinancing existing debt and production expansion',
+        useOfProceeds: 'Refinance existing amortising term loans (c. €32 million) and finance expansion of the Venlo plant and automation of machining lines (c. €18 million).',
+        reportingNote: ''
+      },
+      docs: [
+        { id: 'AR25', ref: 'VDI-AR-2025', title: 'Van Dijk Annual Report 2025',        category: 'Annual report' },
+        { id: 'FS24', ref: 'VDI-FS-2024', title: 'Van Dijk Financial Statements 2024', category: 'Financial statements' },
+        { id: 'FS23', ref: 'VDI-FS-2023', title: 'Van Dijk Financial Statements 2023', category: 'Financial statements (five-year summary)' },
+        { id: 'MP',   ref: 'VDI-MP-2026', title: 'Van Dijk Management Presentation',   category: 'Company presentation' },
+        { id: 'BP',   ref: 'VDI-BP-2630', title: 'Van Dijk Business Plan 2026–2030',   category: 'Business plan' }
+      ],
+      finDocs: ['AR25', 'FS24', 'FS23'],
+      finRows: [
+        { key: 'revenue',   pages: [12, 8, 4],  v: [142.0, 151.5, 163.8, 171.2, 184.6] },
+        { key: 'ebitda',    pages: [14, 9, 4],  v: [17.8, 18.6, 20.9, 22.4, 24.9] },
+        { key: 'netIncome', pages: [15, 10, 4], v: [6.1, 6.4, 7.5, 8.2, 9.6] },
+        { key: 'cash',      pages: [29, 18, 5], v: [11.4, 9.8, 12.6, 14.1, 15.3] },
+        { key: 'debt',      pages: [31, 20, 5], v: [68.0, 71.5, 74.0, 76.5, 78.0] },
+        { key: 'ocf',       pages: [22, 13, 6], v: [13.2, 12.9, 15.8, 17.1, 19.4] },
+        { key: 'capex',     pages: [23, 13, 6], v: [7.4, 9.8, 9.1, 10.6, 11.8] },
+        { key: 'interest',  pages: [16, 11, 4], v: [2.9, 3.2, 4.4, 4.9, 5.1] }
+      ],
+      bond: [
+        { key: 'amount',     value: '@issue',      st: 'proposed' },
+        { key: 'currency',   value: 'EUR',         st: 'proposed' },
+        { key: 'maturity',   value: '5 years',     st: 'proposed' },
+        { key: 'couponType', value: 'Fixed',       st: 'proposed' },
+        { key: 'coupon',     value: '',            st: 'discussion' },
+        { key: 'repayment',  value: 'Bullet',      st: 'proposed' },
+        { key: 'ranking',    value: 'Senior unsecured, intended to rank equally with bank debt', st: 'discussion' },
+        { key: 'security',   value: '',            st: 'discussion' },
+        { key: 'proceeds',   value: '@useOfProceeds', st: 'proposed' },
+        { key: 'bank',       value: '€20 million revolving credit facility with a Dutch bank; the bank intends to remain lender', st: 'proposed' },
+        { key: 'covenants',  value: '',            st: 'discussion' }
+      ],
+      facts: [
+        { id: 'f1',  fact: 'Revenue 2025',                       link: ['revenue', 4] },
+        { id: 'f2',  fact: 'EBITDA 2025',                        link: ['ebitda', 4] },
+        { id: 'f3',  fact: 'Net income 2025',                    link: ['netIncome', 4] },
+        { id: 'f4',  fact: 'Total financial debt, 31 Dec 2025',  link: ['debt', 4] },
+        { id: 'f5',  fact: 'Cash, 31 Dec 2025',                  link: ['cash', 4] },
+        { id: 'f6',  fact: 'Interest expense 2025',              link: ['interest', 4] },
+        { id: 'f7',  fact: 'Revenue 2024',                       link: ['revenue', 3] },
+        { id: 'f8',  fact: 'EBITDA 2024',                        link: ['ebitda', 3] },
+        { id: 'f11', fact: 'Production sites',                   value: 'Eindhoven (NL), Venlo (NL), Poznań (PL)', doc: 'MP', page: '7', profile: 'Production sites' },
+        { id: 'f9',  fact: 'Year of incorporation',              value: '1987', doc: 'MP', page: '3', profile: 'Incorporated' },
+        { id: 'f10', fact: 'Employees (FTE), end 2025',          value: '640', doc: 'AR25', page: '6', profile: 'Employees (FTE, end 2025)' },
+        { id: 'f12', fact: 'Existing RCF leverage covenant',     value: 'Net debt / EBITDA ≤ 3.50x', doc: 'FS24', page: '27' },
+        { id: 'f13', fact: 'Revolving credit facility',          value: '€20 million committed, matures 2027', doc: 'FS24', page: '27' },
+        { id: 'f14', fact: 'Planned capex 2026–2030',            value: '€58 million cumulative', doc: 'BP', page: '18' },
+        { id: 'f15', fact: 'Top-10 customer share of revenue',   value: '', doc: 'MP', mandatory: true },
+        { id: 'f16', fact: 'Order backlog, 31 Dec 2025',         value: '', doc: 'AR25' },
+        { id: 'f17', fact: 'Auditor’s opinion on 2025 accounts', value: '', doc: 'AR25', mandatory: true }
+      ],
+      requests: [
+        { id: 'c1', item: 'Audited financial statements 2023–2025 (signed auditor’s report)', st: 'outstanding', mandatory: true },
+        { id: 'c2', item: 'Debt maturity schedule', st: 'outstanding', mandatory: true },
+        { id: 'c3', item: 'Existing covenant documentation (RCF and term loans)', st: 'outstanding', mandatory: true },
+        { id: 'c4', item: 'Historical budgets versus actuals, 2021–2025', st: 'received' },
+        { id: 'c5', item: 'Customer concentration analysis (top-10 customers)', st: 'outstanding', mandatory: true },
+        { id: 'c6', item: 'Collateral / security documentation', st: 'outstanding', mandatory: true },
+        { id: 'c7', item: 'Cash-flow forecast 2026–2030', st: 'outstanding', mandatory: true }
+      ],
+      diligence: [
+        { title: 'Customer concentration',
+          text: 'Share of revenue from the top-10 customers has not yet been provided. A customer concentration analysis has been requested.',
+          refs: 'Requested: customer concentration analysis', open: { facts: ['f15'], requests: ['c5'] } },
+        { title: 'Security and collateral',
+          text: 'No security package has been defined. Proposed ranking: {{termlc:ranking}}. Collateral documentation has been requested.',
+          refs: 'Bond terms · Requested: collateral / security documentation', open: { terms: ['security'], requests: ['c6'] } },
+        { title: 'Debt maturity profile',
+          text: 'A debt maturity schedule has been requested. The existing revolving credit facility is reported as {{factlc:f13}}.',
+          refs: 'Source: {{src:f13}}', open: { requests: ['c2'] } },
+        { title: 'Existing covenants',
+          text: 'The financial statements disclose an RCF leverage covenant ({{factlc:f12}}); the facility documentation has not been provided. Calculated 2025 net debt / EBITDA: {{leverage}}.',
+          refs: 'Source: {{src:f12}}', open: { requests: ['c3'] } },
+        { title: 'Forward cash flows',
+          text: 'A cash-flow forecast for 2026–2030 has been requested. The business plan indicates {{fact:f14}} of planned capital expenditure over the period.',
+          refs: 'Source: {{src:f14}}', open: { requests: ['c7'] } },
+        { title: 'Audited accounts',
+          text: 'Signed audited financial statements for 2023–2025, including the auditor’s opinion on the 2025 accounts, have been requested.',
+          refs: 'Requested: audited financial statements 2023–2025', open: { facts: ['f17'], requests: ['c1'] } }
+      ]
+    },
+
+    /* ---------------- 2. Nordhaven Logistics (new illustrative case) ---------------- */
+    'nordhaven': {
+      id: 'nordhaven',
+      status: { label: 'Under review', cls: 'review' },
+      dossierStatus: 'prepared',
+      issueEURm: 35,
+      anchors: [
+        { name: 'Baltic Institutional Credit Partners', institutionType: 'Institutional credit fund', amountEURm: 8.75, status: 'indicative',
+          conditions: 'Non-binding indication of interest; subject to credit approval, final terms and documentation.' },
+        { name: 'Fjordstone Capital Management', institutionType: 'Private credit investment manager', amountEURm: 7, status: 'discussion',
+          conditions: 'Potential allocation in early discussion; no indication or commitment has been given.' }
+      ],
+      company: {
+        name: 'Nordhaven Logistics A/S',
+        country: 'Denmark',
+        industry: 'Transport & logistics',
+        description: 'A Danish regional logistics and warehousing operator serving Nordic industrial and consumer-goods customers. Runs an owned and leased road fleet and four warehouses in Denmark and southern Sweden; results are sensitive to fuel and labour costs.',
+        ownership: '68% held by the founding Holm family; 32% held by a Nordic mid-market private equity fund since 2019.',
+        management: [
+          { role: 'CEO', name: 'M. Holm', since: 2016 },
+          { role: 'CFO', name: 'L. Østergaard', since: 2020 },
+          { role: 'COO', name: 'A. Vik', since: 2018 }
+        ],
+        financingPurpose: 'Refinancing fleet facilities and funding warehouse automation',
+        useOfProceeds: 'Refinance existing fleet financing facilities (c. €23 million) and fund warehouse automation at Kolding and Malmö (c. €12 million).',
+        reportingNote: 'Nordhaven reports in Danish kroner; figures are shown in EUR millions as an illustrative convention.'
+      },
+      docs: [
+        { id: 'AR25', ref: 'NHL-AR-2025', title: 'Nordhaven Annual Report 2025',          category: 'Annual report' },
+        { id: 'FS24', ref: 'NHL-FS-2024', title: 'Nordhaven Financial Statements 2024',   category: 'Financial statements' },
+        { id: 'FS23', ref: 'NHL-FS-2023', title: 'Nordhaven Financial Statements 2023',   category: 'Financial statements (five-year summary)' },
+        { id: 'MP',   ref: 'NHL-MP-2026', title: 'Nordhaven Management Presentation',     category: 'Company presentation' },
+        { id: 'FA',   ref: 'NHL-FA-2026', title: 'Nordhaven Fleet & Asset Overview',      category: 'Asset register summary' },
+        { id: 'BP',   ref: 'NHL-BP-2630', title: 'Nordhaven Business Plan 2026–2030',     category: 'Business plan' }
+      ],
+      finDocs: ['AR25', 'FS24', 'FS23'],
+      finRows: [
+        { key: 'revenue',   pages: [10, 7, 3],  v: [88.4, 96.1, 101.7, 106.9, 112.8] },
+        { key: 'ebitda',    pages: [11, 8, 3],  v: [10.9, 12.0, 12.9, 14.0, 15.2] },
+        { key: 'netIncome', pages: [12, 9, 3],  v: [2.6, 3.1, 3.0, 3.6, 4.1] },
+        { key: 'cash',      pages: [27, 17, 4], v: [7.9, 6.4, 8.8, 9.6, 11.8] },
+        { key: 'debt',      pages: [31, 21, 4], v: [49.6, 54.2, 56.8, 57.5, 58.9] },
+        { key: 'ocf',       pages: [20, 13, 5], v: [8.4, 8.9, 10.6, 11.2, 12.3] },
+        { key: 'capex',     pages: [21, 13, 5], v: [9.8, 11.4, 8.7, 9.1, 9.5] },
+        { key: 'interest',  pages: [13, 9, 3],  v: [2.1, 2.6, 3.6, 3.9, 4.0] }
+      ],
+      bond: [
+        { key: 'amount',     value: '@issue',      st: 'proposed' },
+        { key: 'currency',   value: 'EUR',         st: 'proposed' },
+        { key: 'maturity',   value: '4 years',     st: 'proposed' },
+        { key: 'couponType', value: 'Floating (Euribor + margin)', st: 'proposed' },
+        { key: 'coupon',     value: '',            st: 'discussion' },
+        { key: 'repayment',  value: 'Amortizing',  st: 'discussion' },
+        { key: 'ranking',    value: 'Senior; ranking relative to remaining fleet leases under discussion', st: 'discussion' },
+        { key: 'security',   value: '',            st: 'discussion' },
+        { key: 'proceeds',   value: '@useOfProceeds', st: 'proposed' },
+        { key: 'bank',       value: 'Fleet financing facilities with two Danish banks, to be refinanced; working-capital facility to remain in place', st: 'proposed' },
+        { key: 'covenants',  value: '',            st: 'discussion' }
+      ],
+      facts: [
+        { id: 'n1',  fact: 'Revenue 2025',                         link: ['revenue', 4] },
+        { id: 'n2',  fact: 'EBITDA 2025',                          link: ['ebitda', 4] },
+        { id: 'n3',  fact: 'Net income 2025',                      link: ['netIncome', 4] },
+        { id: 'n4',  fact: 'Total financial debt, 31 Dec 2025',    link: ['debt', 4] },
+        { id: 'n5',  fact: 'Cash, 31 Dec 2025',                    link: ['cash', 4] },
+        { id: 'n6',  fact: 'Interest expense 2025',                link: ['interest', 4] },
+        { id: 'n7',  fact: 'Revenue 2024',                         link: ['revenue', 3] },
+        { id: 'n8',  fact: 'EBITDA 2024',                          link: ['ebitda', 3] },
+        { id: 'n9',  fact: 'Warehouses',                           value: 'Aarhus and Kolding (DK), Malmö and Gothenburg (SE)', doc: 'MP', page: '9', profile: 'Operating sites' },
+        { id: 'n10', fact: 'Road fleet, end 2025',                 value: 'c. 310 owned and leased trucks and trailers', doc: 'FA', page: '3', profile: 'Fleet' },
+        { id: 'n11', fact: 'Year of incorporation',                value: '1994', doc: 'MP', page: '4', profile: 'Incorporated' },
+        { id: 'n12', fact: 'Employees (FTE), end 2025',            value: '780', doc: 'AR25', page: '6', profile: 'Employees (FTE, end 2025)' },
+        { id: 'n13', fact: 'Lease liabilities in financial debt, 2025', value: '€21.4 million', doc: 'AR25', page: '33' },
+        { id: 'n14', fact: 'Fleet financing facilities',          value: '€23.1 million, maturing 2026–2028', doc: 'FS24', page: '29' },
+        { id: 'n15', fact: 'Top-3 customer share of revenue',      value: '41%', doc: 'MP', page: '12' },
+        { id: 'n16', fact: 'Planned warehouse automation capex',   value: '€12 million in 2026–2027', doc: 'BP', page: '15' },
+        { id: 'n17', fact: 'Fleet market valuation',               value: '', doc: 'FA', mandatory: true },
+        { id: 'n18', fact: 'Contract renewal dates, top-3 customers', value: '', doc: 'MP', mandatory: true },
+        { id: 'n19', fact: 'Share of fuel costs passed through to customers', value: '', doc: 'MP' }
+      ],
+      requests: [
+        { id: 'r1', item: 'Independent fleet valuation (collateral documentation)', st: 'outstanding', mandatory: true },
+        { id: 'r2', item: 'Lease schedule (IFRS 16), by vehicle class and maturity', st: 'outstanding', mandatory: true },
+        { id: 'r3', item: 'Customer contracts, top-3 customers', st: 'outstanding', mandatory: true },
+        { id: 'r4', item: 'Debt maturity schedule', st: 'outstanding', mandatory: true },
+        { id: 'r5', item: 'Cash-flow forecast 2026–2029, including fuel and labour cost assumptions', st: 'outstanding', mandatory: true },
+        { id: 'r6', item: 'Audited financial statements 2023–2025', st: 'received', mandatory: true }
+      ],
+      diligence: [
+        { title: 'Fleet collateral',
+          text: 'No security package has been defined. The road fleet ({{factlc:n10}}) is the main potential collateral, but no independent fleet valuation has been provided.',
+          refs: 'Source: {{src:n10}} · Requested: independent fleet valuation', open: { terms: ['security'], facts: ['n17'], requests: ['r1'] } },
+        { title: 'Lease obligations',
+          text: 'Financial debt includes {{fact:n13}} of lease liabilities. A lease schedule has been requested to assess maturities and which vehicles would be free to secure the bond.',
+          refs: 'Source: {{src:n13}} · Requested: lease schedule', open: { requests: ['r2'] } },
+        { title: 'Customer concentration',
+          text: 'The top-3 customers account for {{fact:n15}} of revenue. Contract terms and renewal dates have not been provided.',
+          refs: 'Source: {{src:n15}} · Requested: customer contracts', open: { facts: ['n18'], requests: ['r3'] } },
+        { title: 'Debt maturity and amortisation',
+          text: 'The bond would refinance fleet facilities of {{factlc:n14}}; an amortising structure is under discussion. A consolidated debt maturity schedule has been requested.',
+          refs: 'Source: {{src:n14}} · Requested: debt maturity schedule', open: { requests: ['r4'] } },
+        { title: 'Cash-flow forecasts',
+          text: 'Free cash flow was negative in 2021–2022 during fleet investment and {{fcf}} in 2025 (calculated). A forecast for 2026–2029, including fuel and labour cost assumptions, has been requested.',
+          refs: 'Calculated from reported figures · Requested: cash-flow forecast', open: { facts: ['n19'], requests: ['r5'] } }
+      ]
+    },
+
+    /* ---------------- 3. Alpenwerk Packaging (new illustrative case) ---------------- */
+    'alpenwerk': {
+      id: 'alpenwerk',
+      status: { label: 'Investor review', cls: 'ready' },
+      dossierStatus: 'complete',
+      issueEURm: 80,
+      anchors: [
+        { name: 'Continental Institutional Debt Fund', institutionType: 'European institutional debt fund', amountEURm: 20, status: 'binding',
+          conditions: 'Signed commitment; subject only to issuance on the agreed terms and customary closing conditions.' },
+        { name: 'Westhaven Private Capital', institutionType: 'Institutional private credit manager', amountEURm: 16, status: 'binding',
+          conditions: 'Signed commitment; subject only to issuance on the agreed terms and customary closing conditions.' },
+        { name: 'Rheinmark Investment Partners', institutionType: 'Institutional investment manager', amountEURm: 16, status: 'conditional',
+          conditions: 'Subject to final investment committee approval of pricing and final documentation.' }
+      ],
+      company: {
+        name: 'Alpenwerk Packaging GmbH',
+        country: 'Germany',
+        industry: 'Sustainable packaging manufacturing',
+        description: 'A German manufacturer of fibre-based and recyclable industrial packaging for European food, pharmaceutical and industrial customers. Operates an established four-plant footprint; margins are exposed to energy and recovered-fibre prices.',
+        ownership: '74% held by the Brandauer family; 26% held by a German single-family office since 2017.',
+        management: [
+          { role: 'CEO', name: 'K. Brandauer', since: 2012 },
+          { role: 'CFO', name: 'S. Weidinger', since: 2018 },
+          { role: 'COO', name: 'T. Lehmann', since: 2020 }
+        ],
+        financingPurpose: 'Capacity expansion, automation and refinancing of selected bank debt',
+        useOfProceeds: 'Finance a new moulded-fibre line at Chemnitz and automation across existing plants (c. €52 million) and refinance selected bilateral bank loans (c. €28 million).',
+        reportingNote: ''
+      },
+      docs: [
+        { id: 'AR25', ref: 'AWP-AR-2025', title: 'Alpenwerk Annual Report 2025',                    category: 'Annual report' },
+        { id: 'FS24', ref: 'AWP-FS-2024', title: 'Alpenwerk Financial Statements 2024',             category: 'Financial statements' },
+        { id: 'FS23', ref: 'AWP-FS-2023', title: 'Alpenwerk Financial Statements 2023',             category: 'Financial statements (five-year summary)' },
+        { id: 'MP',   ref: 'AWP-MP-2026', title: 'Alpenwerk Management Presentation',               category: 'Company presentation' },
+        { id: 'EP',   ref: 'AWP-EP-2631', title: 'Alpenwerk Expansion Plan 2026–2031',              category: 'Capital expenditure plan' },
+        { id: 'SO',   ref: 'AWP-SO-2025', title: 'Alpenwerk Sustainability & Operations Overview',  category: 'Operations report' }
+      ],
+      finDocs: ['AR25', 'FS24', 'FS23'],
+      finRows: [
+        { key: 'revenue',   pages: [14, 9, 5],  v: [248.7, 271.3, 289.0, 305.2, 326.4] },
+        { key: 'ebitda',    pages: [16, 10, 5], v: [32.1, 33.4, 39.9, 43.2, 46.8] },
+        { key: 'netIncome', pages: [17, 11, 5], v: [13.0, 12.6, 16.9, 18.8, 20.7] },
+        { key: 'cash',      pages: [35, 22, 6], v: [22.5, 18.9, 24.7, 28.3, 31.4] },
+        { key: 'debt',      pages: [38, 24, 6], v: [104.0, 109.5, 112.0, 115.2, 118.0] },
+        { key: 'ocf',       pages: [26, 15, 7], v: [26.8, 24.1, 34.2, 37.5, 40.3] },
+        { key: 'capex',     pages: [27, 15, 7], v: [17.9, 21.6, 19.8, 24.4, 29.7] },
+        { key: 'interest',  pages: [18, 12, 5], v: [3.4, 3.9, 5.6, 6.1, 6.3] }
+      ],
+      bond: [
+        { key: 'amount',     value: '@issue',      st: 'proposed' },
+        { key: 'currency',   value: 'EUR',         st: 'proposed' },
+        { key: 'maturity',   value: '6 years',     st: 'proposed' },
+        { key: 'couponType', value: 'Fixed',       st: 'proposed' },
+        { key: 'coupon',     value: '',            st: 'discussion' },
+        { key: 'repayment',  value: 'Bullet',      st: 'proposed' },
+        { key: 'ranking',    value: 'Senior; ranking relative to the remaining syndicated facility under discussion', st: 'discussion' },
+        { key: 'security',   value: 'Negative pledge proposed; asset security under discussion', st: 'discussion' },
+        { key: 'proceeds',   value: '@useOfProceeds', st: 'proposed' },
+        { key: 'bank',       value: '€60 million syndicated revolving facility with German core banks, intended to remain in place', st: 'proposed' },
+        { key: 'covenants',  value: 'Net debt / EBITDA maintenance covenant proposed; level to be negotiated', st: 'discussion' }
+      ],
+      facts: [
+        { id: 'a1',  fact: 'Revenue 2025',                         link: ['revenue', 4] },
+        { id: 'a2',  fact: 'EBITDA 2025',                          link: ['ebitda', 4] },
+        { id: 'a3',  fact: 'Net income 2025',                      link: ['netIncome', 4] },
+        { id: 'a4',  fact: 'Total financial debt, 31 Dec 2025',    link: ['debt', 4] },
+        { id: 'a5',  fact: 'Cash, 31 Dec 2025',                    link: ['cash', 4] },
+        { id: 'a6',  fact: 'Interest expense 2025',                link: ['interest', 4] },
+        { id: 'a7',  fact: 'Revenue 2024',                         link: ['revenue', 3] },
+        { id: 'a8',  fact: 'EBITDA 2024',                          link: ['ebitda', 3] },
+        { id: 'a9',  fact: 'Production plants',                    value: 'Augsburg, Ulm and Chemnitz (DE), Linz (AT)', doc: 'SO', page: '6', profile: 'Production sites' },
+        { id: 'a10', fact: 'Annual production capacity',           value: 'c. 410,000 tonnes', doc: 'SO', page: '8', profile: 'Annual capacity' },
+        { id: 'a11', fact: 'Year of incorporation',                value: '1962', doc: 'MP', page: '3', profile: 'Incorporated' },
+        { id: 'a12', fact: 'Employees (FTE), end 2025',            value: '1,420', doc: 'AR25', page: '5', profile: 'Employees (FTE, end 2025)' },
+        { id: 'a13', fact: 'Expansion capex 2026–2028',            value: '€74 million', doc: 'EP', page: '11' },
+        { id: 'a14', fact: 'Top-10 customer share of revenue',     value: '38%', doc: 'MP', page: '14' },
+        { id: 'a15', fact: 'Energy and recovered fibre in cost of sales, 2025', value: 'Energy 9%; recovered fibre 27%', doc: 'AR25', page: '22' },
+        { id: 'a16', fact: 'Syndicated facility leverage covenant', value: 'Net debt / EBITDA ≤ 3.00x', doc: 'FS24', page: '31' },
+        { id: 'a17', fact: 'Contracted volumes for the new Chemnitz line', value: '', doc: 'EP', followUp: true },
+        { id: 'a18', fact: 'Hedged share of 2026 energy and fibre purchases', value: '', doc: 'MP', followUp: true }
+      ],
+      requests: [
+        { id: 'q1', item: 'Audited financial statements 2023–2025', st: 'received', mandatory: true },
+        { id: 'q2', item: 'Debt maturity schedule', st: 'received', mandatory: true },
+        { id: 'q3', item: 'Syndicated facility agreement and covenant compliance certificates', st: 'received', mandatory: true },
+        { id: 'q4', item: 'Cash-flow model 2026–2031', st: 'received', mandatory: true },
+        { id: 'q7', item: 'Customer concentration analysis (top-10 customers)', st: 'received', mandatory: true },
+        { id: 'q8', item: 'Security term sheet (negative pledge)', st: 'received', mandatory: true },
+        { id: 'q5', item: 'Contractor quotes and phasing for the Chemnitz expansion', st: 'outstanding', followUp: true },
+        { id: 'q6', item: 'Raw-material and energy hedging policy', st: 'outstanding', followUp: true }
+      ],
+      // Dossier complete: residual points are investor-specific follow-up questions, not missing mandatory items.
+      diligence: [
+        { title: 'Expansion capex',
+          text: 'The expansion plan foresees {{fact:a13}} of capital expenditure in 2026–2028, against calculated 2025 free cash flow of {{fcf}}. Contractor quotes and the phasing of spend are open follow-up items.',
+          refs: 'Source: {{src:a13}} · Follow-up: contractor quotes', always: true },
+        { title: 'Customer concentration',
+          text: 'The top-10 customers account for {{fact:a14}} of revenue (customer concentration analysis included). Volume commitments for the new Chemnitz line are a follow-up question.',
+          refs: 'Source: {{src:a14}}', always: true },
+        { title: 'Raw-material and energy exposure',
+          text: 'Cost of sales in 2025: {{fact:a15}}. The hedging and price pass-through policy is a follow-up item.',
+          refs: 'Source: {{src:a15}} · Follow-up: hedging policy', always: true },
+        { title: 'Projected free cash flow',
+          text: 'The dossier includes a cash-flow model for 2026–2031. Its assumptions for the debt-funded expansion period are for investors to test in their own assessment.',
+          refs: 'Included: cash-flow model 2026–2031', always: true },
+        { title: 'Covenant headroom',
+          text: 'The syndicated facility carries a covenant of {{factlc:a16}}; calculated 2025 net debt / EBITDA is {{leverage}}. Headroom through the expansion phase depends on the projected cash flows.',
+          refs: 'Source: {{src:a16}} · Calculated', always: true }
+      ]
+    }
+  });
+  var ORDER =['van-dijk', 'nordhaven', 'alpenwerk'];
+  /* =========================================================
+     Platform layer: phases, roles, session state
+     Pristine data stays in BASE; what the demo user does (uploads, answers,
+     confirmation, indications, orders) is replayed onto OPPORTUNITIES.
+     ========================================================= */
+  var PHASE = { 'van-dijk': 'anchor', 'nordhaven': 'anchor', 'alpenwerk': 'open' };
+  var PHASE_LABEL = { intake: 'Fact file in preparation', anchor: 'Anchor window', open: 'Open to co-investors', issued: 'Issued' };
+  var ROLE_LABEL = { company: 'Company', anchor: 'Anchor investor', coinvestor: 'Co-investor' };
+  var BASE = JSON.parse(JSON.stringify(OPPORTUNITIES));
+  var STATE = (function () { try { return JSON.parse(sessionStorage.getItem('vb-platform')) || {}; } catch (e) { return {}; } })();
+  STATE.company = STATE.company || 'van-dijk';
+  function saveState() { try { sessionStorage.setItem('vb-platform', JSON.stringify(STATE)); } catch (e) { /* private window, blocked storage */ } }
+  function bag(k) { return STATE[k] || (STATE[k] = {}); }
+  function sub2(k, id) { var b = bag(k); return b[id] || (b[id] = {}); }
+  function role() { return STATE.role || ''; }
+  function today() { return new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
+  function baseFact(o, id) { return BASE[o.id].facts.filter(function (f) { return f.id === id; })[0]; }
+  function cfoOf(o) { return o.company.management.filter(function (m) { return m.role === 'CFO'; })[0] || o.company.management[0]; }
+  // 'Van Dijk', 'Nordhaven', 'Alpenwerk': the name people use in conversation.
+  function shortName(o) { var w = o.company.name.split(' '); return w[0].length <= 3 ? w[0] + ' ' + w[1] : w[0]; }
+
+  function applyState() {
+    ORDER.forEach(function (id) {
+      var o = OPPORTUNITIES[id] = JSON.parse(JSON.stringify(BASE[id]));
+      var up = bag('uploads')[id] || {}, an = bag('answers')[id] || {}, n = 0;
+      o.requests.forEach(function (r) { if (up[r.id]) { r.st = 'received'; r.file = up[r.id]; } });
+      Object.keys(an).forEach(function (fid) {
+        var f = fact(o, fid); if (!f || blank(an[fid])) return;
+        n += 1; f.value = an[fid]; f.doc = 'CR'; f.page = String(n); f.answered = true;
+        if (!doc(o, 'CR')) o.docs.push({ id: 'CR', ref: o.docs[0].ref.split('-')[0] + '-CR-2026', title: shortName(o) + ' · Company responses', category: 'Written answers from the company' });
+      });
+      o.confirmedBy = bag('confirmed')[id] || '';
+      var ind = bag('indications')[id];
+      if (ind && ind.amount > 0) o.anchors.push({ name: 'Your institution', institutionType: 'Anchor investor (you, in this demonstration)', amountEURm: ind.amount, status: ind.binding ? 'binding' : 'indicative', you: true,
+        conditions: ind.binding ? 'Binding commitment given in this demonstration.' : 'Indication of interest given in this demonstration; not a commitment.' });
+      o.orders = bag('orders')[id] || 0;
+    });
+  }
+  applyState();
+
+  function canSee(o) { return role() === 'anchor' || (role() === 'coinvestor' && PHASE[o.id] === 'open') || (role() === 'company' && o.id === STATE.company); }
+  function phaseChip(o) { return '<span class="phase-chip ' + PHASE[o.id] + '" title="Where the financing stands">' + PHASE_LABEL[PHASE[o.id]] + '</span>'; }
+  function coverTotal(o) { return committedTotal(o) + (o.orders || 0); }
+  // Coverage of the issue: anchors (binding, conditional) plus co-investor orders.
+  function coverBar(o) {
+    var s = anchorSummary(o), rest = Math.max(0, s.issue - coverTotal(o));
+    var rows = [['binding', 'Anchors, binding', s.binding], ['conditional', 'Anchors, conditional', s.conditional], ['orders', 'Co-investor orders', o.orders || 0], ['rest', 'Not yet covered', rest]].filter(function (x) { return x[2] > 0; });
+    return '<div class="anchor-bar large" role="img" aria-label="' + esc('Coverage of ' + eurAmt(s.issue) + ' issue: ' + rows.map(function (x) { return x[1] + ' ' + eurAmt(x[2]); }).join('; ')) + '">' +
+      rows.map(function (x) { return '<span class="seg seg-' + x[0] + '" style="width:' + (shareOfIssue(o, x[2]) * 100) + '%" title="' + esc(x[1] + ': ' + eurAmt(x[2])) + '"></span>'; }).join('') + '</div>' +
+      '<ul class="anchor-legend">' + rows.map(function (x) { return '<li><i class="sw seg-' + x[0] + '" aria-hidden="true"></i><span class="lg-label">' + x[1] + '</span> <span class="lg-val">' + eurAmt(x[2]) + ' · ' + fmtShare(shareOfIssue(o, x[2])) + '</span></li>'; }).join('') + '</ul>';
+  }
+
+  var LEDE = {
+    anchor: 'Standardised bond financing opportunities from European mid-sized companies. As an anchor investor you see each opportunity first, from the day its fact file is ready.',
+    coinvestor: 'Standardised bond financing opportunities from European mid-sized companies. Co-investors join once the anchors have committed, on the same terms.',
+    company: ''
+  };
+  function roleNote() {
+    return role() === 'anchor'
+      ? '<div class="role-note"><strong>Anchor window.</strong> Anchors have first access and reserve capacity before co-investors are invited. A binding ticket is asked within ten working days of the fact file.</div>'
+      : '<div class="role-note"><strong>Same terms as the anchors.</strong> Opportunities still in the anchor window show without a name until the anchors have committed. Orders are in pieces of €100,000.</div>';
+  }
+  function listMeta() {
+    var open = ORDER.filter(function (id) { return canSee(OPPORTUNITIES[id]); }).length;
+    return role() === 'coinvestor' ? open + ' open to co-investors · ' + (ORDER.length - open) + ' in the anchor window' : ORDER.length + ' illustrative opportunities';
+  }
+  // What a co-investor sees of a deal still in the anchor window: sector, country, size, no name.
+  function teaserCard(o) {
+    var c = o.company;
+    return '<li class="opp teaser" aria-label="Opportunity in the anchor window">' +
+      '<div class="opp-summary"><div class="opp-id"><h2>Mid-sized company · ' + esc(c.industry) + '</h2>' +
+        '<p class="meta-line"><span>' + esc(c.country) + '</span><span>Name disclosed after the anchor window</span></p>' +
+        '<p class="opp-desc">Anchors are reviewing the fact file. Co-investors are invited once the anchors have committed, on the same terms.</p></div>' +
+      '<div class="chips">' + phaseChip(o) + '</div>' +
+      '<div class="opp-metrics"><dl class="mlist"><div class="m issue"><dt>Proposed issue</dt><dd>' + esc(termText(o, 'amount')) + '</dd></div>' +
+        '<div class="m"><dt>Tenor</dt><dd>' + esc(termText(o, 'maturity')) + '</dd></div><div class="m"><dt>Anchor window</dt><dd>' + esc(anchorShort(o, ' + ')) + '</dd></div></dl>' +
+        '<span class="opp-locked">Not yet open to co-investors</span></div></div></li>';
+  }
+  // Access panel under the overview hero: anchor window (indicate, make binding) or open book (order).
+  function accessPanel(o) {
+    var s = anchorSummary(o), ph = PHASE[o.id], ind = bag('indications')[o.id], you = o.anchors.filter(function (a) { return a.you; })[0];
+    if (role() === 'anchor' && ph === 'anchor') {
+      var room = Math.max(0, s.issue - s.potential);
+      return '<div class="access"><div><p class="eyebrow">Anchor window</p><h2>First access. Binding ticket within ten working days.</h2>' +
+        '<p>' + esc(anchorShort(o, ' + ', true)) + ' so far. Capacity is reserved for anchors before co-investors are invited; coupon, security and covenants are settled with the anchors.</p></div>' +
+        (you
+          ? '<div class="access-act"><p class="label">Your participation</p><div class="val">' + eurAmt(you.amountEURm) + ' · ' + esc(STAGE_LABEL[you.status]) + '</div>' +
+            (ind.binding ? '<p class="small muted">Binding commitment recorded in this demonstration.</p>' : '<button type="button" class="btn" data-bind="' + o.id + '">Confirm as binding commitment</button>') +
+            '<button type="button" class="chip-link" data-withdraw="' + o.id + '">Withdraw</button></div>'
+          : '<form class="access-act" data-indicate="' + o.id + '"><label class="label" for="ind-amt">Indicate interest · EUR m, up to ' + fmtAmt(room) + '</label>' +
+            '<div class="field"><input id="ind-amt" name="amt" type="number" min="1" max="' + fmtAmt(room) + '" step="0.5" value="' + fmtAmt(Math.min(room, 7)) + '" required><button type="submit" class="btn">Indicate interest</button></div>' +
+            '<p class="small muted">Non-binding. In a live opportunity the indication is made in the institution’s own name.</p></form>') +
+        '</div>';
+    }
+    if (role() === 'anchor') return '<div class="access closed"><p class="eyebrow">Anchor window closed</p><p>Anchors committed ' + eurAmt(s.committed) + ' (' + fmtShare(shareOfIssue(o, s.committed)) + '). The remaining ' + eurAmt(s.remaining) + ' is open to co-investors on the same terms.</p></div>';
+    if (role() === 'coinvestor' && ph === 'open') {
+      var rem = Math.max(0, s.issue - coverTotal(o)), full = rem < 1e-9;
+      return '<div class="access"><div><p class="eyebrow">Open to co-investors</p><h2>' + (full ? 'Fully covered. Ready to issue.' : eurAmt(rem) + ' still to be covered.') + '</h2>' +
+        '<p>Anchors committed ' + eurAmt(s.committed) + ' (' + fmtShare(shareOfIssue(o, s.committed)) + '). Co-investors join on the same terms, in pieces of €100,000. The bond is issued only when fully covered.</p>' + coverBar(o) + '</div>' +
+        '<form class="access-act" data-order="' + o.id + '"><p class="label">' + (o.orders ? 'Your order · ' + eurAmt(o.orders) : 'Place an order · EUR m') + '</p>' +
+        (full ? '<p class="small muted">The book is covered.</p>' : '<div class="field"><input name="amt" type="number" min="0.1" max="' + fmtAmt(rem) + '" step="0.1" value="' + fmtAmt(Math.min(rem, 2)) + '" required aria-label="Order in EUR millions"><button type="submit" class="btn">' + (o.orders ? 'Add to order' : 'Place order') + '</button></div>') +
+        (o.orders ? '<button type="button" class="chip-link" data-withdraw-order="' + o.id + '">Withdraw order</button>' : '') +
+        '<p class="small muted">Demonstration only; nothing is binding and no money moves.</p></form></div>';
+    }
+    return '';
+  }
+
+  /* ---------- Start: choose a side ---------- */
+  function roleCard(r, title, text, meta) {
+    return '<button type="button" class="role-card" data-role="' + r + '"><p class="eyebrow">' + (r === 'company' ? 'Issuer side' : 'Investor side') + '</p><h2>' + title + '</h2><p>' + text + '</p><span class="meta">' + esc(meta) + '</span><span class="arr" aria-hidden="true">→</span></button>';
+  }
+  function renderStart() {
+    var open = ORDER.filter(function (id) { return PHASE[id] === 'open'; }).length, co = OPPORTUNITIES[STATE.company].company;
+    return '<p class="eyebrow">Platform demo</p><h1 id="h-start">Two sides. One fact file.</h1>' +
+      '<p class="lede">Companies bring their documents; the fact file is built in the anchors’ format. Anchors see it first and commit; co-investors join on the same terms. Choose a side to walk through the demonstration.</p>' +
+      '<div class="roles">' +
+      roleCard('company', 'The company', 'Upload the documents requested, answer the reviewer’s questions and confirm the figures as CFO.', co.name) +
+      roleCard('anchor', 'Anchor investor', 'First access to every opportunity. Reserve capacity and give a binding ticket within ten working days.', ORDER.length + ' opportunities, all visible') +
+      roleCard('coinvestor', 'Co-investor', 'Join once the anchors have committed, on the same terms, in pieces of €100,000.', open + ' of ' + ORDER.length + ' open now') +
+      '</div>' +
+      '<p class="start-links">Or read first: <button type="button" class="chip-link" data-route="journey">the deal journey</button> · <button type="button" class="chip-link" data-route="market">the market</button></p>' +
+      '<ol class="flow" aria-label="How the two sides meet">' + [['Fact file', 'Company documents and answers, every fact with its source. The CFO confirms.'], ['Anchor window', 'Anchors see it first and commit.'], ['Open to co-investors', 'Same terms; the remainder is filled.'], ['Issued', 'Only when fully covered. Money flows directly to the company.']].map(function (x) { return '<li><h3>' + x[0] + '</h3><p>' + x[1] + '</p></li>'; }).join('') + '</ol>' +
+      '<p class="demo-note">All companies and institutions are fictional. What you upload, answer or order stays in this browser session; nothing is sent anywhere.</p>';
+  }
+
+  /* ---------- Company view: documents, questions, figures, terms, timeline ---------- */
+  function questions(o) { return BASE[o.id].facts.filter(function (f) { return !f.link && blank(f.value); }).map(function (f) { return fact(o, f.id); }); }
+  function renderCompany(o) {
+    var c = o.company, cfo = cfoOf(o), list = dossierChecklist(o), met = list.filter(function (i) { return i.met; }).length, s = anchorSummary(o);
+    var html = '<div class="hero on-navy"><div><p class="eyebrow">Company view · fact file</p><h1 id="h-company">' + esc(c.name) + '</h1>' +
+      '<p class="meta-line"><span>' + esc(c.industry) + '</span><span>' + esc(c.country) + '</span><span>Proposed bond ' + esc(termText(o, 'amount')) + '</span></p>' +
+      '<p class="desc">What the reviewer has drawn from your documents, what is still requested, and the questions to answer. Investors see the fact file in the anchors’ format, every fact with its source.</p></div>' +
+      '<div class="hero-facts"><div class="chips" style="justify-content:flex-start">' + phaseChip(o) + dossierChip(o) + '</div>' +
+      '<div><p class="label">Checklist</p><div class="val">' + met + ' of ' + list.length + ' items met</div></div>' +
+      '<div><p class="label">Who sees the fact file</p><div class="val" style="font-size:15px">' + (s.count ? s.count + ' anchor institution' + (s.count > 1 ? 's' : '') + ' now' : 'Anchors first') + ' · co-investors after anchor commitments</div></div>' +
+      '<div><p class="label">Confirmation</p><div class="val" style="font-size:15px">' + (o.confirmedBy ? esc(o.confirmedBy) : 'Not yet confirmed by the CFO') + '</div></div></div></div>';
+    html += '<nav class="jump" aria-label="Sections on this page">' + [['c-docs', 'Documents requested'], ['c-questions', 'Questions'], ['c-figures', 'Figures to confirm'], ['c-terms', 'Proposed terms'], ['c-timeline', 'Timeline']].map(function (x) { return '<button type="button" class="chip-link" data-jump="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
+
+    var out = outstanding(o), rec = received(o);
+    html += '<section class="section" id="c-docs"><p class="label">' + out.length + ' outstanding · ' + rec.length + ' received</p><h2>Documents requested</h2>' +
+      '<p class="muted small">Mandatory items complete the dossier; follow-up items answer an investor’s question. Files chosen here stay in your browser in this demonstration.</p>' +
+      '<div class="table-scroll"><table><caption class="visually-hidden">Documents requested from ' + esc(c.name) + '</caption><thead><tr><th scope="col">Document</th><th scope="col">Required</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Action</span></th></tr></thead><tbody>' +
+      o.requests.map(function (r) {
+        var act = r.st === 'received' ? '' : '<label class="btn small">Upload<input type="file" accept=".pdf,.xlsx,.xls,.docx,.csv" data-upload="' + r.id + '" class="visually-hidden"></label> <button type="button" class="chip-link" data-mark="' + r.id + '">mark as provided</button>';
+        return '<tr' + (r.st === 'received' ? ' class="done"' : '') + '><td>' + esc(r.item) + '</td><td class="muted">' + (r.mandatory ? 'Mandatory' : r.followUp ? 'Investor follow-up' : 'Requested') + '</td>' +
+          '<td>' + (r.st === 'received' ? '<span class="st-ok">Received' + (r.file ? ' · ' + esc(r.file) : '') + '</span>' : '<span class="st-open">Outstanding</span>') + '</td><td class="act">' + act + '</td></tr>';
+      }).join('') + '</tbody></table></div></section>';
+
+    var qs = questions(o), openQ = qs.filter(function (f) { return !f.answered; }).length;
+    html += '<section class="section" id="c-questions"><p class="label">' + openQ + ' open</p><h2>Questions from the review</h2>' +
+      '<p class="muted small">Facts the reviewer could not find in the documents. A written answer enters the fact file as a company response and is marked as such until it is checked.</p>' +
+      (qs.length ? '<ul class="qa">' + qs.map(function (f) {
+        var b = baseFact(o, f.id), d = doc(o, b.doc);
+        return '<li' + (f.answered ? ' class="answered"' : '') + '><div class="q"><h3>' + esc(f.fact) + '</h3><p class="small muted">' + (f.mandatory ? 'Mandatory · ' : f.followUp ? 'Investor follow-up · ' : '') + 'expected in ' + esc(d ? d.title : 'your documents') + '</p></div>' +
+          (f.answered
+            ? '<div class="a"><p class="ans">' + esc(f.value) + '</p><p class="small muted">Answered by the company · to be checked by the reviewer <button type="button" class="chip-link" data-unanswer="' + f.id + '">edit</button></p></div>'
+            : '<form class="a" data-answer="' + f.id + '"><div class="field"><input name="txt" type="text" maxlength="160" placeholder="Your answer" required aria-label="Answer: ' + esc(f.fact) + '"><button type="submit" class="btn">Send answer</button></div></form>') +
+          '</li>';
+      }).join('') + '</ul>' : '<div class="empty-state">No open questions.</div>') + '</section>';
+
+    var sf = sourcedFacts(o);
+    html += '<section class="section" id="c-figures"><p class="label">' + sf.length + ' facts with source</p><h2>Figures drawn from your documents</h2>' +
+      '<p class="muted small">Every figure carries its source document and page. The CFO confirms the company information. A named credit professional on our side signs separately that each fact was checked against its source.</p>' +
+      '<div class="table-scroll"><table><caption class="visually-hidden">Facts with source, ' + esc(c.name) + '</caption><thead><tr><th scope="col">Fact</th><th scope="col">Value</th><th scope="col">Source</th><th scope="col" class="num">Page</th></tr></thead><tbody>' +
+      sf.map(function (f) { var src = factSource(o, f), d = doc(o, src.doc); return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td class="muted">' + esc(d.title) + (f.answered ? ' <span class="st-open">company response</span>' : '') + '</td><td class="num">' + esc(src.page) + '</td></tr>'; }).join('') +
+      '</tbody></table></div>' +
+      '<div class="confirm">' + (o.confirmedBy
+        ? '<p><strong>Confirmed.</strong> ' + esc(o.confirmedBy) + '. Investors see this confirmation on the fact file. <button type="button" class="chip-link" data-unconfirm="' + o.id + '">Withdraw</button></p>'
+        : '<p>I confirm that the company information above is complete and correct to the best of my knowledge.</p><button type="button" class="btn" data-confirm="' + o.id + '">Confirm as ' + esc(cfo.name) + ', ' + esc(cfo.role) + '</button>') + '</div></section>';
+
+    html += '<section class="section" id="c-terms"><p class="label">Indicative</p><h2>Proposed terms</h2>' +
+      '<p class="muted small">Terms the company proposed for discussion. Coupon, security and covenants are settled with the anchors. The company confirms its information and signs no bond documents at this stage.</p>' +
+      '<div class="table-scroll"><table><caption class="visually-hidden">Proposed bond terms, ' + esc(c.name) + '</caption><tbody>' + o.bond.map(function (t) { return '<tr><th scope="row" class="rowhead">' + esc(TERM_LABEL[t.key]) + '</th><td>' + termHtml(o, t) + '</td><td>' + termStatus(o, t) + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
+
+    var steps = [['Sourcing', 'Days', 'First check against the admission criteria.'], ['Fact file', 'Weeks 1–4', 'Your plan in the anchors’ format, every fact with its source. The CFO confirms.'], ['Anchor decision', 'Weeks 5–6', 'Anchors have first access. Binding ticket within ten working days.'], ['One standard bond', 'Weeks 7–10', 'Co-investors join on the same terms. Issued only when fully covered.'], ['After closing', 'Years 1–5', 'Quarterly reporting and covenant tests by the trustee. Repaid at maturity.']];
+    var cur = { intake: 1, anchor: 2, open: 3, issued: 4 }[PHASE[o.id]];
+    html += '<section class="section" id="c-timeline"><p class="label">Ten weeks, every bond</p><h2>Where this stands</h2><ol class="timeline">' + steps.map(function (st, i) {
+      return '<li class="' + (i < cur ? 'done' : i === cur ? 'now' : '') + '"><span class="when">' + st[1] + '</span><h3>' + st[0] + '</h3><p>' + st[2] + '</p></li>';
+    }).join('') + '</ol></section>';
+    return html;
+  }
+
+  /* ---------- Header: nav items and role box follow the role ---------- */
+  function renderNav() {
+    var r = role(), items = (r === 'company' ? [['company', 'Your fact file']] : r ? [['opportunities', 'Opportunities']] : []).concat([['journey', 'Deal journey'], ['market', 'Market']]);
+    document.getElementById('nav-list').innerHTML = items.map(function (x) {
+      var cur = currentView === x[0] || (x[0] === 'opportunities' && INVESTOR[currentView]);
+      return '<li><button type="button" data-route="' + x[0] + '"' + (cur ? ' aria-current="page"' : '') + '>' + x[1] + '</button></li>';
+    }).join('');
+    document.getElementById('role-box').innerHTML = r
+      ? '<span class="role-tag">' + ROLE_LABEL[r] + (r === 'company' ? ' · ' + esc(shortName(OPPORTUNITIES[STATE.company])) : '') + '</span>' +
+        '<button type="button" class="link-btn" data-route="start">Switch role</button><button type="button" class="link-btn" data-action="reset">Reset demo</button>'
+      : '';
+  }
+
+  /* =========================================================
+     Deal journey: the ten-week process, for every role (two-pager v15 wording)
+     ========================================================= */
+  var STAGES = [
+    { when: 'Days', title: 'Sourcing', lead: 'The company comes itself, via its adviser or its bank. A first check answers within days.',
+      body: 'Four hard criteria: €50–500 million revenue, three audited years, debt at most 3.5× EBITDA, interest cover at least 2.5×. Pass or fail, no score, no fee.',
+      who: [['The company', 'Sends the last annual report and the financing need.'], ['Anchors', 'Not yet involved. Their capacity was reserved upfront; their criteria shape the check.'], ['Vanilla', 'Runs the first check against the admission criteria and answers within days.']],
+      out: 'A yes or a no. With a yes, the list of documents for the fact file.', deal: 'A family company with €120 million revenue asks for €30 million: refinance the term loans, fund a new production line.' },
+    { when: 'Weeks 1–4', title: 'Fact file', lead: 'The company’s own plan and material in the anchors’ format, every fact with source, date and status.',
+      body: 'AI drafts every fact from the company’s documents, with source and page. Two analysts fill the gaps independently; a difference between sources is flagged. A named credit professional signs that every fact was checked against its source. The CFO confirms the company information. The capital structure, bank included, is settled before launch.',
+      who: [['The company', 'Uploads the documents requested, answers the reviewer’s questions, confirms the figures. It signs no bond documents at this stage.'], ['Anchors', 'See nothing yet. The file is built on their criteria, so it arrives ready to decide on.'], ['Vanilla', 'Drafts, checks and signs the fact file. Records the proposed terms within the standard: amount, three to five years, repaid at the end, floating rate over Euribor, €100,000 pieces.']],
+      out: 'A signed fact file, the proposed terms, the bank’s position recorded.', deal: 'Targets: nine in ten facts right in the AI draft; four weeks to the signed file.', link: ['company', 'Company view: documents, questions, confirmation'] },
+    { when: 'Weeks 5–6', title: 'Anchor decision', lead: 'Two or three funds reserved capacity upfront and see every candidate first.',
+      body: 'Each anchor does its own analysis on the fact file, asks its questions through the platform and gives a binding ticket, target ten working days. The anchors set the price within the standard terms: coupon, security and covenants. The company mandates the bond only once the anchors have committed.',
+      who: [['The company', 'Answers follow-up questions. Takes no part in pricing: investors decide and price.'], ['Anchors', 'Assess and decide. A binding ticket for most of the bond.'], ['Vanilla', 'Runs the window and the questions. Gives no rating and no advice.']],
+      out: 'Binding anchor commitments and the final terms.', deal: 'Three anchors at €7 million each, 70% of the bond, before the mandate. Five years, Euribor + 600 basis points.', link: ['opportunities', 'Anchor view: first access, indicate, commit'] },
+    { when: 'Weeks 7–10', title: 'One standard bond', lead: 'Co-investors join on the same terms. The bond is issued only when fully covered.',
+      body: 'Documentation on the Nordic standard: one set of bond terms for all holders, Nordic Trustee as the holders’ agent, an ISIN per bond, €100,000 pieces, professional investors only under MiFID II, no prospectus. Co-investors see the fact file and the anchors’ terms and order; allocation follows the published rule. Settlement is delivery against payment; the money flows directly to the company.',
+      who: [['The company', 'Issues the bond under the standard terms, receives the proceeds at settlement and pays the fee once at closing: 2.0–2.5% of the amount, only when the bond is issued.'], ['Co-investors', 'Order on the same terms as the anchors, in €100,000 pieces, for the remainder.'], ['Vanilla and third parties', 'A licensed firm is arranger of record; trustee, paying agent and settlement system do their part. Vanilla holds no client money and takes no position of its own.']],
+      out: 'A settled bond with an ISIN, one register, one set of terms.', deal: 'Four co-investors for the last €9 million. €690,000 (2.3%) paid once by the company at closing.', link: ['opportunities', 'Co-investor view: the open book'] },
+    { when: 'Years 1–5', title: 'After closing', lead: 'Interest from day one, the principal at maturity. One agent tests the covenants every quarter.',
+      body: 'Nordic Trustee acts for all holders and tests the covenants each quarter. The company reports each quarter in the fact-file format, so every holder reads the same numbers. If something goes wrong, holders decide collectively through the trustee. The bond is designed to be transferable, in the investor’s own securities account; actual liquidity depends on market demand.',
+      who: [['The company', 'Quarterly report and covenant certificate. Pays interest, repays at maturity.'], ['Investors', 'The same numbers for every holder; collective decisions through the trustee.'], ['Vanilla', 'Publishes each report on the platform in the fact-file format.']],
+      out: 'Quarterly certificates for five years, then repayment.', deal: '€30 million repaid at maturity in year five.' }
+  ];
+  var RULES = [
+    ['Licence', 'Issuance, placement and settlement run under MiFID II, for professional investors only. A licensed firm is arranger of record until our own investment-firm licence, planned for 2028.'],
+    ['What Vanilla does not do', 'Gives no rating. Gives no advice. Holds no client money. Takes no position of its own.'],
+    ['The signatures', 'A named credit professional signs that every fact was checked against its source. The CFO confirms the company information. The anchor assesses and decides.'],
+    ['Form', '€100,000 pieces, each bond with an ISIN. No prospectus. Designed to be transferable in the investor’s own securities account; liquidity depends on demand.']
+  ];
+  function renderJourney() {
+    return '<p class="eyebrow">Deal journey · for every role</p><h1 id="h-journey">One standard bond, about ten weeks.</h1>' +
+      '<p class="lede">Anchors first: the same process for every bond. Each stage below says who does what, what comes out of it, and how it looks in one illustrative €30 million deal.</p>' +
+      '<div class="jdeal on-navy"><div><p class="eyebrow">One deal, illustrative</p><h2>€30 million, five years, Euribor + 600 basis points</h2>' +
+        '<p>Three anchors at €7 million each commit before the mandate; four co-investors take the last €9 million. The company pays €690,000 (2.3%) once, at closing.</p></div>' +
+        '<div><div class="anchor-bar large" role="img" aria-label="Three anchors 70%, four co-investors 30%"><span class="seg seg-binding" style="width:70%" title="Three anchors · €21m"></span><span class="seg seg-orders" style="width:30%" title="Four co-investors · €9m"></span></div>' +
+        '<ul class="anchor-legend"><li><i class="sw seg-binding" aria-hidden="true"></i><span class="lg-label">Three anchors</span> <span class="lg-val">€21m · 70%</span></li><li><i class="sw seg-orders" aria-hidden="true"></i><span class="lg-label">Four co-investors</span> <span class="lg-val">€9m · 30%</span></li></ul></div></div>' +
+      '<ol class="jstages">' + STAGES.map(function (st) {
+        return '<li><div class="jmain"><p class="jwhen">' + st.when + '</p><h2>' + st.title + '</h2><p class="jlead">' + st.lead + '</p><p>' + st.body + '</p>' +
+          (st.link ? '<button type="button" class="chip-link jlink" data-route="' + st.link[0] + '">' + st.link[1] + ' <span class="arr" aria-hidden="true">→</span></button>' : '') + '</div>' +
+          '<div class="jside"><dl class="who">' + st.who.map(function (w) { return '<div><dt>' + w[0] + '</dt><dd>' + w[1] + '</dd></div>'; }).join('') + '</dl>' +
+          '<p class="jout"><strong>Comes out of it.</strong> ' + st.out + '</p><p class="jdealline"><strong>In the €30m deal.</strong> ' + st.deal + '</p></div></li>';
+      }).join('') + '</ol>' +
+      '<section class="section"><p class="label">The rules</p><h2>Who may do what</h2><div class="rules">' + RULES.map(function (x) { return '<div><h3>' + x[0] + '</h3><p>' + x[1] + '</p></div>'; }).join('') + '</div></section>' +
+      '<p class="demo-note">Illustrative deal and targets. Own figures; for discussion, not an offer and not investment advice.</p>';
+  }
+
+  /* =========================================================
+     Market: our own dataset of euro bonds in the Nordic format from issuers outside the Nordics.
+     Issuer, ISIN, size, coupon and maturity verified at source (August 2026); prices and status indicative (July 2026).
+     ========================================================= */
+  var E3M = 2.08, AS_OF = '2026-07';
+  var BONDS = [
+ {n:"BOOSTER Precision",c:"DE",s:"Precision automotive",g:"Industrials",isin:"NO0012713520",size:53,t:"FRN",cp:900,iss:"2022-11",mat:"2026-11",px:42.0,st:"Standstill"},
+ {n:"BOS GmbH & Co. KG",c:"DE",s:"Automotive components",g:"Industrials",isin:"NO0013515759",size:150,t:"FRN",cp:900,iss:"2025-06",mat:"2029-06",px:97.8,st:"Watch"},
+ {n:"BoldR Group",c:"DE",s:"Towbars / auto parts e-comm.",g:"Consumer",isin:"NO0013648295",size:110,t:"FRN",cp:650,iss:"2025-09",mat:"2030-09",px:100.3,st:"Performing"},
+ {n:"DEAG Deutsche Entertainment",c:"DE",s:"Live entertainment",g:"Services",isin:"NO0013639112",size:75,t:"Fixed",cp:7.75,iss:"2025-10",mat:"2029-10",px:101.2,st:"Performing"},
+ {n:"DWK Life Sciences (DURAN)",c:"DE",s:"Laboratory glass",g:"Healthcare",isin:"NO0013696880",size:230,t:"Fixed",cp:8.513,iss:"2025-05",mat:"2030-05",px:101.1,st:"Performing"},
+ {n:"Formycon AG",c:"DE",s:"Biosimilars",g:"Healthcare",isin:"NO0013586024",size:70,t:"FRN",cp:700,iss:"2025-07",mat:"2029-07",px:101.0,st:"Performing"},
+ {n:"Homann Holzwerkstoffe",c:"DE",s:"Wood materials",g:"Industrials",isin:"NO0013536169",size:120,t:"Fixed",cp:7.5,iss:"2025-06",mat:"2032-06",px:101.5,st:"Performing"},
+ {n:"HomeToGo SE",c:"DE",s:"Travel marketplace",g:"Services",isin:"NO0013697268",size:101,t:"FRN",cp:775,iss:"2026-02",mat:"2031-03",px:100.4,st:"Performing"},
+ {n:"Hörmann Industries",c:"DE",s:"Diversified industrial",g:"Industrials",isin:"NO0012938325",size:50,t:"Fixed",cp:7.0,iss:"2023-07",mat:"2028-07",px:100.7,st:"Performing"},
+ {n:"JDC Group AG",c:"DE",s:"Insurance brokerage",g:"Financials",isin:"NO0013618587",size:70,t:"FRN",cp:450,iss:"2025-08",mat:"2029-08",px:100.9,st:"Performing"},
+ {n:"Karlsberg Brauerei",c:"DE",s:"Brewery",g:"Consumer",isin:"NO0013168005",size:55,t:"Fixed",cp:6.0,iss:"2024-05",mat:"2029-05",px:102.6,st:"Performing"},
+ {n:"Katjes International",c:"DE",s:"Confectionery",g:"Consumer",isin:"NO0012888769",size:200,t:"Fixed",cp:6.75,iss:"2023-09",mat:"2028-09",px:103.4,st:"Performing"},
+ {n:"Kolibri (Zeitfracht)",c:"DE",s:"Logistics / aviation",g:"Services",isin:"NO0013461384",size:145,t:"FRN",cp:700,iss:"2025-02",mat:"2029-02",px:100.2,st:"Performing"},
+ {n:"Konzmann (Nexus Bidco)",c:"DE",s:"Technical building services",g:"Industrials",isin:"NO0013683466",size:85,t:"FRN",cp:650,iss:"2025-10",mat:"2030-10",px:100.6,st:"Performing"},
+ {n:"LR Health & Beauty",c:"DE",s:"Direct-sales cosmetics",g:"Consumer",isin:"NO0013149658",size:130,t:"FRN",cp:750,iss:"2024-03",mat:"2028-03",px:99.2,st:"Performing"},
+ {n:"LifeFit Group",c:"DE",s:"Fitness clubs",g:"Consumer",isin:"NO0013252452",size:230,t:"FRN",cp:700,iss:"2024-08",mat:"2029-08",px:100.6,st:"Performing"},
+ {n:"MEDIA Central Holding",c:"DE",s:"Retail media / promotions",g:"Services",isin:"NO0012940347",size:200,t:"FRN",cp:975,iss:"2023-06",mat:"2027-06",px:100.9,st:"Performing"},
+ {n:"Muehlhan Holding",c:"DE",s:"Industrial / wind services",g:"Industrials",isin:"NO0013682542",size:320,t:"FRN",cp:590,iss:"2025-10",mat:"2030-05",px:100.8,st:"Performing"},
+ {n:"Mutares SE & Co. KGaA",c:"DE",s:"PE / industrial holding",g:"Financials",isin:"NO0013325407",size:135,t:"FRN",cp:625,iss:"2024-09",mat:"2029-09",px:102.1,st:"Performing"},
+ {n:"Mutares SE & Co. KGaA",c:"DE",s:"PE / industrial holding",g:"Financials",isin:"NO0012530965",size:250,t:"FRN",cp:850,iss:"2023-03",mat:"2027-03",px:101.5,st:"Performing"},
+ {n:"NWI Group",c:"DE",s:"Industrial holding",g:"Industrials",isin:"NO0013355255",size:50,t:"FRN",cp:575,iss:"2024-11",mat:"2028-11",px:99.6,st:"Performing"},
+ {n:"O3 Holding (KD Pharma)",c:"DE",s:"Omega-3 / pharma ingredients",g:"Healthcare",isin:"NO0013360552",size:180,t:"FRN",cp:525,iss:"2024-10",mat:"2029-10",px:99.8,st:"Performing"},
+ {n:"SLR Group",c:"DE",s:"Ductile iron castings",g:"Industrials",isin:"NO0013177949",size:75,t:"FRN",cp:700,iss:"2024-04",mat:"2027-10",px:98.9,st:"Performing"},
+ {n:"Secop Group",c:"DE",s:"Compressors / refrigeration",g:"Industrials",isin:"NO0013752634",size:60,t:"FRN",cp:700,iss:"2026-06",mat:"2029-06",px:100.0,st:"Performing"},
+ {n:"Secop Group",c:"DE",s:"Compressors / refrigeration",g:"Industrials",isin:"NO0012923194",size:50,t:"FRN",cp:840,iss:"2023-06",mat:"2026-12",px:100.2,st:"Maturing"},
+ {n:"Telio Group",c:"DE",s:"Prison communications",g:"Services",isin:"NO0013593913",size:250,t:"FRN",cp:670,iss:"2026-05",mat:"2030-05",px:100.3,st:"Performing"},
+ {n:"The Platform Group",c:"DE",s:"E-commerce platform",g:"Services",isin:"NO0013256834",size:70,t:"Fixed",cp:8.875,iss:"2024-07",mat:"2028-07",px:101.8,st:"Performing"},
+ {n:"smava GmbH",c:"DE",s:"Consumer-credit marketplace",g:"Financials",isin:"NO0013531590",size:200,t:"FRN",cp:700,iss:"2025-05",mat:"2029-05",px:99.4,st:"Performing"},
+ {n:"Keenfinity (Boston Bidco)",c:"DE",s:"Security / building tech",g:"Industrials",isin:"NO0013738609",size:325,t:"FRN",cp:600,iss:"2026-03",mat:"2030-03",px:100.5,st:"Performing"},
+ {n:"TIER Mobility (Dott)",c:"DE",s:"Micromobility",g:"Services",isin:"NO0013516369",size:70,t:"FRN",cp:800,iss:"2025-10",mat:"2029-10",px:100.1,st:"Performing"},
+ {n:"TEMPTON Personaldienstl.",c:"DE",s:"Staffing / HR services",g:"Services",isin:"NO0013752741",size:30,t:"FRN",cp:425,iss:"2026-06",mat:"2030-06",px:100.0,st:"Performing"},
+ {n:"Gentoo Media",c:"MT",s:"iGaming platform",g:"Services",isin:"NO0013024018",size:60,t:"FRN",cp:725,iss:"2023-12",mat:"2026-12",px:101.1,st:"Maturing"},
+ {n:"Arles I (Fletcher Hotels)",c:"NL",s:"Hotels",g:"Consumer",isin:"NO0013684662",size:225,t:"FRN",cp:650,iss:"2025-11",mat:"2030-11",px:100.7,st:"Performing"},
+ {n:"Azerion Group N.V.",c:"NL",s:"Digital advertising / gaming",g:"Services",isin:"NO0013660357",size:225,t:"FRN",cp:550,iss:"2025-10",mat:"2029-10",px:101.3,st:"Performing"},
+ {n:"Flora Food Group",c:"NL",s:"Plant-based foods",g:"Consumer",isin:"NO0013606426",size:400,t:"Fixed",cp:8.625,iss:"2025-06",mat:"2031-04",px:102.2,st:"Performing"},
+ {n:"Nexus Newco (Dayes)",c:"NL",s:"Consumer products",g:"Consumer",isin:"NO0013511766",size:250,t:"FRN",cp:650,iss:"2025-06",mat:"2030-06",px:100.5,st:"Performing"},
+ {n:"Okechamp",c:"PL",s:"Mushroom processing",g:"Consumer",isin:"NO0013364380",size:55,t:"FRN",cp:750,iss:"2024-11",mat:"2028-11",px:18.5,st:"Default"},
+ {n:"Fertiberia",c:"ES",s:"Fertilisers / green ammonia",g:"Energy transition",isin:"NO0013740894",size:300,t:"FRN",cp:500,iss:"2026-05",mat:"2031-05",px:100.2,st:"Performing"},
+  ];
+  var SECTOR_COL = { 'Energy transition': 'var(--vb-chart-1)', 'Industrials': 'var(--vb-chart-2)', 'Consumer': 'var(--vb-chart-3)', 'Services': 'var(--vb-chart-4)', 'Healthcare': 'var(--vb-chart-5)', 'Financials': 'var(--vb-chart-8)' };
+  var STATUS_CLS = { Performing: 'ok', Watch: 'watch', Maturing: 'info', Standstill: 'bad', Default: 'bad', Called: 'grey' };
+  var MKT = { q: '', c: '', g: '', st: '', key: 'size', dir: -1 };
+  function effSpread(b) { return b.t === 'FRN' ? b.cp : Math.round(b.cp * 100 - E3M * 100); }
+  function coupStr(b) { return b.t === 'FRN' ? '3mE+' + b.cp : b.cp.toFixed(3).replace(/0+$/, '').replace(/\.$/, '') + '% fixed'; }
+  function yearsLeft(b) { var p = b.mat.split('-').map(Number); return Math.max(0.1, (p[0] - 2026) + (p[1] - 7) / 12); }
+  function indicYield(b) { if (b.st === 'Default' || b.st === 'Standstill') return null; var c = b.t === 'FRN' ? E3M + b.cp / 100 : b.cp; return c + (100 - b.px) / yearsLeft(b); }
+  function fmtVol(v) { return v >= 1000 ? '€' + (v / 1000).toFixed(2) + 'bn' : '€' + Math.round(v) + 'm'; }
+  function ymAdd(ym, n) { var p = ym.split('-').map(Number), y = p[0], m = p[1] + n; while (m < 1) { m += 12; y--; } while (m > 12) { m -= 12; y++; } return y + '-' + (m < 10 ? '0' : '') + m; }
+  function ymDiff(a, b) { var x = a.split('-').map(Number), y = b.split('-').map(Number); return (y[0] - x[0]) + (y[1] - x[1]) / 12; }
+  function fmtMY(ym) { var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], p = ym.split('-'); return M[+p[1] - 1] + ' ' + p[0]; }
+  function uniq(a) { return a.filter(function (v, i) { return a.indexOf(v) === i; }); }
+  function liveBond(b) { return b.st !== 'Called' && b.st !== 'Default' && b.st !== 'Standstill'; }
+  function pill(st) { return '<span class="pill ' + STATUS_CLS[st] + '">' + st + '</span>'; }
+  function stat(v, l) { return '<div class="mstat"><b>' + v + '</b><span>' + l + '</span></div>'; }
+  function median(a) { a = a.slice().sort(function (x, y) { return x - y; }); return a.length % 2 ? a[(a.length - 1) / 2] : (a[a.length / 2 - 1] + a[a.length / 2]) / 2; }
+  function sortVal(b, k) { if (k === 'cp') return effSpread(b); if (k === 'yld') { var y = indicYield(b); return y == null ? -1 : y; } if (k === 'perf') return b.px - 100; return b[k]; }
+  function marketHead() {
+    var cols = [['n', 'Issuer'], ['c', 'Country'], ['g', 'Sector'], ['size', 'Size €m', 1], ['cp', 'Coupon', 1], ['px', 'Price', 1], ['perf', 'Δ par', 1], ['yld', 'Indic. yield', 1], ['mat', 'Maturity', 1]];
+    return '<tr>' + cols.map(function (c) {
+      return '<th scope="col"' + (c[2] ? ' class="num"' : '') + '><button type="button" class="sort" data-sort="' + c[0] + '">' + c[1] + (MKT.key === c[0] ? (MKT.dir === 1 ? ' ▲' : ' ▼') : '') + '</button></th>';
+    }).join('') + '<th scope="col">Status</th></tr>';
+  }
+  function marketRows() {
+    var q = MKT.q.toLowerCase();
+    var rows = BONDS.filter(function (b) { return (!q || (b.n + ' ' + b.s + ' ' + b.isin).toLowerCase().indexOf(q) >= 0) && (!MKT.c || b.c === MKT.c) && (!MKT.g || b.g === MKT.g) && (!MKT.st || b.st === MKT.st); });
+    rows.sort(function (a, b) { var va = sortVal(a, MKT.key), vb = sortVal(b, MKT.key); return (va < vb ? -1 : va > vb ? 1 : 0) * MKT.dir; });
+    if (!rows.length) return '<tr><td colspan="10" class="muted" style="text-align:center;padding:22px">No bonds match the filter.</td></tr>';
+    return rows.map(function (b) {
+      var y = indicYield(b), d = b.px - 100;
+      return '<tr><td><strong>' + esc(b.n) + '</strong><br><span class="doc-id">' + b.isin + '</span></td><td>' + b.c + '</td><td class="muted">' + esc(b.s) + '</td><td class="num">' + b.size + '</td><td class="num">' + coupStr(b) + '</td>' +
+        '<td class="num">' + b.px.toFixed(1) + '</td><td class="num ' + (d > 0.05 ? 'up' : d < -0.05 ? 'down' : '') + '">' + (d > 0 ? '+' : '') + d.toFixed(1) + '</td><td class="num">' + (y == null ? '—' : y.toFixed(1) + '%') + '</td><td class="num">' + b.mat + '</td><td>' + pill(b.st) + '</td></tr>';
+    }).join('');
+  }
+  function mselect(f, label, opts) {
+    return '<select data-f="' + f + '" aria-label="' + label + '"><option value="">' + label + '</option>' + opts.map(function (o) { return '<option' + (MKT[f] === o ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select>';
+  }
+  function scatterSvg() {
+    var W = 720, H = 340, L = 52, R = 18, T = 16, B = 44, xmin = 20, xmax = 320, ymin = 380, ymax = 1000;
+    var X = function (v) { return L + (Math.log10(v) - Math.log10(xmin)) / (Math.log10(xmax) - Math.log10(xmin)) * (W - L - R); };
+    var Y = function (v) { return T + (1 - (v - ymin) / (ymax - ymin)) * (H - T - B); };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="mchart" role="img" aria-label="Spread over three-month Euribor against issue size, one dot per bond">';
+    s += '<rect class="band" x="' + X(20) + '" y="' + T + '" width="' + (X(100) - X(20)) + '" height="' + (H - T - B) + '"/>';
+    s += '<text class="band-label" x="' + (X(20) + X(100)) / 2 + '" y="' + (T + 14) + '" text-anchor="middle">€20–100 million</text>';
+    [400, 500, 600, 700, 800, 900, 1000].forEach(function (v) { s += '<line class="grid" x1="' + L + '" y1="' + Y(v) + '" x2="' + (W - R) + '" y2="' + Y(v) + '"/><text class="axis" x="' + (L - 7) + '" y="' + (Y(v) + 3.5) + '" text-anchor="end">' + v + '</text>'; });
+    [25, 50, 75, 100, 150, 200, 300].forEach(function (v) { s += '<line class="grid" x1="' + X(v) + '" y1="' + T + '" x2="' + X(v) + '" y2="' + (H - B) + '"/><text class="axis" x="' + X(v) + '" y="' + (H - B + 16) + '" text-anchor="middle">' + v + '</text>'; });
+    s += '<text class="axis" x="' + (L + W - R) / 2 + '" y="' + (H - 6) + '" text-anchor="middle">issue size, € million, log scale</text>';
+    s += '<text class="axis" x="14" y="' + (T + H - B) / 2 + '" text-anchor="middle" transform="rotate(-90 14 ' + (T + H - B) / 2 + ')">spread over 3m Euribor, bp</text>';
+    BONDS.filter(liveBond).forEach(function (b) {
+      var sp = Math.min(1000, Math.max(390, effSpread(b))), r = Math.max(4.5, Math.sqrt(b.size) / 1.55);
+      s += '<circle cx="' + X(Math.min(320, b.size)) + '" cy="' + Y(sp) + '" r="' + r + '" fill="' + SECTOR_COL[b.g] + '"><title>' + esc(b.n + ' · €' + b.size + 'm · ' + coupStr(b) + ' · ' + b.mat) + '</title></circle>';
+    });
+    return s + '</svg>';
+  }
+  function refiSvg(byYear, years) {
+    var W = 720, H = 250, L = 46, R = 10, T = 26, B = 40, max = Math.max.apply(null, years.map(function (y) { return byYear[y] ? byYear[y].v : 0; })), bw = (W - L - R) / years.length;
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="mchart" role="img" aria-label="Maturing volume by year">';
+    [0.25, 0.5, 0.75, 1].forEach(function (f) { var y = T + (1 - f) * (H - T - B); s += '<line class="grid" x1="' + L + '" y1="' + y + '" x2="' + (W - R) + '" y2="' + y + '"/><text class="axis" x="' + (L - 6) + '" y="' + (y + 3.5) + '" text-anchor="end">' + Math.round(max * f) + '</text>'; });
+    years.forEach(function (yr, i) {
+      var d = byYear[yr] || { v: 0, n: 0 }, h = max ? d.v / max * (H - T - B) : 0, x = L + i * bw + bw * 0.14, w = bw * 0.72, y = H - B - h, gold = (yr - 1) <= 2027;
+      s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" fill="' + (gold ? 'var(--gold)' : 'var(--navy)') + '"/>';
+      if (d.v) s += '<text class="bar-label" x="' + (x + w / 2).toFixed(1) + '" y="' + (y - 6).toFixed(1) + '" text-anchor="middle">€' + d.v + 'm</text>';
+      s += '<text class="axis" x="' + (x + w / 2).toFixed(1) + '" y="' + (H - B + 16) + '" text-anchor="middle">' + (yr === 2032 ? '2032+' : yr) + '</text>';
+      if (d.n) s += '<text class="axis" x="' + (x + w / 2).toFixed(1) + '" y="' + (H - B + 29) + '" text-anchor="middle">' + d.n + ' bond' + (d.n > 1 ? 's' : '') + '</text>';
+    });
+    return s + '<text class="axis" x="' + L + '" y="14">maturing volume, € million</text></svg>';
+  }
+  function renderMarket() {
+    var active = BONDS.filter(function (b) { return b.st !== 'Called'; }), live = active.filter(liveBond);
+    var vol = active.reduce(function (s, b) { return s + b.size; }, 0), avgpx = live.reduce(function (s, b) { return s + b.px; }, 0) / live.length;
+    var med = median(active.filter(function (b) { return b.st !== 'Default' && b.st !== 'Standstill'; }).map(effSpread));
+    var ni = BONDS.filter(function (b) { return b.iss >= ymAdd(AS_OF, -12); }), niVol = ni.reduce(function (s, b) { return s + b.size; }, 0), niTenor = ni.reduce(function (s, b) { return s + ymDiff(b.iss, b.mat); }, 0) / ni.length;
+    var byYear = {}, years = [2026, 2027, 2028, 2029, 2030, 2031, 2032];
+    live.forEach(function (b) { var y = Math.min(+b.mat.slice(0, 4), 2032); byYear[y] = byYear[y] || { v: 0, n: 0 }; byYear[y].v += b.size; byYear[y].n += 1; });
+    var gv = function (y) { return byYear[y] ? byYear[y].v : 0; }, open = live.filter(function (b) { return b.mat <= ymAdd(AS_OF, 12); });
+    var chips = live.filter(function (b) { return b.mat <= ymAdd(AS_OF, 30); }).sort(function (a, b) { return a.mat < b.mat ? -1 : 1; }).slice(0, 12);
+    var small = active.filter(function (b) { return b.size <= 50; }).length, smallest = Math.min.apply(null, active.map(function (b) { return b.size; }));
+    return '<p class="eyebrow">Market · for every role</p><h1 id="h-market">The market</h1>' +
+      '<p class="lede">Every outstanding euro bond in the Nordic format from an issuer outside the Nordics, as far as public sources reach: ' + active.length + ' lines from our own dataset. Issuer, ISIN, size, coupon and maturity verified at source in August 2026. Prices, yields and status are indicative as of July 2026 and are not quotes.</p>' +
+      '<div class="mstats">' + stat(fmtVol(vol), 'outstanding, tracked') + stat(active.length, 'bonds listed') + stat('E+' + Math.round(med), 'median spread, floating-rate equivalent') + stat(avgpx.toFixed(1), 'average indicative price') + stat(active.length - live.length, 'in standstill or default') + '</div>' +
+      '<p class="label" style="margin-top:22px">New issues · twelve months to July 2026</p>' +
+      '<div class="mstats">' + stat(ni.length, 'new issues priced') + stat(fmtVol(niVol), 'volume printed') + stat(niTenor.toFixed(1) + ' years', 'average tenor at issue') + stat('E+' + Math.round(median(ni.map(effSpread))), 'median spread at issue') + '</div>' +
+      '<section class="section"><p class="label">All lines</p><h2>Outstanding bonds</h2>' +
+      '<div class="mfilters" id="mkt-filters"><input type="search" data-f="q" value="' + esc(MKT.q) + '" placeholder="Search issuer, sector, ISIN" aria-label="Search issuer, sector or ISIN">' +
+        mselect('c', 'All countries', uniq(BONDS.map(function (b) { return b.c; })).sort()) + mselect('g', 'All sectors', uniq(BONDS.map(function (b) { return b.g; })).sort()) + mselect('st', 'All statuses', ['Performing', 'Watch', 'Maturing', 'Standstill', 'Default']) + '</div>' +
+      '<div class="table-scroll"><table class="mtable"><caption class="visually-hidden">Outstanding bonds in the dataset</caption><thead id="mkt-head">' + marketHead() + '</thead><tbody id="mkt-body">' + marketRows() + '</tbody></table></div>' +
+      '<p class="muted small">Δ par: indicative price minus 100. Indicative yield: coupon, with three-month Euribor at ' + E3M + '% for floating-rate notes, plus the pull to par over the remaining life. Click a column to sort.</p></section>' +
+      '<section class="section"><p class="label">Market map</p><h2>Spread against size</h2>' +
+      '<p class="muted small">One dot per bond: the floating-rate spread, or a fixed coupon converted to a spread over three-month Euribor at ' + E3M + '%. The gold band is the €20–100 million range this platform is built for: ' + small + ' lines of €50 million or less, none below €' + smallest + ' million.</p>' +
+      scatterSvg() + '<ul class="mlegend">' + Object.keys(SECTOR_COL).filter(function (g) { return BONDS.some(function (b) { return b.g === g; }); }).map(function (g) { return '<li><i style="background:' + SECTOR_COL[g] + '"></i>' + g + '</li>'; }).join('') + '</ul></section>' +
+      '<section class="section"><p class="label">Refinancing calendar</p><h2>Where the next bonds come from</h2>' +
+      '<p class="muted small">Bonds in this format are usually refinanced about twelve months before maturity through their call schedules. Maturing volume by year; standstill and default lines excluded. Gold: the refinancing window opens by mid-2027.</p>' +
+      '<div class="mstats">' + stat(fmtVol(gv(2026) + gv(2027) + gv(2028)), 'maturing 2026–2028') + stat(open.length + ' bonds · ' + fmtVol(open.reduce(function (s, b) { return s + b.size; }, 0)), 'refinancing window already open') + stat(fmtVol(gv(2029) + gv(2030)), 'maturing 2029–2030') + '</div>' +
+      refiSvg(byYear, years) +
+      '<h3 style="margin-top:18px">Next refinancing conversations</h3><div class="refichips">' + chips.map(function (b) { return '<div class="refichip"><b>' + esc(b.n) + '</b><span>€' + b.size + 'm · due ' + fmtMY(b.mat) + ' · window from ' + fmtMY(ymAdd(b.mat, -12)) + '</span></div>'; }).join('') + '</div></section>' +
+      '<p class="demo-note">Own dataset from public sources. Issuer reference data verified August 2026; price levels indicative. Nothing on this page is an offer, a quote or advice.</p>';
+  }
+
+
+  // Labels shared by all issuers.
+  var ROW_LABEL = {
+    revenue: 'Revenue', ebitda: 'EBITDA', netIncome: 'Net income', cash: 'Cash',
+    debt: 'Total financial debt', ocf: 'Operating cash flow', capex: 'Capital expenditure', interest: 'Interest expense'
+  };
+  var TERM_LABEL = {
+    amount: 'Issue amount', currency: 'Currency', maturity: 'Maturity', couponType: 'Coupon type',
+    coupon: 'Coupon or margin', repayment: 'Repayment', ranking: 'Ranking', security: 'Security / collateral',
+    proceeds: 'Use of proceeds', bank: 'Existing bank relationship', covenants: 'Covenants'
+  };
+  var TERM_EMPTY = { coupon: 'To be determined', security: 'To be determined', covenants: 'To be negotiated' };
+
+  function deepFreeze(o) {
+    Object.keys(o).forEach(function (k) { if (o[k] && typeof o[k] === 'object') deepFreeze(o[k]); });
+    return Object.freeze(o);
+  }
+
+  /* =========================================================
+     Generic helpers & calculations (one set, used for every issuer)
+     ========================================================= */
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function blank(s) { return s == null || String(s).trim() === ''; }
+  function ok(v) { return typeof v === 'number' && isFinite(v); }
+  var NA = '<span class="na">n/a</span>';
+  function fmtM(v) { return ok(v) ? v.toFixed(1) : NA; }                 // EUR millions (table)
+  function fmtPct(v) { return ok(v) ? (v * 100).toFixed(1) + '%' : NA; }
+  function fmtX(v) { return ok(v) ? v.toFixed(2) + 'x' : NA; }
+  function eurM(v) { return ok(v) ? (v < 0 ? '−' : '') + '€' + Math.abs(v).toFixed(1) + 'm' : 'n/a'; }
+  function eurMillion(v) { return ok(v) ? (v < 0 ? '−' : '') + '€' + Math.abs(v).toFixed(1) + ' million' : 'n/a'; }
+  function stripTags(s) { return String(s).replace(/<[^>]+>/g, ''); }
+  function lcFirst(s) { s = String(s); return s.charAt(0).toLowerCase() + s.slice(1); }
+
+  function finRow(o, key) { return o.finRows.filter(function (r) { return r.key === key; })[0]; }
+  function val(o, key, i) { var r = finRow(o, key), v = r && r.v[i]; return ok(v) ? v : null; }
+  function sub(a, b) { return (a == null || b == null) ? null : a - b; }
+  // Ratios are only meaningful with a positive denominator; otherwise n/a.
+  function ratio(a, b) { return (a == null || b == null || !(b > 0)) ? null : a / b; }
+  function derived(o, i) {
+    var nd = sub(val(o, 'debt', i), val(o, 'cash', i));
+    return {
+      margin: ratio(val(o, 'ebitda', i), val(o, 'revenue', i)),
+      netDebt: nd,
+      fcf: sub(val(o, 'ocf', i), val(o, 'capex', i)),
+      leverage: ratio(nd, val(o, 'ebitda', i)),
+      coverage: ratio(val(o, 'ebitda', i), val(o, 'interest', i))
+    };
+  }
+  function cagr(o, key) {
+    var a = val(o, key, 0), b = val(o, key, LAST);
+    return (a > 0 && b > 0) ? Math.pow(b / a, 1 / LAST) - 1 : null;
+  }
+
+  function doc(o, id) { return o.docs.filter(function (d) { return d.id === id; })[0]; }
+  function fact(o, id) { return o.facts.filter(function (f) { return f.id === id; })[0]; }
+  function request(o, id) { return o.requests.filter(function (r) { return r.id === id; })[0]; }
+  function term(o, key) { return o.bond.filter(function (t) { return t.key === key; })[0]; }
+
+  function cellSource(o, key, i) {
+    var p = finRow(o, key).pages, slot = i === LAST ? 0 : i === LAST - 1 ? 1 : 2;
+    return { doc: o.finDocs[slot], page: String(p[slot]) };
+  }
+  function factValue(o, f) {
+    if (f.link) { var v = val(o, f.link[0], f.link[1]); return v == null ? '' : eurMillion(v); }
+    return f.value;
+  }
+  function factSource(o, f) { return f.link ? cellSource(o, f.link[0], f.link[1]) : { doc: f.doc, page: f.page || '' }; }
+  function factOpen(o, f) { return blank(factValue(o, f)); }
+  function srcText(o, s) { return doc(o, s.doc).title + (blank(s.page) ? '' : ', p. ' + s.page); }
+  function termValue(o, t) {
+    if (t.value === '@useOfProceeds') return o.company.useOfProceeds;
+    if (t.value === '@issue') return '€' + fmtAmt(o.issueEURm) + ' million';
+    return t.value;
+  }
+  function termText(o, key) { return termValue(o, term(o, key)); }
+  function termHtml(o, t) { var v = termValue(o, t); return blank(v) ? '<span class="tbd">' + esc(TERM_EMPTY[t.key] || 'To be determined') + '</span>' : esc(v); }
+  function termStatus(o, t) {
+    if (blank(termValue(o, t))) return '<span class="term-status">Open</span>';
+    return t.st === 'discussion' ? '<span class="term-status discussion">Under discussion</span>' : '<span class="term-status">Proposed</span>';
+  }
+  function managementText(o) {
+    return o.company.management.map(function (m) { return m.role + ': ' + m.name + ' (since ' + m.since + ')'; }).join(' · ');
+  }
+  function outstanding(o) { return o.requests.filter(function (r) { return r.st === 'outstanding'; }); }
+  function openLabel(x) { return x.mandatory ? 'Requested · mandatory' : x.followUp ? 'Investor follow-up' : 'Requested'; }
+  function received(o) { return o.requests.filter(function (r) { return r.st === 'received'; }); }
+  function openFacts(o) { return o.facts.filter(function (f) { return factOpen(o, f); }); }
+  function sourcedFacts(o) { return o.facts.filter(function (f) { return !factOpen(o, f); }); }
+  function profileFacts(o) { return o.facts.filter(function (f) { return f.profile && !factOpen(o, f); }); }
+  function statusChip(o) { return '<span class="status-chip ' + o.status.cls + '" title="Financing stage">' + esc(o.status.label) + '</span>'; }
+
+  /* ---------- Institutional anchor participation (one set of calculations) ---------- */
+  // Stages in order of firmness. Only 'binding' and 'conditional' are commitments.
+  var ANCHOR_STAGES = [
+    { key: 'binding',     label: 'Binding commitment',     plural: 'Binding commitments' },
+    { key: 'conditional', label: 'Conditional commitment', plural: 'Conditional commitments' },
+    { key: 'indicative',  label: 'Indicative interest',    plural: 'Indicative interest' },
+    { key: 'discussion',  label: 'In discussion',          plural: 'In discussion' }
+  ];
+  var STAGE_LABEL = {}; ANCHOR_STAGES.forEach(function (s) { STAGE_LABEL[s.key] = s.label; });
+
+  function fmtAmt(v) { return ok(v) ? (Math.round(v * 100) / 100).toString() : 'n/a'; }   // 22.5, 8.75, 36
+  function eurAmt(v) { return ok(v) ? '€' + fmtAmt(v) + 'm' : 'n/a'; }
+  function fmtShare(x) { return ok(x) ? (Math.round(x * 1000) / 10).toString() + '%' : 'n/a'; }  // 0.45 → 45%
+
+  function anchorTotal(o, status) {
+    return o.anchors.filter(function (a) { return a.status === status; })
+      .reduce(function (s, a) { return s + a.amountEURm; }, 0);
+  }
+  function bindingTotal(o)     { return anchorTotal(o, 'binding'); }
+  function conditionalTotal(o) { return anchorTotal(o, 'conditional'); }
+  function indicativeTotal(o)  { return anchorTotal(o, 'indicative'); }
+  function discussionTotal(o)  { return anchorTotal(o, 'discussion'); }
+  function committedTotal(o)   { return bindingTotal(o) + conditionalTotal(o); }          // binding + conditional
+  function potentialTotal(o)   { return o.anchors.reduce(function (s, a) { return s + a.amountEURm; }, 0); }  // all stages
+  function remainingAfterCommitments(o) { return Math.max(0, o.issueEURm - committedTotal(o)); }
+  function shareOfIssue(o, amt) { return o.issueEURm > 0 ? amt / o.issueEURm : null; }
+  function anchorShare(o, a)    { return shareOfIssue(o, a.amountEURm); }
+  function anchorsValid(o) {
+    return o.anchors.every(function (a) { return ok(a.amountEURm) && a.amountEURm > 0 && STAGE_LABEL[a.status]; }) &&
+      potentialTotal(o) <= o.issueEURm + 1e-9;
+  }
+  function anchorSummary(o) {
+    return {
+      issue: o.issueEURm, binding: bindingTotal(o), conditional: conditionalTotal(o),
+      indicative: indicativeTotal(o), discussion: discussionTotal(o),
+      committed: committedTotal(o), potential: potentialTotal(o), remaining: remainingAfterCommitments(o),
+      count: o.anchors.length,
+      commitCount: o.anchors.filter(function (a) { return a.status === 'binding' || a.status === 'conditional'; }).length
+    };
+  }
+
+  // Segmented bar: one segment per stage plus the unspecified remainder. Widths are shares of the issue.
+  function anchorBar(o, opts) {
+    var s = anchorSummary(o), segs = '';
+    ANCHOR_STAGES.forEach(function (st) {
+      var amt = s[st.key];
+      if (amt > 0) segs += '<span class="seg seg-' + st.key + '" style="width:' + (shareOfIssue(o, amt) * 100) + '%" title="' + esc(st.plural + ': ' + eurAmt(amt) + ' (' + fmtShare(shareOfIssue(o, amt)) + ')') + '"></span>';
+    });
+    var rest = Math.max(0, s.issue - s.potential);
+    if (rest > 0) segs += '<span class="seg seg-rest" style="width:' + (shareOfIssue(o, rest) * 100) + '%" title="No participation indicated: ' + esc(eurAmt(rest)) + '"></span>';
+    var aria = ANCHOR_STAGES.filter(function (st) { return s[st.key] > 0; })
+      .map(function (st) { return st.plural + ' ' + eurAmt(s[st.key]) + ' (' + fmtShare(shareOfIssue(o, s[st.key])) + ')'; })
+      .concat(rest > 0 ? ['no participation indicated ' + eurAmt(rest) + ' (' + fmtShare(shareOfIssue(o, rest)) + ')'] : [])
+      .join('; ');
+    return '<div class="anchor-bar' + (opts && opts.large ? ' large' : '') + '" role="img" aria-label="' + esc('Anchor participation of ' + eurAmt(s.issue) + ' issue: ' + aria) + '">' + segs + '</div>';
+  }
+  function anchorLegend(o, withEmpty) {
+    var s = anchorSummary(o), rest = Math.max(0, s.issue - s.potential);
+    var items = ANCHOR_STAGES.filter(function (st) { return withEmpty || s[st.key] > 0; }).map(function (st) {
+      return '<li><i class="sw seg-' + st.key + '" aria-hidden="true"></i><span class="lg-label">' + st.plural + '</span> <span class="lg-val">' + eurAmt(s[st.key]) + ' · ' + fmtShare(shareOfIssue(o, s[st.key])) + '</span></li>';
+    });
+    if (rest > 0) items.push('<li><i class="sw seg-rest" aria-hidden="true"></i><span class="lg-label">No participation indicated</span> <span class="lg-val">' + eurAmt(rest) + ' · ' + fmtShare(shareOfIssue(o, rest)) + '</span></li>');
+    return '<ul class="anchor-legend">' + items.join('') + '</ul>';
+  }
+  // Headline wording follows the firmest stage present; stages are never added together as "committed".
+  function anchorHeadline(o) {
+    var s = anchorSummary(o);
+    if (!s.count) return { pct: '—', label: 'No anchor participation disclosed', lines: ['No institutional anchors have been disclosed for this opportunity.'] };
+    if (s.binding > 0) return {
+      pct: fmtShare(shareOfIssue(o, s.binding)), label: 'binding commitments',
+      lines: (s.conditional > 0 ? ['+ ' + fmtShare(shareOfIssue(o, s.conditional)) + ' additional conditional commitments'] : [])
+        .concat([eurAmt(s.committed) + ' combined binding and conditional of ' + eurAmt(s.issue), s.count + ' institutional anchor' + (s.count > 1 ? 's' : '')]) };
+    if (s.conditional > 0) return {
+      pct: fmtShare(shareOfIssue(o, s.conditional)), label: 'conditional commitments',
+      lines: [eurAmt(s.conditional) + ' of ' + eurAmt(s.issue) + ' · no binding commitments', s.count + ' institutional anchor' + (s.count > 1 ? 's' : '')] };
+    return {
+      pct: fmtShare(shareOfIssue(o, s.potential)), label: 'potential participation',
+      lines: [eurAmt(s.potential) + ' indicative interest / in discussion', s.count + ' institution' + (s.count > 1 ? 's' : '') + ' · 0 binding or conditional commitments'] };
+  }
+  var ANCHOR_NOTE = 'Fictional institutions. Participation is subject to the stated conditions and is not a guarantee or recommendation.';
+  var ANCHOR_DISCLAIMER = 'Anchor participation is illustrative in this demonstration. In a live opportunity, participation would be disclosed only with appropriate authorization and would remain subject to the stated terms and conditions. Anchor participation does not constitute a guarantee or recommendation.';
+
+  /* ---------- Dossier readiness (computed from structured data) ---------- */
+  var CORE_TERMS = ['amount', 'currency', 'maturity', 'couponType', 'repayment', 'ranking', 'security'];
+  function dossierChecklist(o) {
+    var finOk = o.finRows.every(function (r) { return YEARS.every(function (y, i) { return val(o, r.key, i) != null; }); });
+    var c = o.company;
+    var profileOk = !blank(c.description) && !blank(c.ownership) && c.management.length > 0 && !blank(c.useOfProceeds);
+    var openTerms = CORE_TERMS.filter(function (k) { return blank(termText(o, k)); });
+    var srcOk = sourcedFacts(o).every(function (f) { var s = factSource(o, f); return doc(o, s.doc) && !blank(s.page); });
+    var items = [
+      { label: 'Five-year reported financials (' + YEARS[0] + '–' + YEARS[LAST] + ')', met: finOk },
+      { label: 'Company profile, ownership, management and use of proceeds', met: profileOk },
+      { label: 'Core proposed terms specified', met: !openTerms.length,
+        detail: openTerms.length ? 'Open: ' + openTerms.map(function (k) { return TERM_LABEL[k].toLowerCase(); }).join(', ') : '' },
+      { label: 'Source references for all key facts', met: srcOk }
+    ];
+    o.requests.filter(function (r) { return r.mandatory; }).forEach(function (r) {
+      items.push({ label: r.item, met: r.st !== 'outstanding', doc: true });
+    });
+    o.facts.filter(function (f) { return f.mandatory; }).forEach(function (f) {
+      items.push({ label: f.fact, met: !factOpen(o, f), info: true });
+    });
+    return items;
+  }
+  // The declared status is shown only if the checklist supports it; otherwise it falls back to 'prepared'.
+  function dossierStatus(o) {
+    var complete = dossierChecklist(o).every(function (i) { return i.met; });
+    return (o.dossierStatus === 'complete' && complete) ? 'complete' : 'prepared';
+  }
+  var DOSSIER_LABEL = { prepared: 'Dossier prepared', complete: 'Dossier complete' };
+  function dossierChip(o) {
+    var st = dossierStatus(o);
+    return '<span class="dossier-chip ' + st + '" title="Information package status"><i aria-hidden="true"></i>' + DOSSIER_LABEL[st] + '</span>';
+  }
+  var DOSSIER_TEXT = {
+    prepared: 'A standardised information package has been assembled: historical financials, company details, proposed terms, source references and material outstanding questions. Some mandatory information or documentation is still outstanding. Suitable for preliminary investor review.',
+    complete: 'All mandatory items in the VanillaBonds dossier checklist are present and the material information gaps it identifies have been addressed. Ready for more advanced investor review. This does not mean the figures are independently audited, or that legal approval, credit approval or investor due diligence has been completed.'
+  };
+
+  // Resolve {{tokens}} in issuer diligence text from that issuer's data.
+  function fill(o, s) {
+    return String(s).replace(/\{\{(\w+)(?::([\w-]+))?\}\}/g, function (m, k, a) {
+      var d = derived(o, LAST);
+      switch (k) {
+        case 'leverage': return ok(d.leverage) ? d.leverage.toFixed(2) + 'x' : 'n/a';
+        case 'fcf':      return eurMillion(d.fcf);
+        case 'fact':     return factValue(o, fact(o, a));
+        case 'factlc':   return lcFirst(factValue(o, fact(o, a)));
+        case 'src':      return srcText(o, factSource(o, fact(o, a)));
+        case 'term':     return termText(o, a);
+        case 'termlc':   return lcFirst(termText(o, a));
+      }
+      return m;
+    });
+  }
+  // A diligence item is shown while any of its underlying items is still open.
+  function diligence(o) {
+    return o.diligence.filter(function (x) {
+      if (x.always) return true;
+      var op = x.open || {};
+      return (op.facts || []).some(function (id) { return factOpen(o, fact(o, id)); }) ||
+             (op.requests || []).some(function (id) { return request(o, id).st === 'outstanding'; }) ||
+             (op.terms || []).some(function (k) { return blank(termText(o, k)); });
+    }).map(function (x) { return { title: x.title, text: fill(o, x.text), refs: fill(o, x.refs) }; });
+  }
+  /* ---------- Compact anchor wording (same calculations as everywhere else) ---------- */
+  var STAGE_SHORT = { binding: 'binding', conditional: 'conditional', indicative: 'indicative', discussion: 'in discussion' };
+  var STAGE_LEGEND = { binding: 'Binding', conditional: 'Conditional', indicative: 'Indicative', discussion: 'In discussion' };
+  // Summary keyed to the firmest stage present; never adds non-binding stages to commitments.
+  function anchorShort(o, sep, long) {
+    var s = anchorSummary(o), pct = function (v) { return fmtShare(shareOfIssue(o, v)); };
+    if (!s.count) return 'None disclosed';
+    if (s.binding > 0) return pct(s.binding) + ' binding' + (s.conditional > 0 ? sep + pct(s.conditional) + ' conditional' : '');
+    if (s.conditional > 0) return pct(s.conditional) + ' conditional';
+    return pct(s.potential) + ' potential' + (long ? ' participation' : '');
+  }
+  function anchorFacts(o) {
+    var s = anchorSummary(o);
+    if (!s.count) return 'No institutional anchors disclosed';
+    var present = ANCHOR_STAGES.filter(function (st) { return s[st.key] > 0; });
+    var parts = (present.length === 1 && (present[0].key === 'binding' || present[0].key === 'conditional'))
+      ? [eurAmt(s[present[0].key]) + ' ' + present[0].plural.toLowerCase()]
+      : present.map(function (st) { return eurAmt(s[st.key]) + ' ' + STAGE_SHORT[st.key]; });
+    parts.push(s.committed > 0 ? s.count + ' fictional institution' + (s.count > 1 ? 's' : '') : 'No commitments');
+    return parts.join(' · ');
+  }
+  function anchorLegendCompact(o) {
+    var s = anchorSummary(o);
+    var items = ANCHOR_STAGES.filter(function (st) { return s[st.key] > 0; }).map(function (st) {
+      return '<li><i class="sw seg-' + st.key + '" aria-hidden="true"></i>' + STAGE_LEGEND[st.key] + '</li>';
+    });
+    if (s.potential < s.issue) items.push('<li><i class="sw seg-rest" aria-hidden="true"></i>Not indicated</li>');
+    return '<ul class="legend-compact" aria-hidden="true">' + items.join('') + '</ul>';
+  }
+  function firstSentence(t) { var m = String(t).match(/^.*?[.;](\s|$)/); return m ? m[0].trim().replace(/;$/, '.') : t; }
+
+  /* =========================================================
+     Screen 1 — Opportunities (three issuers, compact listing)
+     ========================================================= */
+  function renderOpportunities() {
+    var html = '' +
+      '<p class="eyebrow">' + ROLE_LABEL[role()] + ' view</p>' +
+      '<h1 id="h-opportunities">Investment Opportunities</h1>' +
+      '<p class="lede">' + LEDE[role()] + '</p>' + roleNote() +
+      '<div class="list-meta"><p class="label" style="margin:0">' + listMeta() + '</p><p class="label" style="margin:0">Financials FY' + YEARS[LAST] + ' · EUR millions</p></div>' +
+      '<p class="demo-note">All companies and anchor institutions shown are fictional demonstration examples; their figures, documents and participation amounts are illustrative and do not represent actual opportunities or commitments.</p>' +
+      '<ol class="opp-list">';
+
+    ORDER.forEach(function (id) {
+      var o = OPPORTUNITIES[id], c = o.company, d = derived(o, LAST);
+      if (!canSee(o)) { html += teaserCard(o); return; }
+      html += '<li class="opp">' +
+        '<div class="opp-summary">' +
+          '<div class="opp-id"><h2 id="opp-' + id + '">' + esc(c.name) + '</h2>' +
+            '<p class="meta-line"><span>' + esc(c.country) + '</span><span>' + esc(c.industry) + '</span></p>' +
+            '<p class="opp-desc" title="' + esc(c.description) + '">' + esc(firstSentence(c.description)) + '</p></div>' +
+          '<div class="chips">' + statusChip(o) + phaseChip(o) + dossierChip(o) + '</div>' +
+          '<div class="opp-metrics"><dl class="mlist">' +
+            '<div class="m issue"><dt>Proposed issue</dt><dd>' + esc(termText(o, 'amount')) + '</dd></div>' +
+            '<div class="m"><dt>Tenor</dt><dd>' + esc(termText(o, 'maturity')) + '</dd></div>' +
+            '<div class="m"><dt>Revenue FY' + YEARS[LAST] + '</dt><dd>' + eurM(val(o, 'revenue', LAST)) + '</dd></div>' +
+            '<div class="m"><dt>EBITDA FY' + YEARS[LAST] + '</dt><dd>' + eurM(val(o, 'ebitda', LAST)) + '</dd></div>' +
+            '<div class="m"><dt>Net debt / EBITDA</dt><dd>' + stripTags(fmtX(d.leverage)) + '</dd></div>' +
+            '</dl>' +
+            '<button type="button" class="opp-action" data-route="' + id + '/overview" aria-label="View opportunity: ' + esc(c.name) + '">View Opportunity<span class="arr" aria-hidden="true">→</span></button>' +
+          '</div>' +
+        '</div>' +
+        '<footer class="opp-anchor" aria-label="Institutional anchor participation">' +
+          '<div class="af-top"><span class="af-title">Institutional anchor participation</span><span class="af-sum">' + esc(anchorShort(o, ' + ')) + '</span></div>' +
+          (o.anchors.length ? anchorBar(o) : '') +
+          '<div class="af-bottom"><span class="af-facts">' + esc(anchorFacts(o)) + '</span>' + (o.anchors.length ? anchorLegendCompact(o) : '') + '</div>' +
+        '</footer>' +
+      '</li>';
+    });
+    return html + '</ol>';
+  }
+
+  /* ---------- Contextual breadcrumb for issuer screens ---------- */
+  function crumbs(o, view) {
+    var back = view === 'overview'
+      ? '<button type="button" class="crumb-link crumb-back" data-route="opportunities">← All Opportunities</button>'
+      : '<button type="button" class="crumb-link crumb-back" data-route="' + o.id + '/overview">← Investment Overview</button>';
+    var trail = '<li><button type="button" class="crumb-link" data-route="opportunities">All Opportunities</button></li>' +
+      (view === 'overview'
+        ? '<li aria-current="page">' + esc(o.company.name) + '</li>'
+        : '<li><button type="button" class="crumb-link" data-route="' + o.id + '/overview">' + esc(o.company.name) + '</button></li><li aria-current="page">Documents &amp; Dossier</li>');
+    return '<nav class="crumbs" aria-label="Breadcrumb"><div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap">' + back +
+      '<ol>' + trail + '</ol></div><div class="context">' + dossierChip(o) + statusChip(o) + '</div></nav>';
+  }
+
+  /* =========================================================
+     Screen 2 — Investment Overview (selected issuer)
+     ========================================================= */
+  function renderOverview(o) {
+    var c = o.company, d = derived(o, LAST), y = YEARS[LAST];
+    var html = crumbs(o, 'overview') +
+      // A. Hero
+      '<div class="hero on-navy">' +
+        '<div>' +
+          '<p class="eyebrow">Investment overview</p>' +
+          '<h1 id="h-overview">' + esc(c.name) + '</h1>' +
+          '<p class="meta-line"><span>' + esc(c.industry) + '</span><span>' + esc(c.country) + '</span></p>' +
+          '<p class="desc">' + esc(c.description) + '</p>' +
+          '<div style="margin-top:20px"><button type="button" class="btn light" data-route="' + o.id + '/documents">View Documents &amp; Dossier <span class="arr" aria-hidden="true">→</span></button></div>' +
+        '</div>' +
+        '<div class="hero-facts">' +
+          '<div class="chips" style="justify-content:flex-start">' + statusChip(o) + phaseChip(o) + dossierChip(o) + '</div>' +
+          '<div><p class="label">Proposed financing</p><div class="val">' + esc(termText(o, 'amount')) + '</div></div>' +
+          '<div><p class="label">Tenor</p><div class="val">' + esc(termText(o, 'maturity')) + ' · ' + esc(termText(o, 'repayment')) + '</div></div>' +
+          '<div><p class="label">Purpose</p><div class="val" style="font-size:15px">' + esc(c.financingPurpose) + '</div></div>' +
+          (o.confirmedBy ? '<div><p class="label">Company information</p><div class="val" style="font-size:15px">Confirmed by ' + esc(o.confirmedBy) + '</div></div>' : '') +
+        '</div>' +
+      '</div>' +
+
+      accessPanel(o) +
+      '<nav class="jump" aria-label="Sections on this page">' +
+        [['sec-metrics', 'Key metrics'], ['sec-anchors', 'Anchor investors'], ['sec-performance', 'Financial performance'], ['sec-company', 'Company & operations'],
+         ['sec-financing', 'Proposed financing'], ['sec-diligence', 'Diligence considerations']].map(function (s) {
+          return '<button type="button" class="chip-link" data-jump="' + s[0] + '">' + esc(s[1]) + '</button>';
+        }).join('') +
+      '</nav>';
+
+    // B. Key metrics
+    html += '<section class="section" id="sec-metrics" aria-labelledby="h-metrics" style="margin-top:28px">' +
+      '<p class="label">FY' + y + ' · EUR millions unless stated</p><h2 id="h-metrics">Key financial metrics</h2>' +
+      '<div class="metrics">' +
+        metric('Revenue', fmtM(val(o, 'revenue', LAST)), 'EUR m · reported') +
+        metric('EBITDA', fmtM(val(o, 'ebitda', LAST)), 'EUR m · reported') +
+        metric('EBITDA margin', fmtPct(d.margin), 'EBITDA / revenue') +
+        metric('Net debt / EBITDA', fmtX(d.leverage), 'Leverage · calculated') +
+        metric('EBITDA / interest', fmtX(d.coverage), 'Interest cover · calculated') +
+        metric('Free cash flow', fmtM(d.fcf), 'EUR m · OCF − capex') +
+      '</div></section>';
+
+    // B2. Institutional anchor investors
+    html += anchorSection(o);
+
+    // C. Financial performance
+    html += '<section class="section" id="sec-performance" aria-labelledby="h-performance">' +
+      '<p class="label">' + YEARS[0] + '–' + y + '</p><h2 id="h-performance">Financial performance</h2>' +
+      '<div class="charts">' + barChart(o, 'revenue', 'Revenue', 'EUR millions') + barChart(o, 'ebitda', 'EBITDA', 'EUR millions') + '</div>' +
+      financialTable(o) +
+      '</section>';
+
+    // D. Company & operations
+    html += '<section class="section" id="sec-company" aria-labelledby="h-company">' +
+      '<p class="label">Company profile</p><h2 id="h-company">Company &amp; operations</h2>' +
+      '<div class="two-col"><div><h3>Business</h3><p>' + esc(c.description) + '</p></div>' +
+      '<dl class="facts-list">' +
+        dlRow('Ownership', esc(c.ownership)) +
+        dlRow('Management', c.management.map(function (m) { return esc(m.role + ' — ' + m.name + ', since ' + m.since); }).join('<br>')) +
+        profileFacts(o).map(function (f) { return dlRow(esc(f.profile), esc(f.value)); }).join('') +
+      '</dl></div></section>';
+
+    // E. Proposed financing
+    html += '<section class="section" id="sec-financing" aria-labelledby="h-financing">' +
+      '<p class="label">Indicative terms</p><h2 id="h-financing">Proposed financing</h2>' +
+      '<p class="muted small">Terms proposed by the company for discussion with investors. None has been agreed, and the bond has not been issued or offered.</p>' +
+      '<div class="table-scroll"><table><caption class="visually-hidden">Proposed bond terms, ' + esc(c.name) + '</caption>' +
+      '<thead><tr><th scope="col" style="width:26%">Term</th><th scope="col">Proposed</th><th scope="col" style="width:16%">Status</th></tr></thead><tbody>' +
+      o.bond.map(function (t) {
+        return '<tr><th scope="row" class="rowhead">' + esc(TERM_LABEL[t.key]) + '</th><td>' + termHtml(o, t) + '</td><td>' + termStatus(o, t) + '</td></tr>';
+      }).join('') +
+      '</tbody></table></div></section>';
+
+    // F. Diligence considerations
+    var dl = diligence(o);
+    html += '<section class="section" id="sec-diligence" aria-labelledby="h-diligence">' +
+      '<p class="label">' + (dossierStatus(o) === 'complete' ? 'Investor follow-up questions' : 'Outstanding questions') + '</p><h2 id="h-diligence">Diligence considerations</h2>' +
+      '<p class="muted small">' + (dossierStatus(o) === 'complete'
+        ? 'The mandatory dossier checklist is complete. The points below are investor-specific follow-up questions, not missing dossier items.'
+        : 'Material items not yet addressed by the information provided. They remain open.') + '</p>' +
+      (dl.length
+        ? '<ol class="diligence">' + dl.map(function (x, i) {
+            return '<li><h3><span class="n">' + (i < 9 ? '0' : '') + (i + 1) + '</span>' + esc(x.title) + '</h3><p>' + esc(x.text) + '</p><span class="ref">' + esc(x.refs) + '</span></li>';
+          }).join('') + '</ol>'
+        : '<p>No open diligence items.</p>') +
+      '</section>';
+
+    html += '<div class="overview-foot"><div><h3 style="margin:0">Source documents and investor dossier</h3><p class="muted small" style="margin:0">Source references, requested documents and a downloadable dossier for ' + esc(c.name) + '.</p></div>' +
+      '<button type="button" class="btn" data-route="' + o.id + '/documents">View Documents &amp; Dossier <span class="arr" aria-hidden="true">→</span></button></div>';
+    return html;
+  }
+  function stageTag(status) {
+    return '<span class="stage"><i class="seg-' + status + '" aria-hidden="true"></i>' + esc(STAGE_LABEL[status]) + '</span>';
+  }
+  function anchorTable(o) {
+    return '<div class="table-scroll"><table class="anchor-table"><caption class="visually-hidden">Institutional anchor investors, ' + esc(o.company.name) + ' (fictional)</caption>' +
+      '<thead><tr><th scope="col">Institution</th><th scope="col">Type</th><th scope="col" class="num">Amount</th><th scope="col" class="num">Share of issue</th><th scope="col">Status</th><th scope="col">Conditions / notes</th></tr></thead><tbody>' +
+      o.anchors.map(function (a) {
+        return '<tr><td class="inst">' + esc(a.name) + '</td><td class="type muted">' + esc(a.institutionType) + '</td><td class="num amt">' + eurAmt(a.amountEURm) + '</td>' +
+          '<td class="num share">' + fmtShare(anchorShare(o, a)) + '</td><td class="st">' + stageTag(a.status) + '</td><td class="cond">' + esc(a.conditions) + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  // Compact memorandum-style section: header + one bar + only the figures that matter + table.
+  function anchorSection(o) {
+    var s = anchorSummary(o), pct = function (v) { return fmtShare(shareOfIssue(o, v)); };
+    var head = '<div class="anchor-head"><div><h2 id="h-anchors">Institutional anchor investors</h2>' +
+      '<p class="sub">' + (s.count ? s.count + ' fictional institution' + (s.count > 1 ? 's' : '') + ' · ' : '') + eurAmt(s.issue) + ' proposed issue</p></div>' +
+      (s.count ? '<div class="anchor-badge">' + esc(anchorShort(o, ' · ', true)) + '</div>' : '') + '</div>';
+    var html = '<section class="section" id="sec-anchors" aria-labelledby="h-anchors">' + head;
+    if (!s.count) return html + '<div class="empty-state" style="margin-top:12px">No institutional anchor participation has been disclosed for this opportunity.</div></section>';
+
+    var figs = ANCHOR_STAGES.filter(function (st) { return s[st.key] > 0; }).map(function (st) {
+      return '<li><span class="v">' + eurAmt(s[st.key]) + '</span> ' + st.plural.toLowerCase() + ' · ' + pct(s[st.key]) + '</li>';
+    });
+    figs.push(s.committed > 0
+      ? '<li><span class="v">' + eurAmt(s.remaining) + '</span> without binding or conditional commitments · ' + pct(s.remaining) + '</li>'
+      : '<li><span class="v">' + eurAmt(0) + '</span> committed — no binding or conditional commitments</li>');
+
+    return html + anchorBar(o, { large: true }) + anchorLegendCompact(o) +
+      '<ul class="anchor-figs">' + figs.join('') + '</ul>' +
+      anchorTable(o) +
+      '<p class="anchor-note">Fictional demonstration. Anchor participation is subject to the stated conditions and does not constitute a guarantee or investment recommendation.</p>' +
+      '</section>';
+  }
+  function metric(label, value, sub) {
+    return '<div class="metric"><p class="label">' + label + '</p><div class="val">' + value + '</div><div class="sub">' + sub + '</div></div>';
+  }
+  function dlRow(k, v) { return '<div><dt>' + k + '</dt><dd>' + v + '</dd></div>'; }
+
+  // Single-series bar chart in native SVG, zero baseline, latest year labelled.
+  function barChart(o, key, title, unit) {
+    var W = 460, H = 200, padL = 34, padR = 8, padT = 22, padB = 24;
+    var vals = YEARS.map(function (y, i) { return val(o, key, i); });
+    var max = Math.max.apply(null, vals.filter(ok).concat([1]));
+    var step = niceStep(max / 4), top = Math.ceil(max / step) * step;
+    var plotW = W - padL - padR, plotH = H - padT - padB, slot = plotW / YEARS.length, bw = Math.min(40, slot * 0.46);
+    function yPos(v) { return padT + plotH - (Math.max(0, v) / top) * plotH; }
+
+    var grid = '';
+    for (var g = 0; g <= top + 1e-9; g += step) {
+      grid += '<line x1="' + padL + '" x2="' + (W - padR) + '" y1="' + yPos(g) + '" y2="' + yPos(g) + '"/>' +
+        '<text class="axis-text" x="' + (padL - 6) + '" y="' + (yPos(g) + 3.5) + '" text-anchor="end">' + Math.round(g) + '</text>';
+    }
+    var bars = YEARS.map(function (y, i) {
+      var v = vals[i], cx = padL + slot * i + slot / 2, x = cx - bw / 2;
+      var tip = y + ': ' + (ok(v) ? v.toFixed(1) + ' EUR m' : 'not available');
+      var mark = '';
+      if (ok(v) && v > 0) {
+        var h = Math.max(1, yPos(0) - yPos(v)), r = Math.min(4, h / 2), yt = yPos(v), yb = yPos(0);
+        mark = '<path class="bar' + (i === LAST ? ' latest' : '') + '" d="M' + x + ',' + yb + 'V' + (yt + r) + 'Q' + x + ',' + yt + ' ' + (x + r) + ',' + yt +
+          'H' + (x + bw - r) + 'Q' + (x + bw) + ',' + yt + ' ' + (x + bw) + ',' + (yt + r) + 'V' + yb + 'Z"/>';
+      }
+      var label = (i === LAST && ok(v)) ? '<text class="val-text" x="' + cx + '" y="' + (yPos(v) - 7) + '" text-anchor="middle">' + v.toFixed(1) + '</text>' : '';
+      if (!ok(v)) label = '<text class="axis-text" x="' + cx + '" y="' + (yPos(0) - 6) + '" text-anchor="middle">n/a</text>';
+      return '<g class="bar-group">' + mark + label +
+        '<text class="axis-text" x="' + cx + '" y="' + (H - 6) + '" text-anchor="middle">' + y + '</text>' +
+        '<rect class="bar-hit" tabindex="0" role="img" aria-label="' + esc(title + ' ' + tip) + '" data-tip-title="' + esc(title) + '" data-tip="' + esc(tip) + '" x="' + (padL + slot * i) + '" y="' + padT + '" width="' + slot + '" height="' + plotH + '"/>' +
+        '</g>';
+    }).join('');
+    var g5 = cagr(o, key);
+    var subt = unit + (ok(g5) ? ' · ' + YEARS[0] + '–' + YEARS[LAST] + ' CAGR ' + (g5 * 100).toFixed(1) + '%' : '');
+    if (key === 'ebitda') { var m = derived(o, LAST).margin; if (ok(m)) subt += ' · FY' + YEARS[LAST] + ' margin ' + (m * 100).toFixed(1) + '%'; }
+    return '<figure class="chart" style="margin:0"><h3>' + esc(title) + '</h3><p class="label" style="margin-bottom:8px">' + subt + '</p>' +
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-label="' + esc(o.company.name + ' — ' + title + ', ' + unit + ', ' + YEARS[0] + ' to ' + YEARS[LAST]) + '">' +
+      '<g class="grid">' + grid + '</g>' + bars + '</svg>' +
+      '<div class="tooltip" hidden></div></figure>';
+  }
+  function niceStep(raw) {
+    var p = Math.pow(10, Math.floor(Math.log10(raw))), n = raw / p;
+    return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p;
+  }
+
+  function financialTable(o) {
+    var rows = [
+      ['raw', 'revenue', 'EUR m'], ['raw', 'ebitda', 'EUR m'],
+      ['calc', 'EBITDA margin', '%', function (d) { return fmtPct(d.margin); }],
+      ['raw', 'netIncome', 'EUR m'], ['raw', 'cash', 'EUR m'], ['raw', 'debt', 'EUR m'],
+      ['calc', 'Net debt', 'EUR m', function (d) { return fmtM(d.netDebt); }],
+      ['raw', 'ocf', 'EUR m'], ['raw', 'capex', 'EUR m'],
+      ['calc', 'Free cash flow', 'EUR m', function (d) { return fmtM(d.fcf); }],
+      ['raw', 'interest', 'EUR m'],
+      ['calc', 'Net debt / EBITDA', 'x', function (d) { return fmtX(d.leverage); }],
+      ['calc', 'EBITDA / interest expense', 'x', function (d) { return fmtX(d.coverage); }]
+    ];
+    var ds = YEARS.map(function (y, i) { return derived(o, i); });
+    var h = '<div class="table-scroll"><table><caption class="visually-hidden">Five-year financial history, ' + esc(o.company.name) + ', fiscal years ending 31 December</caption>' +
+      '<thead><tr><th scope="col">Fiscal year (31 Dec)</th><th scope="col">Unit</th>' +
+      YEARS.map(function (y) { return '<th scope="col" class="num">' + y + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      if (r[0] === 'raw') {
+        h += '<tr><td>' + ROW_LABEL[r[1]] + '</td><td class="unit">' + r[2] + '</td>' +
+          YEARS.map(function (y, i) { return '<td class="num">' + fmtM(val(o, r[1], i)) + '</td>'; }).join('') + '</tr>';
+      } else {
+        h += '<tr class="calc"><td>' + r[1] + '</td><td class="unit">' + r[2] + '</td>' +
+          ds.map(function (d) { return '<td class="num">' + r[3](d) + '</td>'; }).join('') + '</tr>';
+      }
+    });
+    return h + '</tbody></table></div>' +
+      '<p class="muted small" style="margin-top:8px">Reported figures in EUR millions. Shaded rows are calculated from the reported figures; n/a indicates a missing input or a zero or negative denominator.' +
+      (o.company.reportingNote ? ' ' + esc(o.company.reportingNote) : '') + '</p>';
+  }
+
+  /* =========================================================
+     Screen 3 — Documents & Dossier (selected issuer)
+     ========================================================= */
+  function docUsage(o, id) {
+    var years = YEARS.filter(function (y, i) { return cellSource(o, 'revenue', i).doc === id; });
+    var parts = [];
+    if (years.length) parts.push('Reported financials ' + years[0] + (years.length > 1 ? '–' + years[years.length - 1] : ''));
+    var n = sourcedFacts(o).filter(function (f) { return !f.link && factSource(o, f).doc === id; }).length;
+    if (n) parts.push(n + ' company fact' + (n > 1 ? 's' : ''));
+    return parts.join(' · ') || '—';
+  }
+  function renderDocuments(o) {
+    var c = o.company, summary = doc(o, o.finDocs[2]);
+    var html = crumbs(o, 'documents') +
+      '<p class="eyebrow">' + esc(c.name) + '</p>' +
+      '<h1 id="h-documents">Documents &amp; Dossier</h1>' +
+      '<p class="lede">Dossier status, anchor participation, the source documents behind the dossier, references for material facts, and ' +
+        (dossierStatus(o) === 'complete' ? 'remaining investor follow-up items.' : 'information still requested from the company.') + '</p>' +
+      dossierStatusPanel(o) +
+
+      '<div class="dossier-band on-navy"><div><h2>Investor dossier — ' + esc(c.name) + '</h2>' +
+        '<p>Standardised dossier covering company profile, five-year financials, calculated ratios, proposed terms, institutional anchor participation, diligence considerations and source references. Opens your browser’s print dialog; choose “Save as PDF”.</p></div>' +
+        '<button type="button" class="btn light" data-action="print">Download Investor Dossier <span class="arr" aria-hidden="true">↓</span></button></div>';
+
+    html += '<section class="section" aria-labelledby="h-anchor-sum"><p class="label">Included in the dossier</p><h2 id="h-anchor-sum">Anchor participation summary</h2>' +
+      (o.anchors.length
+        ? anchorBar(o) + anchorLegend(o) + '<div style="margin-top:14px">' + anchorTable(o) + '</div>' +
+          '<p class="anchor-disclaimer">All institutions and commitments shown are fictional demonstration data. ' + esc(ANCHOR_DISCLAIMER) + '</p>'
+        : '<div class="empty-state">No institutional anchor participation has been disclosed for this opportunity.</div>') +
+      '</section>';
+
+    html += '<section class="section" aria-labelledby="h-docs"><p class="label">Source index</p><h2 id="h-docs">Source documents</h2>' +
+      '<p class="muted small">Documents are listed for reference. They are not available for download in this environment.</p>' +
+      '<div class="table-scroll"><table><caption class="visually-hidden">Source documents, ' + esc(c.name) + '</caption><thead><tr>' +
+      '<th scope="col">Document</th><th scope="col">Category</th><th scope="col">Reference ID</th><th scope="col">Used for</th><th scope="col">Availability</th></tr></thead><tbody>' +
+      o.docs.map(function (d) {
+        return '<tr><td>' + esc(d.title) + '</td><td class="muted">' + esc(d.category) + '</td><td><span class="doc-id">' + esc(d.ref) + '</span></td>' +
+          '<td class="small">' + esc(docUsage(o, d.id)) + '</td><td><span class="ref-only">Reference only</span></td></tr>';
+      }).join('') + '</tbody></table></div></section>';
+
+    html += '<section class="section" aria-labelledby="h-refs"><p class="label">Traceability</p><h2 id="h-refs">Source references for material facts</h2>' +
+      '<div class="table-scroll"><table><caption class="visually-hidden">Source references for material facts, ' + esc(c.name) + '</caption><thead><tr>' +
+      '<th scope="col">Fact</th><th scope="col">Value</th><th scope="col">Source document</th><th scope="col">Reference ID</th><th scope="col" class="num">Page</th></tr></thead><tbody>' +
+      sourcedFacts(o).map(function (f) {
+        var s = factSource(o, f), dd = doc(o, s.doc);
+        return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td>' + esc(dd.title) + '</td><td><span class="doc-id">' + esc(dd.ref) + '</span></td><td class="num">' + esc(s.page) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<p class="muted small" style="margin-top:8px">Financial figures for ' + YEARS[0] + '–' + YEARS[LAST - 2] + ' are taken from the five-year summary in ' + esc(summary.title) + '; page references for every reported line are included in the dossier. Page numbers are illustrative placeholders.</p></section>';
+
+    var complete = dossierStatus(o) === 'complete';
+    html += '<section class="section" aria-labelledby="h-req"><p class="label">' + (complete ? 'Received and follow-up' : 'Outstanding') + '</p><h2 id="h-req">' + (complete ? 'Documents and follow-up items' : 'Requested from the company') + '</h2>' +
+      '<div class="two-col"><div><h3>Documents</h3><ul class="req-list">' +
+        outstanding(o).map(function (r) { return '<li><span>' + esc(r.item) + '</span><span class="st">' + openLabel(r) + '</span></li>'; }).join('') +
+        received(o).map(function (r) { return '<li><span>' + esc(r.item) + '</span><span class="st" style="color:var(--muted)">Received' + (r.file ? ' · ' + esc(r.file) : '') + '</span></li>'; }).join('') +
+      '</ul></div><div><h3>Information</h3><ul class="req-list">' +
+        (openFacts(o).length
+          ? openFacts(o).map(function (f) { return '<li><span>' + esc(f.fact) + '</span><span class="st">' + openLabel(f) + '</span></li>'; }).join('')
+          : '<li><span class="muted">No information items outstanding.</span></li>') +
+      '</ul></div></div></section>';
+
+    html += '<section class="section" aria-labelledby="h-method"><p class="label">Sources &amp; methodology</p><h2 id="h-method">How the figures are prepared</h2>' +
+      '<div class="method">' +
+        '<div><h3>Reported figures</h3><p>Revenue, EBITDA, net income, cash, financial debt, operating cash flow, capital expenditure and interest expense are taken from the company’s documents as reported, in EUR millions, for fiscal years ending 31 December.' +
+          (c.reportingNote ? ' ' + esc(c.reportingNote) : '') + '</p></div>' +
+        '<div><h3>Calculated ratios</h3><p>EBITDA margin = EBITDA / revenue. Net debt = financial debt − cash. Free cash flow = operating cash flow − capital expenditure. Leverage = net debt / EBITDA. Interest cover = EBITDA / interest expense. Growth rates are compound annual rates over ' + YEARS[0] + '–' + YEARS[LAST] + '.</p></div>' +
+        '<div><h3>Limitations</h3><p>Figures have not been independently audited or verified by VanillaBonds. Ratios with a missing input or a zero or negative denominator are shown as n/a. Proposed terms are indicative and not agreed.' +
+          ' Dossier status describes the information package only; it does not mean the financing is approved, final or open for subscription.</p></div>' +
+      '</div></section>';
+    return html;
+  }
+  function dossierStatusPanel(o) {
+    var st = dossierStatus(o), list = dossierChecklist(o), open = list.filter(function (i) { return !i.met; });
+    return '<section class="dossier-status" aria-labelledby="h-dstatus">' +
+      '<div><p class="label">Dossier status</p><h2 id="h-dstatus" style="margin-bottom:10px">' + DOSSIER_LABEL[st] + '</h2>' + dossierChip(o) +
+        '<p class="small" style="margin-top:12px;color:var(--ink-2)">' + DOSSIER_TEXT[st] + '</p>' +
+        (st === 'prepared'
+          ? '<p class="small muted" style="margin:0">' + open.length + ' of ' + list.length + ' checklist items still open.</p>'
+          : '<p class="small muted" style="margin:0">All ' + list.length + ' checklist items met.</p>') +
+      '</div>' +
+      '<div><h3>' + (st === 'prepared' ? 'Key outstanding mandatory items' : 'Dossier checklist') + '</h3><ul class="checklist">' +
+        (st === 'prepared' ? open : list).map(function (i) {
+          return '<li class="' + (i.met ? 'met' : 'open') + '"><span class="mk" aria-hidden="true">' + (i.met ? '■' : '□') + '</span><span>' + esc(i.label) +
+            (i.detail ? ' <span class="muted">— ' + esc(i.detail) + '</span>' : '') + '</span><span class="st">' + (i.met ? 'Present' : 'Outstanding') + '</span></li>';
+        }).join('') +
+      '</ul></div></section>';
+  }
+
+  /* =========================================================
+     Print-only investor dossier (selected issuer, same calculations)
+     ========================================================= */
+  function dossierAnchors(o) {
+    var s = anchorSummary(o), pct = function (v) { return fmtShare(shareOfIssue(o, v)); };
+    if (!s.count) return '<p>No institutional anchor participation has been disclosed for this opportunity.</p>';
+    return '<div class="keep">' + kv([
+        ['Proposed issue', eurAmt(s.issue)],
+        ['Binding commitments', eurAmt(s.binding) + ' (' + pct(s.binding) + ')'],
+        ['Conditional commitments', eurAmt(s.conditional) + ' (' + pct(s.conditional) + ')'],
+        ['Indicative interest (non-binding)', eurAmt(s.indicative) + ' (' + pct(s.indicative) + ')'],
+        ['In discussion (no commitment)', eurAmt(s.discussion) + ' (' + pct(s.discussion) + ')'],
+        ['Not covered by binding or conditional commitments', eurAmt(s.remaining) + ' (' + pct(s.remaining) + ')']]) +
+      '<div style="margin:10px 0 4px">' + anchorBar(o) + anchorLegend(o) + '</div></div>' +
+      '<table style="margin-top:8px"><thead><tr><th>Institution (fictional)</th><th>Type</th><th class="num">Amount</th><th class="num">% of issue</th><th>Status</th><th>Conditions</th></tr></thead><tbody>' +
+      o.anchors.map(function (a) {
+        return '<tr><td>' + esc(a.name) + '</td><td>' + esc(a.institutionType) + '</td><td class="num">' + eurAmt(a.amountEURm) + '</td><td class="num">' + fmtShare(anchorShare(o, a)) +
+          '</td><td style="white-space:nowrap">' + esc(STAGE_LABEL[a.status]) + '</td><td>' + esc(a.conditions) + '</td></tr>';
+      }).join('') + '</tbody></table>' +
+      '<p class="note">All institutions and commitments are fictional demonstration data. Stages are reported separately; interest and discussions are not commitments. Anchor participation does not constitute a guarantee, credit endorsement, recommendation or verification of the issuer.</p>';
+  }
+  function dossierStatusPrint(o) {
+    var st = dossierStatus(o), list = dossierChecklist(o);
+    return '<p style="margin-bottom:6px"><strong>' + DOSSIER_LABEL[st] + '.</strong> ' + DOSSIER_TEXT[st] + '</p>' +
+      '<table><thead><tr><th>Checklist item</th><th>Status</th></tr></thead><tbody>' +
+      list.map(function (i) { return '<tr><td>' + esc(i.label) + (i.detail ? ' — ' + esc(i.detail) : '') + '</td><td style="white-space:nowrap">' + (i.met ? 'Present' : 'Outstanding') + '</td></tr>'; }).join('') +
+      '</tbody></table>';
+  }
+  function renderDossier(o) {
+    secNo = 0;
+    var c = o.company;
+    var date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    var html = '<div class="doc-head"><div class="wm"><span class="v">VANILLA</span><span class="b">BONDS</span></div><div class="date">Investor dossier · ' + esc(date) + '</div></div>' +
+      '<div class="title-band"><p class="eyebrow">Investor dossier · ' + DOSSIER_LABEL[dossierStatus(o)] + ' · ' + esc(o.status.label) + ' · Illustrative case</p><h1>' + esc(c.name) + '</h1>' +
+      '<div class="meta">' + esc(c.industry) + ' · ' + esc(c.country) + ' · Proposed ' + esc(termText(o, 'amount')) + ', ' + esc(termText(o, 'maturity')) + '</div></div>';
+
+    html += dsec('1', 'Company overview', kv([['Company', esc(c.name)], ['Country', esc(c.country)], ['Sector', esc(c.industry)], ['Business', esc(c.description)]]));
+    html += dsec('2', 'Proposed financing', kv([
+      ['Issue amount', esc(termText(o, 'amount'))], ['Tenor', esc(termText(o, 'maturity'))], ['Repayment', esc(termText(o, 'repayment'))],
+      ['Purpose', esc(c.financingPurpose)], ['Use of proceeds', esc(c.useOfProceeds)]]));
+
+    var codes = o.finDocs.map(function (id) { return id; });
+    var t = '<table><thead><tr><th>EUR m</th>' + YEARS.map(function (y) { return '<th class="num">' + y + '</th>'; }).join('') + '<th>Source pages</th></tr></thead><tbody>';
+    o.finRows.forEach(function (r) {
+      t += '<tr><td>' + ROW_LABEL[r.key] + '</td>' + YEARS.map(function (y, i) { return '<td class="num">' + fmtM(val(o, r.key, i)) + '</td>'; }).join('') +
+        '<td style="white-space:nowrap">' + codes.map(function (cd, k) { return cd + ' p.' + r.pages[k]; }).join(' · ') + '</td></tr>';
+    });
+    html += dsec('', 'Institutional anchor participation', dossierAnchors(o), true);
+    html += dsec('3', 'Historical financials', t + '</tbody></table><p class="note">EUR millions, fiscal years ending 31 December. ' + YEARS[LAST] + ': ' + esc(doc(o, codes[0]).title) + ' (' + codes[0] + '); ' + YEARS[LAST - 1] + ': ' + esc(doc(o, codes[1]).title) + ' (' + codes[1] + '); ' + YEARS[0] + '–' + YEARS[LAST - 2] + ': ' + esc(doc(o, codes[2]).title) + ' (' + codes[2] + ').' +
+      (c.reportingNote ? ' ' + esc(c.reportingNote) : '') + '</p>');
+
+    var ratios = [['EBITDA margin', '%', function (d) { return fmtPct(d.margin); }], ['Net debt', 'EUR m', function (d) { return fmtM(d.netDebt); }],
+      ['Free cash flow', 'EUR m', function (d) { return fmtM(d.fcf); }], ['Net debt / EBITDA', 'x', function (d) { return fmtX(d.leverage); }],
+      ['EBITDA / interest expense', 'x', function (d) { return fmtX(d.coverage); }]];
+    var rt = '<table><thead><tr><th>Calculated</th><th>Unit</th>' + YEARS.map(function (y) { return '<th class="num">' + y + '</th>'; }).join('') + '</tr></thead><tbody>';
+    ratios.forEach(function (r) { rt += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td>' + YEARS.map(function (y, i) { return '<td class="num">' + r[2](derived(o, i)) + '</td>'; }).join('') + '</tr>'; });
+    var gr = cagr(o, 'revenue'), ge = cagr(o, 'ebitda');
+    html += dsec('4', 'Financial ratios', rt + '</tbody></table><p class="note">Calculated from the reported figures above. ' + YEARS[0] + '–' + YEARS[LAST] + ' CAGR: revenue ' + (ok(gr) ? (gr * 100).toFixed(1) + '%' : 'n/a') + ', EBITDA ' + (ok(ge) ? (ge * 100).toFixed(1) + '%' : 'n/a') + '. n/a indicates a missing input or a zero or negative denominator.</p>');
+
+    html += dsec('5', 'Business and management', kv([['Ownership', esc(c.ownership)], ['Management', esc(managementText(o))]].concat(
+      profileFacts(o).map(function (f) { return [esc(f.profile), esc(f.value)]; }))));
+
+    html += dsec('6', 'Proposed bond terms', '<table><thead><tr><th>Term</th><th>Proposed</th><th>Status</th></tr></thead><tbody>' +
+      o.bond.map(function (b) { return '<tr><td>' + esc(TERM_LABEL[b.key]) + '</td><td>' + termHtml(o, b) + '</td><td>' + termStatus(o, b) + '</td></tr>'; }).join('') +
+      '</tbody></table><p class="note">Indicative terms proposed by the company; not agreed, issued or offered.</p>');
+
+    html += dsec('', 'Dossier status', dossierStatusPrint(o), true);
+    html += dsec('7', dossierStatus(o) === 'complete' ? 'Investor follow-up questions' : 'Diligence considerations', '<ul>' + diligence(o).map(function (x) { return '<li><strong>' + esc(x.title) + '.</strong> ' + esc(x.text) + '</li>'; }).join('') + '</ul>', true);
+
+    html += dsec('8', 'Source references', '<table><thead><tr><th>Fact</th><th>Value</th><th>Source</th><th>Ref. ID</th><th class="num">Page</th></tr></thead><tbody>' +
+      sourcedFacts(o).map(function (f) { var s = factSource(o, f), dd = doc(o, s.doc); return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td>' + esc(dd.title) + '</td><td style="white-space:nowrap">' + esc(dd.ref) + '</td><td class="num">' + esc(s.page) + '</td></tr>'; }).join('') +
+      '</tbody></table>', true);
+
+    var outItems = outstanding(o).map(function (r) { return '<li>' + esc(r.item) + ' — ' + openLabel(r).toLowerCase() + '</li>'; })
+      .concat(openFacts(o).map(function (f) { return '<li>' + esc(f.fact) + ' — ' + openLabel(f).toLowerCase() + '</li>'; }))
+      .concat(received(o).map(function (r) { return '<li>' + esc(r.item) + ' — received</li>'; }));
+    html += dsec('9', dossierStatus(o) === 'complete' ? 'Documents received and follow-up items' : 'Outstanding information', '<ul>' + outItems.join('') + '</ul>');
+
+    html += dsec('10', 'Important information', '<div class="disclaimer">This dossier describes an illustrative case: ' + esc(c.name) + ' is a fictional company, and all figures, persons, documents, page references, anchor institutions and participation amounts are illustrative. Anchor participation is not a guarantee, endorsement or recommendation. It is not investment advice, an offer, a solicitation or a prospectus. The information has not been independently verified or audited, diligence is not complete, and the proposed terms are not agreed. Investors must make their own assessment.</div>');
+    return html;
+  }
+  var secNo = 0;   // dossier sections are numbered in render order
+  function dsec(n, title, body, splittable) {
+    n = ++secNo;
+    return '<section class="dsec' + (splittable ? '' : ' keep') + '"><div class="dsec-head"><p class="eyebrow">' + n + ' · ' + title + '</p></div>' + body + '</section>';
+  }
+  function kv(rows) {
+    return '<table class="kv"><tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody></table>';
+  }
+
+  /* =========================================================
+     Routing — hash based, works on file://
+       #/opportunities · #/<issuer>/overview · #/<issuer>/documents
+     selectedOpportunityId is the single source of truth for the issuer.
+     ========================================================= */
+  var selectedOpportunityId = null;
+  var currentView = 'start';
+  var TITLES = { start: 'Platform demo', journey: 'Deal journey', market: 'The market', company: 'Your fact file', opportunities: 'Investment Opportunities', overview: 'Investment Overview', documents: 'Documents & Dossier' };
+  var INVESTOR = { opportunities: 1, overview: 1, documents: 1 };
+
+  function parseRoute(hash) {
+    var parts = String(hash || '').replace(/^#\/?/, '').split('/');
+    if (parts[0] === 'start') return { id: null, view: 'start' };
+    if (parts[0] === 'journey' || parts[0] === 'market') return { id: null, view: parts[0] };
+    if (parts[0] === 'company') return { id: STATE.company, view: 'company' };
+    if (OPPORTUNITIES[parts[0]] && (parts[1] === 'overview' || parts[1] === 'documents')) return { id: parts[0], view: parts[1] };
+    if (OPPORTUNITIES[parts[0]] && !parts[1]) return { id: parts[0], view: 'overview' };
+    if (parts[0] === 'opportunities') return { id: null, view: 'opportunities' };
+    return { id: null, view: 'home' };
+  }
+  // Where a role lands, and what it may open. Co-investors cannot open a deal still in the anchor window.
+  function allowed(r) {
+    if (r.view === 'home') return role() === 'company' ? { id: STATE.company, view: 'company' } : role() ? { id: null, view: 'opportunities' } : { id: null, view: 'start' };
+    if (r.view === 'start' || r.view === 'journey' || r.view === 'market') return r;   // open to every role, and before a role is chosen
+    if (!role()) return { id: null, view: 'start' };
+    if (role() === 'company') return { id: STATE.company, view: 'company' };
+    if (r.view === 'company') return { id: null, view: 'opportunities' };
+    if (r.id && !canSee(OPPORTUNITIES[r.id])) return { id: null, view: 'opportunities', notice: 'That opportunity is still in the anchor window. Co-investors are invited once the anchors have committed.' };
+    return r;
+  }
+  function routeHash(r) { return r.view === 'start' || r.view === 'journey' || r.view === 'market' ? '#/' + r.view : r.view === 'company' ? '#/company' : r.view === 'opportunities' ? '#/opportunities' : '#/' + r.id + '/' + r.view; }
+  var notice = '';
+
+  function render(route, focus) {
+    var r = allowed(route), hash = routeHash(r);
+    if (r.notice) notice = r.notice;
+    if (location.hash !== hash) { try { history.replaceState(null, '', hash); } catch (e) { /* ignore */ } }
+    selectedOpportunityId = INVESTOR[r.view] ? r.id : null;
+    currentView = r.view;
+    var o = r.id ? OPPORTUNITIES[r.id] : null;
+    var screens = { start: renderStart, journey: renderJourney, market: renderMarket, company: function () { return renderCompany(o); }, opportunities: renderOpportunities, overview: function () { return renderOverview(o); }, documents: function () { return renderDocuments(o); } };
+    Object.keys(screens).forEach(function (k) {
+      var el = document.getElementById('screen-' + k), active = k === r.view;
+      el.innerHTML = active ? screens[k]() : '';
+      el.hidden = !active;
+    });
+    if (notice && r.view === 'opportunities') document.getElementById('screen-opportunities').insertAdjacentHTML('afterbegin', '<div class="notice" role="status">' + esc(notice) + '</div>');
+    notice = '';
+    document.getElementById('print-dossier').innerHTML = selectedOpportunityId ? renderDossier(o) : '';
+    document.body.classList.toggle('has-dossier', !!selectedOpportunityId);
+    document.body.setAttribute('data-side', role());   // not data-role: that selector is the role picker's
+    renderNav();
+    document.title = 'VanillaBonds — ' + (o && INVESTOR[r.view] ? o.company.name + ' · ' + TITLES[r.view] : TITLES[r.view]);
+    window.scrollTo(0, 0);
+    if (focus) {
+      var h = document.getElementById('h-' + r.view);
+      if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+    }
+  }
+  function go(path) {
+    var r = allowed(parseRoute('#/' + path)), hash = routeHash(r);
+    if (r.notice) notice = r.notice;
+    if (location.hash === hash) render(r, true);
+    else location.hash = hash;          // hashchange → render(); adds a history entry
+  }
+  function rerender() { render(parseRoute(location.hash), false); }
+  function commit() { saveState(); applyState(); rerender(); }
+  window.addEventListener('hashchange', function () { render(parseRoute(location.hash), true); });
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-route],[data-jump],[data-action],[data-role],[data-sort],[data-bind],[data-withdraw],[data-withdraw-order],[data-mark],[data-unanswer],[data-confirm],[data-unconfirm]');
+    if (!t) return;
+    var id;
+    if (t.hasAttribute('data-route')) { go(t.getAttribute('data-route')); return; }
+    if (t.hasAttribute('data-jump')) {
+      var tg = document.getElementById(t.getAttribute('data-jump'));
+      if (tg) { tg.setAttribute('tabindex', '-1'); tg.focus({ preventScroll: true }); window.scrollTo({ top: tg.getBoundingClientRect().top + window.pageYOffset - 12, behavior: 'smooth' }); }
+      return;
+    }
+    if (t.getAttribute('data-action') === 'print') {
+      if (selectedOpportunityId) document.getElementById('print-dossier').innerHTML = renderDossier(OPPORTUNITIES[selectedOpportunityId]);
+      window.print(); return;
+    }
+    if ((id = t.getAttribute('data-sort'))) {
+      if (MKT.key === id) MKT.dir *= -1; else { MKT.key = id; MKT.dir = (id === 'n' || id === 'c' || id === 'g') ? 1 : -1; }
+      document.getElementById('mkt-head').innerHTML = marketHead(); document.getElementById('mkt-body').innerHTML = marketRows(); return;
+    }
+    if (t.getAttribute('data-action') === 'reset') { STATE = { company: 'van-dijk' }; saveState(); applyState(); go('start'); return; }
+    if (t.hasAttribute('data-role')) { STATE.role = t.getAttribute('data-role'); saveState(); go('home'); return; }
+    if ((id = t.getAttribute('data-bind'))) sub2('indications', id).binding = true;
+    else if ((id = t.getAttribute('data-withdraw'))) delete bag('indications')[id];
+    else if ((id = t.getAttribute('data-withdraw-order'))) delete bag('orders')[id];
+    else if ((id = t.getAttribute('data-mark'))) sub2('uploads', STATE.company)[id] = 'provided without a file';
+    else if ((id = t.getAttribute('data-unanswer'))) delete sub2('answers', STATE.company)[id];
+    else if ((id = t.getAttribute('data-confirm'))) { var cfo = cfoOf(OPPORTUNITIES[id]); bag('confirmed')[id] = cfo.name + ', ' + cfo.role + ', ' + today(); }
+    else if ((id = t.getAttribute('data-unconfirm'))) delete bag('confirmed')[id];
+    commit();
+  });
+  document.addEventListener('submit', function (e) {
+    var f = e.target, id, amt, o;
+    if (!f.matches('[data-indicate],[data-order],[data-answer]')) return;
+    e.preventDefault();
+    if ((id = f.getAttribute('data-indicate'))) {
+      o = OPPORTUNITIES[id]; amt = Math.min(+f.amt.value, Math.max(0, o.issueEURm - potentialTotal(o)));
+      if (amt > 0) bag('indications')[id] = { amount: Math.round(amt * 100) / 100, binding: false };
+    } else if ((id = f.getAttribute('data-order'))) {
+      o = OPPORTUNITIES[id]; amt = Math.min(+f.amt.value, Math.max(0, o.issueEURm - coverTotal(o)));
+      if (amt > 0) bag('orders')[id] = Math.round(((o.orders || 0) + amt) * 10) / 10;   // pieces of €100,000
+    } else if ((id = f.getAttribute('data-answer'))) {
+      var txt = f.txt.value.trim();
+      if (txt) sub2('answers', STATE.company)[id] = txt;
+    }
+    commit();
+  });
+  document.addEventListener('input', function (e) {
+    var f = e.target.closest && e.target.closest('#mkt-filters [data-f]');
+    if (!f) return;
+    MKT[f.getAttribute('data-f')] = f.value;
+    document.getElementById('mkt-body').innerHTML = marketRows();
+  });
+  document.addEventListener('change', function (e) {
+    var inp = e.target;
+    if (!inp.matches || !inp.matches('input[type=file][data-upload]') || !inp.files.length) return;
+    sub2('uploads', STATE.company)[inp.getAttribute('data-upload')] = inp.files[0].name;   // the name only; the file never leaves the browser
+    commit();
+  });
+  // Keyboard/menu printing also uses the selected issuer's dossier.
+  window.addEventListener('beforeprint', function () {
+    var el = document.getElementById('print-dossier');
+    el.innerHTML = selectedOpportunityId ? renderDossier(OPPORTUNITIES[selectedOpportunityId]) : '';
+    document.body.classList.toggle('has-dossier', !!selectedOpportunityId);
+  });
+
+  /* ---------- Chart tooltips (hover and keyboard focus) ---------- */
+  function tipShow(hit) {
+    var fig = hit.closest('.chart'), tip = fig.querySelector('.tooltip');
+    var fr = fig.getBoundingClientRect(), r = hit.getBoundingClientRect();
+    var bar = hit.parentNode.querySelector('.bar'), top = bar ? bar.getBoundingClientRect().top : r.bottom - 20;
+    tip.innerHTML = '<span class="ty">' + esc(hit.getAttribute('data-tip-title')) + '</span>' + esc(hit.getAttribute('data-tip'));
+    tip.style.left = (r.left + r.width / 2 - fr.left) + 'px';
+    tip.style.top = (top - fr.top - 8) + 'px';
+    tip.hidden = false;
+  }
+  function tipHide(hit) { var t = hit.closest('.chart').querySelector('.tooltip'); t.hidden = true; }
+  document.addEventListener('mouseover', function (e) { var h = e.target.closest && e.target.closest('.bar-hit'); if (h) tipShow(h); });
+  document.addEventListener('mouseout', function (e) { var h = e.target.closest && e.target.closest('.bar-hit'); if (h) tipHide(h); });
+  document.addEventListener('focusin', function (e) { if (e.target.classList && e.target.classList.contains('bar-hit')) tipShow(e.target); });
+  document.addEventListener('focusout', function (e) { if (e.target.classList && e.target.classList.contains('bar-hit')) tipHide(e.target); });
+
+  /* ---------- Initial route (refresh restores a valid view, else Opportunities) ---------- */
+  (function init() {
+    // Data validation: anchor totals may not exceed the issue; a declared 'complete' dossier must pass its checklist.
+    ORDER.forEach(function (id) {
+      var o = OPPORTUNITIES[id];
+      if (!anchorsValid(o)) console.warn('VanillaBonds: invalid anchor data for ' + id + ' (amounts, statuses or total exceeds issue size).');
+      if (o.dossierStatus === 'complete' && dossierStatus(o) !== 'complete') console.warn('VanillaBonds: ' + id + ' is declared complete but its checklist has open items; shown as prepared.');
+    });
+    var r = parseRoute(location.hash), canonical = routeHash(r);
+    if (location.hash !== canonical) {
+      try { history.replaceState(null, '', canonical); } catch (e) { /* ignore */ }
+    }
+    render(r, false);
+  })();
+})();
+</script>
+</body>
+</html>
