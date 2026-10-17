@@ -489,6 +489,16 @@
   .mchart .grid { stroke: var(--border); } .mchart .axis { fill: var(--muted); font-size: 10px; } .mchart .band { fill: var(--gold); opacity: 0.14; } .mchart .band-label { fill: var(--gold-ink); font-size: 10.5px; font-weight: 600; }
   .mchart circle { stroke: var(--paper); stroke-width: 1; opacity: 0.85; } .mchart .bar-label { fill: var(--gold-ink); font-size: 11px; font-weight: 600; }
   .mlegend { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--ink-2); } .mlegend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+  .mchart .median { fill: none; stroke: var(--navy); stroke-width: 2; stroke-linejoin: round; }
+  .mchart circle.dim { opacity: 0.22; }
+  .mchart .deal { stroke: var(--gold-ink); stroke-width: 1.5; stroke-dasharray: 4 3; }
+  .mchart .deal-label { fill: var(--gold-ink); font-size: 10.5px; font-weight: 600; }
+  .mchart .axis.win { fill: var(--gold-ink); font-weight: 600; }
+  .mlegend li.dim { opacity: 0.45; } .mlegend i.line { width: 18px; height: 2px; border-radius: 0; background: var(--navy); vertical-align: 3px; }
+  .deal-line { margin: 14px 0 0; padding: 10px 14px; background: var(--paper); border-left: 3px solid var(--gold); font-size: 14px; color: var(--ink-2); }
+  .jcal { list-style: none; margin: 12px 0 0; padding: 0; }
+  .jcal li { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 7px 0; border-top: 1px solid var(--border); font-size: 13.5px; color: var(--ink-2); }
+  .jcal span { font-family: var(--mono); font-size: 11.5px; color: var(--gold-ink); text-transform: uppercase; letter-spacing: 0.05em; }
   .refichips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; } .refichip { background: var(--paper); border: 1px solid var(--border); padding: 8px 12px; font-size: 12.5px; } .refichip b { display: block; color: var(--navy); font-weight: 600; } .refichip span { color: var(--muted); }
   @media (max-width: 820px) {
     .roles, .flow, .access, .qa li, .timeline, .jdeal, .jstages li, .rules { grid-template-columns: 1fr; }
@@ -1041,7 +1051,7 @@
       '<div><p class="label">Checklist</p><div class="val">' + met + ' of ' + list.length + ' items met</div></div>' +
       '<div><p class="label">Who sees the fact file</p><div class="val" style="font-size:15px">' + (s.count ? s.count + ' anchor institution' + (s.count > 1 ? 's' : '') + ' now' : 'Anchors first') + ' · co-investors after anchor commitments</div></div>' +
       '<div><p class="label">Confirmation</p><div class="val" style="font-size:15px">' + (o.confirmedBy ? esc(o.confirmedBy) : 'Not yet confirmed by the CFO') + '</div></div></div></div>';
-    html += '<nav class="jump" aria-label="Sections on this page">' + [['c-docs', 'Documents requested'], ['c-questions', 'Questions'], ['c-figures', 'Figures to confirm'], ['c-terms', 'Proposed terms'], ['c-timeline', 'Timeline']].map(function (x) { return '<button type="button" class="chip-link" data-jump="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
+    html += '<nav class="jump" aria-label="Sections on this page">' + [['c-docs', 'Documents requested'], ['c-questions', 'Questions'], ['c-figures', 'Figures to confirm'], ['c-terms', 'Proposed terms'], ['sec-comps', 'Comparables'], ['c-timeline', 'Timeline']].map(function (x) { return '<button type="button" class="chip-link" data-jump="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
 
     var out = outstanding(o), rec = received(o);
     html += '<section class="section" id="c-docs"><p class="label">' + out.length + ' outstanding · ' + rec.length + ' received</p><h2>Documents requested</h2>' +
@@ -1079,7 +1089,8 @@
       '<p class="muted small">Terms the company proposed for discussion. Coupon, security and covenants are settled with the anchors. The company confirms its information and signs no bond documents at this stage.</p>' +
       '<div class="table-scroll"><table><caption class="visually-hidden">Proposed bond terms, ' + esc(c.name) + '</caption><tbody>' + o.bond.map(function (t) { return '<tr><th scope="row" class="rowhead">' + esc(TERM_LABEL[t.key]) + '</th><td>' + termHtml(o, t) + '</td><td>' + termStatus(o, t) + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
 
-    var steps = [['Sourcing', 'Days', 'First check against the admission criteria.'], ['Fact file', 'Weeks 1–4', 'Your plan in the anchors’ format, every fact with its source. The CFO confirms.'], ['Anchor decision', 'Weeks 5–6', 'Anchors have first access. Binding ticket within ten working days.'], ['One standard bond', 'Weeks 7–10', 'Co-investors join on the same terms. Issued only when fully covered.'], ['After closing', 'Years 1–5', 'Quarterly reporting and covenant tests by the trustee. Repaid at maturity.']];
+    html += comparables(o, 'company');
+    var steps = [['Sourcing', 'Days', 'First check against the admission criteria.'], ['Fact file', 'Weeks 1–4', 'Your plan in the anchors’ format, every fact with its source. The CFO confirms.'], ['Anchor decision', 'Weeks 5–6', 'Anchors have first access. Binding ticket within ten working days.'], ['One standard bond', 'Weeks 7–10', 'Co-investors join on the same terms. Issued only when fully covered.'], ['After closing', 'Years 1–5', 'Quarterly report and covenant certificate to the trustee, audited accounts each year, the refinancing window a year before maturity, repayment at maturity.']];
     var cur = { intake: 1, anchor: 2, open: 3, issued: 4 }[PHASE[o.id]];
     html += '<section class="section" id="c-timeline"><p class="label">Ten weeks, every bond</p><h2>Where this stands</h2><ol class="timeline">' + steps.map(function (st, i) {
       return '<li class="' + (i < cur ? 'done' : i === cur ? 'now' : '') + '"><span class="when">' + st[1] + '</span><h3>' + st[0] + '</h3><p>' + st[2] + '</p></li>';
@@ -1125,7 +1136,8 @@
     { when: 'Years 1–5', title: 'After closing', lead: 'Interest from day one, the principal at maturity. One agent tests the covenants every quarter.',
       body: 'Nordic Trustee acts for all holders and tests the covenants each quarter. The company reports each quarter in the fact-file format, so every holder reads the same numbers. If something goes wrong, holders decide collectively through the trustee. The bond is designed to be transferable, in the investor’s own securities account; actual liquidity depends on market demand.',
       who: [['The company', 'Quarterly report and covenant certificate. Pays interest, repays at maturity.'], ['Investors', 'The same numbers for every holder; collective decisions through the trustee.'], ['Vanilla', 'Publishes each report on the platform in the fact-file format.']],
-      out: 'Quarterly certificates for five years, then repayment.', deal: '€30 million repaid at maturity in year five.' }
+      out: 'Quarterly certificates for five years, then repayment.', deal: '€30 million repaid at maturity in year five.',
+      cal: [['Each quarter', 'Report and covenant certificate within two months of quarter end, as in the standard bond terms.'], ['Each year', 'Audited accounts within four months of year end.'], ['Year 4', 'The refinancing window opens, about twelve months before maturity.'], ['Year 5', 'Principal repaid at maturity.']] }
   ];
   var RULES = [
     ['Licence', 'Issuance, placement and settlement run under MiFID II, for professional investors only. A licensed firm is arranger of record until our own investment-firm licence, planned for 2028.'],
@@ -1142,6 +1154,7 @@
         '<ul class="anchor-legend"><li><i class="sw seg-binding" aria-hidden="true"></i><span class="lg-label">Three anchors</span> <span class="lg-val">€21m · 70%</span></li><li><i class="sw seg-orders" aria-hidden="true"></i><span class="lg-label">Four co-investors</span> <span class="lg-val">€9m · 30%</span></li></ul></div></div>' +
       '<ol class="jstages">' + STAGES.map(function (st) {
         return '<li><div class="jmain"><p class="jwhen">' + st.when + '</p><h2>' + st.title + '</h2><p class="jlead">' + st.lead + '</p><p>' + st.body + '</p>' +
+          (st.cal ? '<ul class="jcal" aria-label="Issuer calendar">' + st.cal.map(function (c) { return '<li><span>' + c[0] + '</span>' + c[1] + '</li>'; }).join('') + '</ul>' : '') +
           (st.link ? '<button type="button" class="chip-link jlink" data-route="' + st.link[0] + '">' + st.link[1] + ' <span class="arr" aria-hidden="true">→</span></button>' : '') + '</div>' +
           '<div class="jside"><dl class="who">' + st.who.map(function (w) { return '<div><dt>' + w[0] + '</dt><dd>' + w[1] + '</dd></div>'; }).join('') + '</dl>' +
           '<p class="jout"><strong>Comes out of it.</strong> ' + st.out + '</p><p class="jdealline"><strong>In the €30m deal.</strong> ' + st.deal + '</p></div></li>';
@@ -1250,15 +1263,19 @@
     return s + '</svg>';
   }
   function refiSvg(byYear, years) {
-    var W = 720, H = 250, L = 46, R = 10, T = 26, B = 40, max = Math.max.apply(null, years.map(function (y) { return byYear[y] ? byYear[y].v : 0; })), bw = (W - L - R) / years.length;
-    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="mchart" role="img" aria-label="Maturing volume by year">';
+    var W = 720, H = 260, L = 46, R = 10, T = 26, B = 40, max = Math.max.apply(null, years.map(function (y) { return byYear[y] ? byYear[y].v : 0; })), bw = (W - L - R) / years.length;
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="mchart" role="img" aria-label="Maturing volume by year, stacked by sector">';
     [0.25, 0.5, 0.75, 1].forEach(function (f) { var y = T + (1 - f) * (H - T - B); s += '<line class="grid" x1="' + L + '" y1="' + y + '" x2="' + (W - R) + '" y2="' + y + '"/><text class="axis" x="' + (L - 6) + '" y="' + (y + 3.5) + '" text-anchor="end">' + Math.round(max * f) + '</text>'; });
     years.forEach(function (yr, i) {
-      var d = byYear[yr] || { v: 0, n: 0 }, h = max ? d.v / max * (H - T - B) : 0, x = L + i * bw + bw * 0.14, w = bw * 0.72, y = H - B - h, gold = (yr - 1) <= 2027;
-      s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" fill="' + (gold ? 'var(--gold)' : 'var(--navy)') + '"/>';
-      if (d.v) s += '<text class="bar-label" x="' + (x + w / 2).toFixed(1) + '" y="' + (y - 6).toFixed(1) + '" text-anchor="middle">€' + d.v + 'm</text>';
-      s += '<text class="axis" x="' + (x + w / 2).toFixed(1) + '" y="' + (H - B + 16) + '" text-anchor="middle">' + (yr === 2032 ? '2032+' : yr) + '</text>';
-      if (d.n) s += '<text class="axis" x="' + (x + w / 2).toFixed(1) + '" y="' + (H - B + 29) + '" text-anchor="middle">' + d.n + ' bond' + (d.n > 1 ? 's' : '') + '</text>';
+      var d = byYear[yr] || { v: 0, n: 0, s: {} }, x = L + i * bw + bw * 0.14, w = bw * 0.72, y = H - B, cx = (x + w / 2).toFixed(1), win = (yr - 1) <= 2027;
+      Object.keys(SECTOR_COL).forEach(function (g) {
+        var v = (d.s && d.s[g]) || 0; if (!v) return;
+        var h = v / max * (H - T - B); y -= h;
+        s += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" fill="' + SECTOR_COL[g] + '"><title>' + esc(g + ' · ' + (yr === 2032 ? '2032 and later' : yr) + ' · €' + v + 'm') + '</title></rect>';
+      });
+      if (d.v) s += '<text class="bar-label" x="' + cx + '" y="' + (y - 6).toFixed(1) + '" text-anchor="middle">€' + d.v + 'm</text>';
+      s += '<text class="axis' + (win ? ' win' : '') + '" x="' + cx + '" y="' + (H - B + 16) + '" text-anchor="middle">' + (yr === 2032 ? '2032+' : yr) + '</text>';
+      if (d.n) s += '<text class="axis" x="' + cx + '" y="' + (H - B + 29) + '" text-anchor="middle">' + d.n + ' bond' + (d.n > 1 ? 's' : '') + '</text>';
     });
     return s + '<text class="axis" x="' + L + '" y="14">maturing volume, € million</text></svg>';
   }
@@ -1268,7 +1285,7 @@
     var med = median(active.filter(function (b) { return b.st !== 'Default' && b.st !== 'Standstill'; }).map(effSpread));
     var ni = BONDS.filter(function (b) { return b.iss >= ymAdd(AS_OF, -12); }), niVol = ni.reduce(function (s, b) { return s + b.size; }, 0), niTenor = ni.reduce(function (s, b) { return s + ymDiff(b.iss, b.mat); }, 0) / ni.length;
     var byYear = {}, years = [2026, 2027, 2028, 2029, 2030, 2031, 2032];
-    live.forEach(function (b) { var y = Math.min(+b.mat.slice(0, 4), 2032); byYear[y] = byYear[y] || { v: 0, n: 0 }; byYear[y].v += b.size; byYear[y].n += 1; });
+    live.forEach(function (b) { var y = Math.min(+b.mat.slice(0, 4), 2032); byYear[y] = byYear[y] || { v: 0, n: 0, s: {} }; byYear[y].v += b.size; byYear[y].n += 1; byYear[y].s[b.g] = (byYear[y].s[b.g] || 0) + b.size; });
     var gv = function (y) { return byYear[y] ? byYear[y].v : 0; }, open = live.filter(function (b) { return b.mat <= ymAdd(AS_OF, 12); });
     var chips = live.filter(function (b) { return b.mat <= ymAdd(AS_OF, 30); }).sort(function (a, b) { return a.mat < b.mat ? -1 : 1; }).slice(0, 12);
     var small = active.filter(function (b) { return b.size <= 50; }).length, smallest = Math.min.apply(null, active.map(function (b) { return b.size; }));
@@ -1282,15 +1299,70 @@
         mselect('c', 'All countries', uniq(BONDS.map(function (b) { return b.c; })).sort()) + mselect('g', 'All sectors', uniq(BONDS.map(function (b) { return b.g; })).sort()) + mselect('st', 'All statuses', ['Performing', 'Watch', 'Maturing', 'Standstill', 'Default']) + '</div>' +
       '<div class="table-scroll"><table class="mtable"><caption class="visually-hidden">Outstanding bonds in the dataset</caption><thead id="mkt-head">' + marketHead() + '</thead><tbody id="mkt-body">' + marketRows() + '</tbody></table></div>' +
       '<p class="muted small">Δ par: indicative price minus 100. Indicative yield: coupon, with three-month Euribor at ' + E3M + '% for floating-rate notes, plus the pull to par over the remaining life. Click a column to sort.</p></section>' +
+      '<section class="section"><p class="label">Over time</p><h2>Spread at issue, 2022 to 2026</h2>' +
+      '<p class="muted small">One dot per bond at its issue date, sized by issue; the line is the rolling median of the last seven issues. Floating-rate margin, or a fixed coupon converted over three-month Euribor at ' + E3M + '%.</p>' +
+      timeSvg({}) + sectorLegend() + '</section>' +
       '<section class="section"><p class="label">Market map</p><h2>Spread against size</h2>' +
       '<p class="muted small">One dot per bond: the floating-rate spread, or a fixed coupon converted to a spread over three-month Euribor at ' + E3M + '%. The gold band is the €20–100 million range this platform is built for: ' + small + ' lines of €50 million or less, none below €' + smallest + ' million.</p>' +
       scatterSvg() + '<ul class="mlegend">' + Object.keys(SECTOR_COL).filter(function (g) { return BONDS.some(function (b) { return b.g === g; }); }).map(function (g) { return '<li><i style="background:' + SECTOR_COL[g] + '"></i>' + g + '</li>'; }).join('') + '</ul></section>' +
       '<section class="section"><p class="label">Refinancing calendar</p><h2>Where the next bonds come from</h2>' +
-      '<p class="muted small">Bonds in this format are usually refinanced about twelve months before maturity through their call schedules. Maturing volume by year; standstill and default lines excluded. Gold: the refinancing window opens by mid-2027.</p>' +
+      '<p class="muted small">Bonds in this format are usually refinanced about twelve months before maturity through their call schedules. Maturing volume by year, stacked by sector; standstill and default lines excluded. Gold years: the refinancing window opens by mid-2027.</p>' +
       '<div class="mstats">' + stat(fmtVol(gv(2026) + gv(2027) + gv(2028)), 'maturing 2026–2028') + stat(open.length + ' bonds · ' + fmtVol(open.reduce(function (s, b) { return s + b.size; }, 0)), 'refinancing window already open') + stat(fmtVol(gv(2029) + gv(2030)), 'maturing 2029–2030') + '</div>' +
-      refiSvg(byYear, years) +
+      refiSvg(byYear, years) + sectorLegend().replace(/<li><i class="line">.*?<\/li>/, '') +
       '<h3 style="margin-top:18px">Next refinancing conversations</h3><div class="refichips">' + chips.map(function (b) { return '<div class="refichip"><b>' + esc(b.n) + '</b><span>€' + b.size + 'm · due ' + fmtMY(b.mat) + ' · window from ' + fmtMY(ymAdd(b.mat, -12)) + '</span></div>'; }).join('') + '</div></section>' +
       '<p class="demo-note">Own dataset from public sources. Issuer reference data verified August 2026; price levels indicative. Nothing on this page is an offer, a quote or advice.</p>';
+  }
+
+  /* =========================================================
+     Comparables: the dataset's same-sector lines next to a deal (investor and company side),
+     the spread-at-issue-over-time chart, and the sector legend.
+     ========================================================= */
+  var COMP_SECTOR = { 'van-dijk': 'Industrials', 'nordhaven': 'Services', 'alpenwerk': 'Industrials' };
+  function monthsOf(ym) { var p = ym.split('-').map(Number); return p[0] * 12 + p[1]; }
+  function tenorAtIssue(b) { return ymDiff(b.iss, b.mat); }
+  function sumSize(a) { return a.reduce(function (t, b) { return t + b.size; }, 0); }
+  function sectorLegend(sector) {
+    return '<ul class="mlegend">' + Object.keys(SECTOR_COL).filter(function (g) { return BONDS.some(function (b) { return b.g === g; }); }).map(function (g) {
+      return '<li' + (sector && g !== sector ? ' class="dim"' : '') + '><i style="background:' + SECTOR_COL[g] + '"></i>' + g + '</li>';
+    }).join('') + '<li><i class="line"></i>Rolling median of the last seven issues</li></ul>';
+  }
+  // One dot per bond at its issue date; rolling median over the live lines; optional sector highlight and deal marker.
+  function timeSvg(opts) {
+    opts = opts || {};
+    var W = 720, H = 300, L = 52, R = 18, T = 18, B = 40, ymin = 380, ymax = 1000, m0 = monthsOf('2022-10'), m1 = monthsOf('2026-12');
+    var X = function (ym) { return L + (monthsOf(ym) - m0) / (m1 - m0) * (W - L - R); };
+    var Y = function (v) { return T + (1 - (Math.min(ymax, Math.max(ymin, v)) - ymin) / (ymax - ymin)) * (H - T - B); };
+    var data = BONDS.filter(function (b) { return b.st !== 'Called'; }).sort(function (a, b) { return a.iss < b.iss ? -1 : 1; }), live = data.filter(liveBond);
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="mchart" role="img" aria-label="Spread at issue over time, one dot per bond, with a rolling median">';
+    [400, 500, 600, 700, 800, 900, 1000].forEach(function (v) { s += '<line class="grid" x1="' + L + '" y1="' + Y(v) + '" x2="' + (W - R) + '" y2="' + Y(v) + '"/><text class="axis" x="' + (L - 7) + '" y="' + (Y(v) + 3.5) + '" text-anchor="end">' + v + '</text>'; });
+    [2023, 2024, 2025, 2026].forEach(function (yr) { var x = X(yr + '-01'); s += '<line class="grid" x1="' + x + '" y1="' + T + '" x2="' + x + '" y2="' + (H - B) + '"/><text class="axis" x="' + x + '" y="' + (H - B + 16) + '" text-anchor="middle">' + yr + '</text>'; });
+    s += '<text class="axis" x="14" y="' + (T + H - B) / 2 + '" text-anchor="middle" transform="rotate(-90 14 ' + (T + H - B) / 2 + ')">spread at issue over 3m Euribor, bp</text>';
+    s += '<polyline class="median" points="' + live.map(function (b, i) { return X(b.iss).toFixed(1) + ',' + Y(median(live.slice(Math.max(0, i - 3), i + 4).map(effSpread))).toFixed(1); }).join(' ') + '"/>';
+    data.forEach(function (b) {
+      var hit = !opts.sector || b.g === opts.sector;
+      s += '<circle' + (hit ? '' : ' class="dim"') + ' cx="' + X(b.iss).toFixed(1) + '" cy="' + Y(effSpread(b)).toFixed(1) + '" r="' + (hit ? Math.max(4, Math.sqrt(b.size) / 1.7) : 3.5).toFixed(1) + '" fill="' + SECTOR_COL[b.g] + '"><title>' + esc(b.n + ' · €' + b.size + 'm · ' + coupStr(b) + ' · issued ' + fmtMY(b.iss) + ' · ' + b.st) + '</title></circle>';
+    });
+    if (opts.deal) { var xd = X('2026-10'); s += '<line class="deal" x1="' + xd + '" y1="' + T + '" x2="' + xd + '" y2="' + (H - B) + '"/><text class="deal-label" x="' + (xd - 6) + '" y="' + (T + 12) + '" text-anchor="end">' + esc(opts.deal) + '</text>'; }
+    return s + '</svg>';
+  }
+  function comparables(o, side) {
+    var g = COMP_SECTOR[o.id], rows = BONDS.filter(function (b) { return b.g === g && b.st !== 'Called'; }).sort(function (a, b) { return a.iss < b.iss ? 1 : -1; });
+    var live = rows.filter(liveBond), sp = live.map(effSpread), tenors = live.map(tenorAtIssue), sizes = rows.map(function (b) { return b.size; });
+    var maturing = live.filter(function (b) { return b.mat >= '2026-01' && b.mat <= '2028-12'; }), windows = live.filter(function (b) { return b.mat <= ymAdd('2027-06', 12); });
+    var gl = g.toLowerCase();
+    return '<section class="section" id="sec-comps" aria-labelledby="h-comps"><p class="label">From the market view</p><h2 id="h-comps">Comparables: ' + gl + ' in the dataset</h2>' +
+      '<p class="muted small">' + rows.length + ' bonds in the Nordic format from ' + gl + ' issuers outside the Nordics, as far as public sources reach. Issuer, size, coupon and maturity verified at source in August 2026; prices indicative as of July 2026. Most lines are larger than this deal; the median spread in the dataset is flat across sizes.' +
+        (side === 'company' ? ' The anchors see this next to your proposal.' : '') + '</p>' +
+      '<div class="mstats">' + stat('E+' + Math.round(median(sp)), 'median spread at issue') + stat('E+' + Math.min.apply(null, sp) + ' to E+' + Math.max.apply(null, sp), 'range at issue') + stat(median(tenors).toFixed(1) + ' years', 'median tenor at issue') + stat('€' + Math.round(median(sizes)) + 'm', 'median size') + stat(fmtVol(sumSize(maturing)), gl + ' maturing 2026–2028') + '</div>' +
+      '<p class="deal-line"><strong>This deal.</strong> ' + esc(termText(o, 'amount')) + ', ' + esc(termText(o, 'maturity')) + ', ' + (blank(termText(o, 'coupon')) ? 'spread set with the anchors' : esc(termText(o, 'coupon'))) + '. ' +
+        windows.length + ' of these bonds reach' + (windows.length === 1 ? 'es' : '') + ' the refinancing window by mid-2027.</p>' +
+      timeSvg({ sector: g, deal: 'this deal · spread set with the anchors' }) + sectorLegend(g) +
+      '<div class="table-scroll" style="margin-top:14px"><table class="mtable"><caption class="visually-hidden">Comparable bonds, ' + esc(g) + '</caption><thead><tr><th scope="col">Issuer</th><th scope="col">Business</th><th scope="col" class="num">Size €m</th><th scope="col" class="num">Spread at issue</th><th scope="col" class="num">Tenor</th><th scope="col" class="num">Issued</th><th scope="col" class="num">Price</th><th scope="col">Status</th></tr></thead><tbody>' +
+      rows.map(function (b) {
+        return '<tr><td><strong>' + esc(b.n) + '</strong><br><span class="doc-id">' + b.isin + '</span></td><td class="muted">' + esc(b.s) + '</td><td class="num">' + b.size + '</td><td class="num">E+' + effSpread(b) + (b.t === 'Fixed' ? ' <span class="muted">(' + coupStr(b) + ')</span>' : '') + '</td><td class="num">' + tenorAtIssue(b).toFixed(1) + 'y</td><td class="num">' + fmtMY(b.iss) + '</td><td class="num">' + b.px.toFixed(1) + '</td><td>' + pill(b.st) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<p class="muted small">Spread at issue: the floating-rate margin, or a fixed coupon converted over three-month Euribor at ' + E3M + '%. Prices are indicative, not quotes. The anchors set the price of this deal; nothing here is an indication from VanillaBonds.</p>' +
+      '<button type="button" class="chip-link" data-route="market">Open the market view <span class="arr" aria-hidden="true">→</span></button></section>';
   }
 
 
@@ -1646,7 +1718,7 @@
       accessPanel(o) +
       '<nav class="jump" aria-label="Sections on this page">' +
         [['sec-metrics', 'Key metrics'], ['sec-anchors', 'Anchor investors'], ['sec-performance', 'Financial performance'], ['sec-company', 'Company & operations'],
-         ['sec-financing', 'Proposed financing'], ['sec-diligence', 'Diligence considerations']].map(function (s) {
+         ['sec-financing', 'Proposed financing'], ['sec-comps', 'Comparables'], ['sec-diligence', 'Diligence considerations']].map(function (s) {
           return '<button type="button" class="chip-link" data-jump="' + s[0] + '">' + esc(s[1]) + '</button>';
         }).join('') +
       '</nav>';
@@ -1694,6 +1766,7 @@
       }).join('') +
       '</tbody></table></div></section>';
 
+    html += comparables(o, 'investor');
     // F. Diligence considerations
     var dl = diligence(o);
     html += '<section class="section" id="sec-diligence" aria-labelledby="h-diligence">' +
