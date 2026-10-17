@@ -399,10 +399,24 @@
   .header-side { display: flex; align-items: center; gap: 18px; font-size: 13px; }
   .back-link { color: #C9D1DA; text-decoration: none; white-space: nowrap; }
   .back-link:hover { color: var(--paper); }
-  .role-box { display: flex; align-items: center; gap: 12px; }
-  .role-tag { color: var(--gold); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
-  .link-btn { background: none; border: 0; padding: 0; cursor: pointer; color: #C9D1DA; font-size: 13px; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; white-space: nowrap; }
-  .link-btn:hover { color: var(--paper); text-decoration-color: var(--gold); }
+  .role-box { display: flex; align-items: center; gap: 16px; }
+  .cur { display: flex; flex-direction: column; line-height: 1.15; white-space: nowrap; }
+  .cur small { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C9AAB; }
+  .cur b { color: var(--paper); font-weight: 600; font-size: 14px; }
+  .switch { position: relative; }
+  .switch::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 10px; }   /* keeps the menu open while the pointer crosses the gap */
+  .switch-btn { background: var(--gold); color: var(--navy); border: 1px solid var(--gold); padding: 8px 14px; font-weight: 600; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .switch-btn:hover, .switch.open .switch-btn, .switch:focus-within .switch-btn { background: var(--paper); border-color: var(--paper); }
+  .switch-btn .caret { font-size: 10px; }
+  .switch-menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 270px; background: var(--paper); border: 1px solid var(--border); box-shadow: 0 10px 28px rgba(13, 27, 42, 0.22); list-style: none; margin: 0; padding: 6px; display: none; z-index: 30; }
+  .switch:hover .switch-menu, .switch:focus-within .switch-menu, .switch.open .switch-menu { display: block; }
+  .switch-menu li + li { border-top: 1px solid var(--border); }
+  .switch-menu button { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 10px 12px; cursor: pointer; color: var(--ink); }
+  .switch-menu button:hover, .switch-menu button:focus-visible { background: var(--ivory); outline: none; }
+  .switch-menu b { display: block; color: var(--navy); font-weight: 600; font-size: 14px; }
+  .switch-menu span { font-size: 12.5px; color: var(--muted); }
+  .ghost-btn { background: none; border: 1px solid #3C5A7A; color: #D5DCE3; padding: 7px 12px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+  .ghost-btn:hover { border-color: var(--gold); color: var(--paper); }
   .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
   .role-card { position: relative; text-align: left; background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--navy); padding: 22px 24px 52px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
   .role-card:hover, .role-card:focus-visible { border-color: var(--gold); border-top-color: var(--gold); }
@@ -485,8 +499,10 @@
     .header-inner { flex-wrap: wrap; padding: 0 16px; gap: 0 16px; }
     .wordmark { padding: 14px 0; }
     .primary-nav button { white-space: nowrap; padding: 0 12px; }
-    .header-side { flex: 1 0 100%; justify-content: space-between; gap: 12px; padding: 0 0 10px; border-top: 1px solid #22405F; padding-top: 8px; }
-    .back-link { display: inline; }
+    .header-side { flex: 1 0 100%; flex-wrap: wrap; justify-content: space-between; gap: 10px 12px; padding: 8px 0 10px; border-top: 1px solid #22405F; }
+    .role-box { flex-wrap: wrap; gap: 10px 12px; }
+    .switch-menu { left: 0; right: auto; min-width: 240px; max-width: calc(100vw - 32px); }
+    .back-link { display: inline; margin-left: auto; }
     main { padding: 28px 16px 56px; } .site-foot { padding: 0 16px 32px; }
   }
 
@@ -896,6 +912,7 @@
   var PHASE = { 'van-dijk': 'anchor', 'nordhaven': 'anchor', 'alpenwerk': 'open' };
   var PHASE_LABEL = { intake: 'Fact file in preparation', anchor: 'Anchor window', open: 'Open to co-investors', issued: 'Issued' };
   var ROLE_LABEL = { company: 'Company', anchor: 'Anchor investor', coinvestor: 'Co-investor' };
+  var ROLE_DESC = { company: 'Upload documents, answer questions, confirm as CFO', anchor: 'First access to every deal; indicate and commit', coinvestor: 'Open deals only, on the anchors\u2019 terms' };
   var BASE = JSON.parse(JSON.stringify(OPPORTUNITIES));
   var STATE = (function () { try { return JSON.parse(sessionStorage.getItem('vb-platform')) || {}; } catch (e) { return {}; } })();
   STATE.company = STATE.company || 'van-dijk';
@@ -1077,10 +1094,12 @@
       var cur = currentView === x[0] || (x[0] === 'opportunities' && INVESTOR[currentView]);
       return '<li><button type="button" data-route="' + x[0] + '"' + (cur ? ' aria-current="page"' : '') + '>' + x[1] + '</button></li>';
     }).join('');
-    document.getElementById('role-box').innerHTML = r
-      ? '<span class="role-tag">' + ROLE_LABEL[r] + (r === 'company' ? ' · ' + esc(shortName(OPPORTUNITIES[STATE.company])) : '') + '</span>' +
-        '<button type="button" class="link-btn" data-route="start">Switch role</button><button type="button" class="link-btn" data-action="reset">Reset demo</button>'
-      : '';
+    var others = Object.keys(ROLE_LABEL).filter(function (k) { return k !== r; });
+    document.getElementById('role-box').innerHTML =
+      '<div class="cur"><small>Current view</small><b>' + (r ? ROLE_LABEL[r] + (r === 'company' ? ' · ' + esc(shortName(OPPORTUNITIES[STATE.company])) : '') : 'Not chosen yet') + '</b></div>' +
+      '<div class="switch"><button type="button" class="switch-btn" data-toggle="switch" aria-haspopup="menu" aria-expanded="false">' + (r ? 'Switch view' : 'Choose a view') + ' <span class="caret" aria-hidden="true">\u25BE</span></button>' +
+        '<ul class="switch-menu" role="menu">' + others.map(function (k) { return '<li><button type="button" role="menuitem" data-role="' + k + '"><b>' + ROLE_LABEL[k] + '</b><span>' + ROLE_DESC[k] + '</span></button></li>'; }).join('') + '</ul></div>' +
+      (r ? '<button type="button" class="ghost-btn" data-action="reset">Reset demo</button>' : '');
   }
 
   /* =========================================================
@@ -2051,7 +2070,7 @@
   window.addEventListener('hashchange', function () { render(parseRoute(location.hash), true); });
 
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-route],[data-jump],[data-action],[data-role],[data-sort],[data-bind],[data-withdraw],[data-withdraw-order],[data-mark],[data-unanswer],[data-confirm],[data-unconfirm]');
+    var t = e.target.closest('[data-route],[data-jump],[data-action],[data-role],[data-sort],[data-toggle],[data-bind],[data-withdraw],[data-withdraw-order],[data-mark],[data-unanswer],[data-confirm],[data-unconfirm]');
     if (!t) return;
     var id;
     if (t.hasAttribute('data-route')) { go(t.getAttribute('data-route')); return; }
@@ -2069,7 +2088,12 @@
       document.getElementById('mkt-head').innerHTML = marketHead(); document.getElementById('mkt-body').innerHTML = marketRows(); return;
     }
     if (t.getAttribute('data-action') === 'reset') { STATE = { company: 'van-dijk' }; saveState(); applyState(); go('start'); return; }
-    if (t.hasAttribute('data-role')) { STATE.role = t.getAttribute('data-role'); saveState(); go('home'); return; }
+    if (t.hasAttribute('data-toggle')) { var sw = t.parentNode, open = !sw.classList.contains('open'); sw.classList.toggle('open', open); t.setAttribute('aria-expanded', open ? 'true' : 'false'); return; }
+    if (t.hasAttribute('data-role')) {
+      STATE.role = t.getAttribute('data-role'); saveState();
+      if (currentView === 'start') go('home'); else render(parseRoute(location.hash), false);   // same page from the other side, or that role's home
+      return;
+    }
     if ((id = t.getAttribute('data-bind'))) sub2('indications', id).binding = true;
     else if ((id = t.getAttribute('data-withdraw'))) delete bag('indications')[id];
     else if ((id = t.getAttribute('data-withdraw-order'))) delete bag('orders')[id];
@@ -2078,6 +2102,12 @@
     else if ((id = t.getAttribute('data-confirm'))) { var cfo = cfoOf(OPPORTUNITIES[id]); bag('confirmed')[id] = cfo.name + ', ' + cfo.role + ', ' + today(); }
     else if ((id = t.getAttribute('data-unconfirm'))) delete bag('confirmed')[id];
     commit();
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.switch')) Array.prototype.forEach.call(document.querySelectorAll('.switch.open'), function (sw) { sw.classList.remove('open'); sw.querySelector('.switch-btn').setAttribute('aria-expanded', 'false'); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') Array.prototype.forEach.call(document.querySelectorAll('.switch'), function (sw) { sw.classList.remove('open'); if (sw.contains(document.activeElement)) document.activeElement.blur(); });
   });
   document.addEventListener('submit', function (e) {
     var f = e.target, id, amt, o;
