@@ -9,6 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="assets/css/tokens.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   @font-face { font-family: "Source Sans 3"; src: url("assets/fonts/SourceSans3VF-Upright.otf.woff2") format("woff2-variations"); font-weight: 200 900; font-display: swap; }
   @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
@@ -120,7 +121,16 @@
   .dv-pg { font-family: var(--mono); font-size: 11.5px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 2px; background: none; color: var(--ink-2); cursor: pointer; }
   .dv-pg:hover { border-color: var(--navy); color: var(--navy); }
   .dv-pg[aria-current="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
-  .dv-pages { flex: 1; overflow-y: auto; padding: 22px 26px 40px; }
+  .dv-pages { flex: 1; overflow-y: auto; padding: 22px 26px 40px; position: relative; }
+  .dv-loading { color: var(--muted); font-size: 13px; padding: 20px 0; }
+  .pdfpage { position: relative; margin: 0 auto 18px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10), 0 6px 18px rgba(9, 30, 52, 0.08); overflow: hidden; }
+  .pdfpage canvas { display: block; width: 100%; height: 100%; }
+  .pdfpage .pn { position: absolute; z-index: 2; right: 8px; top: 6px; font: 10.5px var(--mono); color: var(--muted); background: rgba(255,255,255,0.8); padding: 1px 5px; border-radius: 2px; }
+  .textLayer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; line-height: 1; text-size-adjust: none; forced-color-adjust: none; }
+  .textLayer span, .textLayer br { color: transparent; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%; }
+  .textLayer span.hl { background: rgba(179, 154, 87, 0.32); border-radius: 2px; cursor: pointer; }
+  .textLayer span.hl:hover { background: rgba(179, 154, 87, 0.5); }
+  .textLayer span.hl.on { background: rgba(242, 226, 174, 0.8); box-shadow: 0 0 0 2px var(--gold); }
   .dv-page { background: #FFFFFF; color: var(--ink); padding: 32px 40px 28px; min-height: 560px; display: flex; flex-direction: column; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10), 0 6px 18px rgba(9, 30, 52, 0.08); }
   .dv-page .rh { display: flex; justify-content: space-between; gap: 16px; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 14px; }
   .dv-page .rf { margin-top: auto; padding-top: 24px; display: flex; justify-content: space-between; gap: 16px; font-size: 10.5px; color: var(--muted); }
@@ -346,37 +356,36 @@
     });
   }
 
-  // ---------- source viewer: the whole document with every extracted fact highlighted; previous / next item; click a highlight to jump to its row ----------
+  // ---------- source viewer: the original PDF rendered page by page (PDF.js), every extracted fact highlighted on the page; the page text is the fallback ----------
   var ORDERED = [], POS = {}, BLOCK_OF = {};
   D.blocks.forEach(function (b) { b.fields.forEach(function (fd) {
     BLOCK_OF[fd.id] = b;
     F.filter(function (f) { return f.field === fd.id; }).sort(function (a, b) { return pcmp(a.period, b.period) || (DOC[a.src].i - DOC[b.src].i) || ((a.page || 0) - (b.page || 0)); })
       .forEach(function (f) { if (f.page && D.pages[f.src] && D.pages[f.src][f.page]) { POS[f.id] = ORDERED.length; ORDERED.push(f.id); } });
   }); });
-  var DV = { src: null, active: null }, DOCHTML = {};
+  var DV = { src: null, active: null, pdf: null, task: null, pages: {}, scale: 1, io: null, textMode: !!Q.get('text') || !window.pdfjsLib }, DOCHTML = {};
+  if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   function flow(t) { return (t || '').split(/\n[ \t]*\n+/).map(function (par) { return par.replace(/\s+/g, ' ').trim(); }).filter(Boolean).join('\n\n'); }
   function qre(q) { return new RegExp(q.trim().split(/\s+/).map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('\\s+')); }
   function pagesOf(src) { return Object.keys(D.pages[src] || {}).map(Number).sort(function (a, b) { return a - b; }); }
   function label(f) { return FIELD[f.field] ? FIELD[f.field].label : f.field; }
-  // one page: the PDF text flowed, every fact read from this page marked; facts sharing a quote share one mark
+  function factsOn(src, page) { return F.filter(function (f) { return f.src === src && f.page === page && f.quote; }); }
+  function tip(ids) { return ids.map(function (id) { return id + ' · ' + label(BYID[id]); }).join(' | ') + ' · ' + BLOCK_OF[BYID[ids[0]].field].title + ' · click to jump to it'; }
+  function scrollPagesTo(el, center) { var pages = $('#dv-pages'); pages.scrollTop = el.getBoundingClientRect().top - pages.getBoundingClientRect().top + pages.scrollTop - (center ? pages.clientHeight / 2 : 12); }
+  // --- fallback: the page text of every referenced page, flowed, with the quotes marked ---
   function pageHtml(src, page) {
     var text = flow(D.pages[src][page]), spans = [], d = DOC[src];
-    F.filter(function (f) { return f.src === src && f.page === page && f.quote; }).forEach(function (f) {
+    factsOn(src, page).forEach(function (f) {
       var m = qre(f.quote).exec(text); if (!m) return;
       var same = spans.filter(function (sp) { return sp.s === m.index && sp.e === m.index + m[0].length; })[0];
       if (same) same.ids.push(f.id); else spans.push({ s: m.index, e: m.index + m[0].length, ids: [f.id] });
     });
     spans.sort(function (a, b) { return a.s - b.s; });
     var out = '', pos = 0;
-    spans.forEach(function (sp) {
-      if (sp.s < pos) return;
-      var tip = sp.ids.map(function (id) { return id + ' · ' + label(BYID[id]); }).join(' | ') + ' · ' + BLOCK_OF[BYID[sp.ids[0]].field].title + ' · click to jump to it';
-      out += esc(text.slice(pos, sp.s)) + '<mark data-f="' + sp.ids.join(' ') + '" title="' + esc(tip) + '">' + esc(text.slice(sp.s, sp.e)) + '</mark>'; pos = sp.e;
-    });
+    spans.forEach(function (sp) { if (sp.s < pos) return; out += esc(text.slice(pos, sp.s)) + '<mark data-f="' + sp.ids.join(' ') + '" title="' + esc(tip(sp.ids)) + '">' + esc(text.slice(sp.s, sp.e)) + '</mark>'; pos = sp.e; });
     out += esc(text.slice(pos));
     return '<article class="dv-page" id="dv-p-' + page + '" aria-label="' + esc(d.file + ', page ' + page) + '"><div class="rh"><span>' + esc(d.file) + '</span><span>Page ' + page + ' of ' + d.pages + '</span></div><div class="dv-text">' + out + '</div></article>';
   }
-  // the whole document: every page that carries a fact, in order, with the gaps named
   function docHtml(src) {
     if (DOCHTML[src]) return DOCHTML[src];
     var h = '', prev = 0;
@@ -385,7 +394,68 @@
     if (DOC[src].pages > prev) h += gap(prev + 1, DOC[src].pages);
     return (DOCHTML[src] = h);
   }
-  // the row or cell of an item on the main page: highlighted, and scrolled to when the viewer led the way
+  function openText(src) {
+    var d = DOC[src]; stopPdf(); DV.src = src; $('#dv-pages').innerHTML = docHtml(src);
+    $('#dv-meta').textContent = docTitle(d) + ' · page text · ' + pagesOf(src).length + ' of ' + d.pages + ' pages carry extracted facts, each one highlighted';
+  }
+  // --- the original PDF: one shell per page, rendered when near the viewport, released when far away ---
+  function stopPdf() { if (DV.task) { try { DV.task.destroy(); } catch (e) { /* already gone */ } } if (DV.io) DV.io.disconnect(); DV.task = null; DV.pdf = null; DV.pages = {}; DV.io = null; }
+  function openPdf(src) {
+    var d = DOC[src], pages = $('#dv-pages');
+    stopPdf(); DV.src = src;
+    pages.innerHTML = '<div class="dv-loading">Loading ' + esc(d.file) + (d.bytes ? ' (' + Math.round(d.bytes / 1048576) + ' MB)' : '') + '…</div>';
+    $('#dv-meta').textContent = docTitle(d) + ' · loading the original';
+    var task = DV.task = pdfjsLib.getDocument({ url: d.pdf });
+    task.onProgress = function (p) { if (p.total && DV.task === task) $('#dv-meta').textContent = docTitle(d) + ' · loading the original · ' + Math.round(100 * p.loaded / p.total) + '%'; };
+    return task.promise.then(function (pdf) {
+      if (DV.task !== task) return null;
+      DV.pdf = pdf;
+      return pdf.getPage(1).then(function (p1) {
+        if (DV.task !== task) return null;
+        var vp = p1.getViewport({ scale: 1 }), w = Math.max(320, pages.clientWidth - 52);
+        DV.scale = w / vp.width; var h = Math.round(vp.height * DV.scale), html = '';
+        for (var n = 1; n <= pdf.numPages; n++) html += '<div class="pdfpage" id="dv-p-' + n + '" data-page="' + n + '" style="width:' + Math.round(w) + 'px;height:' + h + 'px"><span class="pn">' + n + '</span></div>';
+        pages.innerHTML = html;
+        $('#dv-meta').textContent = docTitle(d) + ' · the original, ' + pdf.numPages + ' pages · ' + pagesOf(src).length + ' pages carry extracted facts, highlighted on the page';
+        DV.io = new IntersectionObserver(function (es) { es.forEach(function (e) { var n = +e.target.getAttribute('data-page'); if (e.isIntersecting) renderPage(n); else releasePage(n); }); }, { root: pages, rootMargin: '900px 0px' });
+        Array.prototype.forEach.call(pages.querySelectorAll('.pdfpage'), function (el) { DV.io.observe(el); });
+        return pdf;
+      });
+    });
+  }
+  function renderPage(n) {
+    var st = DV.pages[n]; if (st) return st.promise;
+    var el = document.getElementById('dv-p-' + n), pdf = DV.pdf, src = DV.src; if (!el || !pdf) return Promise.resolve();
+    st = DV.pages[n] = { done: false };
+    st.promise = pdf.getPage(n).then(function (page) {
+      if (DV.pdf !== pdf || DV.pages[n] !== st) return;
+      var vp = page.getViewport({ scale: DV.scale }), dpr = window.devicePixelRatio || 1;
+      el.style.height = Math.round(vp.height) + 'px'; el.style.setProperty('--scale-factor', DV.scale);
+      var c = document.createElement('canvas'); c.width = Math.round(vp.width * dpr); c.height = Math.round(vp.height * dpr); el.appendChild(c);
+      var tl = document.createElement('div'); tl.className = 'textLayer'; el.appendChild(tl);
+      return page.render({ canvasContext: c.getContext('2d'), viewport: vp, transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null }).promise
+        .then(function () { return page.getTextContent(); })
+        .then(function (tc) { var divs = []; return pdfjsLib.renderTextLayer({ textContentSource: tc, container: tl, viewport: vp, textDivs: divs }).promise.then(function () { markPdf(src, n, tc, divs); }); })
+        .then(function () { st.done = true; });
+    });
+    return st.promise;
+  }
+  function releasePage(n) { var st = DV.pages[n]; if (!st || !st.done) return; var el = document.getElementById('dv-p-' + n); if (el) el.innerHTML = '<span class="pn">' + n + '</span>'; delete DV.pages[n]; }
+  // the facts read from this page, found in the text layer and marked span by span
+  function markPdf(src, n, tc, divs) {
+    var joined = '', spans = [];
+    tc.items.forEach(function (it, i) { spans.push({ s: joined.length, e: joined.length + (it.str || '').length, i: i }); joined += (it.str || '') + (it.hasEOL ? '\n' : ' '); });
+    factsOn(src, n).forEach(function (f) {
+      var m = qre(f.quote).exec(joined); if (!m) return;
+      var a = m.index, b = m.index + m[0].length;
+      spans.forEach(function (sp) {
+        if (!(sp.e > a && sp.s < b) || !divs[sp.i] || !(it = tc.items[sp.i]).str.trim()) return;
+        var dv = divs[sp.i], ids = (dv.getAttribute('data-f') || '').split(' ').filter(Boolean); if (ids.indexOf(f.id) < 0) ids.push(f.id);
+        dv.classList.add('hl'); dv.setAttribute('data-f', ids.join(' ')); dv.title = tip(ids); if (f.id === DV.active) dv.classList.add('on');
+      });
+    });
+    var it;
+  }
   function highlightMain(id, toMain) {
     Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"], .cell-btn.on, tr.fact-on'), function (x) { x.classList.remove('on', 'fact-on'); if (x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed', 'false'); });
     var btn = document.querySelector('.view-btn[data-view="' + id + '"]'), cb = document.querySelector('.cell-btn[data-view="' + id + '"]'), row = document.getElementById('row-' + id);
@@ -396,21 +466,35 @@
     var f = BYID[id]; if (!f || POS[id] == null) return;
     if (MODE === 'embed') { highlightMain(id, toMain); post({ type: 'dossier-view', slug: slug, id: id }); return; }
     var d = DOC[f.src], pages = $('#dv-pages');
-    if (DV.src !== f.src) {
-      pages.innerHTML = docHtml(f.src); DV.src = f.src;
-      $('#dv-title').textContent = d.file; $('#dv-meta').textContent = docTitle(d) + ' · ' + pagesOf(f.src).length + ' of ' + d.pages + ' pages carry extracted facts, each one highlighted';
-    }
-    DV.active = id; $('#doc-viewer').hidden = false; document.body.classList.add('dv-open');
+    DV.active = id; $('#doc-viewer').hidden = false; document.body.classList.add('dv-open'); $('#dv-title').textContent = d.file;
+    var usePdf = !DV.textMode && !!d.pdf, ready;
+    if (DV.src === f.src && (usePdf ? DV.pdf || DV.task : true)) ready = DV.task && !DV.pdf ? DV.task.promise : Promise.resolve();
+    else if (usePdf) ready = openPdf(f.src);
+    else { openText(f.src); ready = Promise.resolve(); }
     var b = BLOCK_OF[f.field], i = POS[id];
     $('#dv-strip').innerHTML = '<span class="lbl">Item</span><b>' + esc(id) + '</b><span>' + esc(label(f)) + (f.period ? ' · ' + esc(f.period) : '') + '</span><span class="dv-pg" aria-current="true">page ' + f.page + '</span>' +
       '<a class="dv-sec" href="#row-' + id + '" data-jump="' + id + '">' + esc(b.title) + ' ↗</a>' +
       '<span class="dv-nav"><button type="button" class="dv-pg" data-step="-1"' + (i === 0 ? ' disabled' : '') + '>‹ Previous</button><span class="muted">' + (i + 1) + ' of ' + ORDERED.length + '</span><button type="button" class="dv-pg" data-step="1"' + (i === ORDERED.length - 1 ? ' disabled' : '') + '>Next ›</button></span>' +
       '<div class="dv-quote"><span class="lbl">' + (f.found ? 'Quote as extracted' : 'Quote as extracted · not found verbatim on the page text') + '</span>' + esc(f.quote || f.text) + '</div>';
-    Array.prototype.forEach.call(pages.querySelectorAll('mark.on'), function (m) { m.classList.remove('on'); });
-    var mk = pages.querySelector('mark[data-f~="' + id + '"]'), pg = document.getElementById('dv-p-' + f.page);
-    var at = function (el) { return el.getBoundingClientRect().top - pages.getBoundingClientRect().top + pages.scrollTop; };
-    if (mk) { mk.classList.add('on'); pages.scrollTop = at(mk) - pages.clientHeight / 2; } else if (pg) pages.scrollTop = at(pg) - 12;
     if (MODE === 'viewer') post({ type: toMain ? 'dossier-jump' : 'dossier-active', slug: slug, id: id }); else highlightMain(id, toMain);
+    ready.then(function () {
+      if (DV.src !== f.src || DV.active !== id) return;
+      Array.prototype.forEach.call(pages.querySelectorAll('.on'), function (m) { m.classList.remove('on'); });
+      var pg = document.getElementById('dv-p-' + f.page); if (!pg) return;
+      if (DV.pdf) {
+        scrollPagesTo(pg, false);
+        renderPage(f.page).then(function () {
+          if (DV.active !== id) return;
+          var hits = pg.querySelectorAll('.hl[data-f~="' + id + '"]');
+          Array.prototype.forEach.call(hits, function (x) { x.classList.add('on'); });
+          var go = function () { if (DV.active !== id) return; if (hits.length) scrollPagesTo(hits[0], true); else scrollPagesTo(pg, false); };
+          go(); requestAnimationFrame(go);
+        });
+      } else {
+        var mk = pages.querySelector('mark[data-f~="' + id + '"]');
+        if (mk) { mk.classList.add('on'); scrollPagesTo(mk, true); } else scrollPagesTo(pg, false);
+      }
+    }).catch(function () { if (!DV.textMode) { DV.textMode = true; DV.src = null; showFact(id, false); } });   // no PDF to be had: the page text
   }
   function step(n) { var i = POS[DV.active]; if (i == null) return; var j = i + n; if (j >= 0 && j < ORDERED.length) showFact(ORDERED[j], true); }
   function closeViewer() { if (MODE === 'viewer') { post({ type: 'dossier-close', slug: slug }); return; } $('#doc-viewer').hidden = true; document.body.classList.remove('dv-open'); Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"]'), function (b) { b.setAttribute('aria-pressed', 'false'); }); }
@@ -424,7 +508,7 @@
   if (MODE === 'viewer') { post({ type: 'dossier-ready', slug: slug }); if (Q.get('item')) showFact(Q.get('item'), false); }
   document.addEventListener('click', function (e) {
     var v = e.target.closest('[data-view]'); if (v) { showFact(v.getAttribute('data-view'), false); return; }
-    var m = e.target.closest('.dv-text mark'); if (m) { showFact(m.getAttribute('data-f').split(' ')[0], true); return; }
+    var m = e.target.closest('.dv-text mark, .textLayer .hl'); if (m) { showFact(m.getAttribute('data-f').split(' ')[0], true); return; }
     var st = e.target.closest('[data-step]'); if (st) { step(+st.getAttribute('data-step')); return; }
     var j = e.target.closest('.dv-sec'); if (j) { e.preventDefault(); showFact(j.getAttribute('data-jump'), true); return; }
     if (e.target.closest('#dv-close')) closeViewer();

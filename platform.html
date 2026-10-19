@@ -445,6 +445,8 @@
   .header-inner { gap: 24px; }
   .primary-nav { margin-right: auto; }
   .dossier-frame { display: block; width: 100%; height: 82vh; border: 1px solid var(--border); background: var(--paper); }
+  .windows { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12.5px; color: var(--ink-2); margin: 8px 0 10px; }
+  .windows b { color: var(--navy); font-weight: 600; } .windows .left { color: var(--gold-ink); font-weight: 600; }
   #dossier-viewer { position: fixed; top: 0; right: 0; bottom: 0; width: min(50vw, 820px); z-index: 60; background: #E4E3DE; border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.10); }
   #dossier-viewer[hidden] { display: none; }
   #dossier-viewer iframe { display: block; width: 100%; height: 100%; border: 0; }
@@ -1003,6 +1005,26 @@
   var PHASE = { 'van-dijk': 'anchor', 'nordhaven': 'anchor', 'alpenwerk': 'open' };
   Object.keys(window.PLATFORM_DEALS || {}).forEach(function (k) { PHASE[k] = window.PLATFORM_DEALS[k].phase || 'anchor'; });
   PHASE['van-dijk'] = 'intake'; OPPORTUNITIES['van-dijk'].anchors = [];   // the story of the demo: Van Dijk delivers documents, Katjes is in the anchor window, Fastned is open to co-investors
+  // The ten-working-day anchor window and the co-investor book that follows it, per deal (illustrative dates).
+  var WINDOWS = { 'van-dijk': { factFileDue: '2026-11-02', anchorOpens: '2026-11-03', anchorCloses: '2026-11-16', bookOpens: '2026-11-17', bookCloses: '2026-12-01' },
+                  'nordhaven': { anchorOpens: '2026-10-06', anchorCloses: '2026-10-19', bookOpens: '2026-10-20', bookCloses: '2026-11-03' },
+                  'alpenwerk': { anchorOpens: '2026-09-21', anchorCloses: '2026-10-02', bookOpens: '2026-10-05', bookCloses: '2026-10-23' } };
+  Object.keys(window.PLATFORM_DEALS || {}).forEach(function (k) { if (window.PLATFORM_DEALS[k].windows) WINDOWS[k] = window.PLATFORM_DEALS[k].windows; });
+  function fmtDate(iso) { return iso ? new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : ''; }
+  function workdaysLeft(iso) { var t = new Date(); t.setHours(0, 0, 0, 0); var end = new Date(iso + 'T00:00:00'); if (!(end >= t)) return 0; var n = 0, d = new Date(t); while (d < end) { d.setDate(d.getDate() + 1); if (d.getDay() % 6) n++; } return n; }
+  function daysWord(n) { return n + ' working day' + (n === 1 ? '' : 's'); }
+  function windowsLine(o) {
+    var w = WINDOWS[o.id]; if (!w) return '';
+    var ph = PHASE[o.id], a, c;
+    if (ph === 'intake') { a = 'window ' + fmtDate(w.anchorOpens) + ' \u2013 ' + fmtDate(w.anchorCloses) + ', once the fact file is complete (expected ' + fmtDate(w.factFileDue) + ')'; c = 'book ' + fmtDate(w.bookOpens) + ' \u2013 ' + fmtDate(w.bookCloses); }
+    else if (ph === 'anchor') { a = 'window closes ' + fmtDate(w.anchorCloses) + ' \u00b7 <span class="left">' + daysWord(workdaysLeft(w.anchorCloses)) + ' left</span>'; c = 'book ' + fmtDate(w.bookOpens) + ' \u2013 ' + fmtDate(w.bookCloses) + ', after the anchors'; }
+    else if (ph === 'open') { a = 'window closed ' + fmtDate(w.anchorCloses); c = 'book closes ' + fmtDate(w.bookCloses) + ' \u00b7 <span class="left">' + daysWord(workdaysLeft(w.bookCloses)) + ' left</span>'; }
+    else { a = 'issued'; c = ''; }
+    return '<div class="windows"><span><b>Anchors</b> \u00b7 ' + a + '</span>' + (c ? '<span><b>Co-investors</b> \u00b7 ' + c + '</span>' : '') + '</div>';
+  }
+  // The list in the order the investor works: what needs a decision now comes first.
+  var LIST_RANK = { anchor: { anchor: 0, open: 1, intake: 2, issued: 3 }, coinvestor: { open: 0, anchor: 1, intake: 2, issued: 3 } };
+  function listOrder() { var rk = LIST_RANK[role()]; return rk ? ORDER.slice().sort(function (a, b) { return (rk[PHASE[a]] - rk[PHASE[b]]) || (ORDER.indexOf(a) - ORDER.indexOf(b)); }) : ORDER; }
   var PHASE_LABEL = { intake: 'Fact file in preparation', anchor: 'Anchor window', open: 'Open to co-investors', issued: 'Issued' };
   var ROLE_LABEL = { company: 'Company', anchor: 'Anchor investor', coinvestor: 'Co-investor' };
   var ROLE_DESC = { company: 'Upload documents, answer questions, confirm as CFO', anchor: 'First access to every deal; indicate and commit', coinvestor: 'Open deals only, on the anchors\u2019 terms' };
@@ -1110,7 +1132,7 @@
       '<div class="opp-summary"><div class="opp-id"><h2>Mid-sized company · ' + esc(c.industry) + '</h2>' +
         '<p class="meta-line"><span>' + esc(c.country) + '</span><span>Name disclosed after the anchor window</span></p>' +
         '<p class="opp-desc">Anchors are reviewing the fact file. Co-investors are invited once the anchors have committed, on the same terms.</p></div>' +
-      '<div class="chips">' + phaseChip(o) + '</div>' +
+      '<div class="chips">' + phaseChip(o) + '</div>' + windowsLine(o) +
       '<div class="opp-metrics"><dl class="mlist"><div class="m issue"><dt>Proposed issue</dt><dd>' + esc(termText(o, 'amount')) + '</dd></div>' +
         '<div class="m"><dt>Tenor</dt><dd>' + esc(termText(o, 'maturity')) + '</dd></div><div class="m"><dt>Anchor window</dt><dd>' + esc(anchorShort(o, ' + ')) + '</dd></div></dl>' +
         '<span class="opp-locked">Not yet open to co-investors</span></div></div></li>';
@@ -1120,7 +1142,7 @@
     var s = anchorSummary(o), ph = PHASE[o.id], ind = bag('indications')[o.id], you = o.anchors.filter(function (a) { return a.you; })[0];
     if (role() === 'anchor' && ph === 'anchor') {
       var room = Math.max(0, s.issue - s.potential);
-      return '<div class="access"><div><p class="eyebrow">Anchor window</p><h2>First access. Binding ticket within ten working days.</h2>' +
+      return '<div class="access"><div><p class="eyebrow">Anchor window</p><h2>First access. Binding ticket within ten working days.</h2>' + windowsLine(o) +
         '<p>' + esc(anchorShort(o, ' + ', true)) + ' so far. Capacity is reserved for anchors before co-investors are invited; coupon, security and covenants are settled with the anchors.</p></div>' +
         (you
           ? '<div class="access-act"><p class="label">Your participation</p><div class="val">' + eurAmt(you.amountEURm) + ' · ' + esc(STAGE_LABEL[you.status]) + '</div>' +
@@ -1131,11 +1153,11 @@
             '<p class="small muted">Non-binding. In a live opportunity the indication is made in the institution’s own name.</p></form>') +
         '</div>';
     }
-    if (role() === 'anchor' && ph === 'intake') return '<div class="access closed"><p class="eyebrow">Fact file in preparation</p><p>The company is delivering its documents and answering the reviewer\u2019s questions; ' + outstanding(o).length + ' requested documents are outstanding. The anchor window opens once the fact file is complete and the CFO has confirmed it.</p></div>';
+    if (role() === 'anchor' && ph === 'intake') return '<div class="access closed"><p class="eyebrow">Fact file in preparation</p><p>The company is delivering its documents and answering the reviewer\u2019s questions; ' + outstanding(o).length + ' requested documents are outstanding. The anchor window opens once the fact file is complete and the CFO has confirmed it.</p>' + windowsLine(o) + '</div>';
     if (role() === 'anchor') return '<div class="access closed"><p class="eyebrow">Anchor window closed</p><p>Anchors committed ' + eurAmt(s.committed) + ' (' + fmtShare(shareOfIssue(o, s.committed)) + '). The remaining ' + eurAmt(s.remaining) + ' is open to co-investors on the same terms.</p></div>';
     if (role() === 'coinvestor' && ph === 'open') {
       var rem = Math.max(0, s.issue - coverTotal(o)), full = rem < 1e-9;
-      return '<div class="access"><div><p class="eyebrow">Open to co-investors</p><h2>' + (full ? 'Fully covered. Ready to issue.' : eurAmt(rem) + ' still to be covered.') + '</h2>' +
+      return '<div class="access"><div><p class="eyebrow">Open to co-investors</p><h2>' + (full ? 'Fully covered. Ready to issue.' : eurAmt(rem) + ' still to be covered.') + '</h2>' + windowsLine(o) +
         '<p>Anchors committed ' + eurAmt(s.committed) + ' (' + fmtShare(shareOfIssue(o, s.committed)) + '). Co-investors join on the same terms, in pieces of €100,000. The bond is issued only when fully covered.</p>' + coverBar(o) + '</div>' +
         '<form class="access-act" data-order="' + o.id + '"><p class="label">' + (o.orders ? 'Your order · ' + eurAmt(o.orders) : 'Place an order · EUR m') + '</p>' +
         (full ? '<p class="small muted">The book is covered.</p>' : '<div class="field"><input name="amt" type="number" min="0.1" max="' + fmtAmt(rem) + '" step="0.1" value="' + fmtAmt(Math.min(rem, 2)) + '" required aria-label="Order in EUR millions"><button type="submit" class="btn">' + (o.orders ? 'Add to order' : 'Place order') + '</button></div>') +
@@ -1777,7 +1799,7 @@
       '<p class="demo-note">' + demoNote() + '</p>' +
       '<ol class="opp-list">';
 
-    ORDER.forEach(function (id) {
+    listOrder().forEach(function (id) {
       var o = OPPORTUNITIES[id], c = o.company, d = derived(o, LAST);
       if (!canSee(o)) { html += teaserCard(o); return; }
       html += '<li class="opp">' +
@@ -1785,7 +1807,7 @@
           '<div class="opp-id"><h2 id="opp-' + id + '">' + esc(c.name) + '</h2>' +
             '<p class="meta-line"><span>' + esc(c.country) + '</span><span>' + esc(c.industry) + '</span></p>' +
             '<p class="opp-desc" title="' + esc(c.description) + '">' + esc(firstSentence(c.description)) + '</p></div>' +
-          '<div class="chips">' + statusChip(o) + phaseChip(o) + dossierChip(o) + '</div>' +
+          '<div class="chips">' + statusChip(o) + phaseChip(o) + dossierChip(o) + '</div>' + windowsLine(o) +
           '<div class="opp-metrics"><dl class="mlist">' +
             '<div class="m issue"><dt>Proposed issue</dt><dd>' + esc(termText(o, 'amount')) + '</dd></div>' +
             '<div class="m"><dt>Tenor</dt><dd>' + esc(termText(o, 'maturity')) + '</dd></div>' +

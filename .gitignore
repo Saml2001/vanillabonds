@@ -13,3 +13,6 @@ VanillaBonds Pitch*
 Website Pitch*
 WebsitePitch*
 VanillaBonds Logo*
+
+# the original PDFs of the fact dossier: a symlink to mvp/companies/<slug>/docs, local only
+dossier-data/pdf/
