@@ -445,6 +445,10 @@
   .header-inner { gap: 24px; }
   .primary-nav { margin-right: auto; }
   .dossier-frame { display: block; width: 100%; height: 82vh; border: 1px solid var(--border); background: var(--paper); }
+  #dossier-viewer { position: fixed; top: 0; right: 0; bottom: 0; width: min(50vw, 820px); z-index: 60; background: #E4E3DE; border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.10); }
+  #dossier-viewer[hidden] { display: none; }
+  #dossier-viewer iframe { display: block; width: 100%; height: 100%; border: 0; }
+  @media (max-width: 1000px) { #dossier-viewer { display: none !important; } }
   .header-side { display: flex; align-items: center; gap: 18px; font-size: 13px; }
   .back-link { color: #C9D1DA; text-decoration: none; white-space: nowrap; }
   .back-link:hover { color: var(--paper); }
@@ -605,6 +609,7 @@
   <section class="screen" id="screen-overview" aria-labelledby="h-overview" hidden></section>
   <section class="screen" id="screen-documents" aria-labelledby="h-documents" hidden></section>
 </main>
+<aside id="dossier-viewer" hidden aria-label="Source document of the fact dossier"><iframe id="dossier-viewer-frame" title="Source document of the fact dossier"></iframe></aside>
 
 <article id="print-dossier" class="paper" aria-hidden="true"></article>
 <footer class="site-foot"><p>Platform demonstration. Fictional cases are marked as such; a case built from a company’s own public reports is pending review and carries an illustrative financing that the company has not proposed. All institutions and participation amounts are fictional. Nothing on this page is an offer of securities, investment advice or a solicitation of an offer. Any future offering would be addressed to professional investors within the meaning of MiFID&nbsp;II only, in minimum denominations of €100,000. Files chosen in the company view stay in your browser; nothing is uploaded. © 2026 VanillaBonds.</p></footer>
@@ -989,7 +994,7 @@
     }
   });
   Object.keys(window.PLATFORM_DEALS || {}).forEach(function (k) { OPPORTUNITIES[k] = window.PLATFORM_DEALS[k]; });   // companies from the MVP: mvp/export_dossier.py -> dossier-data/deals.js
-  var ORDER = ['van-dijk', 'nordhaven', 'alpenwerk'].concat(Object.keys(window.PLATFORM_DEALS || {}));
+  var ORDER = ['van-dijk'].concat(Object.keys(window.PLATFORM_DEALS || {}));   // Nordhaven and Alpenwerk stay in the data but out of the lists (19 Oct 2026)
   /* =========================================================
      Platform layer: phases, roles, session state
      Pristine data stays in BASE; what the demo user does (uploads, answers,
@@ -1019,12 +1024,36 @@
     return '<section class="section" id="' + (id || 'sec-factdossier') + '" aria-labelledby="h-factdossier"><p class="label">Fact dossier \u00b7 beta</p><h2 id="h-factdossier">Fact dossier, every fact with its source</h2>' +
       '<p class="muted small">Thirteen blocks in the anchors\u2019 format from the company\u2019s public reports: the facts with document and page, the arithmetic with its formula, and the source page beside each fact. Pending review by a named reviewer. ' +
       '<a href="dossier.html?c=' + o.dossier + '" target="_blank" rel="noopener">Open in its own tab</a>.</p>' +
-      '<iframe class="dossier-frame" src="dossier.html?c=' + o.dossier + '&embed=1" title="Fact dossier of ' + esc(o.company.name) + '" loading="lazy"></iframe></section>';
+      '<iframe class="dossier-frame" src="dossier.html?c=' + o.dossier + '&embed=1" title="Fact dossier of ' + esc(o.company.name) + '"></iframe></section>';
   }
   function realDeals() { return ORDER.filter(function (id) { return OPPORTUNITIES[id].real; }); }
+  // The embedded dossier asks the platform to open a document; the platform shows it full height on the right (dossier.html in viewer mode)
+  // and relays the active item back to the embedded dossier, which highlights and scrolls to the row.
+  var DVX = { slug: null, ready: false, pending: null };
+  function openDossierViewer(slug, id) {
+    var panel = document.getElementById('dossier-viewer'), fr = document.getElementById('dossier-viewer-frame');
+    if (DVX.slug !== slug) { DVX.slug = slug; DVX.ready = false; fr.src = 'dossier.html?c=' + encodeURIComponent(slug) + '&viewer=1'; }
+    panel.hidden = false; document.body.classList.add('dv-open');
+    if (DVX.ready) fr.contentWindow.postMessage({ type: 'show', slug: slug, id: id }, '*'); else DVX.pending = id;
+  }
+  function closeDossierViewer() { var p = document.getElementById('dossier-viewer'); if (!p || p.hidden) return; p.hidden = true; document.body.classList.remove('dv-open'); }
+  window.addEventListener('message', function (e) {
+    var m = e.data || {}; if (typeof m.type !== 'string' || m.type.indexOf('dossier-') !== 0) return;
+    var fr = document.getElementById('dossier-viewer-frame'), emb = document.querySelector('iframe.dossier-frame');
+    if (m.type === 'dossier-view') openDossierViewer(m.slug, m.id);
+    else if (m.type === 'dossier-ready') { DVX.ready = true; if (DVX.pending) { fr.contentWindow.postMessage({ type: 'show', slug: m.slug, id: DVX.pending }, '*'); DVX.pending = null; } }
+    else if (m.type === 'dossier-active' || m.type === 'dossier-jump') {
+      if (!emb) return;
+      emb.contentWindow.postMessage(m, '*');
+      var r = emb.getBoundingClientRect();
+      if (m.type === 'dossier-jump' && (r.top < 0 || r.bottom > window.innerHeight)) window.scrollTo({ top: r.top + window.pageYOffset - 12 });
+    }
+    else if (m.type === 'dossier-close') closeDossierViewer();
+  });
   function demoNote() {
     var rd = realDeals();
-    return 'Van Dijk, Nordhaven and Alpenwerk and all anchor institutions are fictional demonstration examples; their figures, documents and participation amounts are illustrative.' +
+    var fd = ORDER.filter(function (id) { return !OPPORTUNITIES[id].real; }).map(function (id) { return shortName(OPPORTUNITIES[id]); });
+    return (fd.length ? fd.join(', ') + (fd.length > 1 ? ' are' : ' is') + ' a fictional demonstration example' + (fd.length > 1 ? 's' : '') + ', as are all anchor institutions; their figures, documents and participation amounts are illustrative.' : 'All anchor institutions are fictional; participation amounts are illustrative.') +
       (rd.length ? ' ' + rd.map(function (id) { return shortName(OPPORTUNITIES[id]); }).join(' and ') + (rd.length > 1 ? ' are' : ' is') + ' shown from the company\u2019s own public reports, extracted and pending review, with an illustrative financing that the company has not proposed.' : '') +
       ' Nothing here represents an actual opportunity or commitment.';
   }
@@ -2384,7 +2413,7 @@
   }
   function rerender() { render(parseRoute(location.hash), false); }
   function commit() { saveState(); applyState(); rerender(); }
-  window.addEventListener('hashchange', function () { render(parseRoute(location.hash), true); });
+  window.addEventListener('hashchange', function () { closeDossierViewer(); render(parseRoute(location.hash), true); });
 
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-route],[data-jump],[data-action],[data-role],[data-sort],[data-toggle],[data-bind],[data-withdraw],[data-withdraw-order],[data-mark],[data-unanswer],[data-confirm],[data-unconfirm]');
