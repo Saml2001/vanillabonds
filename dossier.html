@@ -373,7 +373,11 @@
   var DV = { src: null, active: null, pdf: null, task: null, pages: {}, scale: 1, zoom: 1, p1: null, dims: {}, io: null, textMode: !!Q.get('text') || !window.pdfjsLib }, DOCHTML = {};
   if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   function flow(t) { return (t || '').split(/\n[ \t]*\n+/).map(function (par) { return par.replace(/\s+/g, ' ').trim(); }).filter(Boolean).join('\n\n'); }
-  function qre(q) { return new RegExp(q.trim().split(/\s+/).map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('\\s+')); }
+  // a quote is matched on its letters and digits only, in order, case-insensitively: the PDF's text layer and the extracted text split
+  // words, spaces and punctuation differently. norm() keeps the string length so that match positions map back to the original.
+  function norm(s) { return (s || '').toLowerCase().replace(/\u00ad/g, '-'); }
+  function qre(q) { var t = norm(q).match(/[\p{L}\p{N}]+/gu); return t && t.length ? new RegExp(t.map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('[^\\p{L}\\p{N}]*'), 'u') : null; }
+  function qfind(q, text) { var re = qre(q); return re ? re.exec(norm(text)) : null; }
   function pagesOf(src) { return Object.keys(D.pages[src] || {}).map(Number).sort(function (a, b) { return a - b; }); }
   function label(f) { return FIELD[f.field] ? FIELD[f.field].label : f.field; }
   function factsOn(src, page) { return F.filter(function (f) { return f.src === src && f.page === page && f.quote; }); }
@@ -383,7 +387,7 @@
   function pageHtml(src, page) {
     var text = flow(D.pages[src][page]), spans = [], d = DOC[src];
     factsOn(src, page).forEach(function (f) {
-      var m = qre(f.quote).exec(text); if (!m) return;
+      var m = qfind(f.quote, text); if (!m) return;
       var same = spans.filter(function (sp) { return sp.s === m.index && sp.e === m.index + m[0].length; })[0];
       if (same) same.ids.push(f.id); else spans.push({ s: m.index, e: m.index + m[0].length, ids: [f.id] });
     });
@@ -419,10 +423,15 @@
       if (DV.pages[n]) { el.innerHTML = '<span class="pn">' + n + '</span>'; delete DV.pages[n]; }
     });
     pages.scrollTop = keep * nw;
-    if (DV.io) Array.prototype.forEach.call(pages.querySelectorAll('.pdfpage'), function (el) { DV.io.unobserve(el); DV.io.observe(el); });   // a fresh observation renders what is in view
+    renderInView();
     var z = $('#dv-zoomlabel'); if (z) z.textContent = Math.round(DV.zoom * 100) + '%';
   }
   function setZoom(z) { DV.zoom = Math.max(0.5, Math.min(4, z)); relayout(); }
+  // the pages within 900px of the view, rendered now (the observer only reports changes)
+  function renderInView() {
+    var pages = $('#dv-pages'), top = pages.scrollTop - 900, bottom = pages.scrollTop + pages.clientHeight + 900;
+    Array.prototype.forEach.call(pages.querySelectorAll('.pdfpage'), function (el) { if (el.offsetTop + el.offsetHeight >= top && el.offsetTop <= bottom) renderPage(+el.getAttribute('data-page')); });
+  }
   function openPdf(src) {
     var d = DOC[src], pages = $('#dv-pages');
     stopPdf(); DV.src = src;
@@ -470,7 +479,7 @@
     var joined = '', spans = [];
     tc.items.forEach(function (it, i) { spans.push({ s: joined.length, e: joined.length + (it.str || '').length, i: i }); joined += (it.str || '') + (it.hasEOL ? '\n' : ' '); });
     factsOn(src, n).forEach(function (f) {
-      var m = qre(f.quote).exec(joined); if (!m) return;
+      var m = qfind(f.quote, joined); if (!m) return;
       var a = m.index, b = m.index + m[0].length;
       spans.forEach(function (sp) {
         if (!(sp.e > a && sp.s < b) || !divs[sp.i] || !(it = tc.items[sp.i]).str.trim()) return;
@@ -498,7 +507,7 @@
     var b = BLOCK_OF[f.field], i = POS[id];
     $('#dv-strip').innerHTML = '<span class="lbl">Item</span><b>' + esc(id) + '</b><span>' + esc(label(f)) + (f.period ? ' · ' + esc(f.period) : '') + '</span><span class="dv-pg" aria-current="true">page ' + f.page + '</span>' +
       '<a class="dv-sec" href="#row-' + id + '" data-jump="' + id + '">' + esc(b.title) + ' ↗</a>' +
-      '<span class="dv-nav"><span class="dv-zoom"><button type="button" class="dv-pg" data-zoom="-1" aria-label="Zoom out">−</button><button type="button" class="dv-pg" data-zoom="0" id="dv-zoomlabel" title="Fit to width">' + Math.round(DV.zoom * 100) + '%</button><button type="button" class="dv-pg" data-zoom="1" aria-label="Zoom in">+</button></span>' +
+      '<span class="dv-nav">' + zoomHtml() +
       '<button type="button" class="dv-pg" data-step="-1"' + (i === 0 ? ' disabled' : '') + '>‹ Previous</button><span class="muted">' + (i + 1) + ' of ' + ORDERED.length + '</span><button type="button" class="dv-pg" data-step="1"' + (i === ORDERED.length - 1 ? ' disabled' : '') + '>Next ›</button></span>' +
       '<div class="dv-quote"><span class="lbl">' + (f.found ? 'Quote as extracted' : 'Quote as extracted · not found verbatim on the page text') + '</span>' + esc(f.quote || f.text) + '</div>';
     if (MODE === 'viewer') post({ type: toMain ? 'dossier-jump' : 'dossier-active', slug: slug, id: id }); else highlightMain(id, toMain);
@@ -508,7 +517,7 @@
       var pg = document.getElementById('dv-p-' + f.page); if (!pg) return;
       if (DV.pdf) {
         scrollPagesTo(pg, false);
-        renderPage(f.page).then(function () {
+        renderPage(f.page).then(function () { return pg.querySelector('canvas') ? null : renderPage(f.page); }).then(function () {
           if (DV.active !== id) return;
           var hits = pg.querySelectorAll('.hl[data-f~="' + id + '"]');
           Array.prototype.forEach.call(hits, function (x) { x.classList.add('on'); });
@@ -519,9 +528,30 @@
         var mk = pages.querySelector('mark[data-f~="' + id + '"]');
         if (mk) { mk.classList.add('on'); scrollPagesTo(mk, true); } else scrollPagesTo(pg, false);
       }
-    }).catch(function () { if (!DV.textMode) { DV.textMode = true; DV.src = null; showFact(id, false); } });   // no PDF to be had: the page text
+    }).catch(function (err) { console.error('viewer: original not shown, falling back to the page text', err); if (!DV.textMode) { DV.textMode = true; DV.src = null; showFact(id, false); } });
   }
   function step(n) { var i = POS[DV.active]; if (i == null) return; var j = i + n; if (j >= 0 && j < ORDERED.length) showFact(ORDERED[j], true); }
+  function zoomHtml() { return '<span class="dv-zoom"><button type="button" class="dv-pg" data-zoom="-1" aria-label="Zoom out">−</button><button type="button" class="dv-pg" data-zoom="0" id="dv-zoomlabel" title="Fit to width">' + Math.round(DV.zoom * 100) + '%</button><button type="button" class="dv-pg" data-zoom="1" aria-label="Zoom in">+</button></span>'; }
+  // a document at a page, no item selected (the platform's own View buttons land here); previous / next lead to the nearest items
+  function showPage(src, page) {
+    var d = DOC[src]; if (!d) return;
+    DV.active = null; $('#doc-viewer').hidden = false; document.body.classList.add('dv-open'); $('#dv-doc').value = src;
+    var usePdf = !DV.textMode && !!d.pdf, ready;
+    if (DV.src === src && (usePdf ? DV.pdf || DV.task : true)) ready = DV.task && !DV.pdf ? DV.task.promise : Promise.resolve();
+    else if (usePdf) ready = openPdf(src); else { openText(src); ready = Promise.resolve(); }
+    var here = ORDERED.filter(function (id) { return BYID[id].src === src; }), next = here.filter(function (id) { return BYID[id].page >= page; })[0], prev = here.filter(function (id) { return BYID[id].page < page; }).pop();
+    $('#dv-strip').innerHTML = '<span class="lbl">Document</span><span class="dv-pg" aria-current="true">page ' + page + ' of ' + d.pages + '</span><span class="muted small">the highlights are the extracted facts; click one to select it</span>' +
+      '<span class="dv-nav">' + zoomHtml() + '<button type="button" class="dv-pg" data-goto="' + (prev || '') + '"' + (prev ? '' : ' disabled') + '>‹ Previous item</button><button type="button" class="dv-pg" data-goto="' + (next || '') + '"' + (next ? '' : ' disabled') + '>Next item ›</button></span>';
+    ready.then(function () {
+      if (DV.src !== src || DV.active !== null) return;
+      var pages = $('#dv-pages'); Array.prototype.forEach.call(pages.querySelectorAll('.on'), function (m) { m.classList.remove('on'); });
+      var pg = document.getElementById('dv-p-' + page);
+      if (!pg) { var near = pagesOf(src).filter(function (n) { return n >= page; })[0] || pagesOf(src).pop(); pg = near && document.getElementById('dv-p-' + near); }   // page text: the nearest referenced page
+      if (!pg) return;
+      scrollPagesTo(pg, false);
+      if (DV.pdf) renderPage(+pg.getAttribute('data-page')).then(function () { return pg.querySelector('canvas') ? null : renderPage(+pg.getAttribute('data-page')); }).then(function () { if (DV.active === null) scrollPagesTo(pg, false); });
+    }).catch(function (err) { console.error('viewer: original not shown, falling back to the page text', err); if (!DV.textMode) { DV.textMode = true; DV.src = null; showPage(src, page); } });
+  }
   function openDocument(src) { var first = ORDERED.filter(function (id) { return BYID[id].src === src; })[0]; if (first) showFact(first, true); }
   $('#dv-doc').innerHTML = D.docs.map(function (x) { return '<option value="' + esc(x.id) + '">' + esc(x.id + ' · ' + docTitle(x) + ' · ' + x.file) + '</option>'; }).join('');
   $('#dv-doc').addEventListener('change', function () { openDocument(this.value); });
@@ -542,6 +572,7 @@
     var m = e.data || {}; if (typeof m.type !== 'string' || (m.slug && m.slug !== slug)) return;
     if (MODE === 'viewer' && m.type === 'show') showFact(m.id, false);
     if (MODE === 'viewer' && m.type === 'relayout') relayout();
+    if (MODE === 'viewer' && m.type === 'showPage') showPage(m.doc, +m.page || 1);
     if (MODE === 'embed' && (m.type === 'dossier-active' || m.type === 'dossier-jump')) highlightMain(m.id, m.type === 'dossier-jump');
   });
   if (MODE === 'viewer') { post({ type: 'dossier-ready', slug: slug }); if (Q.get('item')) showFact(Q.get('item'), false); }
@@ -549,6 +580,7 @@
     var v = e.target.closest('[data-view]'); if (v) { showFact(v.getAttribute('data-view'), false); return; }
     var m = e.target.closest('.dv-text mark, .textLayer .hl'); if (m) { showFact(m.getAttribute('data-f').split(' ')[0], true); return; }
     var st = e.target.closest('[data-step]'); if (st) { step(+st.getAttribute('data-step')); return; }
+    var gt = e.target.closest('[data-goto]'); if (gt) { if (gt.getAttribute('data-goto')) showFact(gt.getAttribute('data-goto'), true); return; }
     var z = e.target.closest('[data-zoom]'); if (z) { var zz = +z.getAttribute('data-zoom'); setZoom(zz === 0 ? 1 : zz > 0 ? DV.zoom * 1.25 : DV.zoom / 1.25); return; }
     var j = e.target.closest('.dv-sec'); if (j) { e.preventDefault(); showFact(j.getAttribute('data-jump'), true); return; }
     if (e.target.closest('#dv-close')) closeViewer();

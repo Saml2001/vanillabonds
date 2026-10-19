@@ -1105,6 +1105,14 @@
     panel.hidden = false; document.body.classList.add('dv-open');
     if (DVX.ready) fr.contentWindow.postMessage({ type: 'show', slug: slug, id: id }, '*'); else DVX.pending = id;
   }
+  // a fact or document of a public-report company: the original, at that page, in the platform's panel
+  function openDossierViewerAt(slug, docId, page) {
+    var panel = document.getElementById('dossier-viewer'), fr = document.getElementById('dossier-viewer-frame');
+    if (DVX.slug !== slug) { DVX.slug = slug; DVX.ready = false; fr.src = 'dossier.html?c=' + encodeURIComponent(slug) + '&viewer=1'; }
+    panel.hidden = false; document.body.classList.add('dv-open');
+    var msg = { type: 'showPage', slug: slug, doc: docId, page: page };
+    if (DVX.ready) fr.contentWindow.postMessage(msg, '*'); else DVX.pending = msg;
+  }
   function closeDossierViewer() { var p = document.getElementById('dossier-viewer'); if (!p || p.hidden) return; p.hidden = true; document.body.classList.remove('dv-open'); }
   // the panel's width: a handle on its left edge, remembered per browser; the viewer inside re-fits its pages on the resize
   (function () {
@@ -1123,7 +1131,7 @@
     var m = e.data || {}; if (typeof m.type !== 'string' || m.type.indexOf('dossier-') !== 0) return;
     var fr = document.getElementById('dossier-viewer-frame'), emb = document.querySelector('iframe.dossier-frame');
     if (m.type === 'dossier-view') openDossierViewer(m.slug, m.id);
-    else if (m.type === 'dossier-ready') { DVX.ready = true; if (DVX.pending) { fr.contentWindow.postMessage({ type: 'show', slug: m.slug, id: DVX.pending }, '*'); DVX.pending = null; } }
+    else if (m.type === 'dossier-ready') { DVX.ready = true; if (DVX.pending) { fr.contentWindow.postMessage(typeof DVX.pending === 'string' ? { type: 'show', slug: m.slug, id: DVX.pending } : DVX.pending, '*'); DVX.pending = null; } }
     else if (m.type === 'dossier-active' || m.type === 'dossier-jump') {
       if (!emb) return;
       emb.contentWindow.postMessage(m, '*');
@@ -2379,6 +2387,10 @@
   }
   var DV = { o: null, doc: null, active: null };
   function openViewer(o, target) {
+    if (o.dossier) {   // a public-report company: the original document in the platform's panel, not a composed page
+      var tf = target.indexOf('doc:') === 0 ? null : fact(o, target), ts = tf ? factSource(o, tf) : { doc: target.slice(4), page: '' };
+      openDossierViewerAt(o.dossier, ts.doc, +ts.page || 1); return;
+    }
     var f = null, key, d, page;
     if (target.indexOf('doc:') === 0) { d = doc(o, target.slice(4)); key = null; }
     else { f = fact(o, target); if (!f) return; var src = factSource(o, f); d = doc(o, src.doc); key = factKey(f); page = +src.page; }
