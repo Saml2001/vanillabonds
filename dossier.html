@@ -129,6 +129,17 @@
   .dv-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.65; color: var(--ink-2); }
   .dv-text mark { background: rgba(179, 154, 87, 0.22); color: inherit; padding: 1px 2px; border-radius: 2px; }
   .dv-text mark.on { background: #F2E2AE; color: var(--ink); box-shadow: 0 0 0 2px var(--gold); }
+  .dv-text mark { cursor: pointer; } .dv-text mark:hover { outline: 1px solid var(--gold); }
+  .dv-page + .dv-page, .dv-gap + .dv-page { margin-top: 18px; }
+  .dv-gap { text-align: center; color: var(--muted); font-size: 11.5px; padding: 10px 0 2px; }
+  .dv-strip b { font-family: var(--mono); } .dv-strip > span, .dv-strip > a { margin-right: 4px; }
+  .dv-sec { color: var(--navy); font-size: 12px; } .dv-sec:hover { color: var(--gold-ink); }
+  .dv-nav { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .dv-pg[disabled] { opacity: 0.4; cursor: default; }
+  .dv-quote { flex-basis: 100%; font-size: 12.5px; color: var(--ink-2); border-left: 3px solid var(--gold); background: #FBF6E8; padding: 6px 10px; margin-top: 6px; }
+  .dv-quote .lbl { display: block; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); margin-bottom: 2px; }
+  body.embed .demobar, body.embed .site-header { display: none; }
+  body.embed main { padding: 14px 18px 40px; gap: 24px; }
   @media (max-width: 1000px) {
     main { grid-template-columns: 1fr; padding: 24px 16px 56px; } main > aside { position: static; max-height: none; }
     #doc-viewer, .view-btn, .view-cell, th.view { display: none !important; } body.dv-open { padding-right: 0; }
@@ -165,7 +176,8 @@
 (function () {
   var ALL = window.DOSSIER_DATA || {}, slugs = Object.keys(ALL);
   if (!slugs.length) { document.getElementById('content').innerHTML = '<p>No dossier data. Run <code>python3 mvp/export_dossier.py</code> and <code>python3 website/seb-mvp/build_dossier.py</code>.</p>'; return; }
-  var slug = new URLSearchParams(location.search).get('c'); if (!ALL[slug]) slug = slugs[0];
+  var Q = new URLSearchParams(location.search), slug = Q.get('c'); if (!ALL[slug]) slug = slugs[0];
+  if (Q.get('embed')) document.body.classList.add('embed');   // inside the platform's deal and company screens
   var D = ALL[slug], $ = function (s) { return document.querySelector(s); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
@@ -327,48 +339,83 @@
     });
   }
 
-  // ---------- source viewer ----------
-  var DV = { src: null, page: null, active: null };
+  // ---------- source viewer: the whole document with every extracted fact highlighted; previous / next item; click a highlight to jump to its row ----------
+  var ORDERED = [], POS = {}, BLOCK_OF = {};
+  D.blocks.forEach(function (b) { b.fields.forEach(function (fd) {
+    BLOCK_OF[fd.id] = b;
+    F.filter(function (f) { return f.field === fd.id; }).sort(function (a, b) { return pcmp(a.period, b.period) || (DOC[a.src].i - DOC[b.src].i) || ((a.page || 0) - (b.page || 0)); })
+      .forEach(function (f) { if (f.page && D.pages[f.src] && D.pages[f.src][f.page]) { POS[f.id] = ORDERED.length; ORDERED.push(f.id); } });
+  }); });
+  var DV = { src: null, active: null }, DOCHTML = {};
+  function flow(t) { return (t || '').split(/\n[ \t]*\n+/).map(function (par) { return par.replace(/\s+/g, ' ').trim(); }).filter(Boolean).join('\n\n'); }
+  function qre(q) { return new RegExp(q.trim().split(/\s+/).map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('\\s+')); }
   function pagesOf(src) { return Object.keys(D.pages[src] || {}).map(Number).sort(function (a, b) { return a - b; }); }
-  function pageHtml(src, page, active) {
-    // the PDF text has a line break after every cell: flow it, and match quotes on whitespace runs rather than verbatim
-    var text = (D.pages[src][page] || '').split(/\n[ \t]*\n+/).map(function (par) { return par.replace(/\s+/g, ' ').trim(); }).filter(Boolean).join('\n\n');
-    var facts = F.filter(function (f) { return f.src === src && f.page === page && f.quote; }), spans = [];
-    facts.forEach(function (f) {
-      var re = new RegExp(f.quote.trim().split(/\s+/).map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('\\s+')), m = re.exec(text);
-      if (m) spans.push({ s: m.index, e: m.index + m[0].length, f: f });
+  function label(f) { return FIELD[f.field] ? FIELD[f.field].label : f.field; }
+  // one page: the PDF text flowed, every fact read from this page marked; facts sharing a quote share one mark
+  function pageHtml(src, page) {
+    var text = flow(D.pages[src][page]), spans = [], d = DOC[src];
+    F.filter(function (f) { return f.src === src && f.page === page && f.quote; }).forEach(function (f) {
+      var m = qre(f.quote).exec(text); if (!m) return;
+      var same = spans.filter(function (sp) { return sp.s === m.index && sp.e === m.index + m[0].length; })[0];
+      if (same) same.ids.push(f.id); else spans.push({ s: m.index, e: m.index + m[0].length, ids: [f.id] });
     });
-    spans.sort(function (a, b) { return a.s - b.s || (a.f.id === active ? -1 : 1); });
+    spans.sort(function (a, b) { return a.s - b.s; });
     var out = '', pos = 0;
-    spans.forEach(function (sp) { if (sp.s < pos) return; out += esc(text.slice(pos, sp.s)) + '<mark' + (sp.f.id === active ? ' class="on" id="dv-active"' : '') + ' title="' + esc(sp.f.id + ': ' + (sp.f.text || '')) + '">' + esc(text.slice(sp.s, sp.e)) + '</mark>'; pos = sp.e; });
+    spans.forEach(function (sp) {
+      if (sp.s < pos) return;
+      var tip = sp.ids.map(function (id) { return id + ' · ' + label(BYID[id]); }).join(' | ') + ' · ' + BLOCK_OF[BYID[sp.ids[0]].field].title + ' · click to jump to it';
+      out += esc(text.slice(pos, sp.s)) + '<mark data-f="' + sp.ids.join(' ') + '" title="' + esc(tip) + '">' + esc(text.slice(sp.s, sp.e)) + '</mark>'; pos = sp.e;
+    });
     out += esc(text.slice(pos));
-    var a = active && BYID[active], d = DOC[src];
-    var q = a ? '<div class="quote"><span class="lbl">' + esc(a.id + ' · ' + (FIELD[a.field] ? FIELD[a.field].label : a.field)) + (a.found ? ' · quote found on the page' : ' · quote not found verbatim on the page text') + '</span>' + esc(a.quote || a.text) + '</div>' : '';
-    return '<article class="dv-page" aria-label="' + esc(d.file + ', page ' + page) + '"><div class="rh"><span>' + esc(d.file) + '</span><span>' + esc(D.company.name) + '</span></div>' + q + '<div class="dv-text">' + out + '</div><div class="rf"><span>' + esc(docTitle(d)) + '</span><span>Page ' + page + ' of ' + d.pages + '</span></div></article>';
+    return '<article class="dv-page" id="dv-p-' + page + '" aria-label="' + esc(d.file + ', page ' + page) + '"><div class="rh"><span>' + esc(d.file) + '</span><span>Page ' + page + ' of ' + d.pages + '</span></div><div class="dv-text">' + out + '</div></article>';
   }
-  function showPage(src, page, active) {
-    var d = DOC[src], ps = pagesOf(src);
-    DV.src = src; DV.page = page; DV.active = active;
-    $('#dv-title').textContent = d.file; $('#dv-meta').textContent = docTitle(d) + ' · ' + ps.length + ' referenced pages';
-    var i = ps.indexOf(page), near = ps.slice(Math.max(0, i - 4), i + 5);
-    $('#dv-strip').innerHTML = '<span class="lbl">Referenced pages</span>' + (i > 0 ? '<button type="button" class="dv-pg" data-page="' + ps[i - 1] + '">‹</button>' : '') +
-      near.map(function (p) { return '<button type="button" class="dv-pg" data-page="' + p + '"' + (p === page ? ' aria-current="true"' : '') + '>' + p + '</button>'; }).join('') + (i < ps.length - 1 ? '<button type="button" class="dv-pg" data-page="' + ps[i + 1] + '">›</button>' : '');
-    $('#dv-pages').innerHTML = pageHtml(src, page, active);
-    var el = $('#doc-viewer'); el.hidden = false; document.body.classList.add('dv-open');
-    Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed], .cell-btn.on, tr.fact-on'), function (b) { b.classList.remove('on', 'fact-on'); if (b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed', 'false'); });
-    if (active) { var btn = document.querySelector('.view-btn[data-view="' + active + '"]'); if (btn) btn.setAttribute('aria-pressed', 'true'); var cb = document.querySelector('.cell-btn[data-view="' + active + '"]'); if (cb) cb.classList.add('on'); var row = document.getElementById('row-' + active); if (row) row.classList.add('fact-on'); }
-    var m = document.getElementById('dv-active'); if (m) m.scrollIntoView({ block: 'center' }); else $('#dv-pages').scrollTop = 0;
+  // the whole document: every page that carries a fact, in order, with the gaps named
+  function docHtml(src) {
+    if (DOCHTML[src]) return DOCHTML[src];
+    var h = '', prev = 0;
+    function gap(a, b) { return '<div class="dv-gap">' + (a === b ? 'page ' + a : 'pages ' + a + '–' + b) + ': no extracted facts</div>'; }
+    pagesOf(src).forEach(function (p) { if (p > prev + 1) h += gap(prev + 1, p - 1); h += pageHtml(src, p); prev = p; });
+    if (DOC[src].pages > prev) h += gap(prev + 1, DOC[src].pages);
+    return (DOCHTML[src] = h);
   }
-  function openFact(id) { var f = BYID[id]; if (!f || !f.page || !(D.pages[f.src] || {})[f.page]) return; showPage(f.src, f.page, id); }
+  function showFact(id, toMain) {
+    var f = BYID[id]; if (!f || POS[id] == null) return;
+    var d = DOC[f.src], pages = $('#dv-pages');
+    if (DV.src !== f.src) {
+      pages.innerHTML = docHtml(f.src); DV.src = f.src;
+      $('#dv-title').textContent = d.file; $('#dv-meta').textContent = docTitle(d) + ' · ' + pagesOf(f.src).length + ' of ' + d.pages + ' pages carry extracted facts, each one highlighted';
+    }
+    DV.active = id; $('#doc-viewer').hidden = false; document.body.classList.add('dv-open');
+    var b = BLOCK_OF[f.field], i = POS[id];
+    $('#dv-strip').innerHTML = '<span class="lbl">Item</span><b>' + esc(id) + '</b><span>' + esc(label(f)) + (f.period ? ' · ' + esc(f.period) : '') + '</span><span class="dv-pg" aria-current="true">page ' + f.page + '</span>' +
+      '<a class="dv-sec" href="#row-' + id + '" data-jump="' + id + '">' + esc(b.title) + ' ↗</a>' +
+      '<span class="dv-nav"><button type="button" class="dv-pg" data-step="-1"' + (i === 0 ? ' disabled' : '') + '>‹ Previous</button><span class="muted">' + (i + 1) + ' of ' + ORDERED.length + '</span><button type="button" class="dv-pg" data-step="1"' + (i === ORDERED.length - 1 ? ' disabled' : '') + '>Next ›</button></span>' +
+      '<div class="dv-quote"><span class="lbl">' + (f.found ? 'Quote as extracted' : 'Quote as extracted · not found verbatim on the page text') + '</span>' + esc(f.quote || f.text) + '</div>';
+    Array.prototype.forEach.call(pages.querySelectorAll('mark.on'), function (m) { m.classList.remove('on'); });
+    var mk = pages.querySelector('mark[data-f~="' + id + '"]'), pg = document.getElementById('dv-p-' + f.page);
+    if (mk) { mk.classList.add('on'); mk.scrollIntoView({ block: 'center' }); } else if (pg) pg.scrollIntoView({ block: 'start' });
+    // the main page follows: the row or cell of the item is highlighted, and scrolled to when the viewer led the way
+    Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"], .cell-btn.on, tr.fact-on'), function (x) { x.classList.remove('on', 'fact-on'); if (x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed', 'false'); });
+    var btn = document.querySelector('.view-btn[data-view="' + id + '"]'), cb = document.querySelector('.cell-btn[data-view="' + id + '"]'), row = document.getElementById('row-' + id);
+    if (btn) btn.setAttribute('aria-pressed', 'true'); if (cb) cb.classList.add('on'); if (row) row.classList.add('fact-on');
+    if (toMain) { var t = row || cb, det = t && t.closest('details'); if (det && !det.open) det.open = true; if (t) t.scrollIntoView({ block: 'center' }); }
+  }
+  function step(n) { var i = POS[DV.active]; if (i == null) return; var j = i + n; if (j >= 0 && j < ORDERED.length) showFact(ORDERED[j], true); }
   function closeViewer() { $('#doc-viewer').hidden = true; document.body.classList.remove('dv-open'); Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"]'), function (b) { b.setAttribute('aria-pressed', 'false'); }); }
 
   render();
   document.addEventListener('click', function (e) {
-    var v = e.target.closest('[data-view]'); if (v) { openFact(v.getAttribute('data-view')); return; }
-    var pg = e.target.closest('.dv-pg'); if (pg) { showPage(DV.src, +pg.getAttribute('data-page'), DV.active); return; }
+    var v = e.target.closest('[data-view]'); if (v) { showFact(v.getAttribute('data-view'), false); return; }
+    var m = e.target.closest('.dv-text mark'); if (m) { showFact(m.getAttribute('data-f').split(' ')[0], true); return; }
+    var st = e.target.closest('[data-step]'); if (st) { step(+st.getAttribute('data-step')); return; }
+    var j = e.target.closest('.dv-sec'); if (j) { e.preventDefault(); showFact(j.getAttribute('data-jump'), true); return; }
     if (e.target.closest('#dv-close')) closeViewer();
   });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#doc-viewer').hidden) closeViewer(); if (e.key === 'Enter' && e.target.matches('.bar-group[data-view]')) openFact(e.target.getAttribute('data-view')); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.matches('.bar-group[data-view]')) { showFact(e.target.getAttribute('data-view'), false); return; }
+    if ($('#doc-viewer').hidden || /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === 'Escape') closeViewer(); else if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1);
+  });
   $('#q').addEventListener('input', applyFilter); $('#okonly').addEventListener('change', applyFilter);
 })();
 </script>

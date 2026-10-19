@@ -444,9 +444,7 @@
   .demobar { background: var(--paper); color: var(--gold-ink); font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em; text-align: center; padding: 5px 24px; border-bottom: 1px solid var(--border); text-transform: uppercase; }
   .header-inner { gap: 24px; }
   .primary-nav { margin-right: auto; }
-  .primary-nav .nav-link { display: flex; align-items: center; height: 100%; padding: 0 18px; color: #C9D1DA; font-size: 14px; text-decoration: none; border-bottom: 2px solid transparent; border-top: 2px solid transparent; }
-  .primary-nav .nav-link:hover { color: var(--paper); background: var(--navy-2); }
-  .primary-nav .nav-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .dossier-frame { display: block; width: 100%; height: 82vh; border: 1px solid var(--border); background: var(--paper); }
   .header-side { display: flex; align-items: center; gap: 18px; font-size: 13px; }
   .back-link { color: #C9D1DA; text-decoration: none; white-space: nowrap; }
   .back-link:hover { color: var(--paper); }
@@ -559,7 +557,7 @@
     .demobar { font-size: 10px; letter-spacing: 0.04em; padding: 4px 12px; }
     .header-inner { flex-wrap: wrap; padding: 0 16px; gap: 0 16px; }
     .wordmark { padding: 14px 0; }
-    .primary-nav button, .primary-nav .nav-link { white-space: nowrap; padding: 0 12px; }
+    .primary-nav button { white-space: nowrap; padding: 0 12px; }
     .header-side { flex: 1 0 100%; flex-wrap: wrap; justify-content: space-between; gap: 10px 12px; padding: 8px 0 10px; border-top: 1px solid #22405F; }
     .role-box { flex-wrap: wrap; gap: 10px 12px; }
     .switch-menu { left: 0; right: auto; min-width: 240px; max-width: calc(100vw - 32px); }
@@ -589,7 +587,7 @@
 </style>
 </head>
 <body>
-<div class="demobar">Demonstration environment — fictional companies, institutions and figures · not an offer, solicitation or investment advice</div>
+<div class="demobar">Demonstration environment — fictional cases, and public-report cases with an illustrative financing · not an offer, solicitation or investment advice</div>
 <header class="site-header">
   <div class="header-inner">
     <button type="button" class="wordmark" data-route="home" aria-label="VanillaBonds — platform demo"><span class="v">VANILLA</span><span class="b">BONDS</span></button>
@@ -609,9 +607,10 @@
 </main>
 
 <article id="print-dossier" class="paper" aria-hidden="true"></article>
-<footer class="site-foot"><p>Platform demonstration. All companies, institutions, documents, figures and participation amounts are fictional and illustrative. Nothing on this page is an offer of securities, investment advice or a solicitation of an offer. Any future offering would be addressed to professional investors within the meaning of MiFID&nbsp;II only, in minimum denominations of €100,000. Files chosen in the company view stay in your browser; nothing is uploaded. © 2026 VanillaBonds.</p></footer>
+<footer class="site-foot"><p>Platform demonstration. Fictional cases are marked as such; a case built from a company’s own public reports is pending review and carries an illustrative financing that the company has not proposed. All institutions and participation amounts are fictional. Nothing on this page is an offer of securities, investment advice or a solicitation of an offer. Any future offering would be addressed to professional investors within the meaning of MiFID&nbsp;II only, in minimum denominations of €100,000. Files chosen in the company view stay in your browser; nothing is uploaded. © 2026 VanillaBonds.</p></footer>
 <aside id="doc-viewer" role="complementary" aria-label="Source document" hidden></aside>
 
+<script src="dossier-data/deals.js"></script>
 <script>
 (function () {
   'use strict';
@@ -989,13 +988,16 @@
       ]
     }
   });
-  var ORDER =['van-dijk', 'nordhaven', 'alpenwerk'];
+  Object.keys(window.PLATFORM_DEALS || {}).forEach(function (k) { OPPORTUNITIES[k] = window.PLATFORM_DEALS[k]; });   // companies from the MVP: mvp/export_dossier.py -> dossier-data/deals.js
+  var ORDER = ['van-dijk', 'nordhaven', 'alpenwerk'].concat(Object.keys(window.PLATFORM_DEALS || {}));
   /* =========================================================
      Platform layer: phases, roles, session state
      Pristine data stays in BASE; what the demo user does (uploads, answers,
      confirmation, indications, orders) is replayed onto OPPORTUNITIES.
      ========================================================= */
   var PHASE = { 'van-dijk': 'anchor', 'nordhaven': 'anchor', 'alpenwerk': 'open' };
+  Object.keys(window.PLATFORM_DEALS || {}).forEach(function (k) { PHASE[k] = window.PLATFORM_DEALS[k].phase || 'anchor'; });
+  PHASE['van-dijk'] = 'intake'; OPPORTUNITIES['van-dijk'].anchors = [];   // the story of the demo: Van Dijk delivers documents, Katjes is in the anchor window, Fastned is open to co-investors
   var PHASE_LABEL = { intake: 'Fact file in preparation', anchor: 'Anchor window', open: 'Open to co-investors', issued: 'Issued' };
   var ROLE_LABEL = { company: 'Company', anchor: 'Anchor investor', coinvestor: 'Co-investor' };
   var ROLE_DESC = { company: 'Upload documents, answer questions, confirm as CFO', anchor: 'First access to every deal; indicate and commit', coinvestor: 'Open deals only, on the anchors\u2019 terms' };
@@ -1011,6 +1013,21 @@
   function cfoOf(o) { return o.company.management.filter(function (m) { return m.role === 'CFO'; })[0] || o.company.management[0]; }
   // 'Van Dijk', 'Nordhaven', 'Alpenwerk': the name people use in conversation.
   function shortName(o) { var w = o.company.name.split(' '); return w[0].length <= 3 ? w[0] + ' ' + w[1] : w[0]; }
+  // The web fact dossier (dossier.html, built by build_dossier.py) inside the deal and company screens of a public-report company.
+  function factDossierPanel(o, id) {
+    if (!o.dossier) return '';
+    return '<section class="section" id="' + (id || 'sec-factdossier') + '" aria-labelledby="h-factdossier"><p class="label">Fact dossier \u00b7 beta</p><h2 id="h-factdossier">Fact dossier, every fact with its source</h2>' +
+      '<p class="muted small">Thirteen blocks in the anchors\u2019 format from the company\u2019s public reports: the facts with document and page, the arithmetic with its formula, and the source page beside each fact. Pending review by a named reviewer. ' +
+      '<a href="dossier.html?c=' + o.dossier + '" target="_blank" rel="noopener">Open in its own tab</a>.</p>' +
+      '<iframe class="dossier-frame" src="dossier.html?c=' + o.dossier + '&embed=1" title="Fact dossier of ' + esc(o.company.name) + '" loading="lazy"></iframe></section>';
+  }
+  function realDeals() { return ORDER.filter(function (id) { return OPPORTUNITIES[id].real; }); }
+  function demoNote() {
+    var rd = realDeals();
+    return 'Van Dijk, Nordhaven and Alpenwerk and all anchor institutions are fictional demonstration examples; their figures, documents and participation amounts are illustrative.' +
+      (rd.length ? ' ' + rd.map(function (id) { return shortName(OPPORTUNITIES[id]); }).join(' and ') + (rd.length > 1 ? ' are' : ' is') + ' shown from the company\u2019s own public reports, extracted and pending review, with an illustrative financing that the company has not proposed.' : '') +
+      ' Nothing here represents an actual opportunity or commitment.';
+  }
 
   function applyState() {
     ORDER.forEach(function (id) {
@@ -1085,6 +1102,7 @@
             '<p class="small muted">Non-binding. In a live opportunity the indication is made in the institution’s own name.</p></form>') +
         '</div>';
     }
+    if (role() === 'anchor' && ph === 'intake') return '<div class="access closed"><p class="eyebrow">Fact file in preparation</p><p>The company is delivering its documents and answering the reviewer\u2019s questions; ' + outstanding(o).length + ' requested documents are outstanding. The anchor window opens once the fact file is complete and the CFO has confirmed it.</p></div>';
     if (role() === 'anchor') return '<div class="access closed"><p class="eyebrow">Anchor window closed</p><p>Anchors committed ' + eurAmt(s.committed) + ' (' + fmtShare(shareOfIssue(o, s.committed)) + '). The remaining ' + eurAmt(s.remaining) + ' is open to co-investors on the same terms.</p></div>';
     if (role() === 'coinvestor' && ph === 'open') {
       var rem = Math.max(0, s.issue - coverTotal(o)), full = rem < 1e-9;
@@ -1113,7 +1131,7 @@
       '</div>' +
       '<p class="start-links">Or read first: <button type="button" class="chip-link" data-route="journey">the deal journey</button> · <button type="button" class="chip-link" data-route="market">the market</button></p>' +
       '<ol class="flow" aria-label="How the two sides meet">' + [['Fact file', 'Company documents and answers, every fact with its source. The CFO confirms.'], ['Anchor window', 'Anchors see it first and commit.'], ['Open to co-investors', 'Same terms; the remainder is filled.'], ['Issued', 'Only when fully covered. Money flows directly to the company.']].map(function (x) { return '<li><h3>' + x[0] + '</h3><p>' + x[1] + '</p></li>'; }).join('') + '</ol>' +
-      '<p class="demo-note">All companies and institutions are fictional. What you upload, answer or order stays in this browser session; nothing is sent anywhere.</p>';
+      '<p class="demo-note">' + demoNote() + ' What you upload, answer or order stays in this browser session; nothing is sent anywhere.</p>';
   }
 
   /* ---------- Company view: documents, questions, figures, terms, timeline ---------- */
@@ -1127,7 +1145,7 @@
       '<div><p class="label">Checklist</p><div class="val">' + met + ' of ' + list.length + ' items met</div></div>' +
       '<div><p class="label">Who sees the fact file</p><div class="val" style="font-size:15px">' + (s.count ? s.count + ' anchor institution' + (s.count > 1 ? 's' : '') + ' now' : 'Anchors first') + ' · co-investors after anchor commitments</div></div>' +
       '<div><p class="label">Confirmation</p><div class="val" style="font-size:15px">' + (o.confirmedBy ? esc(o.confirmedBy) : 'Not yet confirmed by the CFO') + '</div></div></div></div>';
-    html += '<nav class="jump" aria-label="Sections on this page">' + [['c-docs', 'Documents requested'], ['c-questions', 'Questions'], ['c-figures', 'Figures to confirm'], ['c-terms', 'Proposed terms'], ['sec-comps', 'Comparables'], ['c-timeline', 'Timeline']].map(function (x) { return '<button type="button" class="chip-link" data-jump="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
+    html += '<nav class="jump" aria-label="Sections on this page">' + [['c-docs', 'Documents requested'], ['c-questions', 'Questions'], ['c-figures', 'Figures to confirm']].concat(o.dossier ? [['c-factdossier', 'Fact dossier']] : [], [['c-terms', 'Proposed terms'], ['sec-comps', 'Comparables'], ['c-timeline', 'Timeline']]).map(function (x) { return '<button type="button" class="chip-link" data-jump="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
 
     var out = outstanding(o), rec = received(o);
     html += '<section class="section" id="c-docs"><p class="label">' + out.length + ' outstanding · ' + rec.length + ' received</p><h2>Documents requested</h2>' +
@@ -1161,6 +1179,7 @@
         ? '<p><strong>Confirmed.</strong> ' + esc(o.confirmedBy) + '. Investors see this confirmation on the fact file. <button type="button" class="chip-link" data-unconfirm="' + o.id + '">Withdraw</button></p>'
         : '<p>I confirm that the company information above is complete and correct to the best of my knowledge.</p><button type="button" class="btn" data-confirm="' + o.id + '">Confirm as ' + esc(cfo.name) + ', ' + esc(cfo.role) + '</button>') + '</div></section>';
 
+    html += factDossierPanel(o, 'c-factdossier');
     html += '<section class="section" id="c-terms"><p class="label">Indicative</p><h2>Proposed terms</h2>' +
       '<p class="muted small">Terms the company proposed for discussion. Coupon, security and covenants are settled with the anchors. The company confirms its information and signs no bond documents at this stage.</p>' +
       '<div class="table-scroll"><table><caption class="visually-hidden">Proposed bond terms, ' + esc(c.name) + '</caption><tbody>' + o.bond.map(function (t) { return '<tr><th scope="row" class="rowhead">' + esc(TERM_LABEL[t.key]) + '</th><td>' + termHtml(o, t) + '</td><td>' + termStatus(o, t) + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
@@ -1180,12 +1199,14 @@
     document.getElementById('nav-list').innerHTML = items.map(function (x) {
       var cur = currentView === x[0] || (x[0] === 'opportunities' && INVESTOR[currentView]);
       return '<li><button type="button" data-route="' + x[0] + '"' + (cur ? ' aria-current="page"' : '') + '>' + x[1] + '</button></li>';
-    }).join('') + '<li><a class="nav-link" href="dossier.html">Fact dossier</a></li>';   // the web fact dossier (build_dossier.py), a page of its own
-    var others = Object.keys(ROLE_LABEL).filter(function (k) { return k !== r; });
+    }).join('');
     document.getElementById('role-box').innerHTML =
       '<div class="cur"><small>Current view</small><b>' + (r ? ROLE_LABEL[r] + (r === 'company' ? ' · ' + esc(shortName(OPPORTUNITIES[STATE.company])) : '') : 'Not chosen yet') + '</b></div>' +
       '<div class="switch"><button type="button" class="switch-btn" data-toggle="switch" aria-haspopup="menu" aria-expanded="false">' + (r ? 'Switch view' : 'Choose a view') + ' <span class="caret" aria-hidden="true">\u25BE</span></button>' +
-        '<ul class="switch-menu" role="menu">' + others.map(function (k) { return '<li><button type="button" role="menuitem" data-role="' + k + '"><b>' + ROLE_LABEL[k] + '</b><span>' + ROLE_DESC[k] + '</span></button></li>'; }).join('') + '</ul></div>' +
+        '<ul class="switch-menu" role="menu">' + Object.keys(ROLE_LABEL).map(function (k) {
+          if (k === 'company') return ORDER.filter(function (id) { return !(r === 'company' && id === STATE.company); }).map(function (id) { return '<li><button type="button" role="menuitem" data-role="company" data-company="' + id + '"><b>Company \u00b7 ' + esc(shortName(OPPORTUNITIES[id])) + '</b><span>' + ROLE_DESC.company + '</span></button></li>'; }).join('');
+          return k === r ? '' : '<li><button type="button" role="menuitem" data-role="' + k + '"><b>' + ROLE_LABEL[k] + '</b><span>' + ROLE_DESC[k] + '</span></button></li>';
+        }).join('') + '</ul></div>' +
       (r ? '<button type="button" class="ghost-btn" data-action="reset">Reset demo</button>' : '');
   }
 
@@ -1422,7 +1443,8 @@
     return s + '</svg>';
   }
   function comparables(o, side) {
-    var g = COMP_SECTOR[o.id], rows = BONDS.filter(function (b) { return b.g === g && b.st !== 'Called'; }).sort(function (a, b) { return a.iss < b.iss ? 1 : -1; });
+    var g = COMP_SECTOR[o.id] || o.compSector; if (!g) return '';   // a public-report company names its own group
+    var rows = BONDS.filter(function (b) { return b.g === g && b.st !== 'Called'; }).sort(function (a, b) { return a.iss < b.iss ? 1 : -1; });
     var live = rows.filter(liveBond), sp = live.map(effSpread), tenors = live.map(tenorAtIssue), sizes = rows.map(function (b) { return b.size; });
     var maturing = live.filter(function (b) { return b.mat >= '2026-01' && b.mat <= '2028-12'; }), windows = live.filter(function (b) { return b.mat <= ymAdd('2027-06', 12); });
     var gl = g.toLowerCase();
@@ -1504,7 +1526,8 @@
   function term(o, key) { return o.bond.filter(function (t) { return t.key === key; })[0]; }
 
   function cellSource(o, key, i) {
-    var p = finRow(o, key).pages, slot = i === LAST ? 0 : i === LAST - 1 ? 1 : 2;
+    var r = finRow(o, key); if (r.src && r.src[i]) return { doc: r.src[i][0], page: String(r.src[i][1]) };   // a public-report company carries a source per year
+    var p = r.pages, slot = i === LAST ? 0 : i === LAST - 1 ? 1 : 2;
     return { doc: o.finDocs[slot], page: String(p[slot]) };
   }
   function factValue(o, f) {
@@ -1722,7 +1745,7 @@
       '<h1 id="h-opportunities">Investment Opportunities</h1>' +
       '<p class="lede">' + LEDE[role()] + '</p>' + roleNote() +
       '<div class="list-meta"><p class="label" style="margin:0">' + listMeta() + '</p><p class="label" style="margin:0">Financials FY' + YEARS[LAST] + ' · EUR millions</p></div>' +
-      '<p class="demo-note">All companies and anchor institutions shown are fictional demonstration examples; their figures, documents and participation amounts are illustrative and do not represent actual opportunities or commitments.</p>' +
+      '<p class="demo-note">' + demoNote() + '</p>' +
       '<ol class="opp-list">';
 
     ORDER.forEach(function (id) {
@@ -1996,6 +2019,7 @@
         '<p>Standardised dossier covering company profile, five-year financials, calculated ratios, proposed terms, institutional anchor participation, diligence considerations and source references. Opens your browser’s print dialog; choose “Save as PDF”.</p></div>' +
         '<button type="button" class="btn light" data-action="print">Download Investor Dossier <span class="arr" aria-hidden="true">↓</span></button></div>';
 
+    html += factDossierPanel(o);
     html += '<section class="section" aria-labelledby="h-anchor-sum"><p class="label">Included in the dossier</p><h2 id="h-anchor-sum">Anchor participation summary</h2>' +
       (o.anchors.length
         ? anchorBar(o) + anchorLegend(o) + '<div style="margin-top:14px">' + anchorTable(o) + '</div>' +
@@ -2092,7 +2116,7 @@
     var c = o.company;
     var date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     var html = '<div class="doc-head"><div class="wm"><span class="v">VANILLA</span><span class="b">BONDS</span></div><div class="date">Investor dossier · ' + esc(date) + '</div></div>' +
-      '<div class="title-band"><p class="eyebrow">Investor dossier · ' + DOSSIER_LABEL[dossierStatus(o)] + ' · ' + esc(o.status.label) + ' · Illustrative case</p><h1>' + esc(c.name) + '</h1>' +
+      '<div class="title-band"><p class="eyebrow">Investor dossier · ' + DOSSIER_LABEL[dossierStatus(o)] + ' · ' + esc(o.status.label) + ' · ' + (o.real ? 'Public-report facts, illustrative financing' : 'Illustrative case') + '</p><h1>' + esc(c.name) + '</h1>' +
       '<div class="meta">' + esc(c.industry) + ' · ' + esc(c.country) + ' · Proposed ' + esc(termText(o, 'amount')) + ', ' + esc(termText(o, 'maturity')) + '</div></div>';
 
     html += dsec('1', 'Company overview', kv([['Company', esc(c.name)], ['Country', esc(c.country)], ['Sector', esc(c.industry)], ['Business', esc(c.description)]]));
@@ -2137,7 +2161,7 @@
       .concat(received(o).map(function (r) { return '<li>' + esc(r.item) + ' — received</li>'; }));
     html += dsec('9', dossierStatus(o) === 'complete' ? 'Documents received and follow-up items' : 'Outstanding information', '<ul>' + outItems.join('') + '</ul>');
 
-    html += dsec('10', 'Important information', '<div class="disclaimer">This dossier describes an illustrative case: ' + esc(c.name) + ' is a fictional company, and all figures, persons, documents, page references, anchor institutions and participation amounts are illustrative. Anchor participation is not a guarantee, endorsement or recommendation. It is not investment advice, an offer, a solicitation or a prospectus. The information has not been independently verified or audited, diligence is not complete, and the proposed terms are not agreed. Investors must make their own assessment.</div>');
+    html += dsec('10', 'Important information', '<div class="disclaimer">' + (o.real ? 'This dossier describes an illustrative financing: ' + esc(c.name) + ' is a real company, and the figures, persons, documents and page references come from its own public reports, extracted and pending review by a named reviewer; the proposed financing is illustrative and has not been proposed by the company; anchor institutions and participation amounts are fictional.' : 'This dossier describes an illustrative case: ' + esc(c.name) + ' is a fictional company, and all figures, persons, documents, page references, anchor institutions and participation amounts are illustrative.') + ' Anchor participation is not a guarantee, endorsement or recommendation. It is not investment advice, an offer, a solicitation or a prospectus. The information has not been independently verified or audited, diligence is not complete, and the proposed terms are not agreed. Investors must make their own assessment.</div>');
     return html;
   }
   var secNo = 0;   // dossier sections are numbered in render order
@@ -2383,6 +2407,7 @@
     if (t.getAttribute('data-action') === 'reset') { STATE = { company: 'van-dijk' }; saveState(); applyState(); go('start'); return; }
     if (t.hasAttribute('data-toggle')) { var sw = t.parentNode, open = !sw.classList.contains('open'); sw.classList.toggle('open', open); t.setAttribute('aria-expanded', open ? 'true' : 'false'); return; }
     if (t.hasAttribute('data-role')) {
+      if (t.hasAttribute('data-company')) STATE.company = t.getAttribute('data-company');
       STATE.role = t.getAttribute('data-role'); saveState();
       if (currentView === 'start') go('home'); else render(parseRoute(location.hash), false);   // same page from the other side, or that role's home
       return;
