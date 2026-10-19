@@ -312,6 +312,54 @@
   .method { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .method p { font-size: 13px; color: var(--ink-2); }
 
+  /* ---------- Source viewer: split screen with the referenced document pages (desktop) ---------- */
+  .view-btn { font-family: var(--sans); font-size: 12px; line-height: 1; padding: 5px 10px; border: 1px solid var(--border); border-radius: 2px;
+    background: var(--paper); color: var(--navy); cursor: pointer; white-space: nowrap; }
+  .view-btn:hover { border-color: var(--navy); }
+  .view-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  .view-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  td.view-cell { text-align: right; padding-top: 6px; padding-bottom: 6px; }
+  tr.fact-on td { background: #F5EFDF; }
+  body.dv-open { padding-right: min(50vw, 820px); }
+  #doc-viewer { position: fixed; top: 0; right: 0; bottom: 0; width: min(50vw, 820px); z-index: 60; display: flex; flex-direction: column;
+    background: #E4E3DE; border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.10); }
+  #doc-viewer[hidden] { display: none; }
+  .dv-bar { background: var(--navy); color: var(--paper); padding: 14px 22px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .dv-bar .dv-kicker { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin: 0 0 4px; }
+  .dv-bar .dv-title { font-size: 16px; font-weight: 300; margin: 0; }
+  .dv-bar .dv-meta { font-family: var(--mono); font-size: 11.5px; color: #B9C3CE; margin: 4px 0 0; }
+  .dv-close { flex: none; width: 34px; height: 34px; border: 1px solid #3B5068; border-radius: 2px; background: none; color: var(--paper); font-size: 20px; line-height: 1; cursor: pointer; }
+  .dv-close:hover { background: var(--navy-2); border-color: var(--gold); }
+  .dv-close:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .dv-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 22px; background: var(--paper); border-bottom: 1px solid var(--border); font-size: 12px; }
+  .dv-strip .lbl { color: var(--muted); margin-right: 4px; }
+  .dv-pg { font-family: var(--mono); font-size: 11.5px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 2px; background: none; color: var(--ink-2); cursor: pointer; }
+  .dv-pg:hover { border-color: var(--navy); color: var(--navy); }
+  .dv-pg[aria-current="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  .dv-pages { flex: 1; overflow-y: auto; padding: 22px 26px 40px; display: flex; flex-direction: column; gap: 22px; scroll-behavior: smooth; }
+  .dv-pages:focus { outline: none; }
+  .dv-page { background: #FFFFFF; color: var(--ink); padding: 40px 52px 32px; min-height: 560px; display: flex; flex-direction: column; font-size: 13.5px; line-height: 1.65;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10), 0 6px 18px rgba(9, 30, 52, 0.08); scroll-margin-top: 22px; }
+  .dv-page .rh { display: flex; justify-content: space-between; gap: 16px; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 30px; }
+  .dv-page .rf { margin-top: auto; padding-top: 30px; display: flex; justify-content: space-between; gap: 16px; font-size: 10.5px; color: var(--muted); }
+  .dv-page .rf span + span { font-family: var(--mono); }
+  .dv-page .sec { font-family: var(--mono); font-size: 11px; color: var(--gold-ink); margin: 0 0 6px; letter-spacing: 0.02em; }
+  .dv-page h2 { font-size: 20px; margin: 0 0 14px; }
+  .dv-page p { margin: 0 0 12px; max-width: 60ch; }
+  .dv-page p.note { font-size: 12px; color: var(--muted); }
+  .dv-page table { width: auto; min-width: 60%; font-size: 12.5px; margin: 8px 0 18px; }
+  .dv-page th { border-bottom-color: var(--ink); padding: 6px 10px; }
+  .dv-page td { padding: 6px 10px; }
+  .dv-page td.on { background: #F5EFDF; font-weight: 600; }
+  .dv-page mark { background: rgba(179, 154, 87, 0.22); color: inherit; padding: 1px 3px; border-radius: 2px; white-space: nowrap; }
+  .dv-page mark.on { background: #F2E2AE; box-shadow: 0 0 0 2px var(--gold); animation: dv-pulse 1.4s ease-out 1; }
+  @keyframes dv-pulse { 0% { box-shadow: 0 0 0 10px rgba(179, 154, 87, 0.0), 0 0 0 2px var(--gold); } 30% { box-shadow: 0 0 0 8px rgba(179, 154, 87, 0.35), 0 0 0 2px var(--gold); } 100% { box-shadow: 0 0 0 2px var(--gold); } }
+  @media (max-width: 1000px) {
+    #doc-viewer, .view-btn, .view-cell, th.view { display: none !important; }
+    body.dv-open { padding-right: 0; }
+  }
+  @media print { #doc-viewer { display: none !important; } }
+
   /* ---------- Print-only investor dossier ---------- */
   #print-dossier { display: none; }
   .paper { color: var(--ink); font-size: 12.5px; }
@@ -559,6 +607,7 @@
 
 <article id="print-dossier" class="paper" aria-hidden="true"></article>
 <footer class="site-foot"><p>Platform demonstration. All companies, institutions, documents, figures and participation amounts are fictional and illustrative. Nothing on this page is an offer of securities, investment advice or a solicitation of an offer. Any future offering would be addressed to professional investors within the meaning of MiFID&nbsp;II only, in minimum denominations of €100,000. Files chosen in the company view stay in your browser; nothing is uploaded. © 2026 VanillaBonds.</p></footer>
+<aside id="doc-viewer" role="complementary" aria-label="Source document" hidden></aside>
 
 <script>
 (function () {
@@ -567,8 +616,9 @@
   /* =========================================================
      DATA — read-only snapshot of three illustrative (fictional) issuers.
      Reported figures only; every ratio is calculated by the shared
-     functions below. Source documents and page numbers are fictional
-     placeholders: no documents exist or have been uploaded.
+     functions below. Source documents and page numbers are fictional.
+     No files exist: the side-by-side source viewer composes every referenced
+     page from this data (quote = the sentence in the document, {{v}} = the value).
 
      Per issuer:
        company      profile (name, country, sector, description, ownership, management, purpose)
@@ -577,7 +627,8 @@
        finRows      reported figures, EUR m; pages = [latest, prior, summary] page in finDocs
        bond         proposed terms; st 'proposed' | 'discussion'; empty value = open
        facts        key facts with source; link = [finRow, yearIndex]; profile = label in
-                    "Company & operations"; empty value = information requested
+                    "Company & operations"; empty value = information requested;
+                    h = heading of the document page, quote = its sentence ({{v}} = value)
        requests     documents requested; st 'outstanding' | 'received'
        diligence    issuer-specific questions; text supports {{tokens}} resolved from data;
                     shown while any item in `open` remains open (or always: true)
@@ -654,12 +705,18 @@
         { id: 'f6',  fact: 'Interest expense 2025',              link: ['interest', 4] },
         { id: 'f7',  fact: 'Revenue 2024',                       link: ['revenue', 3] },
         { id: 'f8',  fact: 'EBITDA 2024',                        link: ['ebitda', 3] },
-        { id: 'f11', fact: 'Production sites',                   value: 'Eindhoven (NL), Venlo (NL), Poznań (PL)', doc: 'MP', page: '7', profile: 'Production sites' },
-        { id: 'f9',  fact: 'Year of incorporation',              value: '1987', doc: 'MP', page: '3', profile: 'Incorporated' },
-        { id: 'f10', fact: 'Employees (FTE), end 2025',          value: '640', doc: 'AR25', page: '6', profile: 'Employees (FTE, end 2025)' },
-        { id: 'f12', fact: 'Existing RCF leverage covenant',     value: 'Net debt / EBITDA ≤ 3.50x', doc: 'FS24', page: '27' },
-        { id: 'f13', fact: 'Revolving credit facility',          value: '€20 million committed, matures 2027', doc: 'FS24', page: '27' },
-        { id: 'f14', fact: 'Planned capex 2026–2030',            value: '€58 million cumulative', doc: 'BP', page: '18' },
+        { id: 'f11', fact: 'Production sites',                   value: 'Eindhoven (NL), Venlo (NL), Poznań (PL)', doc: 'MP', page: '7', profile: 'Production sites',
+          h: 'Footprint', quote: 'Three production sites: {{v}}. Machining and assembly in the Netherlands; the Poznań plant supplies sub-assemblies to the Dutch sites and to Central European OEM customers.' },
+        { id: 'f9',  fact: 'Year of incorporation',              value: '1987', doc: 'MP', page: '3', profile: 'Incorporated',
+          h: 'Company overview', quote: 'Incorporated in {{v}} as a precision-machining workshop in Eindhoven; family-owned in the second generation.' },
+        { id: 'f10', fact: 'Employees (FTE), end 2025',          value: '640', doc: 'AR25', page: '6', profile: 'Employees (FTE, end 2025)',
+          h: 'Our people', quote: 'At 31 December 2025 the group employed {{v}} full-time equivalents, around two thirds in the Netherlands and one third in Poland.' },
+        { id: 'f12', fact: 'Existing RCF leverage covenant',     value: 'Net debt / EBITDA ≤ 3.50x', doc: 'FS24', page: '27',
+          h: 'Note 18 — Borrowings', quote: 'The revolving credit facility is subject to a leverage covenant, tested quarterly: {{v}}. The covenant was met on all test dates in 2024.' },
+        { id: 'f13', fact: 'Revolving credit facility',          value: '€20 million committed, matures 2027', doc: 'FS24', page: '27',
+          h: 'Note 18 — Borrowings', quote: 'The group has a revolving credit facility with its Dutch house bank of {{v}}. It is used for working-capital purposes and ranks equally with the amortising term loans.' },
+        { id: 'f14', fact: 'Planned capex 2026–2030',            value: '€58 million cumulative', doc: 'BP', page: '18',
+          h: 'Investment programme 2026–2030', quote: 'Planned capital expenditure over the plan period totals {{v}}, of which the Venlo expansion and the automation of machining lines account for the largest part.' },
         { id: 'f15', fact: 'Top-10 customer share of revenue',   value: '', doc: 'MP', mandatory: true },
         { id: 'f16', fact: 'Order backlog, 31 Dec 2025',         value: '', doc: 'AR25' },
         { id: 'f17', fact: 'Auditor’s opinion on 2025 accounts', value: '', doc: 'AR25', mandatory: true }
@@ -763,14 +820,22 @@
         { id: 'n6',  fact: 'Interest expense 2025',                link: ['interest', 4] },
         { id: 'n7',  fact: 'Revenue 2024',                         link: ['revenue', 3] },
         { id: 'n8',  fact: 'EBITDA 2024',                          link: ['ebitda', 3] },
-        { id: 'n9',  fact: 'Warehouses',                           value: 'Aarhus and Kolding (DK), Malmö and Gothenburg (SE)', doc: 'MP', page: '9', profile: 'Operating sites' },
-        { id: 'n10', fact: 'Road fleet, end 2025',                 value: 'c. 310 owned and leased trucks and trailers', doc: 'FA', page: '3', profile: 'Fleet' },
-        { id: 'n11', fact: 'Year of incorporation',                value: '1994', doc: 'MP', page: '4', profile: 'Incorporated' },
-        { id: 'n12', fact: 'Employees (FTE), end 2025',            value: '780', doc: 'AR25', page: '6', profile: 'Employees (FTE, end 2025)' },
-        { id: 'n13', fact: 'Lease liabilities in financial debt, 2025', value: '€21.4 million', doc: 'AR25', page: '33' },
-        { id: 'n14', fact: 'Fleet financing facilities',          value: '€23.1 million, maturing 2026–2028', doc: 'FS24', page: '29' },
-        { id: 'n15', fact: 'Top-3 customer share of revenue',      value: '41%', doc: 'MP', page: '12' },
-        { id: 'n16', fact: 'Planned warehouse automation capex',   value: '€12 million in 2026–2027', doc: 'BP', page: '15' },
+        { id: 'n9',  fact: 'Warehouses',                           value: 'Aarhus and Kolding (DK), Malmö and Gothenburg (SE)', doc: 'MP', page: '9', profile: 'Operating sites',
+          h: 'Network', quote: 'Four warehouses: {{v}}. Each site combines cross-docking with contract warehousing for regional customers.' },
+        { id: 'n10', fact: 'Road fleet, end 2025',                 value: 'c. 310 owned and leased trucks and trailers', doc: 'FA', page: '3', profile: 'Fleet',
+          h: 'Fleet summary', quote: 'Road fleet at 31 December 2025: {{v}}. Owned units are carried at cost less depreciation; leased units are recognised as right-of-use assets.' },
+        { id: 'n11', fact: 'Year of incorporation',                value: '1994', doc: 'MP', page: '4', profile: 'Incorporated',
+          h: 'Company overview', quote: 'Founded in {{v}} by the Holm family as a regional haulage company in Aarhus; warehousing was added in the following decade.' },
+        { id: 'n12', fact: 'Employees (FTE), end 2025',            value: '780', doc: 'AR25', page: '6', profile: 'Employees (FTE, end 2025)',
+          h: 'Our people', quote: 'At 31 December 2025 the group employed {{v}} full-time equivalents, the majority drivers and warehouse staff in Denmark.' },
+        { id: 'n13', fact: 'Lease liabilities in financial debt, 2025', value: '€21.4 million', doc: 'AR25', page: '33',
+          h: 'Note 22 — Lease liabilities', quote: 'Lease liabilities included in financial debt at 31 December 2025 amounted to {{v}}, relating mainly to trucks, trailers and the Malmö warehouse.' },
+        { id: 'n14', fact: 'Fleet financing facilities',          value: '€23.1 million, maturing 2026–2028', doc: 'FS24', page: '29',
+          h: 'Note 19 — Borrowings', quote: 'Fleet financing facilities with two Danish banks: {{v}}. The facilities are secured on the financed vehicles.' },
+        { id: 'n15', fact: 'Top-3 customer share of revenue',      value: '41%', doc: 'MP', page: '12',
+          h: 'Customers', quote: 'The three largest customers account for {{v}} of revenue, under multi-year framework contracts.' },
+        { id: 'n16', fact: 'Planned warehouse automation capex',   value: '€12 million in 2026–2027', doc: 'BP', page: '15',
+          h: 'Warehouse automation', quote: 'The automation of the Kolding and Malmö warehouses requires {{v}}, to be funded from new long-term financing.' },
         { id: 'n17', fact: 'Fleet market valuation',               value: '', doc: 'FA', mandatory: true },
         { id: 'n18', fact: 'Contract renewal dates, top-3 customers', value: '', doc: 'MP', mandatory: true },
         { id: 'n19', fact: 'Share of fuel costs passed through to customers', value: '', doc: 'MP' }
@@ -872,14 +937,22 @@
         { id: 'a6',  fact: 'Interest expense 2025',                link: ['interest', 4] },
         { id: 'a7',  fact: 'Revenue 2024',                         link: ['revenue', 3] },
         { id: 'a8',  fact: 'EBITDA 2024',                          link: ['ebitda', 3] },
-        { id: 'a9',  fact: 'Production plants',                    value: 'Augsburg, Ulm and Chemnitz (DE), Linz (AT)', doc: 'SO', page: '6', profile: 'Production sites' },
-        { id: 'a10', fact: 'Annual production capacity',           value: 'c. 410,000 tonnes', doc: 'SO', page: '8', profile: 'Annual capacity' },
-        { id: 'a11', fact: 'Year of incorporation',                value: '1962', doc: 'MP', page: '3', profile: 'Incorporated' },
-        { id: 'a12', fact: 'Employees (FTE), end 2025',            value: '1,420', doc: 'AR25', page: '5', profile: 'Employees (FTE, end 2025)' },
-        { id: 'a13', fact: 'Expansion capex 2026–2028',            value: '€74 million', doc: 'EP', page: '11' },
-        { id: 'a14', fact: 'Top-10 customer share of revenue',     value: '38%', doc: 'MP', page: '14' },
-        { id: 'a15', fact: 'Energy and recovered fibre in cost of sales, 2025', value: 'Energy 9%; recovered fibre 27%', doc: 'AR25', page: '22' },
-        { id: 'a16', fact: 'Syndicated facility leverage covenant', value: 'Net debt / EBITDA ≤ 3.00x', doc: 'FS24', page: '31' },
+        { id: 'a9',  fact: 'Production plants',                    value: 'Augsburg, Ulm and Chemnitz (DE), Linz (AT)', doc: 'SO', page: '6', profile: 'Production sites',
+          h: 'Production footprint', quote: 'Four production plants: {{v}}. Moulded-fibre and corrugated lines are concentrated in Augsburg and Ulm; Chemnitz and Linz serve food and pharmaceutical customers.' },
+        { id: 'a10', fact: 'Annual production capacity',           value: 'c. 410,000 tonnes', doc: 'SO', page: '8', profile: 'Annual capacity',
+          h: 'Capacity', quote: 'Installed annual production capacity across the four plants is {{v}}. The new Chemnitz line adds capacity from its commissioning.' },
+        { id: 'a11', fact: 'Year of incorporation',                value: '1962', doc: 'MP', page: '3', profile: 'Incorporated',
+          h: 'Company overview', quote: 'Founded in {{v}} in Augsburg as a cardboard-box maker; family-owned for three generations.' },
+        { id: 'a12', fact: 'Employees (FTE), end 2025',            value: '1,420', doc: 'AR25', page: '5', profile: 'Employees (FTE, end 2025)',
+          h: 'Our people', quote: 'At 31 December 2025 the group employed {{v}} full-time equivalents across four plants and the Augsburg head office.' },
+        { id: 'a13', fact: 'Expansion capex 2026–2028',            value: '€74 million', doc: 'EP', page: '11',
+          h: 'Investment summary 2026–2028', quote: 'Total expansion capital expenditure in 2026–2028 amounts to {{v}}, of which the new moulded-fibre line at Chemnitz is the largest single item.' },
+        { id: 'a14', fact: 'Top-10 customer share of revenue',     value: '38%', doc: 'MP', page: '14',
+          h: 'Customers', quote: 'The ten largest customers account for {{v}} of revenue, spread across the food, pharmaceutical and industrial segments.' },
+        { id: 'a15', fact: 'Energy and recovered fibre in cost of sales, 2025', value: 'Energy 9%; recovered fibre 27%', doc: 'AR25', page: '22',
+          h: 'Cost of sales', quote: 'Shares of cost of sales in 2025: {{v}}. Both are purchased under a mix of contracts and spot purchases.' },
+        { id: 'a16', fact: 'Syndicated facility leverage covenant', value: 'Net debt / EBITDA ≤ 3.00x', doc: 'FS24', page: '31',
+          h: 'Note 21 — Borrowings', quote: 'The syndicated revolving facility carries a maintenance covenant, tested semi-annually: {{v}}. The covenant was met on all test dates.' },
         { id: 'a17', fact: 'Contracted volumes for the new Chemnitz line', value: '', doc: 'EP', followUp: true },
         { id: 'a18', fact: 'Hedged share of 2026 energy and fibre purchases', value: '', doc: 'MP', followUp: true }
       ],
@@ -1077,9 +1150,9 @@
 
     var sf = sourcedFacts(o);
     html += '<section class="section" id="c-figures"><p class="label">' + sf.length + ' facts with source</p><h2>Figures drawn from your documents</h2>' +
-      '<p class="muted small">Every figure carries its source document and page. The CFO confirms the company information. A named credit professional on our side signs separately that each fact was checked against its source.</p>' +
-      '<div class="table-scroll"><table><caption class="visually-hidden">Facts with source, ' + esc(c.name) + '</caption><thead><tr><th scope="col">Fact</th><th scope="col">Value</th><th scope="col">Source</th><th scope="col" class="num">Page</th></tr></thead><tbody>' +
-      sf.map(function (f) { var src = factSource(o, f), d = doc(o, src.doc); return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td class="muted">' + esc(d.title) + (f.answered ? ' <span class="st-open">company response</span>' : '') + '</td><td class="num">' + esc(src.page) + '</td></tr>'; }).join('') +
+      '<p class="muted small">Every figure carries its source document and page; View opens the page beside this screen with the figure highlighted. The CFO confirms the company information. A named credit professional on our side signs separately that each fact was checked against its source.</p>' +
+      '<div class="table-scroll"><table><caption class="visually-hidden">Facts with source, ' + esc(c.name) + '</caption><thead><tr><th scope="col">Fact</th><th scope="col">Value</th><th scope="col">Source</th><th scope="col" class="num">Page</th><th scope="col" class="view"><span class="visually-hidden">View in document</span></th></tr></thead><tbody>' +
+      sf.map(function (f) { var src = factSource(o, f), d = doc(o, src.doc); return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td class="muted">' + esc(d.title) + (f.answered ? ' <span class="st-open">company response</span>' : '') + '</td><td class="num">' + esc(src.page) + '</td><td class="view-cell">' + (f.answered ? '' : viewBtn(o, f)) + '</td></tr>'; }).join('') +
       '</tbody></table></div>' +
       '<div class="confirm">' + (o.confirmedBy
         ? '<p><strong>Confirmed.</strong> ' + esc(o.confirmedBy) + '. Investors see this confirmation on the fact file. <button type="button" class="chip-link" data-unconfirm="' + o.id + '">Withdraw</button></p>'
@@ -1928,22 +2001,22 @@
       '</section>';
 
     html += '<section class="section" aria-labelledby="h-docs"><p class="label">Source index</p><h2 id="h-docs">Source documents</h2>' +
-      '<p class="muted small">Documents are listed for reference. They are not available for download in this environment.</p>' +
+      '<p class="muted small">Open shows the referenced pages of a document beside this screen. Documents are not available for download in this environment.</p>' +
       '<div class="table-scroll"><table><caption class="visually-hidden">Source documents, ' + esc(c.name) + '</caption><thead><tr>' +
-      '<th scope="col">Document</th><th scope="col">Category</th><th scope="col">Reference ID</th><th scope="col">Used for</th><th scope="col">Availability</th></tr></thead><tbody>' +
+      '<th scope="col">Document</th><th scope="col">Category</th><th scope="col">Reference ID</th><th scope="col">Used for</th><th scope="col" class="view"><span class="visually-hidden">Open</span></th></tr></thead><tbody>' +
       o.docs.map(function (d) {
         return '<tr><td>' + esc(d.title) + '</td><td class="muted">' + esc(d.category) + '</td><td><span class="doc-id">' + esc(d.ref) + '</span></td>' +
-          '<td class="small">' + esc(docUsage(o, d.id)) + '</td><td><span class="ref-only">Reference only</span></td></tr>';
+          '<td class="small">' + esc(docUsage(o, d.id)) + '</td><td class="view-cell">' + docViewBtn(o, d) + '</td></tr>';
       }).join('') + '</tbody></table></div></section>';
 
     html += '<section class="section" aria-labelledby="h-refs"><p class="label">Traceability</p><h2 id="h-refs">Source references for material facts</h2>' +
       '<div class="table-scroll"><table><caption class="visually-hidden">Source references for material facts, ' + esc(c.name) + '</caption><thead><tr>' +
-      '<th scope="col">Fact</th><th scope="col">Value</th><th scope="col">Source document</th><th scope="col">Reference ID</th><th scope="col" class="num">Page</th></tr></thead><tbody>' +
+      '<th scope="col">Fact</th><th scope="col">Value</th><th scope="col">Source document</th><th scope="col">Reference ID</th><th scope="col" class="num">Page</th><th scope="col" class="view"><span class="visually-hidden">View in document</span></th></tr></thead><tbody>' +
       sourcedFacts(o).map(function (f) {
         var s = factSource(o, f), dd = doc(o, s.doc);
-        return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td>' + esc(dd.title) + '</td><td><span class="doc-id">' + esc(dd.ref) + '</span></td><td class="num">' + esc(s.page) + '</td></tr>';
+        return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td>' + esc(dd.title) + '</td><td><span class="doc-id">' + esc(dd.ref) + '</span></td><td class="num">' + esc(s.page) + '</td><td class="view-cell">' + viewBtn(o, f) + '</td></tr>';
       }).join('') + '</tbody></table></div>' +
-      '<p class="muted small" style="margin-top:8px">Financial figures for ' + YEARS[0] + '–' + YEARS[LAST - 2] + ' are taken from the five-year summary in ' + esc(summary.title) + '; page references for every reported line are included in the dossier. Page numbers are illustrative placeholders.</p></section>';
+      '<p class="muted small" style="margin-top:8px">View opens the source page beside this screen with the fact highlighted. Financial figures for ' + YEARS[0] + '–' + YEARS[LAST - 2] + ' are taken from the five-year summary in ' + esc(summary.title) + '; page references for every reported line are included in the dossier. Page numbers are illustrative placeholders.</p></section>';
 
     var complete = dossierStatus(o) === 'complete';
     html += '<section class="section" aria-labelledby="h-req"><p class="label">' + (complete ? 'Received and follow-up' : 'Outstanding') + '</p><h2 id="h-req">' + (complete ? 'Documents and follow-up items' : 'Requested from the company') + '</h2>' +
@@ -2072,6 +2145,150 @@
   function kv(rows) {
     return '<table class="kv"><tbody>' + rows.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</tbody></table>';
   }
+
+  /* =========================================================
+     Source viewer — split screen with the referenced pages of a document.
+     No files exist: each referenced page is composed from the data above.
+       key   fact id ('f12') or financial cell ('revenue@4'); a linked fact resolves to its cell
+       items everything on one page of a document: financial cells and company facts
+     ========================================================= */
+  var ROW_DOC = {
+    revenue:   { h: 'Revenue',                                       s: 'Revenue for the year ended 31 December {Y} amounted to {V}{P}.' },
+    ebitda:    { h: 'Operating result before depreciation (EBITDA)', s: 'EBITDA for {Y} amounted to {V}{P}.' },
+    netIncome: { h: 'Result for the year',                           s: 'Net income for {Y} amounted to {V}{P}.' },
+    cash:      { h: 'Cash and cash equivalents',                     s: 'Cash and cash equivalents at 31 December {Y} amounted to {V}{P}.' },
+    debt:      { h: 'Borrowings',                                    s: 'Total financial debt at 31 December {Y} amounted to {V}{P}.' },
+    ocf:       { h: 'Cash flow from operating activities',           s: 'Cash flow from operating activities in {Y} amounted to {V}{P}.' },
+    capex:     { h: 'Investments in property, plant and equipment',  s: 'Capital expenditure in {Y} amounted to {V}{P}.' },
+    interest:  { h: 'Finance costs',                                 s: 'Interest expense for {Y} amounted to {V}{P}.' }
+  };
+  function factKey(f) { return f.link ? f.link[0] + '@' + f.link[1] : f.id; }
+  function viewBtn(o, f) {
+    var s = factSource(o, f), d = doc(o, s.doc);
+    if (!d || blank(s.page)) return '';
+    return '<button type="button" class="view-btn" data-view="' + o.id + '/' + f.id + '" aria-pressed="false" aria-controls="doc-viewer"' +
+      ' aria-label="' + esc('View ' + f.fact + ' in ' + d.title + ', page ' + s.page) + '">View</button>';
+  }
+  function docViewBtn(o, d) {
+    if (!docItems(o, d.id).length) return '<span class="ref-only">No page referenced</span>';
+    return '<button type="button" class="view-btn" data-view="' + o.id + '/doc:' + d.id + '" aria-pressed="false" aria-controls="doc-viewer"' +
+      ' aria-label="' + esc('Open ' + d.title) + '">Open</button>';
+  }
+  // Everything that sits on a page of document `id`: financial cells and company facts, sorted by page.
+  function docItems(o, id) {
+    var items = [];
+    o.finRows.forEach(function (r) {
+      YEARS.forEach(function (y, i) {
+        var s = cellSource(o, r.key, i);
+        if (s.doc === id && val(o, r.key, i) != null) items.push({ page: +s.page, key: r.key + '@' + i, row: r.key, i: i });
+      });
+    });
+    sourcedFacts(o).forEach(function (f) {
+      if (!f.link && f.doc === id && !blank(f.page)) items.push({ page: +f.page, key: f.id, f: f });
+    });
+    return items.sort(function (a, b) { return a.page - b.page; });
+  }
+  function docPages(o, id) {
+    var pages = [];
+    docItems(o, id).forEach(function (it) {
+      var p = pages[pages.length - 1];
+      if (!p || p.page !== it.page) { p = { page: it.page, items: [] }; pages.push(p); }
+      p.items.push(it);
+    });
+    return pages;
+  }
+  function markHtml(key, text, active) { return '<mark data-k="' + key + '"' + (key === active ? ' class="on"' : '') + '>' + esc(text) + '</mark>'; }
+  function quoteHtml(f, active) {
+    var q = f.quote || (f.fact + ': {{v}}.'), parts = q.split('{{v}}');
+    return esc(parts[0]) + markHtml(f.id, f.value, active) + esc(parts.slice(1).join(f.value));
+  }
+  function docPageHtml(o, d, p, active) {
+    var fin = p.items.filter(function (it) { return it.row; }), facts = p.items.filter(function (it) { return it.f; });
+    var first = p.items[0], heading = first.row ? ROW_DOC[first.row].h : (first.f.h || first.f.fact);
+    var body = '';
+    if (fin.length) {
+      var summary = d.id === o.finDocs[2], years = [];
+      fin.forEach(function (it) { if (years.indexOf(it.i) < 0) years.push(it.i); if (!summary && it.i > 0 && years.indexOf(it.i - 1) < 0) years.push(it.i - 1); });
+      years.sort(function (a, b) { return b - a; });
+      if (summary) {
+        body += '<p>Reported figures for the years shown, in EUR millions.</p>';
+      } else {
+        fin.forEach(function (it) {
+          var prev = val(o, it.row, it.i - 1), P = prev == null ? '' : ' (' + YEARS[it.i - 1] + ': ' + eurMillion(prev) + ')';
+          body += '<p>' + ROW_DOC[it.row].s.replace('{Y}', YEARS[it.i]).replace('{V}', markHtml(it.key, eurMillion(val(o, it.row, it.i)), active)).replace('{P}', esc(P)) + '</p>';
+        });
+      }
+      var rows = []; fin.forEach(function (it) { if (rows.indexOf(it.row) < 0) rows.push(it.row); });
+      body += '<table><thead><tr><th scope="col">EUR millions</th>' + years.map(function (i) { return '<th scope="col" class="num">' + YEARS[i] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        rows.map(function (r) {
+          return '<tr><td>' + ROW_LABEL[r] + '</td>' + years.map(function (i) {
+            var k = r + '@' + i, on = fin.some(function (it) { return it.key === k; }) && k === active;
+            return '<td class="num' + (on ? ' on' : '') + '">' + fmtM(val(o, r, i)) + '</td>';
+          }).join('') + '</tr>';
+        }).join('') + '</tbody></table>';
+      body += '<p class="note">Fiscal year ending 31 December.' + (o.company.reportingNote ? ' ' + esc(o.company.reportingNote) : '') + '</p>';
+    }
+    facts.forEach(function (it) { body += '<p>' + quoteHtml(it.f, active) + '</p>'; });
+    return '<article class="dv-page" id="dv-page-' + p.page + '" aria-label="' + esc(d.title + ', page ' + p.page) + '">' +
+      '<div class="rh"><span>' + esc(d.title) + '</span><span>' + esc(o.company.name) + '</span></div>' +
+      '<p class="sec">' + esc(d.category) + '</p><h2>' + esc(heading) + '</h2>' + body +
+      '<div class="rf"><span>' + esc(d.ref) + '</span><span>Page ' + p.page + '</span></div></article>';
+  }
+  var DV = { o: null, doc: null, active: null };
+  function openViewer(o, target) {
+    var f = null, key, d, page;
+    if (target.indexOf('doc:') === 0) { d = doc(o, target.slice(4)); key = null; }
+    else { f = fact(o, target); if (!f) return; var src = factSource(o, f); d = doc(o, src.doc); key = factKey(f); page = +src.page; }
+    var pages = docPages(o, d.id);
+    if (!pages.length) return;
+    if (page == null) page = pages[0].page;
+    var el = document.getElementById('doc-viewer'), same = DV.o === o.id && DV.doc === d.id;
+    DV.o = o.id; DV.doc = d.id; DV.active = key;
+    el.innerHTML = '<div class="dv-bar"><div><p class="dv-kicker">Source document</p><h2 class="dv-title">' + esc(d.title) + '</h2>' +
+        '<p class="dv-meta">' + esc(d.ref) + ' · ' + esc(d.category) + ' · ' + pages.length + ' referenced page' + (pages.length > 1 ? 's' : '') + '</p></div>' +
+        '<button type="button" class="dv-close" data-view-close aria-label="Close source document">×</button></div>' +
+      '<nav class="dv-strip" aria-label="Referenced pages"><span class="lbl">Pages</span>' +
+        pages.map(function (p) { return '<button type="button" class="dv-pg" data-view-page="' + p.page + '"' + (p.page === page ? ' aria-current="true"' : '') + '>' + p.page + '</button>'; }).join('') + '</nav>' +
+      '<div class="dv-pages" tabindex="-1">' + pages.map(function (p) { return docPageHtml(o, d, p, key); }).join('') + '</div>';
+    el.hidden = false;
+    document.body.classList.add('dv-open');
+    Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"]'), function (b) { b.setAttribute('aria-pressed', 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('tr.fact-on'), function (r) { r.classList.remove('fact-on'); });
+    var btn = document.querySelector('.view-btn[data-view="' + o.id + '/' + target + '"]');
+    if (btn) { btn.setAttribute('aria-pressed', 'true'); var row = btn.closest('tr'); if (row) { row.classList.add('fact-on'); row.scrollIntoView({ block: 'nearest' }); } }
+    var pagesEl = el.querySelector('.dv-pages');
+    if (!same) pagesEl.style.scrollBehavior = 'auto';
+    var mark = key ? el.querySelector('mark[data-k="' + key + '"]') : null, pg = document.getElementById('dv-page-' + page);
+    if (mark) mark.scrollIntoView({ block: 'center' }); else if (pg) pg.scrollIntoView({ block: 'start' });
+    pagesEl.style.scrollBehavior = '';
+    pagesEl.focus({ preventScroll: true });
+  }
+  function closeViewer() {
+    var el = document.getElementById('doc-viewer');
+    if (el.hidden) return;
+    el.hidden = true; el.innerHTML = '';
+    document.body.classList.remove('dv-open');
+    DV.o = DV.doc = DV.active = null;
+    Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"]'), function (b) { b.setAttribute('aria-pressed', 'false'); });
+    Array.prototype.forEach.call(document.querySelectorAll('tr.fact-on'), function (r) { r.classList.remove('fact-on'); });
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-view],[data-view-close],[data-view-page]');
+    if (!t) return;
+    if (t.hasAttribute('data-view-close')) { closeViewer(); return; }
+    if (t.hasAttribute('data-view-page')) {
+      var pg = document.getElementById('dv-page-' + t.getAttribute('data-view-page'));
+      Array.prototype.forEach.call(document.querySelectorAll('.dv-pg'), function (b) { b.removeAttribute('aria-current'); });
+      t.setAttribute('aria-current', 'true');
+      if (pg) pg.scrollIntoView({ block: 'start' });
+      return;
+    }
+    var p = t.getAttribute('data-view').split('/'), o = OPPORTUNITIES[p[0]];
+    if (!o) return;
+    if (t.getAttribute('aria-pressed') === 'true') closeViewer(); else openViewer(o, p[1]);
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeViewer(); });
+  window.addEventListener('hashchange', closeViewer);
 
   /* =========================================================
      Routing — hash based, works on file://
