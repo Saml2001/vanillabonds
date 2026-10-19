@@ -1037,6 +1037,19 @@
   function fmtDate(iso) { return iso ? new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : ''; }
   function workdaysLeft(iso) { var t = new Date(); t.setHours(0, 0, 0, 0); var end = new Date(iso + 'T00:00:00'); if (!(end >= t)) return 0; var n = 0, d = new Date(t); while (d < end) { d.setDate(d.getDate() + 1); if (d.getDay() % 6) n++; } return n; }
   function daysWord(n) { return n + ' working day' + (n === 1 ? '' : 's'); }
+  // Price: the spread over 3m Euribor for a floating bond, the coupon for a fixed one. Anchors set it and are visible to everyone;
+  // co-investors follow it, and their orders are seen by the company only.
+  function isFixed(o) { return /fixed/i.test(termText(o, 'couponType') || ''); }
+  function priceLabel(o) { return isFixed(o) ? 'Coupon (%)' : 'Spread (bp over 3m Euribor)'; }
+  function priceStep(o) { return isFixed(o) ? 0.05 : 5; }
+  function fmtPrice(o, p) { return p == null || p === '' ? '\u2013' : isFixed(o) ? (+p).toFixed(2) + '%' : 'E+' + Math.round(p); }
+  function anchorPrice(o) {   // amount-weighted price of the committed anchors; before any commitment, of every anchor that named a price
+    function avg(list) { var w = 0, s = 0; list.forEach(function (a) { if (a.price != null) { w += a.amountEURm; s += a.amountEURm * a.price; } }); return w ? s / w : null; }
+    var committed = avg(o.anchors.filter(function (a) { return a.status === 'binding' || a.status === 'conditional'; }));
+    return committed != null ? committed : avg(o.anchors);
+  }
+  function anchorPriceRange(o) { var ps = o.anchors.filter(function (a) { return a.price != null; }).map(function (a) { return +a.price; }); if (!ps.length) return ''; var lo = Math.min.apply(null, ps), hi = Math.max.apply(null, ps); return lo === hi ? fmtPrice(o, lo) : fmtPrice(o, lo) + ' to ' + fmtPrice(o, hi); }
+  function defaultPrice(o) { var p = anchorPrice(o); if (p == null) return isFixed(o) ? 6 : 650; return isFixed(o) ? Math.round(p * 20) / 20 : Math.round(p); }
   function windowsLine(o) {
     var w = WINDOWS[o.id]; if (!w) return '';
     var ph = PHASE[o.id], a, c;
@@ -1139,20 +1152,20 @@
       });
       o.confirmedBy = bag('confirmed')[id] || '';
       var ind = bag('indications')[id];
-      if (ind && ind.amount > 0) o.anchors.push({ name: 'Your institution', institutionType: 'Anchor investor (you, in this demonstration)', amountEURm: ind.amount, status: ind.binding ? 'binding' : 'indicative', you: true,
+      if (ind && ind.amount > 0) o.anchors.push({ name: 'Your institution', institutionType: 'Anchor investor (you, in this demonstration)', amountEURm: ind.amount, price: ind.price, status: ind.binding ? 'binding' : 'indicative', you: true,
         conditions: ind.binding ? 'Binding commitment given in this demonstration.' : 'Indication of interest given in this demonstration; not a commitment.' });
-      o.orders = bag('orders')[id] || 0;
+      var od = bag('orders')[id]; o.orders = od ? (typeof od === 'number' ? { amount: od, price: null } : od) : null;
     });
   }
   applyState();
 
   function canSee(o) { return role() === 'anchor' || (role() === 'coinvestor' && PHASE[o.id] === 'open') || (role() === 'company' && o.id === STATE.company); }
   function phaseChip(o) { return '<span class="phase-chip ' + PHASE[o.id] + '" title="Where the financing stands">' + PHASE_LABEL[PHASE[o.id]] + '</span>'; }
-  function coverTotal(o) { return committedTotal(o) + (o.orders || 0); }
+  function coverTotal(o) { return committedTotal(o) + (o.orders ? o.orders.amount : 0); }
   // Coverage of the issue: anchors (binding, conditional) plus co-investor orders.
   function coverBar(o) {
     var s = anchorSummary(o), rest = Math.max(0, s.issue - coverTotal(o));
-    var rows = [['binding', 'Anchors, binding', s.binding], ['conditional', 'Anchors, conditional', s.conditional], ['orders', 'Co-investor orders', o.orders || 0], ['rest', 'Not yet covered', rest]].filter(function (x) { return x[2] > 0; });
+    var rows = [['binding', 'Anchors, binding', s.binding], ['conditional', 'Anchors, conditional', s.conditional], ['orders', 'Your order', o.orders ? o.orders.amount : 0], ['rest', 'Not yet covered', rest]].filter(function (x) { return x[2] > 0; });
     return '<div class="anchor-bar large" role="img" aria-label="' + esc('Coverage of ' + eurAmt(s.issue) + ' issue: ' + rows.map(function (x) { return x[1] + ' ' + eurAmt(x[2]); }).join('; ')) + '">' +
       rows.map(function (x) { return '<span class="seg seg-' + x[0] + '" style="width:' + (shareOfIssue(o, x[2]) * 100) + '%" title="' + esc(x[1] + ': ' + eurAmt(x[2])) + '"></span>'; }).join('') + '</div>' +
       '<ul class="anchor-legend">' + rows.map(function (x) { return '<li><i class="sw seg-' + x[0] + '" aria-hidden="true"></i><span class="lg-label">' + x[1] + '</span> <span class="lg-val">' + eurAmt(x[2]) + ' · ' + fmtShare(shareOfIssue(o, x[2])) + '</span></li>'; }).join('') + '</ul>';
@@ -1192,11 +1205,11 @@
       return '<div class="access"><div><p class="eyebrow">Anchor window</p><h2>First access. Binding ticket within ten working days.</h2>' + deadlineTile(o) + windowsLine(o) +
         '<p>' + esc(anchorShort(o, ' + ', true)) + ' so far. Capacity is reserved for anchors before co-investors are invited; coupon, security and covenants are settled with the anchors.</p></div>' +
         (you
-          ? '<div class="access-act"><p class="label">Your participation</p><div class="val">' + eurAmt(you.amountEURm) + ' · ' + esc(STAGE_LABEL[you.status]) + '</div>' +
+          ? '<div class="access-act"><p class="label">Your participation</p><div class="val">' + eurAmt(you.amountEURm) + (you.price != null ? ' at ' + fmtPrice(o, you.price) : '') + ' · ' + esc(STAGE_LABEL[you.status]) + '</div>' +
             (ind.binding ? '<p class="small muted">Binding commitment recorded in this demonstration.</p>' : '<button type="button" class="btn" data-bind="' + o.id + '">Confirm as binding commitment</button>') +
             '<button type="button" class="chip-link" data-withdraw="' + o.id + '">Withdraw</button></div>'
-          : '<form class="access-act" data-indicate="' + o.id + '"><label class="label" for="ind-amt">Indicate interest · EUR m, up to ' + fmtAmt(room) + '</label>' +
-            '<div class="field"><input id="ind-amt" name="amt" type="number" min="1" max="' + fmtAmt(room) + '" step="0.5" value="' + fmtAmt(Math.min(room, 7)) + '" required><button type="submit" class="btn">Indicate interest</button></div>' +
+          : '<form class="access-act" data-indicate="' + o.id + '"><label class="label" for="ind-amt">Indicate interest · EUR m, up to ' + fmtAmt(room) + ' · ' + esc(priceLabel(o)) + '</label>' +
+            '<div class="field"><input id="ind-amt" name="amt" type="number" min="1" max="' + fmtAmt(room) + '" step="0.5" value="' + fmtAmt(Math.min(room, 7)) + '" required><input name="px" type="number" min="0" step="' + priceStep(o) + '" value="' + defaultPrice(o) + '" required aria-label="' + esc(priceLabel(o)) + '"><button type="submit" class="btn">Indicate interest</button></div>' +
             '<p class="small muted">Non-binding. In a live opportunity the indication is made in the institution’s own name.</p></form>') +
         '</div>';
     }
@@ -1205,9 +1218,9 @@
     if (role() === 'coinvestor' && ph === 'open') {
       var rem = Math.max(0, s.issue - coverTotal(o)), full = rem < 1e-9;
       return '<div class="access"><div><p class="eyebrow">Open to co-investors</p><h2>' + (full ? 'Fully covered. Ready to issue.' : eurAmt(rem) + ' still to be covered.') + '</h2>' + deadlineTile(o) + windowsLine(o) +
-        '<p>Anchors committed ' + eurAmt(s.committed) + ' (' + fmtShare(shareOfIssue(o, s.committed)) + '). Co-investors join on the same terms, in pieces of €100,000. The bond is issued only when fully covered.</p>' + coverBar(o) + '</div>' +
-        '<form class="access-act" data-order="' + o.id + '"><p class="label">' + (o.orders ? 'Your order · ' + eurAmt(o.orders) : 'Place an order · EUR m') + '</p>' +
-        (full ? '<p class="small muted">The book is covered.</p>' : '<div class="field"><input name="amt" type="number" min="0.1" max="' + fmtAmt(rem) + '" step="0.1" value="' + fmtAmt(Math.min(rem, 2)) + '" required aria-label="Order in EUR millions"><button type="submit" class="btn">' + (o.orders ? 'Add to order' : 'Place order') + '</button></div>') +
+        '<p>Anchors committed ' + eurAmt(s.committed) + ' (' + fmtShare(shareOfIssue(o, s.committed)) + ')' + (anchorPriceRange(o) ? ' at ' + anchorPriceRange(o) : '') + '. Co-investors join on the same terms and at the anchors\u2019 price, in pieces of €100,000; an order is seen by the company only. The bond is issued only when fully covered.</p>' + coverBar(o) + '</div>' +
+        '<form class="access-act" data-order="' + o.id + '"><p class="label">' + (o.orders ? 'Your order · ' + eurAmt(o.orders.amount) + ' at ' + fmtPrice(o, o.orders.price) : 'Place an order · EUR m · ' + esc(priceLabel(o))) + '</p>' +
+        (full ? '<p class="small muted">The book is covered.</p>' : '<div class="field"><input name="amt" type="number" min="0.1" max="' + fmtAmt(rem) + '" step="0.1" value="' + fmtAmt(Math.min(rem, 2)) + '" required aria-label="Order in EUR millions"><input name="px" type="number" min="0" step="' + priceStep(o) + '" value="' + (o.orders && o.orders.price != null ? o.orders.price : defaultPrice(o)) + '" required aria-label="' + esc(priceLabel(o)) + '"><button type="submit" class="btn">' + (o.orders ? 'Add to order' : 'Place order') + '</button></div>') +
         (o.orders ? '<button type="button" class="chip-link" data-withdraw-order="' + o.id + '">Withdraw order</button>' : '') +
         '<p class="small muted">Demonstration only; nothing is binding and no money moves.</p></form></div>';
     }
@@ -1243,7 +1256,7 @@
       '<div><p class="label">Checklist</p><div class="val">' + met + ' of ' + list.length + ' items met</div></div>' +
       '<div><p class="label">Who sees the fact file</p><div class="val" style="font-size:15px">' + (s.count ? s.count + ' anchor institution' + (s.count > 1 ? 's' : '') + ' now' : 'Anchors first') + ' · co-investors after anchor commitments</div></div>' +
       '<div><p class="label">Confirmation</p><div class="val" style="font-size:15px">' + (o.confirmedBy ? esc(o.confirmedBy) : 'Not yet confirmed by the CFO') + '</div></div></div></div>';
-    html += '<nav class="jump" aria-label="Sections on this page">' + [['c-docs', 'Documents requested'], ['c-questions', 'Questions'], ['c-figures', 'Figures to confirm']].concat(o.dossier ? [['c-factdossier', 'Fact dossier']] : [], [['c-terms', 'Proposed terms'], ['sec-comps', 'Comparables'], ['c-timeline', 'Timeline']]).map(function (x) { return '<button type="button" class="chip-link" data-jump="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
+    html += '<nav class="jump" aria-label="Sections on this page">' + [['c-docs', 'Documents requested'], ['c-questions', 'Questions'], ['c-figures', 'Figures to confirm']].concat(o.dossier ? [['c-factdossier', 'Fact dossier']] : [], [['c-terms', 'Proposed terms'], ['c-book', 'Order book'], ['sec-comps', 'Comparables'], ['c-timeline', 'Timeline']]).map(function (x) { return '<button type="button" class="chip-link" data-jump="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
 
     var out = outstanding(o), rec = received(o);
     html += '<section class="section" id="c-docs"><p class="label">' + out.length + ' outstanding · ' + rec.length + ' received</p><h2>Documents requested</h2>' +
@@ -1282,6 +1295,12 @@
       '<p class="muted small">Terms the company proposed for discussion. Coupon, security and covenants are settled with the anchors. The company confirms its information and signs no bond documents at this stage.</p>' +
       '<div class="table-scroll"><table><caption class="visually-hidden">Proposed bond terms, ' + esc(c.name) + '</caption><tbody>' + o.bond.map(function (t) { return '<tr><th scope="row" class="rowhead">' + esc(TERM_LABEL[t.key]) + '</th><td>' + termHtml(o, t) + '</td><td>' + termStatus(o, t) + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
 
+    html += '<section class="section" id="c-book"><p class="label">Seen by you only</p><h2>Order book</h2>' +
+      '<p class="muted small">Anchors and their price are visible to every investor, so co-investors can follow; co-investor orders are visible to the company only.</p>' +
+      '<div class="table-scroll"><table><caption class="visually-hidden">Order book, ' + esc(c.name) + '</caption><thead><tr><th scope="col">Party</th><th scope="col">Type</th><th scope="col" class="num">Amount</th><th scope="col" class="num">' + esc(priceLabel(o)) + '</th><th scope="col">Status</th></tr></thead><tbody>' +
+      o.anchors.map(function (a) { return '<tr><td>' + esc(a.name) + '</td><td class="muted">' + esc(a.institutionType) + '</td><td class="num">' + eurAmt(a.amountEURm) + '</td><td class="num">' + fmtPrice(o, a.price) + '</td><td>' + esc(STAGE_LABEL[a.status]) + '</td></tr>'; }).join('') +
+      (o.orders ? '<tr><td>Co-investor (the demonstration user)</td><td class="muted">Co-investor order</td><td class="num">' + eurAmt(o.orders.amount) + '</td><td class="num">' + fmtPrice(o, o.orders.price) + '</td><td>Order</td></tr>' : '') +
+      (!o.anchors.length && !o.orders ? '<tr><td colspan="5" class="muted">No indications or orders yet.</td></tr>' : '') + '</tbody></table></div></section>';
     html += comparables(o, 'company');
     var steps = [['Sourcing', 'Days', 'First check against the admission criteria.'], ['Fact file', 'Weeks 1–4', 'Your plan in the anchors’ format, every fact with its source. The CFO confirms.'], ['Anchor decision', 'Weeks 5–6', 'Anchors have first access. Binding ticket within ten working days.'], ['One standard bond', 'Weeks 7–10', 'Co-investors join on the same terms. Issued only when fully covered.'], ['After closing', 'Years 1–5', 'Quarterly report and covenant certificate to the trustee, audited accounts each year, the refinancing window a year before maturity, repayment at maturity.']];
     var cur = { intake: 1, anchor: 2, open: 3, issued: 4 }[PHASE[o.id]];
@@ -1987,10 +2006,10 @@
   }
   function anchorTable(o) {
     return '<div class="table-scroll"><table class="anchor-table"><caption class="visually-hidden">Institutional anchor investors, ' + esc(o.company.name) + ' (fictional)</caption>' +
-      '<thead><tr><th scope="col">Institution</th><th scope="col">Type</th><th scope="col" class="num">Amount</th><th scope="col" class="num">Share of issue</th><th scope="col">Status</th><th scope="col">Conditions / notes</th></tr></thead><tbody>' +
+      '<thead><tr><th scope="col">Institution</th><th scope="col">Type</th><th scope="col" class="num">Amount</th><th scope="col" class="num">Share of issue</th><th scope="col" class="num">Price</th><th scope="col">Status</th><th scope="col">Conditions / notes</th></tr></thead><tbody>' +
       o.anchors.map(function (a) {
         return '<tr><td class="inst">' + esc(a.name) + '</td><td class="type muted">' + esc(a.institutionType) + '</td><td class="num amt">' + eurAmt(a.amountEURm) + '</td>' +
-          '<td class="num share">' + fmtShare(anchorShare(o, a)) + '</td><td class="st">' + stageTag(a.status) + '</td><td class="cond">' + esc(a.conditions) + '</td></tr>';
+          '<td class="num share">' + fmtShare(anchorShare(o, a)) + '</td><td class="num">' + fmtPrice(o, a.price) + '</td><td class="st">' + stageTag(a.status) + '</td><td class="cond">' + esc(a.conditions) + '</td></tr>';
       }).join('') + '</tbody></table></div>';
   }
   // Compact memorandum-style section: header + one bar + only the figures that matter + table.
@@ -2125,22 +2144,22 @@
       '</section>';
 
     html += '<section class="section" aria-labelledby="h-docs"><p class="label">Source index</p><h2 id="h-docs">Source documents</h2>' +
-      '<p class="muted small">Open shows the referenced pages of a document beside this screen. Documents are not available for download in this environment.</p>' +
+      '<p class="muted small">The index of the documents behind the fact file; every page reference opens in the fact dossier above. Documents are not available for download in this environment.</p>' +
       '<div class="table-scroll"><table><caption class="visually-hidden">Source documents, ' + esc(c.name) + '</caption><thead><tr>' +
-      '<th scope="col">Document</th><th scope="col">Category</th><th scope="col">Reference ID</th><th scope="col">Used for</th><th scope="col">Check</th><th scope="col" class="view"><span class="visually-hidden">Open</span></th></tr></thead><tbody>' +
+      '<th scope="col">Document</th><th scope="col">Category</th><th scope="col">Reference ID</th><th scope="col">Used for</th><th scope="col">Check</th></tr></thead><tbody>' +
       o.docs.map(function (d) {
         return '<tr><td>' + esc(d.title) + '</td><td class="muted">' + esc(d.category) + '</td><td><span class="doc-id">' + esc(d.ref) + '</span></td>' +
-          '<td class="small">' + esc(docUsage(o, d.id)) + '</td><td>' + checkLabel(d) + '</td><td class="view-cell">' + (d.check === 'pending' ? '<span class="ref-only">Not yet on the platform</span>' : docViewBtn(o, d)) + '</td></tr>';
+          '<td class="small">' + esc(docUsage(o, d.id)) + '</td><td>' + checkLabel(d) + (d.check === 'pending' ? ' <span class="muted small">· not yet on the platform</span>' : '') + '</td></tr>';
       }).join('') + '</tbody></table></div></section>';
 
     html += '<section class="section" aria-labelledby="h-refs"><p class="label">Traceability</p><h2 id="h-refs">Source references for material facts</h2>' +
       '<div class="table-scroll"><table><caption class="visually-hidden">Source references for material facts, ' + esc(c.name) + '</caption><thead><tr>' +
-      '<th scope="col">Fact</th><th scope="col">Value</th><th scope="col">Source document</th><th scope="col">Reference ID</th><th scope="col" class="num">Page</th><th scope="col" class="view"><span class="visually-hidden">View in document</span></th></tr></thead><tbody>' +
+      '<th scope="col">Fact</th><th scope="col">Value</th><th scope="col">Source document</th><th scope="col">Reference ID</th><th scope="col" class="num">Page</th></tr></thead><tbody>' +
       sourcedFacts(o).map(function (f) {
         var s = factSource(o, f), dd = doc(o, s.doc);
-        return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td>' + esc(dd.title) + '</td><td><span class="doc-id">' + esc(dd.ref) + '</span></td><td class="num">' + esc(s.page) + '</td><td class="view-cell">' + viewBtn(o, f) + '</td></tr>';
+        return '<tr><td>' + esc(f.fact) + '</td><td>' + esc(factValue(o, f)) + '</td><td>' + esc(dd.title) + '</td><td><span class="doc-id">' + esc(dd.ref) + '</span></td><td class="num">' + esc(s.page) + '</td></tr>';
       }).join('') + '</tbody></table></div>' +
-      '<p class="muted small" style="margin-top:8px">View opens the source page beside this screen with the fact highlighted. Financial figures for ' + YEARS[0] + '–' + YEARS[LAST - 2] + ' are taken from the five-year summary in ' + esc(summary.title) + '; page references for every reported line are included in the dossier. Page numbers are illustrative placeholders.</p></section>';
+      '<p class="muted small" style="margin-top:8px">Each fact opens on its page in the fact dossier above; this table is the index. Financial figures for ' + YEARS[0] + '–' + YEARS[LAST - 2] + ' are taken from the five-year summary in ' + esc(summary.title) + '; page references for every reported line are included in the dossier. Page numbers are illustrative placeholders.</p></section>';
 
     var complete = dossierStatus(o) === 'complete';
     html += '<section class="section" aria-labelledby="h-req"><p class="label">' + (complete ? 'Received and follow-up' : 'Outstanding') + '</p><h2 id="h-req">' + (complete ? 'Documents and follow-up items' : 'Requested from the company') + '</h2>' +
@@ -2530,10 +2549,10 @@
     e.preventDefault();
     if ((id = f.getAttribute('data-indicate'))) {
       o = OPPORTUNITIES[id]; amt = Math.min(+f.amt.value, Math.max(0, o.issueEURm - potentialTotal(o)));
-      if (amt > 0) bag('indications')[id] = { amount: Math.round(amt * 100) / 100, binding: false };
+      if (amt > 0) bag('indications')[id] = { amount: Math.round(amt * 100) / 100, price: f.px && f.px.value !== '' ? +f.px.value : null, binding: false };
     } else if ((id = f.getAttribute('data-order'))) {
       o = OPPORTUNITIES[id]; amt = Math.min(+f.amt.value, Math.max(0, o.issueEURm - coverTotal(o)));
-      if (amt > 0) bag('orders')[id] = Math.round(((o.orders || 0) + amt) * 10) / 10;   // pieces of €100,000
+      if (amt > 0) bag('orders')[id] = { amount: Math.round(((o.orders ? o.orders.amount : 0) + amt) * 10) / 10, price: f.px && f.px.value !== '' ? +f.px.value : null };   // pieces of €100,000
     } else if ((id = f.getAttribute('data-answer'))) {
       var txt = f.txt.value.trim();
       if (txt) sub2('answers', STATE.company)[id] = txt;
