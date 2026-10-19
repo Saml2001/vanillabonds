@@ -452,7 +452,8 @@
   .deadline .dl-txt { font-size: 11.5px; line-height: 1.3; color: #C9D1DA; } .deadline .dl-txt b { color: var(--paper); font-weight: 600; }
   .opp-anchor { position: relative; } .opp-anchor .deadline { position: absolute; right: 14px; bottom: 11px; }
   .opp.has-deadline .af-top, .opp.has-deadline .af-bottom { padding-right: 250px; } .opp.has-deadline .opp-anchor .anchor-bar { margin-right: 250px; }
-  .opp.teaser .deadline { margin-left: 16px; align-self: center; }
+  .opp.teaser .deadline { position: absolute; right: 14px; bottom: 14px; } .opp.teaser .opp-metrics { padding-right: 250px; }
+  @media (max-width: 760px) { .opp.teaser .deadline { position: static; margin-top: 10px; } .opp.teaser .opp-metrics { padding-right: 0; } }
   .access .deadline { margin: 4px 0 12px; }
   @media (max-width: 760px) { .opp-anchor .deadline { position: static; margin-top: 10px; } .opp.has-deadline .af-top, .opp.has-deadline .af-bottom { padding-right: 0; } .opp.has-deadline .opp-anchor .anchor-bar { margin-right: 0; } }
   #dossier-viewer, #doc-viewer { width: var(--dvx-w, min(50vw, 820px)); }
@@ -1018,11 +1019,15 @@
   var PHASE = { 'van-dijk': 'anchor', 'nordhaven': 'anchor', 'alpenwerk': 'open' };
   Object.keys(window.PLATFORM_DEALS || {}).forEach(function (k) { PHASE[k] = window.PLATFORM_DEALS[k].phase || 'anchor'; });
   PHASE['van-dijk'] = 'intake'; OPPORTUNITIES['van-dijk'].anchors = [];   // the story of the demo: Van Dijk delivers documents, Katjes is in the anchor window, Fastned is open to co-investors
-  // The ten-working-day anchor window and the co-investor book that follows it, per deal (illustrative dates).
-  var WINDOWS = { 'van-dijk': { factFileDue: '2026-11-02', anchorOpens: '2026-11-03', anchorCloses: '2026-11-16', bookOpens: '2026-11-17', bookCloses: '2026-12-01' },
-                  'nordhaven': { anchorOpens: '2026-10-06', anchorCloses: '2026-10-19', bookOpens: '2026-10-20', bookCloses: '2026-11-03' },
-                  'alpenwerk': { anchorOpens: '2026-09-21', anchorCloses: '2026-10-02', bookOpens: '2026-10-05', bookCloses: '2026-10-23' } };
+  // The ten-working-day anchor window and the co-investor book that follows it, per deal, as working days from today:
+  // the demonstration shows the same picture every day, the calendar dates roll forward.
+  var WINDOWS = { 'van-dijk': { factFileDue: 10, anchorOpens: 11, anchorCloses: 20, bookOpens: 21, bookCloses: 31 },
+                  'nordhaven': { anchorOpens: -9, anchorCloses: 0, bookOpens: 1, bookCloses: 11 },
+                  'alpenwerk': { anchorOpens: -20, anchorCloses: -11, bookOpens: -10, bookCloses: 4 } };
   Object.keys(window.PLATFORM_DEALS || {}).forEach(function (k) { if (window.PLATFORM_DEALS[k].windows) WINDOWS[k] = window.PLATFORM_DEALS[k].windows; });
+  function isoLocal(d) { function p(n) { return (n < 10 ? '0' : '') + n; } return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+  function addWorkdays(n) { var d = new Date(); d.setHours(0, 0, 0, 0); var step = n < 0 ? -1 : 1, left = Math.abs(n); while (left > 0) { d.setDate(d.getDate() + step); if (d.getDay() % 6) left--; } return isoLocal(d); }
+  Object.keys(WINDOWS).forEach(function (id) { var w = WINDOWS[id], r = {}; Object.keys(w).forEach(function (k) { r[k] = typeof w[k] === 'number' ? addWorkdays(w[k]) : w[k]; }); WINDOWS[id] = r; });
   function fmtDate(iso) { return iso ? new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : ''; }
   function workdaysLeft(iso) { var t = new Date(); t.setHours(0, 0, 0, 0); var end = new Date(iso + 'T00:00:00'); if (!(end >= t)) return 0; var n = 0, d = new Date(t); while (d < end) { d.setDate(d.getDate() + 1); if (d.getDay() % 6) n++; } return n; }
   function daysWord(n) { return n + ' working day' + (n === 1 ? '' : 's'); }
