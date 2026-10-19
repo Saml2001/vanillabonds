@@ -54,7 +54,7 @@
   .meta { color: var(--ink-2); font-size: 14px; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
 
-  .topics { position: sticky; top: 16px; }
+  main > aside { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
   .topics a { display: flex; justify-content: space-between; gap: 10px; padding: 6px 10px; text-decoration: none; color: var(--ink-2); border-left: 2px solid transparent; font-size: 13.5px; line-height: 1.35; }
   .topics a:hover { color: var(--navy); background: var(--paper); }
   .topics a[aria-current="true"] { border-left-color: var(--gold); color: var(--navy); background: var(--paper); font-weight: 600; }
@@ -130,7 +130,7 @@
   .dv-text mark { background: rgba(179, 154, 87, 0.22); color: inherit; padding: 1px 2px; border-radius: 2px; }
   .dv-text mark.on { background: #F2E2AE; color: var(--ink); box-shadow: 0 0 0 2px var(--gold); }
   @media (max-width: 1000px) {
-    main { grid-template-columns: 1fr; padding: 24px 16px 56px; } .topics { position: static; }
+    main { grid-template-columns: 1fr; padding: 24px 16px 56px; } main > aside { position: static; max-height: none; }
     #doc-viewer, .view-btn, .view-cell, th.view { display: none !important; } body.dv-open { padding-right: 0; }
     .header-inner { flex-wrap: wrap; padding: 0 16px; } .header-side { flex: 1 0 100%; padding: 8px 0 10px; }
   }
