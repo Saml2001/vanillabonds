@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VanillaBonds — Fact dossier</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<style>
+  @font-face { font-family: "Source Sans 3"; src: url("assets/fonts/SourceSans3VF-Upright.otf.woff2") format("woff2-variations"); font-weight: 200 900; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+  :root {
+    --navy: var(--vb-navy); --navy-2: var(--vb-navy-raised);
+    --ivory: var(--vb-ground-alt); --paper: var(--vb-white);
+    --gold: var(--vb-gold); --gold-ink: var(--vb-gold-dim);
+    --border: var(--vb-line-warm); --ink: var(--vb-ink-900); --ink-2: #3A4654; --muted: var(--vb-ink-500);
+    --sans: var(--vb-font-body); --mono: var(--vb-font-mono);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--sans); font-size: 15px; line-height: 1.55; color: var(--ink); background: var(--ivory); }
+  button { font: inherit; color: inherit; }
+  a { color: var(--navy); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---------- Header, as on the platform ---------- */
+  .demobar { background: var(--paper); color: var(--gold-ink); font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em; text-align: center; padding: 5px 24px; border-bottom: 1px solid var(--border); }
+  .site-header { background: var(--navy); color: var(--paper); }
+  .header-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: stretch; justify-content: space-between; gap: 24px; }
+  .wordmark { display: flex; align-items: center; font-size: 19px; letter-spacing: 0.02em; padding: 18px 0; background: none; border: 0; text-decoration: none; }
+  .wordmark .v { color: var(--paper); } .wordmark .b { color: var(--gold); }
+  .primary-nav { margin-right: auto; }
+  .primary-nav ul { list-style: none; margin: 0; padding: 0; display: flex; height: 100%; }
+  .primary-nav button { height: 100%; background: none; border: 0; padding: 0 18px; color: #C9D1DA; font-size: 14px; border-bottom: 2px solid transparent; border-top: 2px solid transparent; }
+  .primary-nav button[aria-current="page"] { color: var(--paper); border-bottom-color: var(--gold); }
+  .header-side { display: flex; align-items: center; gap: 14px; font-size: 13px; }
+  .header-side label { color: #C9D1DA; }
+  .co { font: inherit; font-size: 13.5px; background: var(--navy-2); color: var(--paper); border: 1px solid #3B5068; padding: 6px 10px; border-radius: 2px; }
+  .back-link { color: #C9D1DA; text-decoration: none; white-space: nowrap; } .back-link:hover { color: var(--paper); }
+
+  /* ---------- Page ---------- */
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 32px 72px; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 36px; align-items: start; }
+  .title-band { grid-column: 1 / -1; border-bottom: 1px solid var(--border); padding-bottom: 18px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+  h1 { font-weight: 300; font-size: 34px; line-height: 1.15; color: var(--navy); margin: 0 0 10px; }
+  h2 { font-weight: 300; font-size: 23px; line-height: 1.25; color: var(--navy); margin: 0 0 6px; }
+  h3 { font-weight: 600; font-size: 14px; color: var(--navy); margin: 0 0 6px; }
+  .label { font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+  .muted { color: var(--muted); } .small { font-size: 12.5px; }
+  .meta { color: var(--ink-2); font-size: 14px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+
+  .topics { position: sticky; top: 16px; }
+  .topics a { display: flex; justify-content: space-between; gap: 10px; padding: 6px 10px; text-decoration: none; color: var(--ink-2); border-left: 2px solid transparent; font-size: 13.5px; line-height: 1.35; }
+  .topics a:hover { color: var(--navy); background: var(--paper); }
+  .topics a[aria-current="true"] { border-left-color: var(--gold); color: var(--navy); background: var(--paper); font-weight: 600; }
+  .topics .n { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .tools { margin: 14px 0 0; padding: 0 10px; }
+  .tools input[type=search] { width: 100%; font: inherit; font-size: 13.5px; padding: 7px 9px; border: 1px solid var(--border); background: var(--paper); }
+  .tools label { display: block; margin-top: 8px; color: var(--ink-2); }
+
+  section.block { background: var(--paper); border: 1px solid var(--border); padding: 22px 24px 18px; margin-bottom: 26px; scroll-margin-top: 16px; }
+  section.block .ask { margin: 0 0 16px; color: var(--ink-2); max-width: 70ch; }
+  .fieldhead { margin: 18px 0 6px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .fieldhead h3 { margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; font-family: var(--sans); font-weight: 500; font-size: 11px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--muted); padding: 9px 10px; border-bottom: 1px solid var(--navy); white-space: nowrap; }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .table-scroll { overflow-x: auto; }
+  .table-scroll table { min-width: 640px; }
+  tr.calc td { background: #EFECE4; }
+  td.src { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); white-space: nowrap; }
+  td.per { font-family: var(--mono); font-size: 11.5px; white-space: nowrap; }
+  td.fld { color: var(--muted); width: 18%; }
+  .chip { font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; color: var(--muted); }
+  .chip.ok { color: #2F6B3A; } .chip.rep { color: var(--gold-ink); }
+  .cell-btn { background: none; border: 0; padding: 0 2px; cursor: pointer; font: inherit; font-variant-numeric: tabular-nums; color: var(--ink); border-bottom: 1px dotted var(--gold); border-radius: 0; }
+  .cell-btn:hover { color: var(--navy); border-bottom-style: solid; }
+  .cell-btn.on, tr.fact-on td { background: #F5EFDF; }
+  .cell-btn sup { font-size: 9px; color: var(--muted); margin-left: 2px; }
+  .view-btn { font-family: var(--sans); font-size: 12px; line-height: 1; padding: 5px 10px; border: 1px solid var(--border); border-radius: 2px; background: var(--paper); color: var(--navy); cursor: pointer; white-space: nowrap; }
+  .view-btn:hover { border-color: var(--navy); }
+  .view-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  td.view-cell { text-align: right; padding-top: 6px; padding-bottom: 6px; }
+  tr[hidden] { display: none; }
+  details summary { cursor: pointer; color: var(--gold-ink); font-size: 12.5px; margin: 6px 0; }
+  .arith td:first-child { width: 22%; } .arith td:nth-child(2) { color: var(--muted); font-size: 12.5px; }
+  .assess { border: 1px dashed var(--gold); padding: 12px 14px; margin-top: 18px; min-height: 60px; color: var(--muted); font-style: italic; }
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 6px 0 18px; }
+  .chart { background: var(--paper); border: 1px solid var(--border); padding: 16px 18px 10px; position: relative; }
+  .chart.wide { grid-column: 1 / -1; }
+  .chart h3 { margin-bottom: 2px; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart .grid line { stroke: #E4E3DF; stroke-width: 1; }
+  .chart .zero { stroke: #9AA1A9; stroke-width: 1; }
+  .chart .axis-text { font-family: var(--sans); font-size: 10.5px; font-variant-numeric: tabular-nums; fill: var(--muted); }
+  .chart .val-text { font-size: 11.5px; fill: var(--ink); font-weight: 600; }
+  .chart .bar { fill: var(--navy-2); } .chart .bar.latest { fill: var(--navy); } .chart .bar.plan { fill: #C9B987; }
+  .chart .bar-group { cursor: pointer; } .chart .bar-group:hover .bar { fill: #2B4D72; } .chart .bar-group:hover .bar.plan { fill: var(--gold); }
+  .kv td:first-child { width: 30%; color: var(--muted); }
+  .pass { color: #2F6B3A; font-weight: 600; } .fail { color: #9A3B2E; font-weight: 600; } .check { color: var(--gold-ink); font-weight: 600; }
+
+  /* ---------- Source viewer: split screen with the referenced page of the document ---------- */
+  body.dv-open { padding-right: min(50vw, 820px); }
+  #doc-viewer { position: fixed; top: 0; right: 0; bottom: 0; width: min(50vw, 820px); z-index: 60; display: flex; flex-direction: column; background: #E4E3DE; border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.10); }
+  #doc-viewer[hidden] { display: none; }
+  .dv-bar { background: var(--navy); color: var(--paper); padding: 14px 22px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .dv-bar .dv-kicker { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin: 0 0 4px; }
+  .dv-bar .dv-title { font-size: 16px; font-weight: 300; margin: 0; }
+  .dv-bar .dv-meta { font-family: var(--mono); font-size: 11.5px; color: #B9C3CE; margin: 4px 0 0; }
+  .dv-close { flex: none; width: 34px; height: 34px; border: 1px solid #3B5068; border-radius: 2px; background: none; color: var(--paper); font-size: 20px; line-height: 1; cursor: pointer; }
+  .dv-close:hover { background: var(--navy-2); border-color: var(--gold); }
+  .dv-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 22px; background: var(--paper); border-bottom: 1px solid var(--border); font-size: 12px; }
+  .dv-strip .lbl { color: var(--muted); margin-right: 4px; }
+  .dv-pg { font-family: var(--mono); font-size: 11.5px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 2px; background: none; color: var(--ink-2); cursor: pointer; }
+  .dv-pg:hover { border-color: var(--navy); color: var(--navy); }
+  .dv-pg[aria-current="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  .dv-pages { flex: 1; overflow-y: auto; padding: 22px 26px 40px; }
+  .dv-page { background: #FFFFFF; color: var(--ink); padding: 32px 40px 28px; min-height: 560px; display: flex; flex-direction: column; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10), 0 6px 18px rgba(9, 30, 52, 0.08); }
+  .dv-page .rh { display: flex; justify-content: space-between; gap: 16px; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 14px; }
+  .dv-page .rf { margin-top: auto; padding-top: 24px; display: flex; justify-content: space-between; gap: 16px; font-size: 10.5px; color: var(--muted); }
+  .dv-page .quote { border-left: 3px solid var(--gold); background: #FBF6E8; padding: 8px 12px; margin: 0 0 14px; font-size: 13px; }
+  .dv-page .quote .lbl { display: block; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); margin-bottom: 3px; }
+  .dv-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.65; color: var(--ink-2); }
+  .dv-text mark { background: rgba(179, 154, 87, 0.22); color: inherit; padding: 1px 2px; border-radius: 2px; }
+  .dv-text mark.on { background: #F2E2AE; color: var(--ink); box-shadow: 0 0 0 2px var(--gold); }
+  @media (max-width: 1000px) {
+    main { grid-template-columns: 1fr; padding: 24px 16px 56px; } .topics { position: static; }
+    #doc-viewer, .view-btn, .view-cell, th.view { display: none !important; } body.dv-open { padding-right: 0; }
+    .header-inner { flex-wrap: wrap; padding: 0 16px; } .header-side { flex: 1 0 100%; padding: 8px 0 10px; }
+  }
+  @media print { .topics, .tools, #doc-viewer, .site-header, .demobar { display: none !important; } main { display: block; } section.block { break-inside: avoid-page; border: 0; padding: 0; } .view-cell, th.view { display: none; } }
+</style>
+</head>
+<body>
+<div class="demobar">Fact dossier · beta · facts extracted from public reports and pending review by a named reviewer · facts and arithmetic only, no opinion · not an offer, solicitation or investment advice</div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="platform.html" aria-label="VanillaBonds — platform demo"><span class="v">VANILLA</span><span class="b">BONDS</span></a>
+    <nav class="primary-nav" aria-label="Primary"><ul><li><button type="button" aria-current="page">Fact dossier</button></li></ul></nav>
+    <div class="header-side"><label for="co">Company</label><select id="co" class="co" aria-label="Company"></select><a class="back-link" href="platform.html">← Platform</a></div>
+  </div>
+</header>
+<main id="main">
+  <div class="title-band" id="band"></div>
+  <aside>
+    <nav class="topics" id="topics" aria-label="Topics"></nav>
+    <div class="tools"><input type="search" id="q" placeholder="Filter facts…" aria-label="Filter facts"><label class="small"><input type="checkbox" id="okonly"> Approved facts only</label></div>
+  </aside>
+  <div id="content"></div>
+</main>
+<aside id="doc-viewer" hidden aria-label="Source document">
+  <div class="dv-bar"><div><p class="dv-kicker">Source document</p><p class="dv-title" id="dv-title"></p><p class="dv-meta" id="dv-meta"></p></div><button type="button" class="dv-close" id="dv-close" aria-label="Close source viewer">×</button></div>
+  <div class="dv-strip" id="dv-strip"></div>
+  <div class="dv-pages" id="dv-pages" tabindex="-1"></div>
+</aside>
+<script src="dossier-data/fastned.js"></script>
+<script src="dossier-data/katjes.js"></script>
+<script>
+(function () {
+  var ALL = window.DOSSIER_DATA || {}, slugs = Object.keys(ALL);
+  if (!slugs.length) { document.getElementById('content').innerHTML = '<p>No dossier data. Run <code>python3 mvp/export_dossier.py</code> and <code>python3 website/seb-mvp/build_dossier.py</code>.</p>'; return; }
+  var slug = new URLSearchParams(location.search).get('c'); if (!ALL[slug]) slug = slugs[0];
+  var D = ALL[slug], $ = function (s) { return document.querySelector(s); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  // facts: [id, field, period, value, unit, text, src, page, quote, status, confidence, quote_found]
+  var F = D.facts.map(function (r) { return { id: r[0], field: r[1], period: r[2], value: r[3], unit: r[4], text: r[5], src: r[6], page: r[7], quote: r[8], status: r[9], conf: r[10], found: r[11] }; });
+  var BYID = {}; F.forEach(function (f) { BYID[f.id] = f; });
+  var DOC = {}; D.docs.forEach(function (d, i) { d.i = i; DOC[d.id] = d; });
+  var FIELD = {}; D.blocks.forEach(function (b) { b.fields.forEach(function (f) { f.block = b.id; FIELD[f.id] = f; }); });
+  var STATUS = { ok: 'approved', pend: 'pending', rep: 'company statement' };
+  function docTitle(d) { return (d.kind || 'document') + (d.period ? ' ' + d.period : '') + (d.date ? ' · ' + d.date : ''); }
+  function pkey(p) { var m = /^(FY|H1)-?(\d{4})(E?)$/.exec(p || ''); return m ? [+m[2], m[1] === 'H1' ? 1 : (m[3] ? 2 : 0)] : [9999, 3]; }
+  function pcmp(a, b) { var x = pkey(a), y = pkey(b); return x[0] - y[0] || x[1] - y[1] || (a < b ? -1 : a > b ? 1 : 0); }
+  function latest(fs) { return fs.slice().sort(function (a, b) { return (DOC[a.src].i - DOC[b.src].i) || ((a.conf || 0) - (b.conf || 0)); })[fs.length - 1]; }
+  function fmt(v, unit) {
+    if (v == null || v === '') return '<span class="muted">–</span>';
+    if (typeof v !== 'number') return esc(v);
+    var s = Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(1);
+    return unit && unit !== 'EUR m' ? s + ' ' + esc(unit) : s;
+  }
+  function chip(st) { return '<span class="chip ' + st + '">' + (STATUS[st] || st) + '</span>'; }
+  function srcText(f) { return f.page ? f.src + ' p.' + f.page : f.src; }
+  function viewBtn(f) { return f.page && D.pages[f.src] && D.pages[f.src][f.page] ? '<button type="button" class="view-btn" data-view="' + f.id + '" aria-pressed="false" aria-controls="doc-viewer" aria-label="View source of ' + esc(f.id) + '">View</button>' : '<span class="muted small">no page</span>'; }
+
+  // ---------- charts: the platform's bar chart, by period ----------
+  function barChart(title, sub, pts, wide) {
+    var W = 520, H = 190, padL = 44, padB = 28, padT = 18, n = pts.length, slot = (W - padL - 8) / n, bw = Math.min(46, slot * 0.62);
+    var vals = pts.map(function (p) { return p.v; }).filter(function (v) { return typeof v === 'number'; });
+    if (!vals.length) return '';
+    var max = Math.max(0, Math.max.apply(null, vals)), min = Math.min(0, Math.min.apply(null, vals)), span = (max - min) || 1;
+    var step = niceStep(span / 4), top = Math.ceil(max / step) * step, bot = Math.floor(min / step) * step;
+    function y(v) { return padT + (top - v) / (top - bot || 1) * (H - padT - padB); }
+    var grid = '';
+    for (var g = bot; g <= top + 1e-9; g += step) grid += '<line x1="' + padL + '" x2="' + W + '" y1="' + y(g) + '" y2="' + y(g) + '"' + (g === 0 ? ' class="zero"' : '') + '/><text class="axis-text" x="' + (padL - 6) + '" y="' + (y(g) + 3.5) + '" text-anchor="end">' + (Math.abs(g) >= 100 ? g.toFixed(0) : g) + '</text>';
+    var bars = pts.map(function (p, i) {
+      var x = padL + slot * i + (slot - bw) / 2, cx = x + bw / 2, h = typeof p.v === 'number' ? Math.abs(y(p.v) - y(0)) : 0;
+      var cls = 'bar' + (p.plan ? ' plan' : '') + (p.latest ? ' latest' : '');
+      var rect = typeof p.v === 'number' ? '<rect class="' + cls + '" x="' + x + '" y="' + Math.min(y(p.v), y(0)) + '" width="' + bw + '" height="' + Math.max(1, h) + '"/>' : '';
+      var lab = typeof p.v === 'number' ? '<text class="val-text" x="' + cx + '" y="' + (p.v >= 0 ? y(p.v) - 5 : y(p.v) + 12) + '" text-anchor="middle">' + (Math.abs(p.v) >= 100 ? p.v.toFixed(0) : p.v.toFixed(1)) + '</text>' : '<text class="axis-text" x="' + cx + '" y="' + (y(0) - 5) + '" text-anchor="middle">n/a</text>';
+      return '<g class="bar-group"' + (p.id ? ' data-view="' + p.id + '" role="button" tabindex="0"' : '') + '><title>' + esc(p.label + ': ' + (typeof p.v === 'number' ? p.v.toFixed(1) + ' EUR m' : 'n/a') + (p.note ? ' · ' + p.note : '')) + '</title>' + rect + lab + '<text class="axis-text" x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(p.label) + '</text></g>';
+    }).join('');
+    return '<figure class="chart' + (wide ? ' wide' : '') + '" style="margin:0"><h3>' + esc(title) + '</h3><p class="label" style="margin-bottom:6px">' + esc(sub) + '</p><svg viewBox="0 0 ' + W + ' ' + H + '" aria-label="' + esc(title) + '"><g class="grid">' + grid + '</g>' + bars + '</svg></figure>';
+  }
+  function niceStep(raw) { var p = Math.pow(10, Math.floor(Math.log10(raw || 1))), n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
+  function seriesChart(field, title) {
+    var fs = F.filter(function (f) { return f.field === field && typeof f.value === 'number' && pkey(f.period)[1] === 0; }), by = {};
+    fs.forEach(function (f) { (by[f.period] = by[f.period] || []).push(f); });
+    var ps = Object.keys(by).sort(pcmp).slice(-7);
+    if (!ps.length) return '';
+    var pts = ps.map(function (p, i) { var f = latest(by[p]); return { label: p.replace('FY', ''), v: f.value, id: f.id, latest: i === ps.length - 1 }; });
+    return barChart(title, 'EUR m · fiscal years as reported · click a bar for the source', pts);
+  }
+  function redemptionChart() {
+    var fs = F.filter(function (f) { return f.field === 'debt_maturing' && typeof f.value === 'number' && pkey(f.period)[0] !== 9999; }), by = {};
+    fs.forEach(function (f) { (by[f.period] = by[f.period] || []).push(f); });
+    var ps = Object.keys(by).sort(pcmp);
+    if (!ps.length) return '<p class="muted small">No debt-maturity facts extracted yet.</p>';
+    var pts = ps.map(function (p) { var f = latest(by[p]); return { label: p.replace('FY', ''), v: f.value, id: f.id, plan: /E$/.test(p), note: by[p].length > 1 ? by[p].length + ' entries, latest report shown' : '' }; });
+    var bands = F.filter(function (f) { return f.field === 'debt_maturing' && pkey(f.period)[0] === 9999; });
+    var total = pts.filter(function (p) { return p.plan; }).reduce(function (s, p) { return s + p.v; }, 0);
+    return barChart('Redemption profile', 'Principal falling due per period, EUR m · lighter bars = future periods per the latest report' + (total ? ' · future periods shown: ' + total.toFixed(1) : ''), pts, true) +
+      (bands.length ? '<p class="muted small" style="margin:8px 0 0">Also stated as a band: ' + bands.map(function (f) { return esc(f.period) + ' ' + fmt(f.value) + ' (' + srcText(f) + ')'; }).join('; ') + '.</p>' : '') +
+      '<p class="muted small" style="margin:8px 0 18px">Where several reports state a figure for the same period, the most recent report is charted; every entry is in the table below. Debt instruments and their terms follow.</p>';
+  }
+
+  // ---------- facts per block ----------
+  function factRow(f, withField) {
+    return '<tr data-q="' + esc((FIELD[f.field] ? FIELD[f.field].label : f.field) + ' ' + (f.text || '') + ' ' + (f.period || '')).toLowerCase() + '" data-st="' + f.status + '" id="row-' + f.id + '">' +
+      (withField ? '<td class="fld">' + esc(FIELD[f.field] ? FIELD[f.field].label : f.field) + '</td>' : '') +
+      '<td>' + esc(f.text || '') + (f.value != null && f.text && String(f.value) !== f.text ? ' <span class="muted">(' + fmt(f.value, f.unit) + ')</span>' : '') + '</td>' +
+      '<td class="per">' + esc(f.period || '') + '</td><td class="src">' + esc(srcText(f)) + '</td><td>' + chip(f.status) + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>';
+  }
+  var LIST_HEAD = '<thead><tr><th>Field</th><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead>';
+  function pivot(fields, fs) {
+    var by = {}, periods = {};
+    fs.forEach(function (f) { if (typeof f.value !== 'number') return; (by[f.field] = by[f.field] || {}); (by[f.field][f.period] = by[f.field][f.period] || []).push(f); periods[f.period] = 1; });
+    var ps = Object.keys(periods).sort(pcmp), rows = fields.filter(function (fd) { return by[fd.id]; });
+    if (!rows.length) return '';
+    var h = '<div class="table-scroll"><table><thead><tr><th>EUR m unless stated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (fd) {
+      h += '<tr data-q="' + esc(fd.label).toLowerCase() + '"><td>' + esc(fd.label) + '</td>' + ps.map(function (p) {
+        var c = by[fd.id][p]; if (!c) return '<td class="num muted">–</td>';
+        var f = latest(c); return '<td class="num"><button type="button" class="cell-btn" data-view="' + f.id + '" title="' + esc(f.text || '') + ' · ' + srcText(f) + '">' + fmt(f.value, f.unit !== 'EUR m' ? f.unit : null) + (c.length > 1 ? '<sup>' + c.length + '</sup>' : '') + '</button></td>';
+      }).join('') + '</tr>';
+    });
+    return h + '</tbody></table></div><p class="muted small" style="margin:6px 0 0">Click a figure to see it on the page of the report. A superscript counts further reports that state the same period; the most recent report is shown.</p>';
+  }
+  function derivedPivot() {
+    var m = D.screen && D.screen.derived; if (!m) return '';
+    var rows = {}, periods = {};
+    Object.keys(m).forEach(function (k) { var p = k.split('|'); (rows[p[0]] = rows[p[0]] || {})[p[1]] = m[k]; periods[p[1]] = 1; });
+    var ps = Object.keys(periods).sort(pcmp), names = Object.keys(rows);
+    if (!names.length) return '';
+    return '<div class="fieldhead"><h3>Calculated from the reported figures</h3><span class="muted small">formulas in mvp/schema.py derive()</span></div><div class="table-scroll"><table><thead><tr><th>Calculated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      names.map(function (n) { return '<tr class="calc" data-q="' + esc(n).toLowerCase() + '"><td>' + esc(n.replace(/_/g, ' ')) + '</td>' + ps.map(function (p) { var v = rows[n][p]; return '<td class="num">' + (v == null ? '<span class="muted">–</span>' : esc(typeof v === 'number' ? (Math.abs(v) < 10 ? v.toFixed(2) : v.toFixed(1)) : v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+  }
+  var ARITH = { plan: ['forward', 'headroom_path', 'stress_grid', 'eba_events'], financials: ['ratios_three_ways', 'volatility_vs_sector'], management: ['calibration'], structure: ['waterfall', 'guarantor_coverage'] };
+  function arithmetic(block) {
+    var S = D.screen || {}, rows = [];
+    (ARITH[block] || []).forEach(function (k) { var r = k === 'forward' ? S.forward : (S.v3 || {})[k]; (r || []).forEach(function (x) { rows.push(x); }); });
+    if (!rows.length) return '';
+    return '<div class="fieldhead"><h3>Arithmetic</h3><span class="muted small">shown, never scored · formula and source printed with each number</span></div><table class="arith"><thead><tr><th>Derived</th><th>Formula · source</th><th class="num">Value</th></tr></thead><tbody>' +
+      rows.map(function (r) { return '<tr data-q="' + esc(r[0]).toLowerCase() + '"><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
+  }
+  function renderBlock(b, n) {
+    var fs = F.filter(function (f) { return FIELD[f.field] && FIELD[f.field].block === b.id; });
+    var num = b.fields.filter(function (fd) { return fd.periodic && fd.kind === 'num'; }), numIds = {}; num.forEach(function (fd) { numIds[fd.id] = 1; });
+    var h = '<section class="block" id="b-' + b.id + '" aria-labelledby="h-' + b.id + '"><p class="eyebrow">' + n + ' · ' + esc(b.title) + ' · ' + fs.length + ' fact' + (fs.length === 1 ? '' : 's') + '</p><h2 id="h-' + b.id + '">' + esc(b.title) + '</h2><p class="ask">' + esc(b.ask) + '</p>';
+    if (b.id === 'financials') h += '<div class="charts">' + ['revenue', 'ebitda', 'net_debt', 'cash'].map(function (k) { return seriesChart(k, FIELD[k].label); }).join('') + '</div>';
+    if (b.id === 'debt') h += '<div class="charts">' + redemptionChart() + '</div>';
+    h += pivot(num, fs.filter(function (f) { return numIds[f.field]; }));
+    if (b.id === 'financials') h += derivedPivot();
+    var pivoted = fs.filter(function (f) { return numIds[f.field] && typeof f.value === 'number'; }), listed = fs.filter(function (f) { return !(numIds[f.field] && typeof f.value === 'number'); });
+    if (pivoted.length) h += '<details><summary>' + pivoted.length + ' entries behind the table, with text and source</summary><div class="table-scroll"><table>' + LIST_HEAD + '<tbody>' + pivoted.sort(function (a, b) { return pcmp(a.period, b.period); }).map(function (f) { return factRow(f, true); }).join('') + '</tbody></table></div></details>';
+    b.fields.filter(function (fd) { return !(fd.periodic && fd.kind === 'num'); }).forEach(function (fd) {
+      var rows = listed.filter(function (f) { return f.field === fd.id; }); if (!rows.length) return;
+      h += '<div class="fieldhead"><h3>' + esc(fd.label) + '</h3><span class="muted small">' + rows.length + '</span></div><div class="table-scroll"><table><thead><tr><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead><tbody>' + rows.map(function (f) { return factRow(f, false); }).join('') + '</tbody></table></div>';
+    });
+    if (!fs.length) h += '<p class="muted">No facts extracted for this block yet. Fields in the format: ' + b.fields.map(function (fd) { return esc(fd.label); }).join('; ') + '.</p>';
+    h += arithmetic(b.id);
+    h += '<div class="assess"><span class="label" style="color:var(--gold-ink)">Assessment · the anchor\'s analyst</span>Left empty on purpose: the dossier holds the facts and the arithmetic; the opinion is written here by the investor.</div></section>';
+    return h;
+  }
+  function screenBlock(n) {
+    var S = D.screen || {}; if (!S.criteria) return '';
+    return '<section class="block" id="b-screen" aria-labelledby="h-screen"><p class="eyebrow">' + n + ' · Screen</p><h2 id="h-screen">Admission criteria v1</h2><p class="ask">Pass or fail against the platform\'s published admission criteria, on ' + (S.provisional ? 'provisional figures (pending facts included)' : 'approved figures only') + ', fiscal years ' + esc((S.fys || []).join(', ')) + '.</p>' +
+      '<table><thead><tr><th>#</th><th>Criterion</th><th>Threshold</th><th>Issuer value</th><th>Result</th></tr></thead><tbody>' + S.criteria.map(function (c) { return '<tr><td class="muted">' + esc(c[0]) + '</td><td>' + esc(c[1]) + '</td><td class="muted">' + esc(c[2]) + '</td><td><b>' + esc(c[3]) + '</b></td><td class="' + String(c[4]).toLowerCase() + '">' + esc(c[4]) + '</td></tr>'; }).join('') + '</tbody></table>' +
+      (S.indicators ? '<div class="fieldhead"><h3>Indicators</h3><span class="muted small">pre-structuring · shown, not scored</span></div><table><thead><tr><th>Indicator</th><th>Reference</th><th class="num">Value</th></tr></thead><tbody>' + S.indicators.map(function (c) { return '<tr><td>' + esc(c[0]) + '</td><td class="muted">' + esc(c[1]) + '</td><td class="num"><b>' + esc(c[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>' : '') + '</section>';
+  }
+  function sourcesBlock(n) {
+    return '<section class="block" id="b-sources" aria-labelledby="h-sources"><p class="eyebrow">' + n + ' · Sources</p><h2 id="h-sources">Documents</h2><p class="ask">Every fact above carries the document and page it was read from; the page text opens in the source viewer.</p>' +
+      '<table><thead><tr><th>ID</th><th>File</th><th>Kind</th><th>Period</th><th>Date</th><th class="num">Pages</th><th class="num">Facts</th><th>Audited</th></tr></thead><tbody>' +
+      D.docs.map(function (d) { return '<tr><td class="src">' + esc(d.id) + '</td><td>' + esc(d.file) + '</td><td>' + esc(d.kind || '') + '</td><td class="per">' + esc(d.period || '') + '</td><td class="per">' + esc(d.date || '') + '</td><td class="num">' + d.pages + '</td><td class="num">' + d.facts + '</td><td>' + (d.audited ? 'yes' : d.audited === false ? 'no' : '') + '</td></tr>'; }).join('') + '</tbody></table></section>';
+  }
+
+  // ---------- page ----------
+  function render() {
+    var c = D.company, k = D.counts;
+    $('#band').innerHTML = '<p class="eyebrow">Fact dossier · beta · ' + esc(D.run_at ? 'screened ' + D.run_at : '') + '</p><h1>' + esc(c.name) + '</h1><div class="meta">' + esc([c.sector, c.country, c.legal_form].filter(Boolean).join(' · ')) + '</div>' +
+      '<div class="legend"><span>' + k.facts + ' facts from ' + k.docs + ' documents</span><span>' + k.ok + ' approved by a named reviewer</span><span>' + (k.facts - k.ok - k.rep) + ' pending review</span>' + (k.rep ? '<span>' + k.rep + ' company statements</span>' : '') + '<span>Each fact: value, document, page, verbatim quote, status.</span></div>';
+    var n = 0, html = '', nav = '';
+    D.blocks.forEach(function (b) { n++; html += renderBlock(b, n); var cnt = F.filter(function (f) { return FIELD[f.field] && FIELD[f.field].block === b.id; }).length; nav += '<a href="#b-' + b.id + '">' + esc(b.title) + '<span class="n">' + cnt + '</span></a>'; });
+    n++; html += screenBlock(n); nav += '<a href="#b-screen">Screen<span class="n"></span></a>';
+    n++; html += sourcesBlock(n); nav += '<a href="#b-sources">Sources<span class="n">' + D.docs.length + '</span></a>';
+    $('#content').innerHTML = html; $('#topics').innerHTML = nav;
+    document.title = 'VanillaBonds — Fact dossier · ' + c.name;
+    var sel = $('#co'); sel.innerHTML = slugs.map(function (s) { return '<option value="' + esc(s) + '"' + (s === slug ? ' selected' : '') + '>' + esc(ALL[s].company.name) + '</option>'; }).join('');
+    sel.onchange = function () { location.search = '?c=' + encodeURIComponent(sel.value); };
+    var links = Array.prototype.slice.call(document.querySelectorAll('.topics a'));
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) links.forEach(function (a) { a.getAttribute('href') === '#' + e.target.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'); }); }); }, { rootMargin: '-10% 0px -80% 0px' });
+      Array.prototype.forEach.call(document.querySelectorAll('section.block'), function (s) { io.observe(s); });
+    }
+  }
+  function applyFilter() {
+    var q = $('#q').value.trim().toLowerCase(), ok = $('#okonly').checked;
+    Array.prototype.forEach.call(document.querySelectorAll('tr[data-q]'), function (tr) {
+      var hide = (q && tr.getAttribute('data-q').indexOf(q) < 0) || (ok && tr.hasAttribute('data-st') && tr.getAttribute('data-st') !== 'ok');
+      if (hide) tr.setAttribute('hidden', ''); else tr.removeAttribute('hidden');
+    });
+  }
+
+  // ---------- source viewer ----------
+  var DV = { src: null, page: null, active: null };
+  function pagesOf(src) { return Object.keys(D.pages[src] || {}).map(Number).sort(function (a, b) { return a - b; }); }
+  function pageHtml(src, page, active) {
+    // the PDF text has a line break after every cell: flow it, and match quotes on whitespace runs rather than verbatim
+    var text = (D.pages[src][page] || '').split(/\n[ \t]*\n+/).map(function (par) { return par.replace(/\s+/g, ' ').trim(); }).filter(Boolean).join('\n\n');
+    var facts = F.filter(function (f) { return f.src === src && f.page === page && f.quote; }), spans = [];
+    facts.forEach(function (f) {
+      var re = new RegExp(f.quote.trim().split(/\s+/).map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('\\s+')), m = re.exec(text);
+      if (m) spans.push({ s: m.index, e: m.index + m[0].length, f: f });
+    });
+    spans.sort(function (a, b) { return a.s - b.s || (a.f.id === active ? -1 : 1); });
+    var out = '', pos = 0;
+    spans.forEach(function (sp) { if (sp.s < pos) return; out += esc(text.slice(pos, sp.s)) + '<mark' + (sp.f.id === active ? ' class="on" id="dv-active"' : '') + ' title="' + esc(sp.f.id + ': ' + (sp.f.text || '')) + '">' + esc(text.slice(sp.s, sp.e)) + '</mark>'; pos = sp.e; });
+    out += esc(text.slice(pos));
+    var a = active && BYID[active], d = DOC[src];
+    var q = a ? '<div class="quote"><span class="lbl">' + esc(a.id + ' · ' + (FIELD[a.field] ? FIELD[a.field].label : a.field)) + (a.found ? ' · quote found on the page' : ' · quote not found verbatim on the page text') + '</span>' + esc(a.quote || a.text) + '</div>' : '';
+    return '<article class="dv-page" aria-label="' + esc(d.file + ', page ' + page) + '"><div class="rh"><span>' + esc(d.file) + '</span><span>' + esc(D.company.name) + '</span></div>' + q + '<div class="dv-text">' + out + '</div><div class="rf"><span>' + esc(docTitle(d)) + '</span><span>Page ' + page + ' of ' + d.pages + '</span></div></article>';
+  }
+  function showPage(src, page, active) {
+    var d = DOC[src], ps = pagesOf(src);
+    DV.src = src; DV.page = page; DV.active = active;
+    $('#dv-title').textContent = d.file; $('#dv-meta').textContent = docTitle(d) + ' · ' + ps.length + ' referenced pages';
+    var i = ps.indexOf(page), near = ps.slice(Math.max(0, i - 4), i + 5);
+    $('#dv-strip').innerHTML = '<span class="lbl">Referenced pages</span>' + (i > 0 ? '<button type="button" class="dv-pg" data-page="' + ps[i - 1] + '">‹</button>' : '') +
+      near.map(function (p) { return '<button type="button" class="dv-pg" data-page="' + p + '"' + (p === page ? ' aria-current="true"' : '') + '>' + p + '</button>'; }).join('') + (i < ps.length - 1 ? '<button type="button" class="dv-pg" data-page="' + ps[i + 1] + '">›</button>' : '');
+    $('#dv-pages').innerHTML = pageHtml(src, page, active);
+    var el = $('#doc-viewer'); el.hidden = false; document.body.classList.add('dv-open');
+    Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed], .cell-btn.on, tr.fact-on'), function (b) { b.classList.remove('on', 'fact-on'); if (b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed', 'false'); });
+    if (active) { var btn = document.querySelector('.view-btn[data-view="' + active + '"]'); if (btn) btn.setAttribute('aria-pressed', 'true'); var cb = document.querySelector('.cell-btn[data-view="' + active + '"]'); if (cb) cb.classList.add('on'); var row = document.getElementById('row-' + active); if (row) row.classList.add('fact-on'); }
+    var m = document.getElementById('dv-active'); if (m) m.scrollIntoView({ block: 'center' }); else $('#dv-pages').scrollTop = 0;
+  }
+  function openFact(id) { var f = BYID[id]; if (!f || !f.page || !(D.pages[f.src] || {})[f.page]) return; showPage(f.src, f.page, id); }
+  function closeViewer() { $('#doc-viewer').hidden = true; document.body.classList.remove('dv-open'); Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"]'), function (b) { b.setAttribute('aria-pressed', 'false'); }); }
+
+  render();
+  document.addEventListener('click', function (e) {
+    var v = e.target.closest('[data-view]'); if (v) { openFact(v.getAttribute('data-view')); return; }
+    var pg = e.target.closest('.dv-pg'); if (pg) { showPage(DV.src, +pg.getAttribute('data-page'), DV.active); return; }
+    if (e.target.closest('#dv-close')) closeViewer();
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#doc-viewer').hidden) closeViewer(); if (e.key === 'Enter' && e.target.matches('.bar-group[data-view]')) openFact(e.target.getAttribute('data-view')); });
+  $('#q').addEventListener('input', applyFilter); $('#okonly').addEventListener('change', applyFilter);
+})();
+</script>
+</body>
+</html>

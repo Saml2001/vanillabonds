@@ -444,6 +444,9 @@
   .demobar { background: var(--paper); color: var(--gold-ink); font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em; text-align: center; padding: 5px 24px; border-bottom: 1px solid var(--border); text-transform: uppercase; }
   .header-inner { gap: 24px; }
   .primary-nav { margin-right: auto; }
+  .primary-nav .nav-link { display: flex; align-items: center; height: 100%; padding: 0 18px; color: #C9D1DA; font-size: 14px; text-decoration: none; border-bottom: 2px solid transparent; border-top: 2px solid transparent; }
+  .primary-nav .nav-link:hover { color: var(--paper); background: var(--navy-2); }
+  .primary-nav .nav-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   .header-side { display: flex; align-items: center; gap: 18px; font-size: 13px; }
   .back-link { color: #C9D1DA; text-decoration: none; white-space: nowrap; }
   .back-link:hover { color: var(--paper); }
@@ -556,7 +559,7 @@
     .demobar { font-size: 10px; letter-spacing: 0.04em; padding: 4px 12px; }
     .header-inner { flex-wrap: wrap; padding: 0 16px; gap: 0 16px; }
     .wordmark { padding: 14px 0; }
-    .primary-nav button { white-space: nowrap; padding: 0 12px; }
+    .primary-nav button, .primary-nav .nav-link { white-space: nowrap; padding: 0 12px; }
     .header-side { flex: 1 0 100%; flex-wrap: wrap; justify-content: space-between; gap: 10px 12px; padding: 8px 0 10px; border-top: 1px solid #22405F; }
     .role-box { flex-wrap: wrap; gap: 10px 12px; }
     .switch-menu { left: 0; right: auto; min-width: 240px; max-width: calc(100vw - 32px); }
@@ -1177,7 +1180,7 @@
     document.getElementById('nav-list').innerHTML = items.map(function (x) {
       var cur = currentView === x[0] || (x[0] === 'opportunities' && INVESTOR[currentView]);
       return '<li><button type="button" data-route="' + x[0] + '"' + (cur ? ' aria-current="page"' : '') + '>' + x[1] + '</button></li>';
-    }).join('');
+    }).join('') + '<li><a class="nav-link" href="dossier.html">Fact dossier</a></li>';   // the web fact dossier (build_dossier.py), a page of its own
     var others = Object.keys(ROLE_LABEL).filter(function (k) { return k !== r; });
     document.getElementById('role-box').innerHTML =
       '<div class="cur"><small>Current view</small><b>' + (r ? ROLE_LABEL[r] + (r === 'company' ? ' · ' + esc(shortName(OPPORTUNITIES[STATE.company])) : '') : 'Not chosen yet') + '</b></div>' +
