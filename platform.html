@@ -1018,7 +1018,13 @@
      ========================================================= */
   var PHASE = { 'van-dijk': 'anchor', 'nordhaven': 'anchor', 'alpenwerk': 'open' };
   Object.keys(window.PLATFORM_DEALS || {}).forEach(function (k) { PHASE[k] = window.PLATFORM_DEALS[k].phase || 'anchor'; });
-  PHASE['van-dijk'] = 'intake'; OPPORTUNITIES['van-dijk'].anchors = [];   // the story of the demo: Van Dijk delivers documents, Katjes is in the anchor window, Fastned is open to co-investors
+  PHASE['van-dijk'] = 'intake'; OPPORTUNITIES['van-dijk'].anchors = [];
+  OPPORTUNITIES['van-dijk'].docs.forEach(function (d) { d.check = ['AR25', 'FS24', 'FS23'].indexOf(d.id) >= 0 ? 'passed' : 'pending'; });   // only what passed the check is on the platform
+  function checkLabel(d) { return d.check === 'passed' ? '<span class="st-ok">Through the check</span>' : d.check === 'pending' ? '<span class="st-open">Being checked</span>' : ''; }
+  function checkLine(o) {
+    var pend = o.docs.filter(function (d) { return d.check === 'pending'; }).length; if (!pend) return '';
+    return '<p class="muted small" style="margin:-6px 0 16px">' + (o.docs.length - pend) + ' of ' + o.docs.length + ' documents are through the check and on the platform; ' + pend + ' ' + (pend === 1 ? 'is' : 'are') + ' being checked and not yet shown.</p>';
+  }   // the story of the demo: Van Dijk delivers documents, Katjes is in the anchor window, Fastned is open to co-investors
   // The ten-working-day anchor window and the co-investor book that follows it, per deal, as working days from today:
   // the demonstration shows the same picture every day, the calendar dates roll forward.
   var WINDOWS = { 'van-dijk': { factFileDue: 10, anchorOpens: 11, anchorCloses: 20, bookOpens: 21, bookCloses: 31 },
@@ -1250,11 +1256,11 @@
       }).join('') + '</tbody></table></div></section>';
 
     var qs = questions(o), openQ = qs.filter(function (f) { return !f.answered; }).length;
-    html += '<section class="section" id="c-questions"><p class="label">' + openQ + ' open</p><h2>Questions from the review</h2>' +
-      '<p class="muted small">Facts the reviewer could not find in the documents. A written answer enters the fact file as a company response and is marked as such until it is checked.</p>' +
+    html += '<section class="section" id="c-questions"><p class="label">' + openQ + ' open</p><h2>Questions from the review and from investors</h2>' +
+      '<p class="muted small">Facts the reviewer could not find in the documents, and what investors asked after reading the fact file. A written answer enters the fact file as a company response and is marked as such until it is checked.</p>' +
       (qs.length ? '<ul class="qa">' + qs.map(function (f) {
         var b = baseFact(o, f.id), d = doc(o, b.doc);
-        return '<li' + (f.answered ? ' class="answered"' : '') + '><div class="q"><h3>' + esc(f.fact) + '</h3><p class="small muted">' + (f.mandatory ? 'Mandatory · ' : f.followUp ? 'Investor follow-up · ' : '') + 'expected in ' + esc(d ? d.title : 'your documents') + '</p></div>' +
+        return '<li' + (f.answered ? ' class="answered"' : '') + '><div class="q"><h3>' + esc(f.fact) + '</h3><p class="small muted">' + (f.mandatory ? 'Mandatory · ' : f.followUp ? 'Asked by ' + (f.askedBy ? esc(f.askedBy) : 'an investor') + ' · ' : 'From the review · ') + 'expected in ' + esc(d ? d.title : 'your documents') + '</p></div>' +
           (f.answered
             ? '<div class="a"><p class="ans">' + esc(f.value) + '</p><p class="small muted">Answered by the company · to be checked by the reviewer <button type="button" class="chip-link" data-unanswer="' + f.id + '">edit</button></p></div>'
             : '<form class="a" data-answer="' + f.id + '"><div class="field"><input name="txt" type="text" maxlength="160" placeholder="Your answer" required aria-label="Answer: ' + esc(f.fact) + '"><button type="submit" class="btn">Send answer</button></div></form>') +
@@ -1647,7 +1653,7 @@
   function openLabel(x) { return x.mandatory ? 'Requested · mandatory' : x.followUp ? 'Investor follow-up' : 'Requested'; }
   function received(o) { return o.requests.filter(function (r) { return r.st === 'received'; }); }
   function openFacts(o) { return o.facts.filter(function (f) { return factOpen(o, f); }); }
-  function sourcedFacts(o) { return o.facts.filter(function (f) { return !factOpen(o, f); }); }
+  function sourcedFacts(o) { return o.facts.filter(function (f) { var d = f.link ? null : doc(o, f.doc); return !factOpen(o, f) && !(d && d.check === 'pending'); }); }   // a fact from a document still being checked is not on the platform yet
   function profileFacts(o) { return o.facts.filter(function (f) { return f.profile && !factOpen(o, f); }); }
   function statusChip(o) { return '<span class="status-chip ' + o.status.cls + '" title="Financing stage">' + esc(o.status.label) + '</span>'; }
 
@@ -1877,7 +1883,7 @@
     var trail = '<li><button type="button" class="crumb-link" data-route="opportunities">All Opportunities</button></li>' +
       (view === 'overview'
         ? '<li aria-current="page">' + esc(o.company.name) + '</li>'
-        : '<li><button type="button" class="crumb-link" data-route="' + o.id + '/overview">' + esc(o.company.name) + '</button></li><li aria-current="page">Documents &amp; Dossier</li>');
+        : '<li><button type="button" class="crumb-link" data-route="' + o.id + '/overview">' + esc(o.company.name) + '</button></li><li aria-current="page">Analysis</li>');
     return '<nav class="crumbs" aria-label="Breadcrumb"><div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap">' + back +
       '<ol>' + trail + '</ol></div><div class="context">' + dossierChip(o) + statusChip(o) + '</div></nav>';
   }
@@ -1895,7 +1901,7 @@
           '<h1 id="h-overview">' + esc(c.name) + '</h1>' +
           '<p class="meta-line"><span>' + esc(c.industry) + '</span><span>' + esc(c.country) + '</span></p>' +
           '<p class="desc">' + esc(c.description) + '</p>' +
-          '<div style="margin-top:20px"><button type="button" class="btn light" data-route="' + o.id + '/documents">View Documents &amp; Dossier <span class="arr" aria-hidden="true">→</span></button></div>' +
+          '<div style="margin-top:20px"><button type="button" class="btn light" data-route="' + o.id + '/documents">Open the analysis: every fact with its source <span class="arr" aria-hidden="true">→</span></button></div>' +
         '</div>' +
         '<div class="hero-facts">' +
           '<div class="chips" style="justify-content:flex-start">' + statusChip(o) + phaseChip(o) + dossierChip(o) + '</div>' +
@@ -1973,7 +1979,7 @@
       '</section>';
 
     html += '<div class="overview-foot"><div><h3 style="margin:0">Source documents and investor dossier</h3><p class="muted small" style="margin:0">Source references, requested documents and a downloadable dossier for ' + esc(c.name) + '.</p></div>' +
-      '<button type="button" class="btn" data-route="' + o.id + '/documents">View Documents &amp; Dossier <span class="arr" aria-hidden="true">→</span></button></div>';
+      '<button type="button" class="btn" data-route="' + o.id + '/documents">Open the analysis: every fact with its source <span class="arr" aria-hidden="true">→</span></button></div>';
     return html;
   }
   function stageTag(status) {
@@ -2102,16 +2108,15 @@
     var c = o.company, summary = doc(o, o.finDocs[2]);
     var html = crumbs(o, 'documents') +
       '<p class="eyebrow">' + esc(c.name) + '</p>' +
-      '<h1 id="h-documents">Documents &amp; Dossier</h1>' +
-      '<p class="lede">Dossier status, anchor participation, the source documents behind the dossier, references for material facts, and ' +
+      '<h1 id="h-documents">Analysis \u2014 the fact proof</h1>' +
+      '<p class="lede">' + (o.dossier ? 'Every fact with its document and page, the arithmetic with its formula, the source page beside each fact; then ' : '') + 'dossier status, anchor participation, the source documents behind the dossier, references for material facts, and ' +
         (dossierStatus(o) === 'complete' ? 'remaining investor follow-up items.' : 'information still requested from the company.') + '</p>' +
-      dossierStatusPanel(o) +
+      checkLine(o) + factDossierPanel(o) + dossierStatusPanel(o) +
 
       '<div class="dossier-band on-navy"><div><h2>Investor dossier — ' + esc(c.name) + '</h2>' +
         '<p>Standardised dossier covering company profile, five-year financials, calculated ratios, proposed terms, institutional anchor participation, diligence considerations and source references. Opens your browser’s print dialog; choose “Save as PDF”.</p></div>' +
         '<button type="button" class="btn light" data-action="print">Download Investor Dossier <span class="arr" aria-hidden="true">↓</span></button></div>';
 
-    html += factDossierPanel(o);
     html += '<section class="section" aria-labelledby="h-anchor-sum"><p class="label">Included in the dossier</p><h2 id="h-anchor-sum">Anchor participation summary</h2>' +
       (o.anchors.length
         ? anchorBar(o) + anchorLegend(o) + '<div style="margin-top:14px">' + anchorTable(o) + '</div>' +
@@ -2122,10 +2127,10 @@
     html += '<section class="section" aria-labelledby="h-docs"><p class="label">Source index</p><h2 id="h-docs">Source documents</h2>' +
       '<p class="muted small">Open shows the referenced pages of a document beside this screen. Documents are not available for download in this environment.</p>' +
       '<div class="table-scroll"><table><caption class="visually-hidden">Source documents, ' + esc(c.name) + '</caption><thead><tr>' +
-      '<th scope="col">Document</th><th scope="col">Category</th><th scope="col">Reference ID</th><th scope="col">Used for</th><th scope="col" class="view"><span class="visually-hidden">Open</span></th></tr></thead><tbody>' +
+      '<th scope="col">Document</th><th scope="col">Category</th><th scope="col">Reference ID</th><th scope="col">Used for</th><th scope="col">Check</th><th scope="col" class="view"><span class="visually-hidden">Open</span></th></tr></thead><tbody>' +
       o.docs.map(function (d) {
         return '<tr><td>' + esc(d.title) + '</td><td class="muted">' + esc(d.category) + '</td><td><span class="doc-id">' + esc(d.ref) + '</span></td>' +
-          '<td class="small">' + esc(docUsage(o, d.id)) + '</td><td class="view-cell">' + docViewBtn(o, d) + '</td></tr>';
+          '<td class="small">' + esc(docUsage(o, d.id)) + '</td><td>' + checkLabel(d) + '</td><td class="view-cell">' + (d.check === 'pending' ? '<span class="ref-only">Not yet on the platform</span>' : docViewBtn(o, d)) + '</td></tr>';
       }).join('') + '</tbody></table></div></section>';
 
     html += '<section class="section" aria-labelledby="h-refs"><p class="label">Traceability</p><h2 id="h-refs">Source references for material facts</h2>' +
@@ -2416,7 +2421,7 @@
      ========================================================= */
   var selectedOpportunityId = null;
   var currentView = 'start';
-  var TITLES = { start: 'Platform demo', journey: 'Deal journey', market: 'The market', company: 'Your fact file', opportunities: 'Investment Opportunities', overview: 'Investment Overview', documents: 'Documents & Dossier' };
+  var TITLES = { start: 'Platform demo', journey: 'Deal journey', market: 'The market', company: 'Your fact file', opportunities: 'Investment Opportunities', overview: 'Investment Overview', documents: 'Analysis' };
   var INVESTOR = { opportunities: 1, overview: 1, documents: 1 };
 
   function parseRoute(hash) {
