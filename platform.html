@@ -444,7 +444,8 @@
   .demobar { background: var(--paper); color: var(--gold-ink); font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em; text-align: center; padding: 5px 24px; border-bottom: 1px solid var(--border); text-transform: uppercase; }
   .header-inner { gap: 24px; }
   .primary-nav { margin-right: auto; }
-  .dossier-frame { display: block; width: 100%; height: 82vh; border: 1px solid var(--border); background: var(--paper); }
+  body { overflow-anchor: none; }   /* the embedded dossier grows and shrinks with its tabs; the page must not follow the content below it */
+  .dossier-frame { display: block; width: 100%; height: 640px; border: 0; background: transparent; overflow: hidden; }
   .windows { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12.5px; color: var(--ink-2); margin: 8px 0 10px; }
   .windows b { color: var(--navy); font-weight: 600; } .windows .left { color: var(--gold-ink); font-weight: 600; }
   .deadline { display: inline-flex; align-items: center; gap: 12px; background: var(--navy); color: var(--paper); padding: 9px 14px 9px 12px; border-radius: 2px; border-left: 3px solid var(--gold); }
@@ -1104,9 +1105,9 @@
   function factDossierPanel(o, id) {
     if (!o.dossier) return '';
     return '<section class="section" id="' + (id || 'sec-factdossier') + '" aria-labelledby="h-factdossier"><p class="label">Fact dossier \u00b7 beta</p><h2 id="h-factdossier">Fact dossier, every fact with its source</h2>' +
-      '<p class="muted small">Thirteen blocks in the anchors\u2019 format from the company\u2019s public reports: the facts with document and page, the arithmetic with its formula, and the source page beside each fact. Pending review by a named reviewer. ' +
+      '<p class="muted small">The overview first: key figures, charts, what changed year by year, news and litigation on file, open items' + (role() === 'company' ? '' : ' and your own assessment') + '. Behind it the fact proof: thirteen blocks in the anchors\u2019 format from the company\u2019s public reports, every fact with document and page and the source page beside it. Pending review by a named reviewer. ' +
       '<a href="dossier.html?c=' + o.dossier + '" target="_blank" rel="noopener">Open in its own tab</a>.</p>' +
-      '<iframe class="dossier-frame" src="dossier.html?c=' + o.dossier + '&embed=1" title="Fact dossier of ' + esc(o.company.name) + '"></iframe></section>';
+      '<iframe class="dossier-frame" scrolling="no" src="dossier.html?c=' + o.dossier + '&embed=1&role=' + role() + '" title="Fact dossier of ' + esc(o.company.name) + '"></iframe></section>';
   }
   function realDeals() { return ORDER.filter(function (id) { return OPPORTUNITIES[id].real; }); }
   // The embedded dossier asks the platform to open a document; the platform shows it full height on the right (dossier.html in viewer mode)
@@ -1147,12 +1148,17 @@
     else if (m.type === 'dossier-ready') { DVX.ready = true; if (DVX.pending) { fr.contentWindow.postMessage(typeof DVX.pending === 'string' ? { type: 'show', slug: m.slug, id: DVX.pending } : DVX.pending, '*'); DVX.pending = null; } }
     else if (m.type === 'dossier-active' || m.type === 'dossier-jump') {
       if (!emb) return;
-      emb.contentWindow.postMessage(m, '*');
-      var r = emb.getBoundingClientRect();
-      if (m.type === 'dossier-jump' && (r.top < 0 || r.bottom > window.innerHeight)) window.scrollTo({ top: r.top + window.pageYOffset - 12 });
+      emb.contentWindow.postMessage(m, '*');   // the dossier scrolls this page to the row itself (dossier-scrollto)
     }
+    else if (m.type === 'dossier-height') { if (emb) { emb.style.height = m.h + 'px'; syncEmbed(); } }
+    else if (m.type === 'dossier-scrollto') { if (emb) window.scrollTo({ top: emb.getBoundingClientRect().top + window.pageYOffset + m.y }); }
     else if (m.type === 'dossier-close') closeDossierViewer();
   });
+  // the embedded dossier is part of this page (no scroll of its own): it learns where the page is scrolled, so its topic menu sticks
+  var embTick = false;
+  function syncEmbed() { var emb = document.querySelector('iframe.dossier-frame'); if (emb && emb.contentWindow) emb.contentWindow.postMessage({ type: 'scroll', top: Math.max(0, -emb.getBoundingClientRect().top), vh: window.innerHeight }, '*'); }
+  window.addEventListener('scroll', function () { if (embTick) return; embTick = true; requestAnimationFrame(function () { embTick = false; syncEmbed(); }); }, { passive: true });
+  window.addEventListener('resize', syncEmbed);
   function demoNote() {
     var rd = realDeals();
     var fd = ORDER.filter(function (id) { return !OPPORTUNITIES[id].real; }).map(function (id) { return shortName(OPPORTUNITIES[id]); });

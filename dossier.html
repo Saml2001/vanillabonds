@@ -45,6 +45,7 @@
 
   /* ---------- Page ---------- */
   main { max-width: 1280px; margin: 0 auto; padding: 32px 32px 72px; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 36px; align-items: start; }
+  main > * { min-width: 0; }   /* wide tables scroll inside their own box instead of widening the page */
   .title-band { grid-column: 1 / -1; border-bottom: 1px solid var(--border); padding-bottom: 18px; }
   .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
   h1 { font-weight: 300; font-size: 34px; line-height: 1.15; color: var(--navy); margin: 0 0 10px; }
@@ -75,8 +76,9 @@
   .table-scroll { overflow-x: auto; }
   .table-scroll table { min-width: 640px; }
   tr.calc td { background: #EFECE4; }
-  td.src { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); white-space: nowrap; }
-  td.per { font-family: var(--mono); font-size: 11.5px; white-space: nowrap; }
+  td.src { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); min-width: 7em; }
+  td.per { font-family: var(--mono); font-size: 11.5px; min-width: 6em; }
+  td.per, td.src, td.st, td.view-cell { width: 1%; } td.src.web { min-width: 15em; }   /* these fit their content; the entry takes the rest */
   td.fld { color: var(--muted); width: 18%; }
   .chip { font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; color: var(--muted); }
   .chip.ok { color: #2F6B3A; } .chip.rep { color: var(--gold-ink); }
@@ -85,22 +87,50 @@
   .cell-btn.on, tr.fact-on td { background: #F5EFDF; }
   .cell-btn sup { font-size: 9px; color: var(--muted); margin-left: 2px; }
   .view-btn { font-family: var(--sans); font-size: 12px; line-height: 1; padding: 5px 10px; border: 1px solid var(--border); border-radius: 2px; background: var(--paper); color: var(--navy); cursor: pointer; white-space: nowrap; }
-  .view-btn:hover { border-color: var(--navy); }
+  .view-btn:hover { border-color: var(--navy); } a.view-btn { display: inline-block; text-decoration: none; }
   .view-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
   td.view-cell { text-align: right; padding-top: 6px; padding-bottom: 6px; }
   tr[hidden] { display: none; }
   details summary { cursor: pointer; color: var(--gold-ink); font-size: 12.5px; margin: 6px 0; }
   .arith td:first-child { width: 22%; } .arith td:nth-child(2) { color: var(--muted); font-size: 12.5px; }
-  .assess { border: 1px dashed var(--gold); padding: 12px 14px; margin-top: 18px; min-height: 60px; color: var(--muted); font-style: italic; }
-  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 6px 0 18px; }
+  .fnote { font-size: 12px; line-height: 1.45; color: var(--muted); margin-top: 3px; }
+  .fids { font-family: var(--mono); font-size: 11px; line-height: 1.7; } .fids a { color: var(--navy); text-decoration: none; border-bottom: 1px dotted var(--gold); } .fids a:hover { border-bottom-style: solid; }
+  .mrows td:first-child { font-family: var(--mono); font-size: 11.5px; color: var(--gold-ink); white-space: nowrap; } .mrows td:nth-child(2) { width: 18%; } .mrows td:nth-child(4) { width: 26%; }
+  .reqs { table-layout: fixed; } .reqs th:first-child { width: 8%; } .reqs th:nth-child(2) { width: 52%; } .reqs th:nth-child(3) { width: 16%; }
+  tr:target td { background: #F5EFDF; }
+  .assess { border: 1px dashed var(--gold); padding: 12px 14px; margin-top: 18px; color: var(--muted); }
+  .assess textarea { display: block; width: 100%; margin: 4px 0 6px; font: inherit; font-size: 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--border); padding: 8px 10px; resize: vertical; }
+  .assess .shared { white-space: pre-wrap; color: var(--ink); background: #FBF6E8; border-left: 3px solid var(--gold); padding: 8px 12px; margin-bottom: 10px; }
+  .assess .shared .label, .assess .shared .small { display: block; white-space: normal; color: var(--gold-ink); } .assess .shared .small { color: var(--muted); margin-top: 4px; }
+  .assess .share { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; color: var(--ink-2); margin: 2px 0 6px; } .assess .share label { cursor: pointer; white-space: nowrap; }
+  .assess textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  /* ---------- overview: the investor's first screen; the fact proof is the second tab ---------- */
+  .tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 16px; }
+  .tabs button { background: var(--paper); border: 1px solid var(--border); padding: 8px 16px; font-size: 14px; color: var(--ink-2); cursor: pointer; border-radius: 2px; }
+  .tabs button[aria-selected="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .tile { display: flex; flex-direction: column; gap: 2px; text-align: left; font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--border); padding: 12px 14px; border-radius: 0; }
+  button.tile { cursor: pointer; } button.tile:hover { border-color: var(--gold); }
+  .tile .v { font-size: 26px; font-weight: 300; line-height: 1.2; color: var(--navy); font-variant-numeric: tabular-nums; }
+  .tile .s { font-size: 12px; line-height: 1.45; color: var(--muted); }
+  a.differs { font-size: 11px; color: #9A3B2E; white-space: nowrap; }
+  .chart .ref { stroke: var(--gold); stroke-width: 1.5; stroke-dasharray: 5 4; } .chart .ref-text { font-size: 10.5px; fill: var(--gold-ink); }
+  ul.ev, ul.log, ul.items { list-style: none; margin: 0; padding: 0; } ul.ev li { margin: 0 0 7px; line-height: 1.45; } ul.log li, ul.items li { margin: 0 0 5px; }
+  ul.items li::before { content: "·"; color: var(--gold); margin-right: 8px; }
+  .evk { font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); margin-right: 6px; white-space: nowrap; }
+  .src-btn { font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+  td.nums { width: 30%; font-size: 13px; line-height: 1.6; }
+  .cols2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 24px; font-size: 13px; color: var(--ink-2); }
+  section.block h3 + ul { margin-top: 4px; } section.block ul + h3 { margin-top: 16px; }
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 16px; margin: 6px 0 18px; }
   .chart { background: var(--paper); border: 1px solid var(--border); padding: 16px 18px 10px; position: relative; }
   .chart.wide { grid-column: 1 / -1; }
   .chart h3 { margin-bottom: 2px; }
   .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
   .chart .grid line { stroke: #E4E3DF; stroke-width: 1; }
   .chart .zero { stroke: #9AA1A9; stroke-width: 1; }
-  .chart .axis-text { font-family: var(--sans); font-size: 10.5px; font-variant-numeric: tabular-nums; fill: var(--muted); }
-  .chart .val-text { font-size: 11.5px; fill: var(--ink); font-weight: 600; }
+  .chart .axis-text { font-family: var(--sans); font-size: 12.5px; font-variant-numeric: tabular-nums; fill: var(--muted); }
+  .chart .val-text { font-size: 13.5px; fill: var(--ink); font-weight: 600; }
   .chart .bar { fill: var(--navy-2); } .chart .bar.latest { fill: var(--navy); } .chart .bar.plan { fill: #C9B987; }
   .chart .bar-group { cursor: pointer; } .chart .bar-group:hover .bar { fill: #2B4D72; } .chart .bar-group:hover .bar.plan { fill: var(--gold); }
   .kv td:first-child { width: 30%; color: var(--muted); }
@@ -155,14 +185,19 @@
   .dv-quote { flex-basis: 100%; font-size: 12.5px; color: var(--ink-2); border-left: 3px solid var(--gold); background: #FBF6E8; padding: 6px 10px; margin-top: 6px; }
   .dv-quote .lbl { display: block; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); margin-bottom: 2px; }
   body.embed .demobar, body.embed .site-header { display: none; }
-  body.embed main { padding: 14px 18px 40px; gap: 24px; }
+  body.embed { background: transparent; }
+  body.embed main { padding: 0 0 8px; gap: 28px; }
+  body.embed .title-band .eyebrow, body.embed .title-band h1, body.embed .title-band .meta { display: none; }   /* the platform's page heading names the company */
+  body.embed main > aside { position: relative; top: 0; max-height: none; }
+  body.noaside main { grid-template-columns: minmax(0, 1fr); } body.noaside main > aside { display: none; }
+  body.app main { gap: 20px; } body.app section.block { padding: 16px 20px 14px; margin-bottom: 16px; } body.app h2 { font-size: 18px; font-weight: 500; } body.app section.block .ask { font-size: 13px; color: var(--muted); margin-bottom: 12px; } body.app #tab-overview .eyebrow { display: none; }
   body.mode-viewer .demobar, body.mode-viewer .site-header, body.mode-viewer main { display: none; }
   body.mode-viewer { padding-right: 0 !important; }
   body.mode-viewer #doc-viewer { left: 0; width: 100%; border-left: 0; box-shadow: none; }
   @media (max-width: 1000px) {
     main { grid-template-columns: 1fr; padding: 24px 16px 56px; } main > aside { position: static; max-height: none; }
     body.mode-page #doc-viewer, body.mode-page .view-btn, body.mode-page .view-cell, body.mode-page th.view { display: none !important; } body.mode-page.dv-open { padding-right: 0; }
-    .header-inner { flex-wrap: wrap; padding: 0 16px; } .header-side { flex: 1 0 100%; padding: 8px 0 10px; }
+    .header-inner { flex-wrap: wrap; padding: 0 16px; } .header-side { flex: 1 0 100%; flex-wrap: wrap; padding: 8px 0 10px; } .co { min-width: 0; max-width: 100%; }
   }
   @media print { .topics, .tools, #doc-viewer, .site-header, .demobar { display: none !important; } main { display: block; } section.block { break-inside: avoid-page; border: 0; padding: 0; } .view-cell, th.view { display: none; } }
 </style>
@@ -171,9 +206,9 @@
 <div class="demobar">Fact dossier · beta · facts extracted from public reports and pending review by a named reviewer · facts and arithmetic only, no opinion · not an offer, solicitation or investment advice</div>
 <header class="site-header">
   <div class="header-inner">
-    <a class="wordmark" href="platform.html" aria-label="VanillaBonds — platform demo"><span class="v">VANILLA</span><span class="b">BONDS</span></a>
+    <a class="wordmark" href="app.html" aria-label="VanillaBonds — platform demo"><span class="v">VANILLA</span><span class="b">BONDS</span></a>
     <nav class="primary-nav" aria-label="Primary"><ul><li><button type="button" aria-current="page">Fact dossier</button></li></ul></nav>
-    <div class="header-side"><label for="co">Company</label><select id="co" class="co" aria-label="Company"></select><a class="back-link" href="platform.html">← Platform</a></div>
+    <div class="header-side"><label for="co">Company</label><select id="co" class="co" aria-label="Company"></select><a class="back-link" href="app.html">← Platform</a></div>
   </div>
 </header>
 <main id="main">
@@ -200,21 +235,26 @@
   // page = on its own; embed = the dossier inside the platform's deal and company screens (documents open in the platform's own panel);
   // viewer = only the document viewer, full size, inside that panel. The two frames talk through the platform with postMessage.
   var MODE = Q.get('viewer') ? 'viewer' : Q.get('embed') ? 'embed' : 'page';
+  var VIEW = MODE === 'embed' ? Q.get('view') : null;   // app.html: one tab of the deal workspace (overview, proof or assess); links to another tab go through the app
+  if (VIEW) document.body.classList.add('app', VIEW === 'proof' ? 'with-aside' : 'noaside');
   document.body.classList.add('mode-' + MODE); if (MODE === 'embed') document.body.classList.add('embed');
   function post(m) { if (window.parent !== window) window.parent.postMessage(m, '*'); }
   var D = ALL[slug], $ = function (s) { return document.querySelector(s); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
-  // facts: [id, field, period, value, unit, text, src, page, quote, status, confidence, quote_found]
-  var F = D.facts.map(function (r) { return { id: r[0], field: r[1], period: r[2], value: r[3], unit: r[4], text: r[5], src: r[6], page: r[7], quote: r[8], status: r[9], conf: r[10], found: r[11] }; });
+  // facts: [id, field, period, value, unit, text, src, page, quote, status, confidence, quote_found, url, note]; url = a web fact, verified at the URL; note = a merge conflict and its decision
+  var F = D.facts.map(function (r) { return { id: r[0], field: r[1], period: r[2], value: r[3], unit: r[4], text: r[5], src: r[6], page: r[7], quote: r[8], status: r[9], conf: r[10], found: r[11], url: r[12], note: r[13] }; });
+  var BEST = {}; (D.best || []).forEach(function (id) { BEST[id] = 1; });   // screen.py's record: one value per (field, period), as the screen and the PDF use it
+  var ROLE = Q.get('role') || 'anchor', INVESTOR = ROLE !== 'company', ANCHOR = ROLE === 'anchor';   // the platform passes its role; the company never sees an assessment
+  var A = D.agents || {}, MROWS = A.rows || [], MQ = A.questions || [], IK = A.intake;   // the agents' output, resolved against the record by mvp/render.py
   var BYID = {}; F.forEach(function (f) { BYID[f.id] = f; });
   var DOC = {}; D.docs.forEach(function (d, i) { d.i = i; DOC[d.id] = d; });
   var FIELD = {}; D.blocks.forEach(function (b) { b.fields.forEach(function (f) { f.block = b.id; FIELD[f.id] = f; }); });
-  var STATUS = { ok: 'approved', pend: 'pending', rep: 'company statement' };
+  var STATUS = { ok: 'approved', pend: 'pending', rep: 'company statement', web: 'verify at URL' };
   function docTitle(d) { return (d.kind || 'document') + (d.period ? ' ' + d.period : '') + (d.date ? ' · ' + d.date : ''); }
   function pkey(p) { var m = /^(FY|H1)-?(\d{4})(E?)$/.exec(p || ''); return m ? [+m[2], m[1] === 'H1' ? 1 : (m[3] ? 2 : 0)] : [9999, 3]; }
   function pcmp(a, b) { var x = pkey(a), y = pkey(b); return x[0] - y[0] || x[1] - y[1] || (a < b ? -1 : a > b ? 1 : 0); }
-  function latest(fs) { return fs.slice().sort(function (a, b) { return (DOC[a.src].i - DOC[b.src].i) || ((a.conf || 0) - (b.conf || 0)); })[fs.length - 1]; }
+  function latest(fs) { var b = fs.filter(function (f) { return BEST[f.id]; }); if (b.length) return b[0]; return fs.slice().sort(function (a, b) { return (DOC[a.src].i - DOC[b.src].i) || ((a.conf || 0) - (b.conf || 0)); })[fs.length - 1]; }
   function fmt(v, unit) {
     if (v == null || v === '') return '<span class="muted">–</span>';
     if (typeof v !== 'number') return esc(v);
@@ -222,15 +262,16 @@
     return unit && unit !== 'EUR m' ? s + ' ' + esc(unit) : s;
   }
   function chip(st) { return '<span class="chip ' + st + '">' + (STATUS[st] || st) + '</span>'; }
-  function srcText(f) { return f.page ? f.src + ' p.' + f.page : f.src; }
-  function viewBtn(f) { return f.page && D.pages[f.src] && D.pages[f.src][f.page] ? '<button type="button" class="view-btn" data-view="' + f.id + '" aria-pressed="false" aria-controls="doc-viewer" aria-label="View source of ' + esc(f.id) + '">View</button>' : '<span class="muted small">no page</span>'; }
+  function srcText(f) { return f.url ? (DOC[f.src].origin || f.src) + ' · ' + (DOC[f.src].date || '') : f.page ? f.src + '\u00a0p.' + f.page : f.src; }
+  function viewBtn(f) { return f.url ? '<a class="view-btn" href="' + esc(f.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Open the web source of ' + esc(f.id) + ' in a new tab">View ↗</a>' : f.page && D.pages[f.src] && D.pages[f.src][f.page] ? '<button type="button" class="view-btn" data-view="' + f.id + '" aria-pressed="false" aria-controls="doc-viewer" aria-label="View source of ' + esc(f.id) + '">View</button>' : '<span class="muted small">no page</span>'; }
 
   // ---------- charts: the platform's bar chart, by period ----------
-  function barChart(title, sub, pts, wide) {
-    var W = 520, H = 190, padL = 44, padB = 28, padT = 18, n = pts.length, slot = (W - padL - 8) / n, bw = Math.min(46, slot * 0.62);
+  function barChart(title, sub, pts, wide, opt) {
+    opt = opt || {};
+    var W = wide ? 1040 : 520, H = 220, padL = 50, padB = 32, padT = 22, n = pts.length, slot = (W - padL - 8) / n, bw = Math.min(46, slot * 0.62);
     var vals = pts.map(function (p) { return p.v; }).filter(function (v) { return typeof v === 'number'; });
     if (!vals.length) return '';
-    var max = Math.max(0, Math.max.apply(null, vals)), min = Math.min(0, Math.min.apply(null, vals)), span = (max - min) || 1;
+    var max = Math.max(0, opt.ref || 0, Math.max.apply(null, vals)), min = Math.min(0, Math.min.apply(null, vals)), span = (max - min) || 1;
     var step = niceStep(span / 4), top = Math.ceil(max / step) * step, bot = Math.floor(min / step) * step;
     function y(v) { return padT + (top - v) / (top - bot || 1) * (H - padT - padB); }
     var grid = '';
@@ -240,9 +281,9 @@
       var cls = 'bar' + (p.plan ? ' plan' : '') + (p.latest ? ' latest' : '');
       var rect = typeof p.v === 'number' ? '<rect class="' + cls + '" x="' + x + '" y="' + Math.min(y(p.v), y(0)) + '" width="' + bw + '" height="' + Math.max(1, h) + '"/>' : '';
       var lab = typeof p.v === 'number' ? '<text class="val-text" x="' + cx + '" y="' + (p.v >= 0 ? y(p.v) - 5 : y(p.v) + 12) + '" text-anchor="middle">' + (Math.abs(p.v) >= 100 ? p.v.toFixed(0) : p.v.toFixed(1)) + '</text>' : '<text class="axis-text" x="' + cx + '" y="' + (y(0) - 5) + '" text-anchor="middle">n/a</text>';
-      return '<g class="bar-group"' + (p.id ? ' data-view="' + p.id + '" role="button" tabindex="0"' : '') + '><title>' + esc(p.label + ': ' + (typeof p.v === 'number' ? p.v.toFixed(1) + ' EUR m' : 'n/a') + (p.note ? ' · ' + p.note : '')) + '</title>' + rect + lab + '<text class="axis-text" x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(p.label) + '</text></g>';
+      return '<g class="bar-group"' + (p.id ? ' data-view="' + p.id + '" role="button" tabindex="0"' : '') + '><title>' + esc(p.label + ': ' + (typeof p.v === 'number' ? p.v.toFixed(1) + (opt.unit || ' EUR m') : 'n/a') + (p.note ? ' · ' + p.note : '')) + '</title>' + rect + lab + '<text class="axis-text" x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(p.label) + '</text></g>';
     }).join('');
-    return '<figure class="chart' + (wide ? ' wide' : '') + '" style="margin:0"><h3>' + esc(title) + '</h3><p class="label" style="margin-bottom:6px">' + esc(sub) + '</p><svg viewBox="0 0 ' + W + ' ' + H + '" aria-label="' + esc(title) + '"><g class="grid">' + grid + '</g>' + bars + '</svg></figure>';
+    return '<figure class="chart' + (wide ? ' wide' : '') + '" style="margin:0"><h3>' + esc(title) + '</h3><p class="label" style="margin-bottom:6px">' + esc(sub) + '</p><svg viewBox="0 0 ' + W + ' ' + H + '" aria-label="' + esc(title) + '"><g class="grid">' + grid + '</g>' + bars + (opt.ref != null ? '<line class="ref" x1="' + padL + '" x2="' + W + '" y1="' + y(opt.ref) + '" y2="' + y(opt.ref) + '"/><text class="ref-text" x="' + W + '" y="' + (y(opt.ref) - 5) + '" text-anchor="end">' + esc(opt.refLabel || '') + '</text>' : '') + '</svg></figure>';
   }
   function niceStep(raw) { var p = Math.pow(10, Math.floor(Math.log10(raw || 1))), n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
   function seriesChart(field, title) {
@@ -270,8 +311,8 @@
   function factRow(f, withField) {
     return '<tr data-q="' + esc((FIELD[f.field] ? FIELD[f.field].label : f.field) + ' ' + (f.text || '') + ' ' + (f.period || '')).toLowerCase() + '" data-st="' + f.status + '" id="row-' + f.id + '">' +
       (withField ? '<td class="fld">' + esc(FIELD[f.field] ? FIELD[f.field].label : f.field) + '</td>' : '') +
-      '<td>' + esc(f.text || '') + (f.value != null && f.text && String(f.value) !== f.text ? ' <span class="muted">(' + fmt(f.value, f.unit) + ')</span>' : '') + '</td>' +
-      '<td class="per">' + esc(f.period || '') + '</td><td class="src">' + esc(srcText(f)) + '</td><td>' + chip(f.status) + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>';
+      '<td>' + esc(f.text || '') + (f.value != null && f.text && String(f.value) !== f.text ? ' <span class="muted">(' + fmt(f.value, f.unit) + ')</span>' : '') + (f.note ? '<div class="fnote">' + esc(f.note) + '</div>' : '') + '</td>' +
+      '<td class="per">' + esc(f.period || '') + '</td><td class="src' + (f.url ? ' web' : '') + '">' + esc(srcText(f)) + '</td><td class="st">' + chip(f.url && f.status === 'pend' ? 'web' : f.status) + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>';
   }
   var LIST_HEAD = '<thead><tr><th>Field</th><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead>';
   function pivot(fields, fs) {
@@ -283,7 +324,7 @@
     rows.forEach(function (fd) {
       h += '<tr data-q="' + esc(fd.label).toLowerCase() + '"><td>' + esc(fd.label) + '</td>' + ps.map(function (p) {
         var c = by[fd.id][p]; if (!c) return '<td class="num muted">–</td>';
-        var f = latest(c); return '<td class="num"><button type="button" class="cell-btn" data-view="' + f.id + '" title="' + esc(f.text || '') + ' · ' + srcText(f) + '">' + fmt(f.value, f.unit !== 'EUR m' ? f.unit : null) + (c.length > 1 ? '<sup>' + c.length + '</sup>' : '') + '</button></td>';
+        var f = latest(c); return '<td class="num"><button type="button" class="cell-btn" data-view="' + f.id + '" title="' + esc((f.text || '') + ' · ' + srcText(f) + (f.note ? ' · ' + f.note : '')) + '">' + fmt(f.value, f.unit !== 'EUR m' ? f.unit : null) + (c.length > 1 ? '<sup>' + c.length + '</sup>' : '') + '</button></td>';
       }).join('') + '</tr>';
     });
     return h + '</tbody></table></div><p class="muted small" style="margin:6px 0 0">Click a figure to see it on the page of the report. A superscript counts further reports that state the same period; the most recent report is shown.</p>';
@@ -305,6 +346,27 @@
     return '<div class="fieldhead"><h3>Arithmetic</h3><span class="muted small">shown, never scored · formula and source printed with each number</span></div><table class="arith"><thead><tr><th>Derived</th><th>Formula · source</th><th class="num">Value</th></tr></thead><tbody>' +
       rows.map(function (r) { return '<tr data-q="' + esc(r[0]).toLowerCase() + '"><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
   }
+  // fact ids as links to their rows (the row opens and lights up, as when the viewer jumps back)
+  function fids(s) { return s ? '<span class="fids">' + s.split(', ').map(function (x) { var id = x.split(' ')[0]; return BYID[id] ? '<a href="#row-' + id + '" data-row="' + id + '">' + esc(x) + '</a>' : esc(x); }).join(', ') + '</span>' : '<span class="muted">–</span>'; }
+  function mgmtRows() {
+    if (!MROWS.length) return '';
+    return '<div class="fieldhead"><h3>The 17 rows of memo section 9</h3><span class="muted small">per row: a document fact, a register fact, or a representation pending with its question</span></div><div class="table-scroll"><table class="mrows"><thead><tr><th>Row</th><th>Item</th><th>Status</th><th>Facts on file</th><th>Question to management</th></tr></thead><tbody>' +
+      MROWS.map(function (r) { return '<tr id="mrow-' + r[0] + '"><td>' + r[0] + '</td><td>' + esc(r[1]) + '</td><td>' + '<span class="chip' + (/^repr/.test(r[2]) ? ' rep' : '') + '">' + esc(r[2]) + '</span>' + '</td><td>' + fids(r[3]) + '</td><td>' + (r[4] ? esc(r[4]) : '<span class="muted">–</span>') + (r[5] ? '<div class="fnote">answer: ' + fids(r[5]) + '</div>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function questionsBlock(n) {
+    return '<section class="block" id="b-questions" aria-labelledby="h-questions"><p class="eyebrow">' + n + ' · Process · ' + MQ.length + ' questions</p><h2 id="h-questions">Questions to management' + (A.date ? ', prepared ' + esc(A.date) : '') + '</h2><p class="ask">Process fact: the numbered list for the recorded management meeting, one question per row of the management block. The company answers in a management Q&amp;A document on the platform; each answer starts with its number (Q1: ...) and enters the record as a management representation, attested by a named officer, not verified by VanillaBonds.</p>' +
+      '<div class="table-scroll"><table class="mrows"><thead><tr><th>#</th><th>Row</th><th>Question</th><th>Answer</th></tr></thead><tbody>' +
+      MQ.map(function (q) { return '<tr><td>Q' + q[0] + '</td><td><a href="#mrow-' + q[1] + '">row ' + q[1] + '</a></td><td>' + esc(q[2]) + '</td><td>' + (q[3].length ? fids(q[3].join(', ')) : '<span class="chip">open</span>') + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
+  }
+  function requestsBlock(n) {
+    var h = '<section class="block" id="b-requests" aria-labelledby="h-requests"><p class="eyebrow">' + n + ' · Process · ' + IK.requests.length + ' items</p><h2 id="h-requests">Documents requested from the company</h2><p class="ask">Intake: the fields of the format the public documents do not carry for the periods of the dossier, as the fact agent recorded where it looked, grouped by block. Each item arrives as a company document on the platform and enters the record with source and page; plans and budgets as management representations. The list shrinks as facts reach the record.</p>';
+    D.blocks.forEach(function (b) {
+      var rs = IK.requests.map(function (r, i) { return [i + 1].concat(r); }).filter(function (r) { return r[1] === b.id; }); if (!rs.length) return;
+      h += '<div class="fieldhead"><h3>' + esc(b.title) + '</h3><span class="muted small">' + rs.length + '</span></div><div class="table-scroll"><table class="mrows reqs"><thead><tr><th>#</th><th>Field of the format</th><th>Periods</th><th>Note</th></tr></thead><tbody>' +
+        rs.map(function (r) { return '<tr><td>R' + r[0] + '</td><td>' + esc(FIELD[r[2]] ? FIELD[r[2]].label : r[2]) + '</td><td class="per">' + esc(r[3]) + '</td><td>' + (r[4] ? esc(r[4]) : '<span class="muted">–</span>') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    });
+    return h + '</section>';
+  }
   function renderBlock(b, n) {
     var fs = F.filter(function (f) { return FIELD[f.field] && FIELD[f.field].block === b.id; });
     var num = b.fields.filter(function (fd) { return fd.periodic && fd.kind === 'num'; }), numIds = {}; num.forEach(function (fd) { numIds[fd.id] = 1; });
@@ -313,15 +375,16 @@
     if (b.id === 'debt') h += '<div class="charts">' + redemptionChart() + '</div>';
     h += pivot(num, fs.filter(function (f) { return numIds[f.field]; }));
     if (b.id === 'financials') h += derivedPivot();
-    var pivoted = fs.filter(function (f) { return numIds[f.field] && typeof f.value === 'number'; }), listed = fs.filter(function (f) { return !(numIds[f.field] && typeof f.value === 'number'); });
+    var pivoted = fs.filter(function (f) { return numIds[f.field]; }), listed = fs.filter(function (f) { return !(numIds[f.field] && typeof f.value === 'number'); });
     if (pivoted.length) h += '<details><summary>' + pivoted.length + ' entries behind the table, with text and source</summary><div class="table-scroll"><table>' + LIST_HEAD + '<tbody>' + pivoted.sort(function (a, b) { return pcmp(a.period, b.period); }).map(function (f) { return factRow(f, true); }).join('') + '</tbody></table></div></details>';
     b.fields.filter(function (fd) { return !(fd.periodic && fd.kind === 'num'); }).forEach(function (fd) {
       var rows = listed.filter(function (f) { return f.field === fd.id; }); if (!rows.length) return;
       h += '<div class="fieldhead"><h3>' + esc(fd.label) + '</h3><span class="muted small">' + rows.length + '</span></div><div class="table-scroll"><table><thead><tr><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead><tbody>' + rows.map(function (f) { return factRow(f, false); }).join('') + '</tbody></table></div>';
     });
+    if (b.id === 'management') h += mgmtRows();
     if (!fs.length) h += '<p class="muted">No facts extracted for this block yet. Fields in the format: ' + b.fields.map(function (fd) { return esc(fd.label); }).join('; ') + '.</p>';
     h += arithmetic(b.id);
-    h += '<div class="assess"><span class="label" style="color:var(--gold-ink)">Assessment · the anchor\'s analyst</span>Left empty on purpose: the dossier holds the facts and the arithmetic; the opinion is written here by the investor.</div></section>';
+    h += assessBox(b.id, b.title) + '</section>';
     return h;
   }
   function screenBlock(n) {
@@ -331,27 +394,192 @@
       (S.indicators ? '<div class="fieldhead"><h3>Indicators</h3><span class="muted small">pre-structuring · shown, not scored</span></div><table><thead><tr><th>Indicator</th><th>Reference</th><th class="num">Value</th></tr></thead><tbody>' + S.indicators.map(function (c) { return '<tr><td>' + esc(c[0]) + '</td><td class="muted">' + esc(c[1]) + '</td><td class="num"><b>' + esc(c[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>' : '') + '</section>';
   }
   function sourcesBlock(n) {
-    return '<section class="block" id="b-sources" aria-labelledby="h-sources"><p class="eyebrow">' + n + ' · Sources</p><h2 id="h-sources">Documents</h2><p class="ask">Every fact above carries the document and page it was read from; the page text opens in the source viewer.</p>' +
+    return '<section class="block" id="b-sources" aria-labelledby="h-sources"><p class="eyebrow">' + n + ' · Sources</p><h2 id="h-sources">Documents</h2><p class="ask">Every fact above carries the document and page it was read from; the page text opens in the source viewer. A web fact carries its URL instead and opens there, in a new tab.</p>' +
       '<table><thead><tr><th>ID</th><th>File</th><th>Kind</th><th>Period</th><th>Date</th><th class="num">Pages</th><th class="num">Facts</th><th>Audited</th></tr></thead><tbody>' +
-      D.docs.map(function (d) { return '<tr><td class="src">' + esc(d.id) + '</td><td>' + esc(d.file) + '</td><td>' + esc(d.kind || '') + '</td><td class="per">' + esc(d.period || '') + '</td><td class="per">' + esc(d.date || '') + '</td><td class="num">' + d.pages + '</td><td class="num">' + d.facts + '</td><td>' + (d.audited ? 'yes' : d.audited === false ? 'no' : '') + '</td></tr>'; }).join('') + '</tbody></table></section>';
+      D.docs.map(function (d) { return '<tr><td class="src">' + esc(d.id) + '</td><td>' + (d.kind === 'web page' ? '<a href="' + esc(d.file) + '" target="_blank" rel="noopener noreferrer">' + esc(d.file) + '</a>' : esc(d.file)) + '</td><td>' + esc(d.kind || '') + '</td><td class="per">' + esc(d.period || '') + '</td><td class="per">' + esc(d.date || '') + '</td><td class="num">' + d.pages + '</td><td class="num">' + d.facts + '</td><td>' + (d.audited ? 'yes' : d.audited === false ? 'no' : '') + '</td></tr>'; }).join('') + '</tbody></table></section>';
+  }
+
+  // ---------- overview: the investor's first screen. Facts, arithmetic and dated events side by side, every number opens its source;
+  //            no conclusion of ours: the assessment is the investor's own, block by block and the overall view last ----------
+  var FYS = Object.keys(F.reduce(function (o, f) { if (f.field === 'revenue' && /^FY\d{4}$/.test(f.period || '') && typeof f.value === 'number') o[f.period] = 1; return o; }, {})).sort(pcmp);
+  function fyFact(field, p) { var fs = F.filter(function (f) { return f.field === field && f.period === p && typeof f.value === 'number'; }); return fs.length ? latest(fs) : null; }
+  function der(k, p) { var v = ((D.screen || {}).derived || {})[k + '|' + p]; return typeof v === 'number' ? v : null; }
+  function nf(v, u) { return v == null ? '–' : u === '%' ? (v * 100).toFixed(1) + '%' : u === 'x' ? v.toFixed(1) + 'x' : v.toFixed(1); }
+  function chg(v, w) { if (v == null || w == null || w <= 0) return ''; var c = (v / w - 1) * 100; return (c >= 0 ? '+' : '−') + Math.abs(c).toFixed(1) + '%'; }
+  function differs(f) { return f && /^conflict/.test(f.note || '') ? ' <a href="#o-open" class="differs" title="' + esc(f.note) + '">sources differ</a>' : ''; }
+  function srcBtn(f) { return '<button type="button" class="cell-btn src-btn" data-view="' + f.id + '">' + esc(srcText(f)) + (f.url ? ' ↗' : '') + '</button>'; }
+  function osec(id, eyebrow, title, ask, body) { return '<section class="block" id="' + id + '" aria-labelledby="h-' + id + '"><p class="eyebrow">' + esc(eyebrow) + '</p><h2 id="h-' + id + '">' + esc(title) + '</h2>' + (ask ? '<p class="ask">' + esc(ask) + '</p>' : '') + body + '</section>'; }
+  var TILES = [['Revenue', 'revenue'], ['EBITDA', 'ebitda'], ['EBITDA margin', 'ebitda_margin', '%', 'EBITDA / revenue'], ['Net debt as reported', 'net_debt'],
+    ['Net leverage', 'net_leverage', 'x', '(gross debt − cash, leases excluded) / EBITDA'], ['Interest cover', 'interest_cover', 'x', 'EBITDA / net finance cost'], ['Cash', 'cash'], ['Equity ratio', 'equity_ratio', '%', 'equity / total assets']];
+  function tiles() {
+    var p = FYS[FYS.length - 1], q = FYS[FYS.length - 2]; if (!p) return '<p class="muted">No fiscal-year figures on file.</p>';
+    return '<div class="tiles">' + TILES.map(function (t) {
+      var calc = !!t[3], u = t[2] || 'm', f = calc ? null : fyFact(t[1], p), g = calc ? null : fyFact(t[1], q);
+      var v = calc ? der(t[1], p) : f && f.value, w = calc ? der(t[1], q) : g && g.value, tag = f ? 'button' : 'div';
+      var sub = (q ? esc(q) + ': ' + nf(w, u) + (u === 'm' && chg(v, w) ? ' · change ' + chg(v, w) : '') + '<br>' : '') + (calc ? 'calc: ' + esc(t[3]) + (v == null ? '; an input for ' + esc(p) + ' is not on file' : '') : f ? esc(srcText(f)) + differs(f) : 'not on file');
+      return '<' + tag + (f ? ' type="button" data-view="' + f.id + '"' : '') + ' class="tile"><span class="label">' + esc(t[0]) + ' · ' + esc(p) + (u === 'm' ? ' · EUR m' : '') + '</span><span class="v">' + nf(v, u) + '</span><span class="s">' + sub + '</span></' + tag + '>';
+    }).join('') + '</div>';
+  }
+  function guidance() {
+    var rows = F.filter(function (f) { return f.field === 'revenue_budget' || f.field === 'ebitda_budget'; }).sort(function (a, b) { return pcmp(a.period, b.period) || (a.field < b.field ? 1 : -1); });
+    if (!rows.length) return '';
+    return '<div class="fieldhead"><h3>Guidance against outcome</h3><span class="muted small">the guidance as the company stated it, next to the reported figure of that year</span></div><div class="table-scroll"><table><thead><tr><th>Period</th><th>Guidance as stated</th><th>Reported</th><th class="view"></th></tr></thead><tbody>' +
+      rows.map(function (f) {
+        var p = 'FY' + (f.period || '').replace(/\D/g, '').slice(0, 4), rev = f.field === 'revenue_budget', a = FYS.indexOf(p) < 0 ? null : fyFact(rev ? 'revenue' : 'ebitda', p), m = der('ebitda_margin', p);
+        return '<tr><td class="per">' + esc(f.period || '') + '</td><td>' + esc(f.text || '') + '</td><td class="nums">' + (a ? (rev ? 'revenue ' : 'EBITDA ') + '<button type="button" class="cell-btn" data-view="' + a.id + '">' + fmt(a.value) + '</button>' + (!rev && m != null ? '<br>margin ' + nf(m, '%') : '') : '<span class="muted">–</span>') + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  function charts() {
+    var ind = (D.screen || {}).indicators || [], lvl = function (i) { var m = /([\d.]+)x/.exec((ind[i] || [])[1] || ''); return m ? +m[1] : null; };
+    var pts = function (k) { var ps = FYS.slice(Math.max(0, FYS.findIndex(function (p) { return der(k, p) != null; }))); return ps.map(function (p, i) { return { label: p.replace('FY', ''), v: der(k, p), latest: i === ps.length - 1 }; }); };
+    return '<div class="charts">' + seriesChart('revenue', FIELD.revenue.label) + seriesChart('ebitda', FIELD.ebitda.label) + seriesChart('net_debt', FIELD.net_debt.label) + seriesChart('cash', FIELD.cash.label) +
+      barChart('Net leverage', 'x · calc: net debt excl. leases / EBITDA' + (lvl(0) ? ' · line: ' + (ind[0][1] || '') + ' (admission criteria v1)' : ''), pts('net_leverage'), false, { unit: 'x', ref: lvl(0), refLabel: lvl(0) ? lvl(0) + 'x' : '' }) +
+      barChart('Interest cover', 'x · calc: EBITDA / net finance cost' + (lvl(1) ? ' · line: ' + (ind[1][1] || '') + ' (admission criteria v1)' : ''), pts('interest_cover'), false, { unit: 'x', ref: lvl(1), refLabel: lvl(1) ? lvl(1) + 'x' : '' }) +
+      redemptionChart() + '</div>' + guidance();
+  }
+  // events the reports date in a year, beside that year's figures
+  var EVENTS = { key_event: 'Event', acquisition: 'Acquisition or disposal', rollover_event: 'Past maturity', team_turnover: 'Top-team change', litigation_item: 'Litigation', one_off: 'One-off item' };
+  function evYear(f) { if (/^(FY|H1-)\d{4}$/.test(f.period || '')) return +f.period.slice(-4); var t = f.text || '', m = /date:\s*(\d{4})/.exec(t) || /(\d{4})-\d\d-\d\d/.exec(t) || /year:\s*(\d{4})/.exec(t) || /\b(19\d\d|20[0-4]\d)\b/.exec(t); return m ? +m[1] : null; }
+  function evLi(f) { var t = f.text || ''; return '<li><span class="evk">' + esc(EVENTS[f.field] || label(f).split(/[:(]/)[0]) + '</span>' + esc(t.length > 240 ? t.slice(0, 240) + '…' : t) + ' ' + srcBtn(f) + '</li>'; }
+  function changes() {
+    var by = {}, seen = {}, order = Object.keys(EVENTS), y0 = FYS.length ? +FYS[0].slice(2) : 0;
+    F.filter(function (f) { return EVENTS[f.field]; }).sort(function (a, b) { return order.indexOf(a.field) - order.indexOf(b.field) || DOC[a.src].i - DOC[b.src].i; }).forEach(function (f) {
+      var y = evYear(f); if (y == null) return; if (y < y0) y = 'earlier';
+      var k = y + '|' + f.field + '|' + (f.text || '').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 50); if (!seen[k]) { seen[k] = 1; (by[y] = by[y] || []).push(f); }
+    });
+    var h1 = F.filter(function (f) { return f.field === 'revenue' && /^H1-\d{4}$/.test(f.period || '') && typeof f.value === 'number'; }).map(function (f) { return f.period; }).sort(pcmp).pop();
+    var years = {}; FYS.forEach(function (p) { years[+p.slice(2)] = p; }); if (h1 && !years[+h1.slice(3)]) years[+h1.slice(3)] = h1;
+    Object.keys(by).forEach(function (y) { if (y !== 'earlier' && !years[y]) years[y] = String(y); });
+    function nums(p) {
+      if (!/^(FY|H1-)\d{4}$/.test(p)) return '<span class="muted">no figures for this period</span>';
+      var q = p.replace(/\d{4}/, function (y) { return y - 1; }), out = [];
+      [['Revenue', 'revenue'], ['EBITDA', 'ebitda'], ['Cash', 'cash']].forEach(function (t) { var f = fyFact(t[1], p), g = fyFact(t[1], q); if (f) out.push(t[0] + ' <button type="button" class="cell-btn" data-view="' + f.id + '">' + fmt(f.value) + '</button>' + (g && chg(f.value, g.value) ? ' <span class="muted">' + chg(f.value, g.value) + ' on ' + esc(q) + '</span>' : '') + differs(f) + differs(g)); });
+      [['EBITDA margin', 'ebitda_margin', '%'], ['Net leverage', 'net_leverage', 'x'], ['Interest cover', 'interest_cover', 'x']].forEach(function (t) { var v = der(t[1], p); if (v != null) out.push(t[0] + ' ' + nf(v, t[2]) + ' <span class="muted">calc</span>'); });
+      return out.join('<br>') || '<span class="muted">–</span>';
+    }
+    function evs(list) { list = list || []; if (!list.length) return '<span class="muted">no dated events on file</span>'; return '<ul class="ev">' + list.slice(0, 5).map(evLi).join('') + '</ul>' + (list.length > 5 ? '<details><summary>' + (list.length - 5) + ' more</summary><ul class="ev">' + list.slice(5).map(evLi).join('') + '</ul></details>' : ''); }
+    var ys = Object.keys(years).map(Number).sort(function (a, b) { return b - a; });
+    return '<div class="table-scroll"><table><thead><tr><th>Period</th><th>Reported figures, change on the year before</th><th>Dated in that year: events, transactions, maturities, one-off items</th></tr></thead><tbody>' +
+      ys.map(function (y) { return '<tr><td class="per">' + esc(years[y]) + '</td><td class="nums">' + nums(years[y]) + '</td><td>' + evs(by[y]) + '</td></tr>'; }).join('') +
+      (by.earlier ? '<tr><td class="per">before ' + esc(FYS[0]) + '</td><td class="nums"><span class="muted">–</span></td><td>' + evs(by.earlier) + '</td></tr>' : '') + '</tbody></table></div>';
+  }
+  var NEWS = { key_event: 1, acquisition: 1, team_turnover: 1, risk_fact: 1, business_fact: 1 };
+  function news() {
+    var web = F.filter(function (f) { return f.url; }), lit = F.filter(function (f) { return f.field === 'litigation_item'; }), sr = A.searched || [], nc = A.not_checked || [];
+    var reg = web.filter(function (f) { return !NEWS[f.field] && f.field !== 'litigation_item'; }), nws = web.filter(function (f) { return NEWS[f.field]; });
+    var li = function (f) { return '<li><span class="evk">' + esc(label(f).split(/[:(]/)[0]) + '</span>' + esc(f.text || '') + ' ' + srcBtn(f) + (f.url && f.status === 'pend' ? ' ' + chip('web') : '') + '</li>'; };
+    var ul = function (fs) { return '<ul class="ev">' + fs.map(li).join('') + '</ul>'; }, log = function (xs) { return '<ul class="log">' + xs.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'; };
+    return osec('o-news', 'Overview · outside the reports', 'Registers, litigation and news', 'What is on file about the company beyond its own reports. For a mid-sized company the registers carry most of it: register entries and changes, filings, insolvency notices. The search log says where the sources agent looked and where it did not; a source that was not searched is listed as not searched, never as a search without hits.',
+      '<div class="fieldhead"><h3>Registers</h3><span class="muted small">' + (sr.length || nc.length ? 'sources agent' + (web[0] && DOC[web[0].src].date ? ', ' + esc(DOC[web[0].src].date) : '') : '') + '</span></div>' +
+      (sr.length || nc.length ? '<div class="cols2"><div><p class="label">Searched</p>' + log(sr) + '</div><div><p class="label">Not searched or not reachable</p>' + log(nc) + '</div></div>' : '<p class="muted">No register search on file for this company.</p>') +
+      (reg.length ? '<p class="label" style="margin-top:12px">Found: registers, exchange and reference pages</p>' + ul(reg) : '') +
+      '<h3>Litigation</h3>' + (lit.length ? ul(lit) : '<p class="muted">No litigation facts on file.</p>') +
+      '<h3>News</h3>' + (nws.length ? ul(nws) : '<p class="muted">' + (web.length ? 'No news items on file from the sources searched.' : 'No news search on file for this company.') + '</p>'));
+  }
+  function openItems() {
+    var groups = {}, cr = (D.screen || {}).criteria || [], cnt = {}, items = [];
+    F.forEach(function (f) { if (/^conflict/.test(f.note || '')) (groups[f.note] = groups[f.note] || []).push(f); });
+    cr.forEach(function (c) { cnt[c[4]] = (cnt[c[4]] || 0) + 1; });
+    if (MQ.length) items.push('<a href="#b-questions">' + MQ.length + ' questions to management</a>' + (A.date ? ', prepared ' + esc(A.date) : '') + ': ' + MQ.filter(function (q) { return q[3].length; }).length + ' answered');
+    if (IK && IK.requests.length) items.push('<a href="#b-requests">' + IK.requests.length + ' items requested from the company</a>; completeness of the dossier ' + IK.on + ' of ' + IK.of + ' fields of the format');
+    items.push(F.filter(function (f) { return f.status === 'pend'; }).length + ' facts pending review by a named reviewer');
+    if (cr.length) items.push('<a href="#b-screen">Admission criteria v1</a>: ' + Object.keys(cnt).map(function (k) { return cnt[k] + ' ' + esc(k.toLowerCase()); }).join(', '));
+    var g = Object.keys(groups);
+    return osec('o-open', 'Overview · process', 'Open items', 'What is still outstanding before the dossier is complete: answers, documents, reviews, and figures that differ between sources.',
+      '<ul class="items">' + items.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>' +
+      (g.length ? '<div class="fieldhead"><h3>Figures that differ between sources</h3><span class="muted small">' + g.length + ' · the record uses the source the fact agent named; a reviewer decides</span></div><div class="table-scroll"><table><thead><tr><th>Figure</th><th>Period</th><th>Sources and the decision so far</th><th>Facts</th></tr></thead><tbody>' +
+        g.map(function (n) { var fs = groups[n]; return '<tr><td>' + esc(label(fs[0])) + '</td><td class="per">' + esc(fs[0].period || '') + '</td><td class="small">' + esc(n.replace(/^conflict:\s*/, '')) + '</td><td>' + fids(fs.map(function (x) { return x.id; }).join(', ')) + '</td></tr>'; }).join('') + '</tbody></table></div>' : ''));
+  }
+  // the investor's own assessment: one box per block and the overall view last (Mediating Assessments Protocol). Private to each investor; an anchor
+  // may share a box with the co-investors on the deal, who see it read-only as the anchor's; a co-investor's stays its own. Demo: kept in this browser only.
+  function akey(b, who) { return 'vb-assess:' + slug + ':' + (who || ROLE) + ':' + b; }
+  function aget(b, who) { try { return localStorage.getItem(akey(b, who)) || ''; } catch (x) { return ''; } }
+  function aset(b, v, who) { try { localStorage.setItem(akey(b, who), v); } catch (x) { /* storage blocked: the text stays on the page until it is left */ } }
+  var AUD = [['coinvestors', 'the co-investors on this deal']].concat((D.anchors || []).map(function (n) { return ['anchor:' + n, n + ' (anchor on this deal)']; }));
+  function aud(b) { try { return JSON.parse(aget(b + ':shared', 'anchor') || '[]'); } catch (x) { return []; } }        // whom the anchor shares this box with
+  function shared(b) { return aud(b).indexOf('coinvestors') >= 0 ? aget(b, 'anchor') : ''; }                              // what a co-investor may read
+  function assessBox(id, title) {
+    if (!INVESTOR) return '';
+    var sh = !ANCHOR && shared(id);
+    return '<div class="assess">' + (sh ? '<div class="shared"><span class="label">Shared by the anchor · ' + esc(title) + '</span>' + esc(sh) + '<span class="small">The anchor’s own view, not VanillaBonds’.</span></div>' : '') +
+      '<label class="label" for="as-' + id + '" style="color:var(--gold-ink)">Your assessment · ' + esc(title) + '</label><textarea id="as-' + id + '" data-assess="' + id + '" rows="' + (id === 'overall' ? 6 : 3) + '" placeholder="' + (id === 'overall' ? 'Your overall view, written after the blocks.' : 'What these facts mean for the credit, in your analyst’s words.') + '">' + esc(aget(id)) + '</textarea>' +
+      (ANCHOR ? '<div class="share small"><span>Share with:</span>' + AUD.map(function (a) { return '<label><input type="checkbox" data-share="' + id + '" value="' + esc(a[0]) + '"' + (aud(id).indexOf(a[0]) >= 0 ? ' checked' : '') + '> ' + esc(a[1]) + '</label>'; }).join('') + '<span class="muted">they read it as yours, read-only; the company never sees it</span></div>' : '') +
+      '<span class="small">Written by your analyst; VanillaBonds supplies no assessment. ' + (ANCHOR ? 'Private unless you share it with someone.' : 'Private to you: not shown to the company, the anchors or other co-investors.') + ' In this demo it is kept in this browser only.</span></div>';
+  }
+  function sumText(t) { return t ? esc(t.length > 160 ? t.slice(0, 160) + '…' : t) : '<span class="muted">not yet written</span>'; }
+  function shareCell(id) { var w = aud(id).map(function (k) { return k === 'coinvestors' ? 'co-investors' : k.slice(7); }); return ANCHOR ? (w.length ? '<span class="chip rep">shared with</span> ' + esc(w.join(', ')) : '<span class="chip">private</span>') : shared(id) ? sumText(shared(id)) : '<span class="muted">not shared</span>'; }
+  function assessAll() {
+    if (!INVESTOR) return '';
+    return assessOverview(true) + D.blocks.map(function (b, i) { return osec('as-b-' + b.id, (i + 1) + ' · ' + b.title, b.title, b.ask, assessBox(b.id, b.title) + '<p class="small" style="margin:8px 0 0"><a href="#b-' + b.id + '">The facts of this block</a></p>'); }).join('') +
+      osec('as-last', 'Last', 'Overall view', 'Written after the blocks, the total last.', assessBox('overall', 'overall view'));
+  }
+  function assessOverview(noOverall) {
+    if (!INVESTOR) return '';
+    return osec('o-assess', 'Overview · yours', 'Your assessment', 'Block by block in the fact proof, the overall view last. The dossier holds the facts and the arithmetic; the opinion is yours. ' + (ANCHOR ? 'Each box is private until you choose who reads it: another anchor on this deal by name, the co-investors, or both.' : 'Yours stays private; where the anchor has shared its assessment, it appears beside yours.'),
+      '<div class="table-scroll"><table class="mrows"><thead><tr><th>#</th><th>Block</th><th>Your assessment</th><th>' + (ANCHOR ? 'Shared with' : 'Shared by the anchor') + '</th></tr></thead><tbody>' +
+      D.blocks.concat([{ id: 'overall', title: 'Overall view' }]).map(function (b, i) { return '<tr><td>' + (b.id === 'overall' ? '' : i + 1) + '</td><td><a href="#as-' + b.id + '">' + esc(b.title) + '</a></td><td id="as-sum-' + b.id + '">' + sumText(aget(b.id)) + '</td><td id="as-sh-' + b.id + '">' + shareCell(b.id) + '</td></tr>'; }).join('') + '</tbody></table></div>' + (noOverall ? '' : assessBox('overall', 'overall view')));
+  }
+  var OVERVIEW = [['o-figures', 'Key figures'], ['o-charts', 'Charts'], ['o-changes', 'What changed'], ['o-news', 'Registers and news'], ['o-open', 'Open items']].concat(INVESTOR ? [['o-assess', 'Your assessment']] : []);
+  function overview() {
+    var p = FYS[FYS.length - 1] || '';
+    return osec('o-figures', 'Overview · ' + p, 'Key figures', 'The latest fiscal year as reported, the year before beside it. Click a figure for the page it was read from; a calculated figure prints its formula.', tiles()) +
+      osec('o-charts', 'Overview · by year', 'Charts', 'Reported figures and the arithmetic on them, per fiscal year; the dashed lines are the published levels of the admission criteria, the same for every deal.', charts()) +
+      osec('o-changes', 'Overview · by year', 'What changed', 'Per period: the reported figures and their change on the same period a year earlier, next to what the reports date in that year. The latest period first.', changes()) +
+      news() + openItems() + (VIEW ? '' : assessOverview() +
+      '<p><button type="button" class="view-btn" data-tab="proof">Open the fact proof: ' + D.blocks.length + ' blocks, every fact with its source →</button></p>');
+  }
+  // embed: the frame takes the content's height and has no scroll of its own; the platform reports where its page is scrolled,
+  // the topic menu sticks against that and every jump scrolls the platform's page
+  var EMB = { top: 0, vh: 800, h: 0 };
+  function sendH() { var m = $('#main'), h = m.offsetTop + m.offsetHeight; if (Math.abs(h - EMB.h) > 1) { EMB.h = h; post({ type: 'dossier-height', slug: slug, h: h }); } embedSync(); }   // first the height, then any jump
+  function scrollToEl(t, center) {
+    var vh = MODE === 'embed' ? EMB.vh : window.innerHeight, y = t.getBoundingClientRect().top + window.pageYOffset - (center ? Math.max(16, (vh - t.offsetHeight) / 2) : 16);
+    if (MODE === 'embed') { sendH(); post({ type: 'dossier-scrollto', slug: slug, y: Math.max(0, y) }); } else window.scrollTo({ top: y });
+  }
+  function setCurrent(id) { Array.prototype.forEach.call(document.querySelectorAll('.topics a'), function (a) { if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); }); }
+  function embedSync() {
+    var as = document.querySelector('main > aside'), m = $('#main'), cur = null; if (!as || !m) return;
+    if (window.innerWidth > 1000) { as.style.maxHeight = (EMB.vh - 32) + 'px'; as.style.overflowY = 'auto'; as.style.transform = 'translateY(' + Math.max(0, Math.min(EMB.top + 16 - as.offsetTop, m.offsetTop + m.offsetHeight - as.offsetHeight - as.offsetTop)) + 'px)'; }
+    else { as.style.transform = ''; as.style.maxHeight = ''; }
+    Array.prototype.forEach.call(document.querySelectorAll('section.block'), function (x) { if (x.offsetParent && x.offsetTop <= EMB.top + 120) cur = x.id; });   // offsetParent null = the hidden tab
+    setCurrent(cur);
+  }
+  function showTab(t) {
+    if (VIEW || !$('#tab-proof')) return;
+    $('#tab-overview').hidden = t !== 'overview'; $('#tab-proof').hidden = t !== 'proof'; $('.tools').hidden = t !== 'proof';
+    Array.prototype.forEach.call(document.querySelectorAll('[data-pane]'), function (x) { x.hidden = x.getAttribute('data-pane') !== t; });
+    Array.prototype.forEach.call(document.querySelectorAll('.tabs [data-tab]'), function (x) { x.setAttribute('aria-selected', x.getAttribute('data-tab') === t ? 'true' : 'false'); });
   }
 
   // ---------- page ----------
   function render() {
     var c = D.company, k = D.counts;
     $('#band').innerHTML = '<p class="eyebrow">Fact dossier · beta · ' + esc(D.run_at ? 'screened ' + D.run_at : '') + '</p><h1>' + esc(c.name) + '</h1><div class="meta">' + esc([c.sector, c.country, c.legal_form].filter(Boolean).join(' · ')) + '</div>' +
-      '<div class="legend"><span>' + k.facts + ' facts from ' + k.docs + ' documents</span><span>' + k.ok + ' approved by a named reviewer</span><span>' + (k.facts - k.ok - k.rep) + ' pending review</span>' + (k.rep ? '<span>' + k.rep + ' company statements</span>' : '') + '<span>Each fact: value, document, page, verbatim quote, status.</span></div>';
+      '<div class="legend"><span>' + k.facts + ' facts from ' + k.docs + ' documents</span><span>' + k.ok + ' approved by a named reviewer</span><span>' + (k.facts - k.ok - k.rep) + ' pending review</span>' + (k.rep ? '<span>' + k.rep + ' company statements</span>' : '') + '<span>Each fact: value, document, page, verbatim quote, status.</span></div>' +
+      (IK ? '<div class="legend"><span>Completeness of this dossier: ' + IK.on + ' of ' + IK.of + ' fields of the format on file for the periods ' + esc(IK.span) + '</span>' + (IK.requests.length ? '<a href="#b-requests">' + IK.requests.length + ' items requested from the company</a>' : '') + '</div>' : '') +
+      '<div class="tabs" role="tablist" aria-label="Dossier view"><button type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button><button type="button" role="tab" data-tab="proof" aria-selected="false">Fact proof · ' + D.blocks.length + ' blocks, every fact with its source</button></div>';
     var n = 0, html = '', nav = '';
     D.blocks.forEach(function (b) { n++; html += renderBlock(b, n); var cnt = F.filter(function (f) { return FIELD[f.field] && FIELD[f.field].block === b.id; }).length; nav += '<a href="#b-' + b.id + '">' + esc(b.title) + '<span class="n">' + cnt + '</span></a>'; });
+    if (MQ.length) { n++; html += questionsBlock(n); nav += '<a href="#b-questions">Questions to management<span class="n">' + MQ.length + '</span></a>'; }
+    if (IK && IK.requests.length) { n++; html += requestsBlock(n); nav += '<a href="#b-requests">Documents requested<span class="n">' + IK.requests.length + '</span></a>'; }
     n++; html += screenBlock(n); nav += '<a href="#b-screen">Screen<span class="n"></span></a>';
     n++; html += sourcesBlock(n); nav += '<a href="#b-sources">Sources<span class="n">' + D.docs.length + '</span></a>';
-    $('#content').innerHTML = html; $('#topics').innerHTML = nav;
+    if (VIEW) { $('#band').hidden = true; $('.tools').hidden = VIEW !== 'proof'; $('#topics').innerHTML = VIEW === 'proof' ? nav : '';
+      $('#content').innerHTML = '<div id="tab-' + VIEW + '">' + (VIEW === 'proof' ? html : VIEW === 'assess' ? assessAll() : overview()) + '</div>'; }
+    else {
+    $('#content').innerHTML = '<div id="tab-overview">' + overview() + '</div><div id="tab-proof" hidden>' + html + '</div>';
+    $('#topics').innerHTML = '<div data-pane="overview">' + OVERVIEW.map(function (o) { return '<a href="#' + o[0] + '">' + esc(o[1]) + '<span class="n"></span></a>'; }).join('') + '</div><div data-pane="proof" hidden>' + nav + '</div>';
+    showTab('overview'); }
+    var h0 = location.hash.slice(1), el0 = h0 && document.getElementById(h0);
+    if (Q.get('tab') === 'proof' || (el0 && el0.closest('#tab-proof'))) showTab('proof');
+    if (el0) el0.scrollIntoView();
     document.title = 'VanillaBonds — Fact dossier · ' + c.name;
     var sel = $('#co'); sel.innerHTML = slugs.map(function (s) { return '<option value="' + esc(s) + '"' + (s === slug ? ' selected' : '') + '>' + esc(ALL[s].company.name) + '</option>'; }).join('');
     sel.onchange = function () { location.search = '?c=' + encodeURIComponent(sel.value); };
     var links = Array.prototype.slice.call(document.querySelectorAll('.topics a'));
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) links.forEach(function (a) { a.getAttribute('href') === '#' + e.target.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'); }); }); }, { rootMargin: '-10% 0px -80% 0px' });
+    if (MODE === 'embed') { new ResizeObserver(sendH).observe($('#main')); sendH(); }
+    else if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) setCurrent(e.target.id); }); }, { rootMargin: '-10% 0px -80% 0px' });
       Array.prototype.forEach.call(document.querySelectorAll('section.block'), function (s) { io.observe(s); });
     }
   }
@@ -490,11 +718,13 @@
     var it;
   }
   function highlightMain(id, toMain) {
+    if (toMain) showTab('proof');
     Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"], .cell-btn.on, tr.fact-on'), function (x) { x.classList.remove('on', 'fact-on'); if (x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed', 'false'); });
     var btn = document.querySelector('.view-btn[data-view="' + id + '"]'), cb = document.querySelector('.cell-btn[data-view="' + id + '"]'), row = document.getElementById('row-' + id);
     if (btn) btn.setAttribute('aria-pressed', 'true'); if (cb) cb.classList.add('on'); if (row) row.classList.add('fact-on');
-    if (toMain) { var t = row || cb, det = t && t.closest('details'); if (det && !det.open) det.open = true; if (t) window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - Math.max(16, (window.innerHeight - t.offsetHeight) / 2) }); }
+    if (toMain) { var t = row || cb, det = t && t.closest('details'); if (det && !det.open) det.open = true; if (t) scrollToEl(t, true); }
   }
+  function openFact(id) { var f = BYID[id]; if (f && f.url) window.open(f.url, '_blank', 'noopener'); else showFact(id, false); }   // a web fact opens its URL
   function showFact(id, toMain) {
     var f = BYID[id]; if (!f || POS[id] == null) return;
     if (MODE === 'embed') { highlightMain(id, toMain); post({ type: 'dossier-view', slug: slug, id: id }); return; }
@@ -574,10 +804,17 @@
     if (MODE === 'viewer' && m.type === 'relayout') relayout();
     if (MODE === 'viewer' && m.type === 'showPage') showPage(m.doc, +m.page || 1);
     if (MODE === 'embed' && (m.type === 'dossier-active' || m.type === 'dossier-jump')) highlightMain(m.id, m.type === 'dossier-jump');
+    if (MODE === 'embed' && m.type === 'scroll') { EMB.top = m.top; EMB.vh = m.vh; embedSync(); }
+    if (MODE === 'embed' && m.type === 'goto') { var gt = document.getElementById(m.id); if (/^row-/.test(m.id)) highlightMain(m.id.slice(4), true); else if (gt) scrollToEl(gt, false); }
   });
   if (MODE === 'viewer') { post({ type: 'dossier-ready', slug: slug }); if (Q.get('item')) showFact(Q.get('item'), false); }
   document.addEventListener('click', function (e) {
-    var v = e.target.closest('[data-view]'); if (v) { showFact(v.getAttribute('data-view'), false); return; }
+    var tb = e.target.closest('[data-tab]'); if (tb) { showTab(tb.getAttribute('data-tab')); if (MODE === 'embed') { sendH(); post({ type: 'dossier-scrollto', slug: slug, y: 0 }); } else window.scrollTo(0, 0); return; }
+    var an = e.target.closest('a[href^="#"]'), ae = an && document.getElementById(an.getAttribute('href').slice(1));
+    if (an && !ae && VIEW) { e.preventDefault(); post({ type: 'dossier-goto', slug: slug, id: an.getAttribute('href').slice(1) }); return; }
+    if (ae) { showTab(ae.closest('#tab-proof') ? 'proof' : 'overview'); if (MODE === 'embed' && !an.hasAttribute('data-row')) { e.preventDefault(); scrollToEl(ae, false); return; } }
+    var v = e.target.closest('[data-view]'); if (v) { openFact(v.getAttribute('data-view')); return; }
+    var fr = e.target.closest('[data-row]'); if (fr) { e.preventDefault(); highlightMain(fr.getAttribute('data-row'), true); return; }
     var m = e.target.closest('.dv-text mark, .textLayer .hl'); if (m) { showFact(m.getAttribute('data-f').split(' ')[0], true); return; }
     var st = e.target.closest('[data-step]'); if (st) { step(+st.getAttribute('data-step')); return; }
     var gt = e.target.closest('[data-goto]'); if (gt) { if (gt.getAttribute('data-goto')) showFact(gt.getAttribute('data-goto'), true); return; }
@@ -586,10 +823,13 @@
     if (e.target.closest('#dv-close')) closeViewer();
   });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && e.target.matches('.bar-group[data-view]')) { showFact(e.target.getAttribute('data-view'), false); return; }
+    if (e.key === 'Enter' && e.target.matches('.bar-group[data-view]')) { openFact(e.target.getAttribute('data-view')); return; }
     if ($('#doc-viewer').hidden || /input|textarea|select/i.test(e.target.tagName)) return;
     if (e.key === 'Escape') closeViewer(); else if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1);
   });
+  document.addEventListener('input', function (e) { var id = e.target.getAttribute && e.target.getAttribute('data-assess'); if (!id) return; aset(id, e.target.value); var sm = document.getElementById('as-sum-' + id); if (sm) sm.innerHTML = sumText(e.target.value); });
+  document.addEventListener('change', function (e) { var id = e.target.getAttribute && e.target.getAttribute('data-share'); if (!id) return;
+    aset(id + ':shared', JSON.stringify(Array.prototype.filter.call(document.querySelectorAll('[data-share="' + id + '"]'), function (x) { return x.checked; }).map(function (x) { return x.value; }))); var c = document.getElementById('as-sh-' + id); if (c) c.innerHTML = shareCell(id); });
   if (MODE !== 'viewer') { $('#q').addEventListener('input', applyFilter); $('#okonly').addEventListener('change', applyFilter); }
 })();
 </script>
