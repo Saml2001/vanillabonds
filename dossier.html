@@ -8,7 +8,7 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/tokens.css?v=2026-10-21">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   @font-face { font-family: "Source Sans 3"; src: url("assets/fonts/SourceSans3VF-Upright.otf.woff2") format("woff2-variations"); font-weight: 200 900; font-display: swap; }
@@ -69,6 +69,8 @@
   section.block .ask { margin: 0 0 16px; color: var(--ink-2); max-width: 70ch; }
   .fieldhead { margin: 18px 0 6px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
   .fieldhead h3 { margin: 0; }
+  .mfacts { margin: 0; padding: 0; list-style: none; } .mfacts li { padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; } .mfacts li:last-child { border: 0; }
+  table.mt td { vertical-align: top; } table.mt td:first-child { white-space: nowrap; font-weight: 600; color: var(--navy); }
   table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   th { text-align: left; font-family: var(--sans); font-weight: 500; font-size: 11px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--muted); padding: 9px 10px; border-bottom: 1px solid var(--navy); white-space: nowrap; }
   td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -199,7 +201,34 @@
     body.mode-page #doc-viewer, body.mode-page .view-btn, body.mode-page .view-cell, body.mode-page th.view { display: none !important; } body.mode-page.dv-open { padding-right: 0; }
     .header-inner { flex-wrap: wrap; padding: 0 16px; } .header-side { flex: 1 0 100%; flex-wrap: wrap; padding: 8px 0 10px; } .co { min-width: 0; max-width: 100%; }
   }
+  @page { size: A4; margin: 14mm 14mm 16mm; }   /* the house format of the printed notes */
   @media print { .topics, .tools, #doc-viewer, .site-header, .demobar { display: none !important; } main { display: block; } section.block { break-inside: avoid-page; border: 0; padding: 0; } .view-cell, th.view { display: none; } }
+
+  /* ---------- one product with app.html (21 Oct 2026): same tokens, 14 px base in the frames, quiet arithmetic marks, one number format ---------- */
+  body.embed { font-size: 14px; } body.app h2 { font-weight: 600; }
+  .calc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: 5px; cursor: help; } .calc::before { content: "ƒ"; }
+  .cell-btn.pend { color: var(--muted); font-style: italic; }
+  .kf { width: 100%; border-collapse: collapse; font-size: 13px; } .kf th { text-align: right; } .kf th:first-child, .kf td:first-child { text-align: left; }
+  .kf td { padding: 5px 10px; border-bottom: 1px solid #EFEBE0; } .kf tr.em td { font-weight: 600; color: var(--navy); } .kf tr.sub td:first-child { padding-left: 18px; color: var(--ink-2); }
+  .tile .v small { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 4px; }
+  /* ---------- the credit analysis as a research note ---------- */
+  .note { max-width: 880px; } body.note-page main { grid-template-columns: 220px minmax(0, 1fr); }
+  @media (max-width: 1000px) { body.note-page main { grid-template-columns: minmax(0, 1fr); } .note section.block { padding: 16px 14px 12px; } }
+  .note section.block { padding: 24px 28px 20px; margin-bottom: 18px; } body.app .note section.block { padding: 18px 22px 16px; }
+  .note h2 { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
+  .note .num-h { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-ink); margin: 0 0 2px; }
+  .note p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.6; max-width: 74ch; color: var(--ink-2); } .note p.lead { font-size: 15.5px; color: var(--ink); }
+  .cite { font-family: var(--mono); font-size: 9.5px; color: var(--gold-ink); cursor: pointer; margin-left: 1px; border-bottom: 1px dotted var(--gold-ink); line-height: 0; } .cite:hover { color: var(--navy); border-bottom-color: var(--navy); }
+  .cites { display: inline-flex; flex-wrap: wrap; gap: 4px; margin: 0 6px; vertical-align: middle; }
+  .cites .cell-btn { font-family: var(--mono); font-size: 11px; padding: 1px 6px; border: 1px solid var(--border); border-bottom: 1px solid var(--gold); background: var(--paper); }
+  figure.ex { margin: 18px 0 8px; padding: 0; } figure.ex h3 { margin-bottom: 6px; } figure.ex figcaption { font-size: 12px; line-height: 1.45; color: var(--muted); margin-top: 6px; max-width: 80ch; }
+  .draft { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); border: 1px solid #D9C79B; background: #FBF6E8; padding: 2px 8px; border-radius: 2px; }
+  .legend .view-btn { margin-left: auto; }
+  @media print {
+    body.note-page main { display: block; max-width: none; padding: 0; } .note { max-width: none; } .note section.block { break-inside: auto; border: 0; padding: 0 0 14px; margin: 0; }
+    .note h2, figure.ex h3 { break-after: avoid; } figure.ex, .tiles, table { break-inside: avoid; } .cite { color: #000; border: 0; } .cites, .legend .view-btn, .dv-bar, .dv-strip { display: none !important; }
+    .note p { color: #000; max-width: none; } .tile { border: 1px solid #999; }
+  }
 </style>
 </head>
 <body>
@@ -234,9 +263,10 @@
   var Q = new URLSearchParams(location.search), slug = Q.get('c'); if (!ALL[slug]) slug = slugs[0];
   // page = on its own; embed = the dossier inside the platform's deal and company screens (documents open in the platform's own panel);
   // viewer = only the document viewer, full size, inside that panel. The two frames talk through the platform with postMessage.
-  var MODE = Q.get('viewer') ? 'viewer' : Q.get('embed') ? 'embed' : 'page';
-  var VIEW = MODE === 'embed' ? Q.get('view') : null;   // app.html: one tab of the deal workspace (overview, proof or assess); links to another tab go through the app
-  if (VIEW) document.body.classList.add('app', VIEW === 'proof' ? 'with-aside' : 'noaside');
+  var MODE = Q.get('viewer') ? 'viewer' : Q.get('embed') ? 'embed' : 'page', NOTE = document.documentElement.getAttribute('data-mode') === 'analysis';   // analysis.html: the written analysis as a page (build_dossier.py)
+  var VIEW = MODE === 'embed' ? Q.get('view') : NOTE ? 'analysis' : null;   // app.html: one tab of the deal workspace (overview, proof, analysis or assess); links to another tab go through the app
+  if (VIEW) document.body.classList.add(NOTE ? 'note-page' : 'app', VIEW === 'proof' || VIEW === 'analysis' ? 'with-aside' : 'noaside');
+  if (NOTE) { document.querySelector('.primary-nav button').textContent = 'Credit analysis'; document.querySelector('.demobar').textContent = 'Credit analysis · draft written from the record, pending review by a named reviewer · facts, arithmetic on printed formulas and the company’s own words, no opinion · not an offer, solicitation or investment advice'; }
   document.body.classList.add('mode-' + MODE); if (MODE === 'embed') document.body.classList.add('embed');
   function post(m) { if (window.parent !== window) window.parent.postMessage(m, '*'); }
   var D = ALL[slug], $ = function (s) { return document.querySelector(s); };
@@ -258,9 +288,13 @@
   function fmt(v, unit) {
     if (v == null || v === '') return '<span class="muted">–</span>';
     if (typeof v !== 'number') return esc(v);
-    var s = Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(1);
+    var s = nf1(v);
     return unit && unit !== 'EUR m' ? s + ' ' + esc(unit) : s;
   }
+  // one number format everywhere: one decimal, en-GB thousands separator, a true minus; ratios as 1.2x, shares as 10.8%
+  function nf1(v) { return v == null ? '–' : (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
+  function snum(v, u) { return v == null ? '–' : u === '%' ? (v * 100).toFixed(1) + '%' : u === 'x' ? v.toFixed(1) + 'x' : nf1(v); }
+  function fb(id, txt, st) { return id ? '<button type="button" class="cell-btn' + (st === 'pend' ? ' pend' : '') + '" data-view="' + esc(id) + '">' + txt + '</button>' : txt; }
   function chip(st) { return '<span class="chip ' + st + '">' + (STATUS[st] || st) + '</span>'; }
   function srcText(f) { return f.url ? (DOC[f.src].origin || f.src) + ' · ' + (DOC[f.src].date || '') : f.page ? f.src + '\u00a0p.' + f.page : f.src; }
   function viewBtn(f) { return f.url ? '<a class="view-btn" href="' + esc(f.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Open the web source of ' + esc(f.id) + ' in a new tab">View ↗</a>' : f.page && D.pages[f.src] && D.pages[f.src][f.page] ? '<button type="button" class="view-btn" data-view="' + f.id + '" aria-pressed="false" aria-controls="doc-viewer" aria-label="View source of ' + esc(f.id) + '">View</button>' : '<span class="muted small">no page</span>'; }
@@ -280,7 +314,7 @@
       var x = padL + slot * i + (slot - bw) / 2, cx = x + bw / 2, h = typeof p.v === 'number' ? Math.abs(y(p.v) - y(0)) : 0;
       var cls = 'bar' + (p.plan ? ' plan' : '') + (p.latest ? ' latest' : '');
       var rect = typeof p.v === 'number' ? '<rect class="' + cls + '" x="' + x + '" y="' + Math.min(y(p.v), y(0)) + '" width="' + bw + '" height="' + Math.max(1, h) + '"/>' : '';
-      var lab = typeof p.v === 'number' ? '<text class="val-text" x="' + cx + '" y="' + (p.v >= 0 ? y(p.v) - 5 : y(p.v) + 12) + '" text-anchor="middle">' + (Math.abs(p.v) >= 100 ? p.v.toFixed(0) : p.v.toFixed(1)) + '</text>' : '<text class="axis-text" x="' + cx + '" y="' + (y(0) - 5) + '" text-anchor="middle">n/a</text>';
+      var lab = typeof p.v === 'number' ? '<text class="val-text" x="' + cx + '" y="' + (p.v >= 0 ? y(p.v) - 5 : y(p.v) + 12) + '" text-anchor="middle">' + nf1(p.v) + '</text>' : '<text class="axis-text" x="' + cx + '" y="' + (y(0) - 5) + '" text-anchor="middle">n/a</text>';
       return '<g class="bar-group"' + (p.id ? ' data-view="' + p.id + '" role="button" tabindex="0"' : '') + '><title>' + esc(p.label + ': ' + (typeof p.v === 'number' ? p.v.toFixed(1) + (opt.unit || ' EUR m') : 'n/a') + (p.note ? ' · ' + p.note : '')) + '</title>' + rect + lab + '<text class="axis-text" x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(p.label) + '</text></g>';
     }).join('');
     return '<figure class="chart' + (wide ? ' wide' : '') + '" style="margin:0"><h3>' + esc(title) + '</h3><p class="label" style="margin-bottom:6px">' + esc(sub) + '</p><svg viewBox="0 0 ' + W + ' ' + H + '" aria-label="' + esc(title) + '"><g class="grid">' + grid + '</g>' + bars + (opt.ref != null ? '<line class="ref" x1="' + padL + '" x2="' + W + '" y1="' + y(opt.ref) + '" y2="' + y(opt.ref) + '"/><text class="ref-text" x="' + W + '" y="' + (y(opt.ref) - 5) + '" text-anchor="end">' + esc(opt.refLabel || '') + '</text>' : '') + '</svg></figure>';
@@ -353,19 +387,43 @@
     return '<div class="fieldhead"><h3>The 17 rows of memo section 9</h3><span class="muted small">per row: a document fact, a register fact, or a representation pending with its question</span></div><div class="table-scroll"><table class="mrows"><thead><tr><th>Row</th><th>Item</th><th>Status</th><th>Facts on file</th><th>Question to management</th></tr></thead><tbody>' +
       MROWS.map(function (r) { return '<tr id="mrow-' + r[0] + '"><td>' + r[0] + '</td><td>' + esc(r[1]) + '</td><td>' + '<span class="chip' + (/^repr/.test(r[2]) ? ' rep' : '') + '">' + esc(r[2]) + '</span>' + '</td><td>' + fids(r[3]) + '</td><td>' + (r[4] ? esc(r[4]) : '<span class="muted">–</span>') + (r[5] ? '<div class="fnote">answer: ' + fids(r[5]) + '</div>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
   }
-  function questionsBlock(n) {
-    return '<section class="block" id="b-questions" aria-labelledby="h-questions"><p class="eyebrow">' + n + ' · Process · ' + MQ.length + ' questions</p><h2 id="h-questions">Questions to management' + (A.date ? ', prepared ' + esc(A.date) : '') + '</h2><p class="ask">Process fact: the numbered list for the recorded management meeting, one question per row of the management block. The company answers in a management Q&amp;A document on the platform; each answer starts with its number (Q1: ...) and enters the record as a management representation, attested by a named officer, not verified by VanillaBonds.</p>' +
-      '<div class="table-scroll"><table class="mrows"><thead><tr><th>#</th><th>Row</th><th>Question</th><th>Answer</th></tr></thead><tbody>' +
-      MQ.map(function (q) { return '<tr><td>Q' + q[0] + '</td><td><a href="#mrow-' + q[1] + '">row ' + q[1] + '</a></td><td>' + esc(q[2]) + '</td><td>' + (q[3].length ? fids(q[3].join(', ')) : '<span class="chip">open</span>') + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
+  function mqTable() {
+    return '<div class="table-scroll"><table class="mrows"><thead><tr><th>#</th><th>Row</th><th>Question</th><th>Answer</th></tr></thead><tbody>' +
+      MQ.map(function (q) { return '<tr><td>Q' + q[0] + '</td><td><a href="#mrow-' + q[1] + '">row ' + q[1] + '</a></td><td>' + esc(q[2]) + '</td><td>' + (q[3].length ? fids(q[3].join(', ')) : '<span class="chip">open</span>') + '</td></tr>'; }).join('') + '</tbody></table></div>';
   }
-  function requestsBlock(n) {
-    var h = '<section class="block" id="b-requests" aria-labelledby="h-requests"><p class="eyebrow">' + n + ' · Process · ' + IK.requests.length + ' items</p><h2 id="h-requests">Documents requested from the company</h2><p class="ask">Intake: the fields of the format the public documents do not carry for the periods of the dossier, as the fact agent recorded where it looked, grouped by block. Each item arrives as a company document on the platform and enters the record with source and page; plans and budgets as management representations. The list shrinks as facts reach the record.</p>';
+  function questionsBlock(n) {
+    return '<section class="block" id="b-questions" aria-labelledby="h-questions"><p class="eyebrow">' + n + ' · Process · ' + MQ.length + ' questions</p><h2 id="h-questions">Questions to management' + (A.date ? ', prepared ' + esc(A.date) : '') + '</h2><p class="ask">Process fact: the numbered list for the recorded management meeting, one question per row of the management block. The company answers in a management Q&amp;A document on the platform; each answer starts with its number (Q1: ...) and enters the record as a management representation, attested by a named officer, not verified by VanillaBonds.</p>' + mqTable() + '</section>';
+  }
+  function reqTables() {
+    var h = '';
     D.blocks.forEach(function (b) {
       var rs = IK.requests.map(function (r, i) { return [i + 1].concat(r); }).filter(function (r) { return r[1] === b.id; }); if (!rs.length) return;
       h += '<div class="fieldhead"><h3>' + esc(b.title) + '</h3><span class="muted small">' + rs.length + '</span></div><div class="table-scroll"><table class="mrows reqs"><thead><tr><th>#</th><th>Field of the format</th><th>Periods</th><th>Note</th></tr></thead><tbody>' +
         rs.map(function (r) { return '<tr><td>R' + r[0] + '</td><td>' + esc(FIELD[r[2]] ? FIELD[r[2]].label : r[2]) + '</td><td class="per">' + esc(r[3]) + '</td><td>' + (r[4] ? esc(r[4]) : '<span class="muted">–</span>') + '</td></tr>'; }).join('') + '</tbody></table></div>';
     });
-    return h + '</section>';
+    return h;
+  }
+  function requestsBlock(n) {
+    return '<section class="block" id="b-requests" aria-labelledby="h-requests"><p class="eyebrow">' + n + ' · Process · ' + IK.requests.length + ' items</p><h2 id="h-requests">Documents requested from the company</h2><p class="ask">Intake: the fields of the format the public documents do not carry for the periods of the dossier, as the fact agent recorded where it looked, grouped by block. Each item arrives as a company document on the platform and enters the record with source and page; plans and budgets as management representations. The list shrinks as facts reach the record.</p>' + reqTables() + '</section>';
+  }
+  // 21 Oct 2026: a single-value field shows the record's value per period; a list the latest report's entries (three at most, each once); the rest folds below
+  function shortList(rows) {
+    var by = rows.slice().sort(function (a, b) { return ((a.url ? 1 : 0) - (b.url ? 1 : 0)) || (DOC[b.src].i - DOC[a.src].i) || pcmp(b.period, a.period); }), seen = {}, top = [], rest = [];
+    if (by.some(function (f) { return BEST[f.id]; })) return [by.filter(function (f) { return BEST[f.id]; }).sort(function (a, b) { return pcmp(b.period, a.period); }), by.filter(function (f) { return !BEST[f.id]; })];   // one value per period: the record's
+    by.forEach(function (f) { var k = (f.text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').slice(0, 48); if (!seen[k] && top.length < 3) { seen[k] = 1; top.push(f); } else rest.push(f); });
+    return [top, rest];
+  }
+  // the management block opens with the decision-useful facts (who, owners, guidance against reported, lenders, changes, pay), as the snapshot holds them
+  function jb(id) { return ' <button type="button" class="cell-btn" data-view="' + esc(id) + '">' + esc(id) + '</button>'; }
+  function mgList(xs) { return '<ul class="mfacts">' + xs.map(function (x) { return '<li>' + esc(x[0]) + jb(x[1]) + '</li>'; }).join('') + '</ul>'; }
+  function mgPeople() { return '<div class="table-scroll"><table class="mt"><tbody>' + D.snapshot.people.map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td>' + esc(x[1]) + jb(x[2]) + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
+  function mgGuidance() { return '<div class="table-scroll"><table class="mt"><thead><tr><th>Year</th><th>Guidance as stated</th><th>Reported</th></tr></thead><tbody>' + D.snapshot.guidance.slice().reverse().map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td>' + esc(x[1] + ': ' + x[2]) + jb(x[4][0]) + '</td><td>' + esc(x[3]) + (x[4][1] ? jb(x[4][1]) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
+  function mgmtFacts() {
+    var s = D.snapshot; if (!s) return '';
+    var li = function (t, xs) { return xs.length ? '<div class="fieldhead"><h3>' + t + '</h3><span class="muted small">' + xs.length + '</span></div>' + mgList(xs) : ''; };
+    return '<div class="fieldhead"><h3>Who runs it</h3><span class="muted small">' + s.people.length + '</span></div>' + mgPeople() + li('Owners', s.owners) +
+      (s.guidance.length ? '<div class="fieldhead"><h3>Guidance against reported</h3><span class="muted small">the guidance as the company stated it, next to the reported figure of that year</span></div>' + mgGuidance() : '') +
+      li('Covenant tests and past maturities', s.lenders) + li('Changes in the top team', s.changes) + li('Pay, as filed', s.pay);
   }
   function renderBlock(b, n) {
     var fs = F.filter(function (f) { return FIELD[f.field] && FIELD[f.field].block === b.id; });
@@ -373,15 +431,19 @@
     var h = '<section class="block" id="b-' + b.id + '" aria-labelledby="h-' + b.id + '"><p class="eyebrow">' + n + ' · ' + esc(b.title) + ' · ' + fs.length + ' fact' + (fs.length === 1 ? '' : 's') + '</p><h2 id="h-' + b.id + '">' + esc(b.title) + '</h2><p class="ask">' + esc(b.ask) + '</p>';
     if (b.id === 'financials') h += '<div class="charts">' + ['revenue', 'ebitda', 'net_debt', 'cash'].map(function (k) { return seriesChart(k, FIELD[k].label); }).join('') + '</div>';
     if (b.id === 'debt') h += '<div class="charts">' + redemptionChart() + '</div>';
+    if (b.id === 'management') h += mgmtFacts();
     h += pivot(num, fs.filter(function (f) { return numIds[f.field]; }));
     if (b.id === 'financials') h += derivedPivot();
     var pivoted = fs.filter(function (f) { return numIds[f.field]; }), listed = fs.filter(function (f) { return !(numIds[f.field] && typeof f.value === 'number'); });
     if (pivoted.length) h += '<details><summary>' + pivoted.length + ' entries behind the table, with text and source</summary><div class="table-scroll"><table>' + LIST_HEAD + '<tbody>' + pivoted.sort(function (a, b) { return pcmp(a.period, b.period); }).map(function (f) { return factRow(f, true); }).join('') + '</tbody></table></div></details>';
+    var h0 = h; if (b.id === 'management' && D.snapshot) h = '';   // management: the field lists fold under the structured facts and the 17 rows
     b.fields.filter(function (fd) { return !(fd.periodic && fd.kind === 'num'); }).forEach(function (fd) {
-      var rows = listed.filter(function (f) { return f.field === fd.id; }); if (!rows.length) return;
-      h += '<div class="fieldhead"><h3>' + esc(fd.label) + '</h3><span class="muted small">' + rows.length + '</span></div><div class="table-scroll"><table><thead><tr><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead><tbody>' + rows.map(function (f) { return factRow(f, false); }).join('') + '</tbody></table></div>';
+      var rows = listed.filter(function (f) { return f.field === fd.id; }); if (!rows.length) return; var sl = shortList(rows);
+      h += '<div class="fieldhead"><h3>' + esc(fd.label) + '</h3><span class="muted small">' + rows.length + '</span></div><div class="table-scroll"><table><thead><tr><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead><tbody>' + sl[0].map(function (f) { return factRow(f, false); }).join('') + '</tbody></table></div>' +
+        (sl[1].length ? '<details><summary>' + sl[1].length + ' more: earlier reports and repeats</summary><div class="table-scroll"><table><tbody>' + sl[1].map(function (f) { return factRow(f, false); }).join('') + '</tbody></table></div></details>' : '');
     });
-    if (b.id === 'management') h += mgmtRows();
+    if (b.id === 'management' && D.snapshot) h = h0 + mgmtRows() + (h ? '<details><summary>All ' + fs.length + ' management facts, field by field</summary>' + h + '</details>' : '');
+    else if (b.id === 'management') h += mgmtRows();
     if (!fs.length) h += '<p class="muted">No facts extracted for this block yet. Fields in the format: ' + b.fields.map(function (fd) { return esc(fd.label); }).join('; ') + '.</p>';
     h += arithmetic(b.id);
     h += assessBox(b.id, b.title) + '</section>';
@@ -393,10 +455,102 @@
       '<table><thead><tr><th>#</th><th>Criterion</th><th>Threshold</th><th>Issuer value</th><th>Result</th></tr></thead><tbody>' + S.criteria.map(function (c) { return '<tr><td class="muted">' + esc(c[0]) + '</td><td>' + esc(c[1]) + '</td><td class="muted">' + esc(c[2]) + '</td><td><b>' + esc(c[3]) + '</b></td><td class="' + String(c[4]).toLowerCase() + '">' + esc(c[4]) + '</td></tr>'; }).join('') + '</tbody></table>' +
       (S.indicators ? '<div class="fieldhead"><h3>Indicators</h3><span class="muted small">pre-structuring · shown, not scored</span></div><table><thead><tr><th>Indicator</th><th>Reference</th><th class="num">Value</th></tr></thead><tbody>' + S.indicators.map(function (c) { return '<tr><td>' + esc(c[0]) + '</td><td class="muted">' + esc(c[1]) + '</td><td class="num"><b>' + esc(c[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>' : '') + '</section>';
   }
+  function docsTable() {
+    return '<div class="table-scroll"><table><thead><tr><th>ID</th><th>File</th><th>Kind</th><th>Period</th><th>Date</th><th class="num">Pages</th><th class="num">Facts</th><th>Audited</th></tr></thead><tbody>' +
+      D.docs.map(function (d) { return '<tr><td class="src">' + esc(d.id) + '</td><td>' + (d.kind === 'web page' ? '<a href="' + esc(d.file) + '" target="_blank" rel="noopener noreferrer">' + esc(d.file) + '</a>' : esc(d.file)) + '</td><td>' + esc(d.kind || '') + '</td><td class="per">' + esc(d.period || '') + '</td><td class="per">' + esc(d.date || '') + '</td><td class="num">' + d.pages + '</td><td class="num">' + d.facts + '</td><td>' + (d.audited ? 'yes' : d.audited === false ? 'no' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
   function sourcesBlock(n) {
-    return '<section class="block" id="b-sources" aria-labelledby="h-sources"><p class="eyebrow">' + n + ' · Sources</p><h2 id="h-sources">Documents</h2><p class="ask">Every fact above carries the document and page it was read from; the page text opens in the source viewer. A web fact carries its URL instead and opens there, in a new tab.</p>' +
-      '<table><thead><tr><th>ID</th><th>File</th><th>Kind</th><th>Period</th><th>Date</th><th class="num">Pages</th><th class="num">Facts</th><th>Audited</th></tr></thead><tbody>' +
-      D.docs.map(function (d) { return '<tr><td class="src">' + esc(d.id) + '</td><td>' + (d.kind === 'web page' ? '<a href="' + esc(d.file) + '" target="_blank" rel="noopener noreferrer">' + esc(d.file) + '</a>' : esc(d.file)) + '</td><td>' + esc(d.kind || '') + '</td><td class="per">' + esc(d.period || '') + '</td><td class="per">' + esc(d.date || '') + '</td><td class="num">' + d.pages + '</td><td class="num">' + d.facts + '</td><td>' + (d.audited ? 'yes' : d.audited === false ? 'no' : '') + '</td></tr>'; }).join('') + '</tbody></table></section>';
+    return '<section class="block" id="b-sources" aria-labelledby="h-sources"><p class="eyebrow">' + n + ' · Sources</p><h2 id="h-sources">Documents</h2><p class="ask">Every fact above carries the document and page it was read from; the page text opens in the source viewer. A web fact carries its URL instead and opens there, in a new tab.</p>' + docsTable() + '</section>';
+  }
+
+  // ---------- the written credit analysis (21 Oct 2026): companies/<x>/analysis.json through mvp/analysis.py, rendered as a research note; every
+  //            sentence carries the fact ids it rests on (the superscript lists them, each opens its page), every exhibit is drawn from the record ----------
+  var AN = D.analysis;
+  function noteNav() { return (AN ? AN.sections : []).map(function (s, i) { return '<a href="#an-' + s.id + '">' + (i + 1 < AN.sections.length ? (i + 1) + ' · ' : '') + esc(s.title) + '<span class="n"></span></a>'; }).join(''); }
+  function noteBand() {
+    var c = D.company, n = AN ? AN.sections.reduce(function (a, s) { return a + s.paras.reduce(function (b, p) { return b + p.length; }, 0); }, 0) : 0;
+    return '<p class="eyebrow">Credit analysis · ' + esc(AN ? 'figures to ' + AN.asof : '') + '</p><h1>' + esc(c.name) + '</h1><div class="meta">' + esc([c.sector, c.country, c.legal_form].filter(Boolean).join(' · ')) + '</div>' +
+      (AN ? '<div class="legend"><span class="draft">' + esc(AN.label) + '</span><span>written ' + esc(AN.written) + ' by the analyst agent from the record</span><span>' + n + ' sentences, each resting on the facts it cites: the superscript opens them</span><span>facts, arithmetic on printed formulas and the company’s own words; no opinion of ours</span><button type="button" class="view-btn" data-print="1">Print</button></div>' : '');
+  }
+  function cite(ids) {
+    var ok = (ids || []).filter(function (i) { return BYID[i]; }); if (!ok.length) return '';
+    return '<sup class="cite" data-cite="' + esc(ok.join(' ')) + '" title="' + esc(ok.map(function (i) { return i + ' · ' + label(BYID[i]) + ' · ' + srcText(BYID[i]); }).join(' | ')) + '">' + ok.length + '</sup>';
+  }
+  function noteView() {
+    if (!AN) return '<section class="block"><h2>Credit analysis</h2><p class="muted">No written analysis for this company yet. The analyst agent (mvp/agents/analyst.md) writes it from the record once the screen has run.</p></section>';
+    return '<div class="note">' + AN.sections.map(function (s, i) {
+      return '<section class="block" id="an-' + s.id + '" aria-labelledby="h-an-' + s.id + '"><p class="num-h">' + (i + 1 < AN.sections.length ? 'Section ' + (i + 1) : 'Appendix') + '</p><h2 id="h-an-' + s.id + '">' + esc(s.title) + '</h2>' +
+        s.paras.map(function (p, j) { return '<p' + (j === 0 ? ' class="lead"' : '') + '>' + p.map(function (x) { return '<span class="s">' + esc(x[0]) + '</span>' + cite(x[1]) + ' '; }).join('') + '</p>'; }).join('') +
+        (s.exhibits || []).map(exhibit).join('') + '</section>';
+    }).join('') + '</div>';
+  }
+  var SRC_CO = 'Source: the company’s own reports as extracted into the record (' + D.docs.filter(function (d) { return d.kind !== 'web page'; }).map(function (d) { return d.id; }).join(', ') + '), pending review by a named reviewer; click a figure or id for its page.';
+  function fig(h, cap, title) { return '<figure class="ex">' + (title ? '<h3>' + esc(title) + '</h3>' : '') + h + '<figcaption>' + esc(cap) + '</figcaption></figure>'; }
+  function stripTiles() {
+    return '<div class="tiles">' + (D.snapshot.strip || []).map(function (t) {
+      var id = t.ids[0], tag = id ? 'button' : 'div';
+      return '<' + tag + (id ? ' type="button" data-view="' + esc(id) + '"' : '') + ' class="tile"' + (t.calc ? ' title="' + esc(t.calc) + '"' : '') + '><span class="label">' + esc(t.label) + ' · ' + esc(t.period) + '</span><span class="v">' + snum(t.v, t.unit) + (t.unit === 'm' && t.v != null ? '<small>EUR m</small>' : '') + '</span><span class="s">' + (t.calc ? 'arithmetic, formula on hover' : id ? esc(srcText(BYID[id])) : 'not on file') + '</span></' + tag + '>';
+    }).join('') + '</div>';
+  }
+  function figTable() {
+    var s = D.snapshot, ps = s.periods;
+    return '<div class="table-scroll"><table class="kf"><thead><tr><th>EUR m unless stated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' + s.figures.map(function (r) {
+      var sub = /^of which/.test(r.label);
+      return '<tr class="' + (r.em ? 'em' : sub ? 'sub' : '') + '"><td>' + esc(r.label) + (r.calc && !sub ? '<span class="calc" title="' + esc(r.calc) + '"></span>' : '') + '</td>' + r.v.map(function (v, i) { var id = r.ids[i] && r.ids[i][0]; return '<td class="num">' + (id && v != null ? fb(id, snum(v, r.unit), r.st[i]) : snum(v, r.unit)) + '</td>'; }).join('') + '</tr>';
+    }).join('') + '</tbody></table></div>';
+  }
+  function bridgeTable() {
+    var s = D.snapshot, ps = Object.keys(s.bridge || {});
+    if (!ps.length) return '<p class="muted small">The reports itemise no one-off income inside EBITDA for this company under the record’s rule (badwill, disposal and purchase-price-allocation gains booked in other operating income).</p>';
+    return '<div class="table-scroll"><table><thead><tr><th>Period</th><th>One-off income inside EBITDA, as itemised in the reports</th><th class="num">EUR m</th><th class="view"></th></tr></thead><tbody>' + ps.map(function (p) { return s.bridge[p].map(function (x) { return '<tr><td class="per">' + esc(p) + '</td><td>' + esc(x[1]) + '</td><td class="num">' + nf1(x[2]) + '</td><td class="view-cell">' + viewBtn(BYID[x[0]]) + '</td></tr>'; }).join(''); }).join('') + '</tbody></table></div>';
+  }
+  function matTable() {
+    var s = D.snapshot;
+    return '<div class="table-scroll"><table><thead><tr><th>Falls due</th><th class="num">EUR m</th><th class="view"></th></tr></thead><tbody>' + s.maturities.map(function (m) { return '<tr><td class="per">' + esc(m[0].replace(/^FY(\d{4})E$/, '$1')) + '</td><td class="num">' + nf1(m[1]) + '</td><td class="view-cell">' + viewBtn(BYID[m[2]]) + '</td></tr>'; }).join('') +
+      (s.due24 && s.due24.v != null ? '<tr class="calc"><td>Next 24 months<span class="calc" title="' + esc(s.due24.calc) + '"></span></td><td class="num"><b>' + nf1(s.due24.v) + '</b></td><td></td></tr>' : '') + '</tbody></table></div>';
+  }
+  function factList(field, n) {
+    var fs = F.filter(function (f) { return f.field === field && !f.url; }).sort(function (a, b) { return (DOC[b.src].i - DOC[a.src].i) || pcmp(b.period, a.period); }), seen = {}, out = [];
+    fs.forEach(function (f) { var k = (f.text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').slice(0, 48); if (!seen[k] && out.length < (n || 8)) { seen[k] = 1; out.push(f); } });
+    if (!out.length) return '<p class="muted small">No facts of this field on file.</p>';
+    return '<div class="table-scroll"><table><thead><tr><th>Entry</th><th>Period</th><th>Source</th><th class="view"></th></tr></thead><tbody>' + out.map(function (f) { return '<tr><td>' + esc(f.text || '') + '</td><td class="per">' + esc(f.period || '') + '</td><td class="src">' + esc(srcText(f)) + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>'; }).join('') + '</tbody></table></div>' + (fs.length > out.length ? '<p class="muted small" style="margin:4px 0 0">' + out.length + ' of ' + fs.length + ' entries, latest report first; all of them in the fact proof.</p>' : '');
+  }
+  function ratioTable() {
+    var rows = ((D.screen || {}).v3 || {}).ratios_three_ways || []; if (!rows.length) return '<p class="muted small">No ratios on file.</p>';
+    return '<table class="arith"><thead><tr><th>Ratio</th><th>Formula · source</th><th class="num">Per fiscal year</th></tr></thead><tbody>' + rows.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
+  }
+  function conflictTable() {
+    var cs = AN.conflicts || []; if (!cs.length) return '<p class="muted small">No figure differs between the sources on file.</p>';
+    return '<div class="table-scroll"><table><thead><tr><th>Figure</th><th>Period</th><th>Facts (the record uses the later audited report; a reviewer decides)</th></tr></thead><tbody>' + cs.map(function (c) { return '<tr><td>' + esc(FIELD[c[0]] ? FIELD[c[0]].label : c[0]) + '</td><td class="per">' + esc(c[1] || '') + '</td><td>' + fids(c[2].join(', ')) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function missingList() {
+    var ms = AN.missing || [], T = {}; D.blocks.forEach(function (b) { T[b.id] = b.title; });
+    return '<div class="table-scroll"><table><thead><tr><th>Block</th><th>Fields of the format with no fact on file</th></tr></thead><tbody>' + ms.map(function (m) { return '<tr><td>' + esc(T[m[0]] || m[0]) + '</td><td class="small">' + esc(m[1].join('; ')) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function exhibit(ex) {
+    var s = D.snapshot || {}, li = function (xs) { return xs && xs.length ? mgList(xs) : '<p class="muted small">Nothing on file.</p>'; };
+    switch (ex.kind) {
+      case 'strip': return fig(stripTiles(), 'Source: the record; each tile opens the page of its first fact; a calculated tile prints its formula on hover. ' + SRC_CO.slice(8));
+      case 'figures': return fig(figTable(), SRC_CO + ' ƒ = arithmetic on the shown figures, formula on hover; grey italic = pending review.', 'Key figures, periods as columns');
+      case 'bridge': return fig(bridgeTable(), 'Source: other operating income as itemised in the reports; the rule that counts an item is printed in mvp/snapshot.py.', 'One-off income inside EBITDA');
+      case 'chart': return '<div class="charts">' + seriesChart(ex.field, FIELD[ex.field].label) + '</div>';
+      case 'maturities': return fig(matTable() + '<div class="charts" style="margin-top:12px">' + redemptionChart() + '</div>', 'Source: principal per period as the latest annual report states it; the row Next 24 months is arithmetic on those figures.', 'Debt falling due');
+      case 'facts': return fig(factList(ex.field, ex.n), SRC_CO, ex.title || (FIELD[ex.field] ? FIELD[ex.field].label : ex.field));
+      case 'people': return fig(mgPeople(), SRC_CO, 'Who runs it');
+      case 'owners': return fig(li(s.owners), SRC_CO, 'Owners, as stated');
+      case 'guidance': return fig(s.guidance && s.guidance.length ? mgGuidance() : '<p class="muted small">No guidance on file.</p>', 'Source: the guidance as the company stated it in the report of the year before, next to the figure the record holds for that year.', 'Guidance against reported');
+      case 'lenders': return fig(li(s.lenders), SRC_CO, 'Covenant tests and past maturities');
+      case 'changes': return fig(li(s.changes), SRC_CO, 'Changes in the top team');
+      case 'pay': return fig(li(s.pay), SRC_CO, 'Pay, as filed');
+      case 'risks': return fig(li(s.risks), 'Source: the risk and opportunity sections of the latest reports, in the company’s wording; no weighting of ours.', 'Risks as the company states them');
+      case 'ratios': return fig(ratioTable(), 'Source: mvp/schema.py ratios_three_ways on the record; the same figures under the covenant, the S&P and the EBA bank definitions.', 'Leverage and cover under three published definitions');
+      case 'questions': return fig(MQ.length ? mqTable() : '<p class="muted small">No questions prepared yet.</p>', 'Source: the management agent’s question list (agents/management_questions.md); answers enter the record as management representations.', 'Questions to management');
+      case 'requests': return fig(IK && IK.requests.length ? reqTables() : '<p class="muted small">No open requests.</p>', 'Source: the fact agent’s gap list (agents/gaps.md), reconciled with the record.', 'Documents requested from the company');
+      case 'conflicts': return fig(conflictTable(), 'Source: the merge of the documents (mvp/extract.py) flags a figure that differs by more than 1% between sources.', 'Figures that differ between sources');
+      case 'missing': return fig(missingList(), 'Source: the fields of mvp/schema.py against the facts on file; a statistic about the dossier, not about the company.', 'Not on file');
+      case 'sources': return fig(docsTable(), 'Source register of this dossier; every fact above carries one of these ids and a page.', 'Documents');
+    }
+    return '';
   }
 
   // ---------- overview: the investor's first screen. Facts, arithmetic and dated events side by side, every number opens its source;
@@ -520,6 +674,11 @@
       D.blocks.concat([{ id: 'overall', title: 'Overall view' }]).map(function (b, i) { return '<tr><td>' + (b.id === 'overall' ? '' : i + 1) + '</td><td><a href="#as-' + b.id + '">' + esc(b.title) + '</a></td><td id="as-sum-' + b.id + '">' + sumText(aget(b.id)) + '</td><td id="as-sh-' + b.id + '">' + shareCell(b.id) + '</td></tr>'; }).join('') + '</tbody></table></div>' + (noOverall ? '' : assessBox('overall', 'overall view')));
   }
   var OVERVIEW = [['o-figures', 'Key figures'], ['o-charts', 'Charts'], ['o-changes', 'What changed'], ['o-news', 'Registers and news'], ['o-open', 'Open items']].concat(INVESTOR ? [['o-assess', 'Your assessment']] : []);
+  // the app's Analysis tab: charts, what changed, registers and news, open items, then the blocks (the key figures live on the Snapshot)
+  function analysisHead() {
+    return osec('o-charts', 'Analysis · by year', 'Charts', 'Reported figures and the arithmetic on them, per fiscal year; the dashed lines are the published levels of the admission criteria, the same for every deal.', charts()) +
+      osec('o-changes', 'Analysis · by year', 'What changed', 'Per period: the reported figures and their change on the same period a year earlier, next to what the reports date in that year. The latest period first.', changes()) + news() + openItems();
+  }
   function overview() {
     var p = FYS[FYS.length - 1] || '';
     return osec('o-figures', 'Overview · ' + p, 'Key figures', 'The latest fiscal year as reported, the year before beside it. Click a figure for the page it was read from; a calculated figure prints its formula.', tiles()) +
@@ -564,8 +723,9 @@
     if (IK && IK.requests.length) { n++; html += requestsBlock(n); nav += '<a href="#b-requests">Documents requested<span class="n">' + IK.requests.length + '</span></a>'; }
     n++; html += screenBlock(n); nav += '<a href="#b-screen">Screen<span class="n"></span></a>';
     n++; html += sourcesBlock(n); nav += '<a href="#b-sources">Sources<span class="n">' + D.docs.length + '</span></a>';
-    if (VIEW) { $('#band').hidden = true; $('.tools').hidden = VIEW !== 'proof'; $('#topics').innerHTML = VIEW === 'proof' ? nav : '';
-      $('#content').innerHTML = '<div id="tab-' + VIEW + '">' + (VIEW === 'proof' ? html : VIEW === 'assess' ? assessAll() : overview()) + '</div>'; }
+    if (VIEW) { $('#band').hidden = !NOTE; $('.tools').hidden = VIEW !== 'proof'; $('#topics').innerHTML = VIEW === 'proof' ? OVERVIEW.slice(1, 5).map(function (o) { return '<a href="#' + o[0] + '">' + esc(o[1]) + '<span class="n"></span></a>'; }).join('') + nav : VIEW === 'analysis' ? noteNav() : '';
+      if (NOTE) $('#band').innerHTML = noteBand();
+      $('#content').innerHTML = '<div id="tab-' + VIEW + '">' + (VIEW === 'proof' ? analysisHead() + html : VIEW === 'assess' ? assessAll() : VIEW === 'analysis' ? noteView() : overview()) + '</div>'; }
     else {
     $('#content').innerHTML = '<div id="tab-overview">' + overview() + '</div><div id="tab-proof" hidden>' + html + '</div>';
     $('#topics').innerHTML = '<div data-pane="overview">' + OVERVIEW.map(function (o) { return '<a href="#' + o[0] + '">' + esc(o[1]) + '<span class="n"></span></a>'; }).join('') + '</div><div data-pane="proof" hidden>' + nav + '</div>';
@@ -809,6 +969,8 @@
   });
   if (MODE === 'viewer') { post({ type: 'dossier-ready', slug: slug }); if (Q.get('item')) showFact(Q.get('item'), false); }
   document.addEventListener('click', function (e) {
+    var ci = e.target.closest('.cite'); if (ci) { var nx = ci.nextElementSibling; if (nx && nx.classList.contains('cites')) { nx.remove(); return; } ci.insertAdjacentHTML('afterend', '<span class="cites">' + ci.getAttribute('data-cite').split(' ').map(function (i) { return '<button type="button" class="cell-btn" data-view="' + i + '" title="' + esc(label(BYID[i]) + ' · ' + srcText(BYID[i])) + '">' + i + '</button>'; }).join('') + '</span>'); return; }
+    if (e.target.closest('[data-print]')) { window.print(); return; }
     var tb = e.target.closest('[data-tab]'); if (tb) { showTab(tb.getAttribute('data-tab')); if (MODE === 'embed') { sendH(); post({ type: 'dossier-scrollto', slug: slug, y: 0 }); } else window.scrollTo(0, 0); return; }
     var an = e.target.closest('a[href^="#"]'), ae = an && document.getElementById(an.getAttribute('href').slice(1));
     if (an && !ae && VIEW) { e.preventDefault(); post({ type: 'dossier-goto', slug: slug, id: an.getAttribute('href').slice(1) }); return; }

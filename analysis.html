@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="en" data-mode="analysis">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VanillaBonds — Credit analysis</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/css/tokens.css?v=2026-10-21">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  @font-face { font-family: "Source Sans 3"; src: url("assets/fonts/SourceSans3VF-Upright.otf.woff2") format("woff2-variations"); font-weight: 200 900; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+  :root {
+    --navy: var(--vb-navy); --navy-2: var(--vb-navy-raised);
+    --ivory: var(--vb-ground-alt); --paper: var(--vb-white);
+    --gold: var(--vb-gold); --gold-ink: var(--vb-gold-dim);
+    --border: var(--vb-line-warm); --ink: var(--vb-ink-900); --ink-2: #3A4654; --muted: var(--vb-ink-500);
+    --sans: var(--vb-font-body); --mono: var(--vb-font-mono);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--sans); font-size: 15px; line-height: 1.55; color: var(--ink); background: var(--ivory); }
+  button { font: inherit; color: inherit; }
+  a { color: var(--navy); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---------- Header, as on the platform ---------- */
+  .demobar { background: var(--paper); color: var(--gold-ink); font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em; text-align: center; padding: 5px 24px; border-bottom: 1px solid var(--border); }
+  .site-header { background: var(--navy); color: var(--paper); }
+  .header-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: stretch; justify-content: space-between; gap: 24px; }
+  .wordmark { display: flex; align-items: center; font-size: 19px; letter-spacing: 0.02em; padding: 18px 0; background: none; border: 0; text-decoration: none; }
+  .wordmark .v { color: var(--paper); } .wordmark .b { color: var(--gold); }
+  .primary-nav { margin-right: auto; }
+  .primary-nav ul { list-style: none; margin: 0; padding: 0; display: flex; height: 100%; }
+  .primary-nav button { height: 100%; background: none; border: 0; padding: 0 18px; color: #C9D1DA; font-size: 14px; border-bottom: 2px solid transparent; border-top: 2px solid transparent; }
+  .primary-nav button[aria-current="page"] { color: var(--paper); border-bottom-color: var(--gold); }
+  .header-side { display: flex; align-items: center; gap: 14px; font-size: 13px; }
+  .header-side label { color: #C9D1DA; }
+  .co { font: inherit; font-size: 13.5px; background: var(--navy-2); color: var(--paper); border: 1px solid #3B5068; padding: 6px 10px; border-radius: 2px; }
+  .back-link { color: #C9D1DA; text-decoration: none; white-space: nowrap; } .back-link:hover { color: var(--paper); }
+
+  /* ---------- Page ---------- */
+  main { max-width: 1280px; margin: 0 auto; padding: 32px 32px 72px; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 36px; align-items: start; }
+  main > * { min-width: 0; }   /* wide tables scroll inside their own box instead of widening the page */
+  .title-band { grid-column: 1 / -1; border-bottom: 1px solid var(--border); padding-bottom: 18px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+  h1 { font-weight: 300; font-size: 34px; line-height: 1.15; color: var(--navy); margin: 0 0 10px; }
+  h2 { font-weight: 300; font-size: 23px; line-height: 1.25; color: var(--navy); margin: 0 0 6px; }
+  h3 { font-weight: 600; font-size: 14px; color: var(--navy); margin: 0 0 6px; }
+  .label { font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+  .muted { color: var(--muted); } .small { font-size: 12.5px; }
+  .meta { color: var(--ink-2); font-size: 14px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+
+  main > aside { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
+  .topics a { display: flex; justify-content: space-between; gap: 10px; padding: 6px 10px; text-decoration: none; color: var(--ink-2); border-left: 2px solid transparent; font-size: 13.5px; line-height: 1.35; }
+  .topics a:hover { color: var(--navy); background: var(--paper); }
+  .topics a[aria-current="true"] { border-left-color: var(--gold); color: var(--navy); background: var(--paper); font-weight: 600; }
+  .topics .n { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .tools { margin: 14px 0 0; padding: 0 10px; }
+  .tools input[type=search] { width: 100%; font: inherit; font-size: 13.5px; padding: 7px 9px; border: 1px solid var(--border); background: var(--paper); }
+  .tools label { display: block; margin-top: 8px; color: var(--ink-2); }
+
+  section.block { background: var(--paper); border: 1px solid var(--border); padding: 22px 24px 18px; margin-bottom: 26px; scroll-margin-top: 16px; }
+  section.block .ask { margin: 0 0 16px; color: var(--ink-2); max-width: 70ch; }
+  .fieldhead { margin: 18px 0 6px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .fieldhead h3 { margin: 0; }
+  .mfacts { margin: 0; padding: 0; list-style: none; } .mfacts li { padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; } .mfacts li:last-child { border: 0; }
+  table.mt td { vertical-align: top; } table.mt td:first-child { white-space: nowrap; font-weight: 600; color: var(--navy); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; font-family: var(--sans); font-weight: 500; font-size: 11px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--muted); padding: 9px 10px; border-bottom: 1px solid var(--navy); white-space: nowrap; }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .table-scroll { overflow-x: auto; }
+  .table-scroll table { min-width: 640px; }
+  tr.calc td { background: #EFECE4; }
+  td.src { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); min-width: 7em; }
+  td.per { font-family: var(--mono); font-size: 11.5px; min-width: 6em; }
+  td.per, td.src, td.st, td.view-cell { width: 1%; } td.src.web { min-width: 15em; }   /* these fit their content; the entry takes the rest */
+  td.fld { color: var(--muted); width: 18%; }
+  .chip { font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; color: var(--muted); }
+  .chip.ok { color: #2F6B3A; } .chip.rep { color: var(--gold-ink); }
+  .cell-btn { background: none; border: 0; padding: 0 2px; cursor: pointer; font: inherit; font-variant-numeric: tabular-nums; color: var(--ink); border-bottom: 1px dotted var(--gold); border-radius: 0; }
+  .cell-btn:hover { color: var(--navy); border-bottom-style: solid; }
+  .cell-btn.on, tr.fact-on td { background: #F5EFDF; }
+  .cell-btn sup { font-size: 9px; color: var(--muted); margin-left: 2px; }
+  .view-btn { font-family: var(--sans); font-size: 12px; line-height: 1; padding: 5px 10px; border: 1px solid var(--border); border-radius: 2px; background: var(--paper); color: var(--navy); cursor: pointer; white-space: nowrap; }
+  .view-btn:hover { border-color: var(--navy); } a.view-btn { display: inline-block; text-decoration: none; }
+  .view-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  td.view-cell { text-align: right; padding-top: 6px; padding-bottom: 6px; }
+  tr[hidden] { display: none; }
+  details summary { cursor: pointer; color: var(--gold-ink); font-size: 12.5px; margin: 6px 0; }
+  .arith td:first-child { width: 22%; } .arith td:nth-child(2) { color: var(--muted); font-size: 12.5px; }
+  .fnote { font-size: 12px; line-height: 1.45; color: var(--muted); margin-top: 3px; }
+  .fids { font-family: var(--mono); font-size: 11px; line-height: 1.7; } .fids a { color: var(--navy); text-decoration: none; border-bottom: 1px dotted var(--gold); } .fids a:hover { border-bottom-style: solid; }
+  .mrows td:first-child { font-family: var(--mono); font-size: 11.5px; color: var(--gold-ink); white-space: nowrap; } .mrows td:nth-child(2) { width: 18%; } .mrows td:nth-child(4) { width: 26%; }
+  .reqs { table-layout: fixed; } .reqs th:first-child { width: 8%; } .reqs th:nth-child(2) { width: 52%; } .reqs th:nth-child(3) { width: 16%; }
+  tr:target td { background: #F5EFDF; }
+  .assess { border: 1px dashed var(--gold); padding: 12px 14px; margin-top: 18px; color: var(--muted); }
+  .assess textarea { display: block; width: 100%; margin: 4px 0 6px; font: inherit; font-size: 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--border); padding: 8px 10px; resize: vertical; }
+  .assess .shared { white-space: pre-wrap; color: var(--ink); background: #FBF6E8; border-left: 3px solid var(--gold); padding: 8px 12px; margin-bottom: 10px; }
+  .assess .shared .label, .assess .shared .small { display: block; white-space: normal; color: var(--gold-ink); } .assess .shared .small { color: var(--muted); margin-top: 4px; }
+  .assess .share { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; color: var(--ink-2); margin: 2px 0 6px; } .assess .share label { cursor: pointer; white-space: nowrap; }
+  .assess textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  /* ---------- overview: the investor's first screen; the fact proof is the second tab ---------- */
+  .tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 16px; }
+  .tabs button { background: var(--paper); border: 1px solid var(--border); padding: 8px 16px; font-size: 14px; color: var(--ink-2); cursor: pointer; border-radius: 2px; }
+  .tabs button[aria-selected="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .tile { display: flex; flex-direction: column; gap: 2px; text-align: left; font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--border); padding: 12px 14px; border-radius: 0; }
+  button.tile { cursor: pointer; } button.tile:hover { border-color: var(--gold); }
+  .tile .v { font-size: 26px; font-weight: 300; line-height: 1.2; color: var(--navy); font-variant-numeric: tabular-nums; }
+  .tile .s { font-size: 12px; line-height: 1.45; color: var(--muted); }
+  a.differs { font-size: 11px; color: #9A3B2E; white-space: nowrap; }
+  .chart .ref { stroke: var(--gold); stroke-width: 1.5; stroke-dasharray: 5 4; } .chart .ref-text { font-size: 10.5px; fill: var(--gold-ink); }
+  ul.ev, ul.log, ul.items { list-style: none; margin: 0; padding: 0; } ul.ev li { margin: 0 0 7px; line-height: 1.45; } ul.log li, ul.items li { margin: 0 0 5px; }
+  ul.items li::before { content: "·"; color: var(--gold); margin-right: 8px; }
+  .evk { font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); margin-right: 6px; white-space: nowrap; }
+  .src-btn { font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+  td.nums { width: 30%; font-size: 13px; line-height: 1.6; }
+  .cols2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 24px; font-size: 13px; color: var(--ink-2); }
+  section.block h3 + ul { margin-top: 4px; } section.block ul + h3 { margin-top: 16px; }
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 16px; margin: 6px 0 18px; }
+  .chart { background: var(--paper); border: 1px solid var(--border); padding: 16px 18px 10px; position: relative; }
+  .chart.wide { grid-column: 1 / -1; }
+  .chart h3 { margin-bottom: 2px; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart .grid line { stroke: #E4E3DF; stroke-width: 1; }
+  .chart .zero { stroke: #9AA1A9; stroke-width: 1; }
+  .chart .axis-text { font-family: var(--sans); font-size: 12.5px; font-variant-numeric: tabular-nums; fill: var(--muted); }
+  .chart .val-text { font-size: 13.5px; fill: var(--ink); font-weight: 600; }
+  .chart .bar { fill: var(--navy-2); } .chart .bar.latest { fill: var(--navy); } .chart .bar.plan { fill: #C9B987; }
+  .chart .bar-group { cursor: pointer; } .chart .bar-group:hover .bar { fill: #2B4D72; } .chart .bar-group:hover .bar.plan { fill: var(--gold); }
+  .kv td:first-child { width: 30%; color: var(--muted); }
+  .pass { color: #2F6B3A; font-weight: 600; } .fail { color: #9A3B2E; font-weight: 600; } .check { color: var(--gold-ink); font-weight: 600; }
+
+  /* ---------- Source viewer: split screen with the referenced page of the document ---------- */
+  body.dv-open { padding-right: var(--dv-w, min(50vw, 820px)); }
+  #doc-viewer { position: fixed; top: 0; right: 0; bottom: 0; width: var(--dv-w, min(50vw, 820px)); z-index: 60; display: flex; flex-direction: column; background: #E4E3DE; border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.10); }
+  #doc-viewer[hidden] { display: none; }
+  .dv-bar { background: var(--navy); color: var(--paper); padding: 14px 22px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .dv-bar .dv-kicker { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin: 0 0 4px; }
+  .dv-bar .dv-title { font-size: 16px; font-weight: 300; margin: 0; }
+  .dv-doc { font: inherit; font-size: 15px; font-weight: 300; background: transparent; color: var(--paper); border: 0; border-bottom: 1px solid #3B5068; padding: 2px 0; max-width: 100%; cursor: pointer; }
+  .dv-doc option { color: var(--ink); background: var(--paper); }
+  .dv-handle { position: absolute; left: 0; top: 0; bottom: 0; width: 7px; cursor: col-resize; z-index: 5; }
+  .dv-handle:hover, body.dv-resizing .dv-handle { background: rgba(179, 154, 87, 0.35); }
+  body.dv-resizing { user-select: none; cursor: col-resize; }
+  .dv-zoom { display: flex; align-items: center; gap: 4px; margin-right: 10px; }
+  .dv-bar .dv-meta { font-family: var(--mono); font-size: 11.5px; color: #B9C3CE; margin: 4px 0 0; }
+  .dv-close { flex: none; width: 34px; height: 34px; border: 1px solid #3B5068; border-radius: 2px; background: none; color: var(--paper); font-size: 20px; line-height: 1; cursor: pointer; }
+  .dv-close:hover { background: var(--navy-2); border-color: var(--gold); }
+  .dv-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 22px; background: var(--paper); border-bottom: 1px solid var(--border); font-size: 12px; }
+  .dv-strip .lbl { color: var(--muted); margin-right: 4px; }
+  .dv-pg { font-family: var(--mono); font-size: 11.5px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 2px; background: none; color: var(--ink-2); cursor: pointer; }
+  .dv-pg:hover { border-color: var(--navy); color: var(--navy); }
+  .dv-pg[aria-current="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
+  .dv-pages { flex: 1; overflow: auto; padding: 22px 26px 40px; position: relative; }
+  .dv-loading { color: var(--muted); font-size: 13px; padding: 20px 0; }
+  .pdfpage { position: relative; margin: 0 auto 18px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10), 0 6px 18px rgba(9, 30, 52, 0.08); overflow: hidden; }
+  .pdfpage canvas { display: block; width: 100%; height: 100%; }
+  .pdfpage .pn { position: absolute; z-index: 2; right: 8px; top: 6px; font: 10.5px var(--mono); color: var(--muted); background: rgba(255,255,255,0.8); padding: 1px 5px; border-radius: 2px; }
+  .textLayer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; line-height: 1; text-size-adjust: none; forced-color-adjust: none; }
+  .textLayer span, .textLayer br { color: transparent; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%; }
+  .textLayer span.hl { background: rgba(179, 154, 87, 0.32); border-radius: 2px; cursor: pointer; }
+  .textLayer span.hl:hover { background: rgba(179, 154, 87, 0.5); }
+  .textLayer span.hl.on { background: rgba(242, 226, 174, 0.8); box-shadow: 0 0 0 2px var(--gold); }
+  .dv-page { background: #FFFFFF; color: var(--ink); padding: 32px 40px 28px; min-height: 560px; display: flex; flex-direction: column; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10), 0 6px 18px rgba(9, 30, 52, 0.08); }
+  .dv-page .rh { display: flex; justify-content: space-between; gap: 16px; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 14px; }
+  .dv-page .rf { margin-top: auto; padding-top: 24px; display: flex; justify-content: space-between; gap: 16px; font-size: 10.5px; color: var(--muted); }
+  .dv-page .quote { border-left: 3px solid var(--gold); background: #FBF6E8; padding: 8px 12px; margin: 0 0 14px; font-size: 13px; }
+  .dv-page .quote .lbl { display: block; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); margin-bottom: 3px; }
+  .dv-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.65; color: var(--ink-2); }
+  .dv-text mark { background: rgba(179, 154, 87, 0.22); color: inherit; padding: 1px 2px; border-radius: 2px; }
+  .dv-text mark.on { background: #F2E2AE; color: var(--ink); box-shadow: 0 0 0 2px var(--gold); }
+  .dv-text mark { cursor: pointer; } .dv-text mark:hover { outline: 1px solid var(--gold); }
+  .dv-page + .dv-page, .dv-gap + .dv-page { margin-top: 18px; }
+  .dv-gap { text-align: center; color: var(--muted); font-size: 11.5px; padding: 10px 0 2px; }
+  .dv-strip b { font-family: var(--mono); } .dv-strip > span, .dv-strip > a { margin-right: 4px; }
+  .dv-sec { color: var(--navy); font-size: 12px; } .dv-sec:hover { color: var(--gold-ink); }
+  .dv-nav { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .dv-pg[disabled] { opacity: 0.4; cursor: default; }
+  .dv-quote { flex-basis: 100%; font-size: 12.5px; color: var(--ink-2); border-left: 3px solid var(--gold); background: #FBF6E8; padding: 6px 10px; margin-top: 6px; }
+  .dv-quote .lbl { display: block; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); margin-bottom: 2px; }
+  body.embed .demobar, body.embed .site-header { display: none; }
+  body.embed { background: transparent; }
+  body.embed main { padding: 0 0 8px; gap: 28px; }
+  body.embed .title-band .eyebrow, body.embed .title-band h1, body.embed .title-band .meta { display: none; }   /* the platform's page heading names the company */
+  body.embed main > aside { position: relative; top: 0; max-height: none; }
+  body.noaside main { grid-template-columns: minmax(0, 1fr); } body.noaside main > aside { display: none; }
+  body.app main { gap: 20px; } body.app section.block { padding: 16px 20px 14px; margin-bottom: 16px; } body.app h2 { font-size: 18px; font-weight: 500; } body.app section.block .ask { font-size: 13px; color: var(--muted); margin-bottom: 12px; } body.app #tab-overview .eyebrow { display: none; }
+  body.mode-viewer .demobar, body.mode-viewer .site-header, body.mode-viewer main { display: none; }
+  body.mode-viewer { padding-right: 0 !important; }
+  body.mode-viewer #doc-viewer { left: 0; width: 100%; border-left: 0; box-shadow: none; }
+  @media (max-width: 1000px) {
+    main { grid-template-columns: 1fr; padding: 24px 16px 56px; } main > aside { position: static; max-height: none; }
+    body.mode-page #doc-viewer, body.mode-page .view-btn, body.mode-page .view-cell, body.mode-page th.view { display: none !important; } body.mode-page.dv-open { padding-right: 0; }
+    .header-inner { flex-wrap: wrap; padding: 0 16px; } .header-side { flex: 1 0 100%; flex-wrap: wrap; padding: 8px 0 10px; } .co { min-width: 0; max-width: 100%; }
+  }
+  @page { size: A4; margin: 14mm 14mm 16mm; }   /* the house format of the printed notes */
+  @media print { .topics, .tools, #doc-viewer, .site-header, .demobar { display: none !important; } main { display: block; } section.block { break-inside: avoid-page; border: 0; padding: 0; } .view-cell, th.view { display: none; } }
+
+  /* ---------- one product with app.html (21 Oct 2026): same tokens, 14 px base in the frames, quiet arithmetic marks, one number format ---------- */
+  body.embed { font-size: 14px; } body.app h2 { font-weight: 600; }
+  .calc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: 5px; cursor: help; } .calc::before { content: "ƒ"; }
+  .cell-btn.pend { color: var(--muted); font-style: italic; }
+  .kf { width: 100%; border-collapse: collapse; font-size: 13px; } .kf th { text-align: right; } .kf th:first-child, .kf td:first-child { text-align: left; }
+  .kf td { padding: 5px 10px; border-bottom: 1px solid #EFEBE0; } .kf tr.em td { font-weight: 600; color: var(--navy); } .kf tr.sub td:first-child { padding-left: 18px; color: var(--ink-2); }
+  .tile .v small { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 4px; }
+  /* ---------- the credit analysis as a research note ---------- */
+  .note { max-width: 880px; } body.note-page main { grid-template-columns: 220px minmax(0, 1fr); }
+  @media (max-width: 1000px) { body.note-page main { grid-template-columns: minmax(0, 1fr); } .note section.block { padding: 16px 14px 12px; } }
+  .note section.block { padding: 24px 28px 20px; margin-bottom: 18px; } body.app .note section.block { padding: 18px 22px 16px; }
+  .note h2 { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
+  .note .num-h { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-ink); margin: 0 0 2px; }
+  .note p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.6; max-width: 74ch; color: var(--ink-2); } .note p.lead { font-size: 15.5px; color: var(--ink); }
+  .cite { font-family: var(--mono); font-size: 9.5px; color: var(--gold-ink); cursor: pointer; margin-left: 1px; border-bottom: 1px dotted var(--gold-ink); line-height: 0; } .cite:hover { color: var(--navy); border-bottom-color: var(--navy); }
+  .cites { display: inline-flex; flex-wrap: wrap; gap: 4px; margin: 0 6px; vertical-align: middle; }
+  .cites .cell-btn { font-family: var(--mono); font-size: 11px; padding: 1px 6px; border: 1px solid var(--border); border-bottom: 1px solid var(--gold); background: var(--paper); }
+  figure.ex { margin: 18px 0 8px; padding: 0; } figure.ex h3 { margin-bottom: 6px; } figure.ex figcaption { font-size: 12px; line-height: 1.45; color: var(--muted); margin-top: 6px; max-width: 80ch; }
+  .draft { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); border: 1px solid #D9C79B; background: #FBF6E8; padding: 2px 8px; border-radius: 2px; }
+  .legend .view-btn { margin-left: auto; }
+  @media print {
+    body.note-page main { display: block; max-width: none; padding: 0; } .note { max-width: none; } .note section.block { break-inside: auto; border: 0; padding: 0 0 14px; margin: 0; }
+    .note h2, figure.ex h3 { break-after: avoid; } figure.ex, .tiles, table { break-inside: avoid; } .cite { color: #000; border: 0; } .cites, .legend .view-btn, .dv-bar, .dv-strip { display: none !important; }
+    .note p { color: #000; max-width: none; } .tile { border: 1px solid #999; }
+  }
+</style>
+</head>
+<body>
+<div class="demobar">Fact dossier · beta · facts extracted from public reports and pending review by a named reviewer · facts and arithmetic only, no opinion · not an offer, solicitation or investment advice</div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="app.html" aria-label="VanillaBonds — platform demo"><span class="v">VANILLA</span><span class="b">BONDS</span></a>
+    <nav class="primary-nav" aria-label="Primary"><ul><li><button type="button" aria-current="page">Fact dossier</button></li></ul></nav>
+    <div class="header-side"><label for="co">Company</label><select id="co" class="co" aria-label="Company"></select><a class="back-link" href="app.html">← Platform</a></div>
+  </div>
+</header>
+<main id="main">
+  <div class="title-band" id="band"></div>
+  <aside>
+    <nav class="topics" id="topics" aria-label="Topics"></nav>
+    <div class="tools"><input type="search" id="q" placeholder="Filter facts…" aria-label="Filter facts"><label class="small"><input type="checkbox" id="okonly"> Approved facts only</label></div>
+  </aside>
+  <div id="content"></div>
+</main>
+<aside id="doc-viewer" hidden aria-label="Source document">
+  <div class="dv-handle" id="dv-handle" title="Drag to resize"></div>
+  <div class="dv-bar"><div><p class="dv-kicker">Source document</p><p class="dv-title"><select id="dv-doc" class="dv-doc" aria-label="Document"></select></p><p class="dv-meta" id="dv-meta"></p></div><button type="button" class="dv-close" id="dv-close" aria-label="Close source viewer">×</button></div>
+  <div class="dv-strip" id="dv-strip"></div>
+  <div class="dv-pages" id="dv-pages" tabindex="-1"></div>
+</aside>
+<script src="dossier-data/fastned.js"></script>
+<script src="dossier-data/katjes.js"></script>
+<script>
+(function () {
+  var ALL = window.DOSSIER_DATA || {}, slugs = Object.keys(ALL);
+  if (!slugs.length) { document.getElementById('content').innerHTML = '<p>No dossier data. Run <code>python3 mvp/export_dossier.py</code> and <code>python3 website/seb-mvp/build_dossier.py</code>.</p>'; return; }
+  var Q = new URLSearchParams(location.search), slug = Q.get('c'); if (!ALL[slug]) slug = slugs[0];
+  // page = on its own; embed = the dossier inside the platform's deal and company screens (documents open in the platform's own panel);
+  // viewer = only the document viewer, full size, inside that panel. The two frames talk through the platform with postMessage.
+  var MODE = Q.get('viewer') ? 'viewer' : Q.get('embed') ? 'embed' : 'page', NOTE = document.documentElement.getAttribute('data-mode') === 'analysis';   // analysis.html: the written analysis as a page (build_dossier.py)
+  var VIEW = MODE === 'embed' ? Q.get('view') : NOTE ? 'analysis' : null;   // app.html: one tab of the deal workspace (overview, proof, analysis or assess); links to another tab go through the app
+  if (VIEW) document.body.classList.add(NOTE ? 'note-page' : 'app', VIEW === 'proof' || VIEW === 'analysis' ? 'with-aside' : 'noaside');
+  if (NOTE) { document.querySelector('.primary-nav button').textContent = 'Credit analysis'; document.querySelector('.demobar').textContent = 'Credit analysis · draft written from the record, pending review by a named reviewer · facts, arithmetic on printed formulas and the company’s own words, no opinion · not an offer, solicitation or investment advice'; }
+  document.body.classList.add('mode-' + MODE); if (MODE === 'embed') document.body.classList.add('embed');
+  function post(m) { if (window.parent !== window) window.parent.postMessage(m, '*'); }
+  var D = ALL[slug], $ = function (s) { return document.querySelector(s); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  // facts: [id, field, period, value, unit, text, src, page, quote, status, confidence, quote_found, url, note]; url = a web fact, verified at the URL; note = a merge conflict and its decision
+  var F = D.facts.map(function (r) { return { id: r[0], field: r[1], period: r[2], value: r[3], unit: r[4], text: r[5], src: r[6], page: r[7], quote: r[8], status: r[9], conf: r[10], found: r[11], url: r[12], note: r[13] }; });
+  var BEST = {}; (D.best || []).forEach(function (id) { BEST[id] = 1; });   // screen.py's record: one value per (field, period), as the screen and the PDF use it
+  var ROLE = Q.get('role') || 'anchor', INVESTOR = ROLE !== 'company', ANCHOR = ROLE === 'anchor';   // the platform passes its role; the company never sees an assessment
+  var A = D.agents || {}, MROWS = A.rows || [], MQ = A.questions || [], IK = A.intake;   // the agents' output, resolved against the record by mvp/render.py
+  var BYID = {}; F.forEach(function (f) { BYID[f.id] = f; });
+  var DOC = {}; D.docs.forEach(function (d, i) { d.i = i; DOC[d.id] = d; });
+  var FIELD = {}; D.blocks.forEach(function (b) { b.fields.forEach(function (f) { f.block = b.id; FIELD[f.id] = f; }); });
+  var STATUS = { ok: 'approved', pend: 'pending', rep: 'company statement', web: 'verify at URL' };
+  function docTitle(d) { return (d.kind || 'document') + (d.period ? ' ' + d.period : '') + (d.date ? ' · ' + d.date : ''); }
+  function pkey(p) { var m = /^(FY|H1)-?(\d{4})(E?)$/.exec(p || ''); return m ? [+m[2], m[1] === 'H1' ? 1 : (m[3] ? 2 : 0)] : [9999, 3]; }
+  function pcmp(a, b) { var x = pkey(a), y = pkey(b); return x[0] - y[0] || x[1] - y[1] || (a < b ? -1 : a > b ? 1 : 0); }
+  function latest(fs) { var b = fs.filter(function (f) { return BEST[f.id]; }); if (b.length) return b[0]; return fs.slice().sort(function (a, b) { return (DOC[a.src].i - DOC[b.src].i) || ((a.conf || 0) - (b.conf || 0)); })[fs.length - 1]; }
+  function fmt(v, unit) {
+    if (v == null || v === '') return '<span class="muted">–</span>';
+    if (typeof v !== 'number') return esc(v);
+    var s = nf1(v);
+    return unit && unit !== 'EUR m' ? s + ' ' + esc(unit) : s;
+  }
+  // one number format everywhere: one decimal, en-GB thousands separator, a true minus; ratios as 1.2x, shares as 10.8%
+  function nf1(v) { return v == null ? '–' : (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
+  function snum(v, u) { return v == null ? '–' : u === '%' ? (v * 100).toFixed(1) + '%' : u === 'x' ? v.toFixed(1) + 'x' : nf1(v); }
+  function fb(id, txt, st) { return id ? '<button type="button" class="cell-btn' + (st === 'pend' ? ' pend' : '') + '" data-view="' + esc(id) + '">' + txt + '</button>' : txt; }
+  function chip(st) { return '<span class="chip ' + st + '">' + (STATUS[st] || st) + '</span>'; }
+  function srcText(f) { return f.url ? (DOC[f.src].origin || f.src) + ' · ' + (DOC[f.src].date || '') : f.page ? f.src + '\u00a0p.' + f.page : f.src; }
+  function viewBtn(f) { return f.url ? '<a class="view-btn" href="' + esc(f.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Open the web source of ' + esc(f.id) + ' in a new tab">View ↗</a>' : f.page && D.pages[f.src] && D.pages[f.src][f.page] ? '<button type="button" class="view-btn" data-view="' + f.id + '" aria-pressed="false" aria-controls="doc-viewer" aria-label="View source of ' + esc(f.id) + '">View</button>' : '<span class="muted small">no page</span>'; }
+
+  // ---------- charts: the platform's bar chart, by period ----------
+  function barChart(title, sub, pts, wide, opt) {
+    opt = opt || {};
+    var W = wide ? 1040 : 520, H = 220, padL = 50, padB = 32, padT = 22, n = pts.length, slot = (W - padL - 8) / n, bw = Math.min(46, slot * 0.62);
+    var vals = pts.map(function (p) { return p.v; }).filter(function (v) { return typeof v === 'number'; });
+    if (!vals.length) return '';
+    var max = Math.max(0, opt.ref || 0, Math.max.apply(null, vals)), min = Math.min(0, Math.min.apply(null, vals)), span = (max - min) || 1;
+    var step = niceStep(span / 4), top = Math.ceil(max / step) * step, bot = Math.floor(min / step) * step;
+    function y(v) { return padT + (top - v) / (top - bot || 1) * (H - padT - padB); }
+    var grid = '';
+    for (var g = bot; g <= top + 1e-9; g += step) grid += '<line x1="' + padL + '" x2="' + W + '" y1="' + y(g) + '" y2="' + y(g) + '"' + (g === 0 ? ' class="zero"' : '') + '/><text class="axis-text" x="' + (padL - 6) + '" y="' + (y(g) + 3.5) + '" text-anchor="end">' + (Math.abs(g) >= 100 ? g.toFixed(0) : g) + '</text>';
+    var bars = pts.map(function (p, i) {
+      var x = padL + slot * i + (slot - bw) / 2, cx = x + bw / 2, h = typeof p.v === 'number' ? Math.abs(y(p.v) - y(0)) : 0;
+      var cls = 'bar' + (p.plan ? ' plan' : '') + (p.latest ? ' latest' : '');
+      var rect = typeof p.v === 'number' ? '<rect class="' + cls + '" x="' + x + '" y="' + Math.min(y(p.v), y(0)) + '" width="' + bw + '" height="' + Math.max(1, h) + '"/>' : '';
+      var lab = typeof p.v === 'number' ? '<text class="val-text" x="' + cx + '" y="' + (p.v >= 0 ? y(p.v) - 5 : y(p.v) + 12) + '" text-anchor="middle">' + nf1(p.v) + '</text>' : '<text class="axis-text" x="' + cx + '" y="' + (y(0) - 5) + '" text-anchor="middle">n/a</text>';
+      return '<g class="bar-group"' + (p.id ? ' data-view="' + p.id + '" role="button" tabindex="0"' : '') + '><title>' + esc(p.label + ': ' + (typeof p.v === 'number' ? p.v.toFixed(1) + (opt.unit || ' EUR m') : 'n/a') + (p.note ? ' · ' + p.note : '')) + '</title>' + rect + lab + '<text class="axis-text" x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(p.label) + '</text></g>';
+    }).join('');
+    return '<figure class="chart' + (wide ? ' wide' : '') + '" style="margin:0"><h3>' + esc(title) + '</h3><p class="label" style="margin-bottom:6px">' + esc(sub) + '</p><svg viewBox="0 0 ' + W + ' ' + H + '" aria-label="' + esc(title) + '"><g class="grid">' + grid + '</g>' + bars + (opt.ref != null ? '<line class="ref" x1="' + padL + '" x2="' + W + '" y1="' + y(opt.ref) + '" y2="' + y(opt.ref) + '"/><text class="ref-text" x="' + W + '" y="' + (y(opt.ref) - 5) + '" text-anchor="end">' + esc(opt.refLabel || '') + '</text>' : '') + '</svg></figure>';
+  }
+  function niceStep(raw) { var p = Math.pow(10, Math.floor(Math.log10(raw || 1))), n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
+  function seriesChart(field, title) {
+    var fs = F.filter(function (f) { return f.field === field && typeof f.value === 'number' && pkey(f.period)[1] === 0; }), by = {};
+    fs.forEach(function (f) { (by[f.period] = by[f.period] || []).push(f); });
+    var ps = Object.keys(by).sort(pcmp).slice(-7);
+    if (!ps.length) return '';
+    var pts = ps.map(function (p, i) { var f = latest(by[p]); return { label: p.replace('FY', ''), v: f.value, id: f.id, latest: i === ps.length - 1 }; });
+    return barChart(title, 'EUR m · fiscal years as reported · click a bar for the source', pts);
+  }
+  function redemptionChart() {
+    var fs = F.filter(function (f) { return f.field === 'debt_maturing' && typeof f.value === 'number' && pkey(f.period)[0] !== 9999; }), by = {};
+    fs.forEach(function (f) { (by[f.period] = by[f.period] || []).push(f); });
+    var ps = Object.keys(by).sort(pcmp);
+    if (!ps.length) return '<p class="muted small">No debt-maturity facts extracted yet.</p>';
+    var pts = ps.map(function (p) { var f = latest(by[p]); return { label: p.replace('FY', ''), v: f.value, id: f.id, plan: /E$/.test(p), note: by[p].length > 1 ? by[p].length + ' entries, latest report shown' : '' }; });
+    var bands = F.filter(function (f) { return f.field === 'debt_maturing' && pkey(f.period)[0] === 9999; });
+    var total = pts.filter(function (p) { return p.plan; }).reduce(function (s, p) { return s + p.v; }, 0);
+    return barChart('Redemption profile', 'Principal falling due per period, EUR m · lighter bars = future periods per the latest report' + (total ? ' · future periods shown: ' + total.toFixed(1) : ''), pts, true) +
+      (bands.length ? '<p class="muted small" style="margin:8px 0 0">Also stated as a band: ' + bands.map(function (f) { return esc(f.period) + ' ' + fmt(f.value) + ' (' + srcText(f) + ')'; }).join('; ') + '.</p>' : '') +
+      '<p class="muted small" style="margin:8px 0 18px">Where several reports state a figure for the same period, the most recent report is charted; every entry is in the table below. Debt instruments and their terms follow.</p>';
+  }
+
+  // ---------- facts per block ----------
+  function factRow(f, withField) {
+    return '<tr data-q="' + esc((FIELD[f.field] ? FIELD[f.field].label : f.field) + ' ' + (f.text || '') + ' ' + (f.period || '')).toLowerCase() + '" data-st="' + f.status + '" id="row-' + f.id + '">' +
+      (withField ? '<td class="fld">' + esc(FIELD[f.field] ? FIELD[f.field].label : f.field) + '</td>' : '') +
+      '<td>' + esc(f.text || '') + (f.value != null && f.text && String(f.value) !== f.text ? ' <span class="muted">(' + fmt(f.value, f.unit) + ')</span>' : '') + (f.note ? '<div class="fnote">' + esc(f.note) + '</div>' : '') + '</td>' +
+      '<td class="per">' + esc(f.period || '') + '</td><td class="src' + (f.url ? ' web' : '') + '">' + esc(srcText(f)) + '</td><td class="st">' + chip(f.url && f.status === 'pend' ? 'web' : f.status) + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>';
+  }
+  var LIST_HEAD = '<thead><tr><th>Field</th><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead>';
+  function pivot(fields, fs) {
+    var by = {}, periods = {};
+    fs.forEach(function (f) { if (typeof f.value !== 'number') return; (by[f.field] = by[f.field] || {}); (by[f.field][f.period] = by[f.field][f.period] || []).push(f); periods[f.period] = 1; });
+    var ps = Object.keys(periods).sort(pcmp), rows = fields.filter(function (fd) { return by[fd.id]; });
+    if (!rows.length) return '';
+    var h = '<div class="table-scroll"><table><thead><tr><th>EUR m unless stated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (fd) {
+      h += '<tr data-q="' + esc(fd.label).toLowerCase() + '"><td>' + esc(fd.label) + '</td>' + ps.map(function (p) {
+        var c = by[fd.id][p]; if (!c) return '<td class="num muted">–</td>';
+        var f = latest(c); return '<td class="num"><button type="button" class="cell-btn" data-view="' + f.id + '" title="' + esc((f.text || '') + ' · ' + srcText(f) + (f.note ? ' · ' + f.note : '')) + '">' + fmt(f.value, f.unit !== 'EUR m' ? f.unit : null) + (c.length > 1 ? '<sup>' + c.length + '</sup>' : '') + '</button></td>';
+      }).join('') + '</tr>';
+    });
+    return h + '</tbody></table></div><p class="muted small" style="margin:6px 0 0">Click a figure to see it on the page of the report. A superscript counts further reports that state the same period; the most recent report is shown.</p>';
+  }
+  function derivedPivot() {
+    var m = D.screen && D.screen.derived; if (!m) return '';
+    var rows = {}, periods = {};
+    Object.keys(m).forEach(function (k) { var p = k.split('|'); (rows[p[0]] = rows[p[0]] || {})[p[1]] = m[k]; periods[p[1]] = 1; });
+    var ps = Object.keys(periods).sort(pcmp), names = Object.keys(rows);
+    if (!names.length) return '';
+    return '<div class="fieldhead"><h3>Calculated from the reported figures</h3><span class="muted small">formulas in mvp/schema.py derive()</span></div><div class="table-scroll"><table><thead><tr><th>Calculated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      names.map(function (n) { return '<tr class="calc" data-q="' + esc(n).toLowerCase() + '"><td>' + esc(n.replace(/_/g, ' ')) + '</td>' + ps.map(function (p) { var v = rows[n][p]; return '<td class="num">' + (v == null ? '<span class="muted">–</span>' : esc(typeof v === 'number' ? (Math.abs(v) < 10 ? v.toFixed(2) : v.toFixed(1)) : v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+  }
+  var ARITH = { plan: ['forward', 'headroom_path', 'stress_grid', 'eba_events'], financials: ['ratios_three_ways', 'volatility_vs_sector'], management: ['calibration'], structure: ['waterfall', 'guarantor_coverage'] };
+  function arithmetic(block) {
+    var S = D.screen || {}, rows = [];
+    (ARITH[block] || []).forEach(function (k) { var r = k === 'forward' ? S.forward : (S.v3 || {})[k]; (r || []).forEach(function (x) { rows.push(x); }); });
+    if (!rows.length) return '';
+    return '<div class="fieldhead"><h3>Arithmetic</h3><span class="muted small">shown, never scored · formula and source printed with each number</span></div><table class="arith"><thead><tr><th>Derived</th><th>Formula · source</th><th class="num">Value</th></tr></thead><tbody>' +
+      rows.map(function (r) { return '<tr data-q="' + esc(r[0]).toLowerCase() + '"><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
+  }
+  // fact ids as links to their rows (the row opens and lights up, as when the viewer jumps back)
+  function fids(s) { return s ? '<span class="fids">' + s.split(', ').map(function (x) { var id = x.split(' ')[0]; return BYID[id] ? '<a href="#row-' + id + '" data-row="' + id + '">' + esc(x) + '</a>' : esc(x); }).join(', ') + '</span>' : '<span class="muted">–</span>'; }
+  function mgmtRows() {
+    if (!MROWS.length) return '';
+    return '<div class="fieldhead"><h3>The 17 rows of memo section 9</h3><span class="muted small">per row: a document fact, a register fact, or a representation pending with its question</span></div><div class="table-scroll"><table class="mrows"><thead><tr><th>Row</th><th>Item</th><th>Status</th><th>Facts on file</th><th>Question to management</th></tr></thead><tbody>' +
+      MROWS.map(function (r) { return '<tr id="mrow-' + r[0] + '"><td>' + r[0] + '</td><td>' + esc(r[1]) + '</td><td>' + '<span class="chip' + (/^repr/.test(r[2]) ? ' rep' : '') + '">' + esc(r[2]) + '</span>' + '</td><td>' + fids(r[3]) + '</td><td>' + (r[4] ? esc(r[4]) : '<span class="muted">–</span>') + (r[5] ? '<div class="fnote">answer: ' + fids(r[5]) + '</div>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function mqTable() {
+    return '<div class="table-scroll"><table class="mrows"><thead><tr><th>#</th><th>Row</th><th>Question</th><th>Answer</th></tr></thead><tbody>' +
+      MQ.map(function (q) { return '<tr><td>Q' + q[0] + '</td><td><a href="#mrow-' + q[1] + '">row ' + q[1] + '</a></td><td>' + esc(q[2]) + '</td><td>' + (q[3].length ? fids(q[3].join(', ')) : '<span class="chip">open</span>') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function questionsBlock(n) {
+    return '<section class="block" id="b-questions" aria-labelledby="h-questions"><p class="eyebrow">' + n + ' · Process · ' + MQ.length + ' questions</p><h2 id="h-questions">Questions to management' + (A.date ? ', prepared ' + esc(A.date) : '') + '</h2><p class="ask">Process fact: the numbered list for the recorded management meeting, one question per row of the management block. The company answers in a management Q&amp;A document on the platform; each answer starts with its number (Q1: ...) and enters the record as a management representation, attested by a named officer, not verified by VanillaBonds.</p>' + mqTable() + '</section>';
+  }
+  function reqTables() {
+    var h = '';
+    D.blocks.forEach(function (b) {
+      var rs = IK.requests.map(function (r, i) { return [i + 1].concat(r); }).filter(function (r) { return r[1] === b.id; }); if (!rs.length) return;
+      h += '<div class="fieldhead"><h3>' + esc(b.title) + '</h3><span class="muted small">' + rs.length + '</span></div><div class="table-scroll"><table class="mrows reqs"><thead><tr><th>#</th><th>Field of the format</th><th>Periods</th><th>Note</th></tr></thead><tbody>' +
+        rs.map(function (r) { return '<tr><td>R' + r[0] + '</td><td>' + esc(FIELD[r[2]] ? FIELD[r[2]].label : r[2]) + '</td><td class="per">' + esc(r[3]) + '</td><td>' + (r[4] ? esc(r[4]) : '<span class="muted">–</span>') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    });
+    return h;
+  }
+  function requestsBlock(n) {
+    return '<section class="block" id="b-requests" aria-labelledby="h-requests"><p class="eyebrow">' + n + ' · Process · ' + IK.requests.length + ' items</p><h2 id="h-requests">Documents requested from the company</h2><p class="ask">Intake: the fields of the format the public documents do not carry for the periods of the dossier, as the fact agent recorded where it looked, grouped by block. Each item arrives as a company document on the platform and enters the record with source and page; plans and budgets as management representations. The list shrinks as facts reach the record.</p>' + reqTables() + '</section>';
+  }
+  // 21 Oct 2026: a single-value field shows the record's value per period; a list the latest report's entries (three at most, each once); the rest folds below
+  function shortList(rows) {
+    var by = rows.slice().sort(function (a, b) { return ((a.url ? 1 : 0) - (b.url ? 1 : 0)) || (DOC[b.src].i - DOC[a.src].i) || pcmp(b.period, a.period); }), seen = {}, top = [], rest = [];
+    if (by.some(function (f) { return BEST[f.id]; })) return [by.filter(function (f) { return BEST[f.id]; }).sort(function (a, b) { return pcmp(b.period, a.period); }), by.filter(function (f) { return !BEST[f.id]; })];   // one value per period: the record's
+    by.forEach(function (f) { var k = (f.text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').slice(0, 48); if (!seen[k] && top.length < 3) { seen[k] = 1; top.push(f); } else rest.push(f); });
+    return [top, rest];
+  }
+  // the management block opens with the decision-useful facts (who, owners, guidance against reported, lenders, changes, pay), as the snapshot holds them
+  function jb(id) { return ' <button type="button" class="cell-btn" data-view="' + esc(id) + '">' + esc(id) + '</button>'; }
+  function mgList(xs) { return '<ul class="mfacts">' + xs.map(function (x) { return '<li>' + esc(x[0]) + jb(x[1]) + '</li>'; }).join('') + '</ul>'; }
+  function mgPeople() { return '<div class="table-scroll"><table class="mt"><tbody>' + D.snapshot.people.map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td>' + esc(x[1]) + jb(x[2]) + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
+  function mgGuidance() { return '<div class="table-scroll"><table class="mt"><thead><tr><th>Year</th><th>Guidance as stated</th><th>Reported</th></tr></thead><tbody>' + D.snapshot.guidance.slice().reverse().map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td>' + esc(x[1] + ': ' + x[2]) + jb(x[4][0]) + '</td><td>' + esc(x[3]) + (x[4][1] ? jb(x[4][1]) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
+  function mgmtFacts() {
+    var s = D.snapshot; if (!s) return '';
+    var li = function (t, xs) { return xs.length ? '<div class="fieldhead"><h3>' + t + '</h3><span class="muted small">' + xs.length + '</span></div>' + mgList(xs) : ''; };
+    return '<div class="fieldhead"><h3>Who runs it</h3><span class="muted small">' + s.people.length + '</span></div>' + mgPeople() + li('Owners', s.owners) +
+      (s.guidance.length ? '<div class="fieldhead"><h3>Guidance against reported</h3><span class="muted small">the guidance as the company stated it, next to the reported figure of that year</span></div>' + mgGuidance() : '') +
+      li('Covenant tests and past maturities', s.lenders) + li('Changes in the top team', s.changes) + li('Pay, as filed', s.pay);
+  }
+  function renderBlock(b, n) {
+    var fs = F.filter(function (f) { return FIELD[f.field] && FIELD[f.field].block === b.id; });
+    var num = b.fields.filter(function (fd) { return fd.periodic && fd.kind === 'num'; }), numIds = {}; num.forEach(function (fd) { numIds[fd.id] = 1; });
+    var h = '<section class="block" id="b-' + b.id + '" aria-labelledby="h-' + b.id + '"><p class="eyebrow">' + n + ' · ' + esc(b.title) + ' · ' + fs.length + ' fact' + (fs.length === 1 ? '' : 's') + '</p><h2 id="h-' + b.id + '">' + esc(b.title) + '</h2><p class="ask">' + esc(b.ask) + '</p>';
+    if (b.id === 'financials') h += '<div class="charts">' + ['revenue', 'ebitda', 'net_debt', 'cash'].map(function (k) { return seriesChart(k, FIELD[k].label); }).join('') + '</div>';
+    if (b.id === 'debt') h += '<div class="charts">' + redemptionChart() + '</div>';
+    if (b.id === 'management') h += mgmtFacts();
+    h += pivot(num, fs.filter(function (f) { return numIds[f.field]; }));
+    if (b.id === 'financials') h += derivedPivot();
+    var pivoted = fs.filter(function (f) { return numIds[f.field]; }), listed = fs.filter(function (f) { return !(numIds[f.field] && typeof f.value === 'number'); });
+    if (pivoted.length) h += '<details><summary>' + pivoted.length + ' entries behind the table, with text and source</summary><div class="table-scroll"><table>' + LIST_HEAD + '<tbody>' + pivoted.sort(function (a, b) { return pcmp(a.period, b.period); }).map(function (f) { return factRow(f, true); }).join('') + '</tbody></table></div></details>';
+    var h0 = h; if (b.id === 'management' && D.snapshot) h = '';   // management: the field lists fold under the structured facts and the 17 rows
+    b.fields.filter(function (fd) { return !(fd.periodic && fd.kind === 'num'); }).forEach(function (fd) {
+      var rows = listed.filter(function (f) { return f.field === fd.id; }); if (!rows.length) return; var sl = shortList(rows);
+      h += '<div class="fieldhead"><h3>' + esc(fd.label) + '</h3><span class="muted small">' + rows.length + '</span></div><div class="table-scroll"><table><thead><tr><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead><tbody>' + sl[0].map(function (f) { return factRow(f, false); }).join('') + '</tbody></table></div>' +
+        (sl[1].length ? '<details><summary>' + sl[1].length + ' more: earlier reports and repeats</summary><div class="table-scroll"><table><tbody>' + sl[1].map(function (f) { return factRow(f, false); }).join('') + '</tbody></table></div></details>' : '');
+    });
+    if (b.id === 'management' && D.snapshot) h = h0 + mgmtRows() + (h ? '<details><summary>All ' + fs.length + ' management facts, field by field</summary>' + h + '</details>' : '');
+    else if (b.id === 'management') h += mgmtRows();
+    if (!fs.length) h += '<p class="muted">No facts extracted for this block yet. Fields in the format: ' + b.fields.map(function (fd) { return esc(fd.label); }).join('; ') + '.</p>';
+    h += arithmetic(b.id);
+    h += assessBox(b.id, b.title) + '</section>';
+    return h;
+  }
+  function screenBlock(n) {
+    var S = D.screen || {}; if (!S.criteria) return '';
+    return '<section class="block" id="b-screen" aria-labelledby="h-screen"><p class="eyebrow">' + n + ' · Screen</p><h2 id="h-screen">Admission criteria v1</h2><p class="ask">Pass or fail against the platform\'s published admission criteria, on ' + (S.provisional ? 'provisional figures (pending facts included)' : 'approved figures only') + ', fiscal years ' + esc((S.fys || []).join(', ')) + '.</p>' +
+      '<table><thead><tr><th>#</th><th>Criterion</th><th>Threshold</th><th>Issuer value</th><th>Result</th></tr></thead><tbody>' + S.criteria.map(function (c) { return '<tr><td class="muted">' + esc(c[0]) + '</td><td>' + esc(c[1]) + '</td><td class="muted">' + esc(c[2]) + '</td><td><b>' + esc(c[3]) + '</b></td><td class="' + String(c[4]).toLowerCase() + '">' + esc(c[4]) + '</td></tr>'; }).join('') + '</tbody></table>' +
+      (S.indicators ? '<div class="fieldhead"><h3>Indicators</h3><span class="muted small">pre-structuring · shown, not scored</span></div><table><thead><tr><th>Indicator</th><th>Reference</th><th class="num">Value</th></tr></thead><tbody>' + S.indicators.map(function (c) { return '<tr><td>' + esc(c[0]) + '</td><td class="muted">' + esc(c[1]) + '</td><td class="num"><b>' + esc(c[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>' : '') + '</section>';
+  }
+  function docsTable() {
+    return '<div class="table-scroll"><table><thead><tr><th>ID</th><th>File</th><th>Kind</th><th>Period</th><th>Date</th><th class="num">Pages</th><th class="num">Facts</th><th>Audited</th></tr></thead><tbody>' +
+      D.docs.map(function (d) { return '<tr><td class="src">' + esc(d.id) + '</td><td>' + (d.kind === 'web page' ? '<a href="' + esc(d.file) + '" target="_blank" rel="noopener noreferrer">' + esc(d.file) + '</a>' : esc(d.file)) + '</td><td>' + esc(d.kind || '') + '</td><td class="per">' + esc(d.period || '') + '</td><td class="per">' + esc(d.date || '') + '</td><td class="num">' + d.pages + '</td><td class="num">' + d.facts + '</td><td>' + (d.audited ? 'yes' : d.audited === false ? 'no' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function sourcesBlock(n) {
+    return '<section class="block" id="b-sources" aria-labelledby="h-sources"><p class="eyebrow">' + n + ' · Sources</p><h2 id="h-sources">Documents</h2><p class="ask">Every fact above carries the document and page it was read from; the page text opens in the source viewer. A web fact carries its URL instead and opens there, in a new tab.</p>' + docsTable() + '</section>';
+  }
+
+  // ---------- the written credit analysis (21 Oct 2026): companies/<x>/analysis.json through mvp/analysis.py, rendered as a research note; every
+  //            sentence carries the fact ids it rests on (the superscript lists them, each opens its page), every exhibit is drawn from the record ----------
+  var AN = D.analysis;
+  function noteNav() { return (AN ? AN.sections : []).map(function (s, i) { return '<a href="#an-' + s.id + '">' + (i + 1 < AN.sections.length ? (i + 1) + ' · ' : '') + esc(s.title) + '<span class="n"></span></a>'; }).join(''); }
+  function noteBand() {
+    var c = D.company, n = AN ? AN.sections.reduce(function (a, s) { return a + s.paras.reduce(function (b, p) { return b + p.length; }, 0); }, 0) : 0;
+    return '<p class="eyebrow">Credit analysis · ' + esc(AN ? 'figures to ' + AN.asof : '') + '</p><h1>' + esc(c.name) + '</h1><div class="meta">' + esc([c.sector, c.country, c.legal_form].filter(Boolean).join(' · ')) + '</div>' +
+      (AN ? '<div class="legend"><span class="draft">' + esc(AN.label) + '</span><span>written ' + esc(AN.written) + ' by the analyst agent from the record</span><span>' + n + ' sentences, each resting on the facts it cites: the superscript opens them</span><span>facts, arithmetic on printed formulas and the company’s own words; no opinion of ours</span><button type="button" class="view-btn" data-print="1">Print</button></div>' : '');
+  }
+  function cite(ids) {
+    var ok = (ids || []).filter(function (i) { return BYID[i]; }); if (!ok.length) return '';
+    return '<sup class="cite" data-cite="' + esc(ok.join(' ')) + '" title="' + esc(ok.map(function (i) { return i + ' · ' + label(BYID[i]) + ' · ' + srcText(BYID[i]); }).join(' | ')) + '">' + ok.length + '</sup>';
+  }
+  function noteView() {
+    if (!AN) return '<section class="block"><h2>Credit analysis</h2><p class="muted">No written analysis for this company yet. The analyst agent (mvp/agents/analyst.md) writes it from the record once the screen has run.</p></section>';
+    return '<div class="note">' + AN.sections.map(function (s, i) {
+      return '<section class="block" id="an-' + s.id + '" aria-labelledby="h-an-' + s.id + '"><p class="num-h">' + (i + 1 < AN.sections.length ? 'Section ' + (i + 1) : 'Appendix') + '</p><h2 id="h-an-' + s.id + '">' + esc(s.title) + '</h2>' +
+        s.paras.map(function (p, j) { return '<p' + (j === 0 ? ' class="lead"' : '') + '>' + p.map(function (x) { return '<span class="s">' + esc(x[0]) + '</span>' + cite(x[1]) + ' '; }).join('') + '</p>'; }).join('') +
+        (s.exhibits || []).map(exhibit).join('') + '</section>';
+    }).join('') + '</div>';
+  }
+  var SRC_CO = 'Source: the company’s own reports as extracted into the record (' + D.docs.filter(function (d) { return d.kind !== 'web page'; }).map(function (d) { return d.id; }).join(', ') + '), pending review by a named reviewer; click a figure or id for its page.';
+  function fig(h, cap, title) { return '<figure class="ex">' + (title ? '<h3>' + esc(title) + '</h3>' : '') + h + '<figcaption>' + esc(cap) + '</figcaption></figure>'; }
+  function stripTiles() {
+    return '<div class="tiles">' + (D.snapshot.strip || []).map(function (t) {
+      var id = t.ids[0], tag = id ? 'button' : 'div';
+      return '<' + tag + (id ? ' type="button" data-view="' + esc(id) + '"' : '') + ' class="tile"' + (t.calc ? ' title="' + esc(t.calc) + '"' : '') + '><span class="label">' + esc(t.label) + ' · ' + esc(t.period) + '</span><span class="v">' + snum(t.v, t.unit) + (t.unit === 'm' && t.v != null ? '<small>EUR m</small>' : '') + '</span><span class="s">' + (t.calc ? 'arithmetic, formula on hover' : id ? esc(srcText(BYID[id])) : 'not on file') + '</span></' + tag + '>';
+    }).join('') + '</div>';
+  }
+  function figTable() {
+    var s = D.snapshot, ps = s.periods;
+    return '<div class="table-scroll"><table class="kf"><thead><tr><th>EUR m unless stated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' + s.figures.map(function (r) {
+      var sub = /^of which/.test(r.label);
+      return '<tr class="' + (r.em ? 'em' : sub ? 'sub' : '') + '"><td>' + esc(r.label) + (r.calc && !sub ? '<span class="calc" title="' + esc(r.calc) + '"></span>' : '') + '</td>' + r.v.map(function (v, i) { var id = r.ids[i] && r.ids[i][0]; return '<td class="num">' + (id && v != null ? fb(id, snum(v, r.unit), r.st[i]) : snum(v, r.unit)) + '</td>'; }).join('') + '</tr>';
+    }).join('') + '</tbody></table></div>';
+  }
+  function bridgeTable() {
+    var s = D.snapshot, ps = Object.keys(s.bridge || {});
+    if (!ps.length) return '<p class="muted small">The reports itemise no one-off income inside EBITDA for this company under the record’s rule (badwill, disposal and purchase-price-allocation gains booked in other operating income).</p>';
+    return '<div class="table-scroll"><table><thead><tr><th>Period</th><th>One-off income inside EBITDA, as itemised in the reports</th><th class="num">EUR m</th><th class="view"></th></tr></thead><tbody>' + ps.map(function (p) { return s.bridge[p].map(function (x) { return '<tr><td class="per">' + esc(p) + '</td><td>' + esc(x[1]) + '</td><td class="num">' + nf1(x[2]) + '</td><td class="view-cell">' + viewBtn(BYID[x[0]]) + '</td></tr>'; }).join(''); }).join('') + '</tbody></table></div>';
+  }
+  function matTable() {
+    var s = D.snapshot;
+    return '<div class="table-scroll"><table><thead><tr><th>Falls due</th><th class="num">EUR m</th><th class="view"></th></tr></thead><tbody>' + s.maturities.map(function (m) { return '<tr><td class="per">' + esc(m[0].replace(/^FY(\d{4})E$/, '$1')) + '</td><td class="num">' + nf1(m[1]) + '</td><td class="view-cell">' + viewBtn(BYID[m[2]]) + '</td></tr>'; }).join('') +
+      (s.due24 && s.due24.v != null ? '<tr class="calc"><td>Next 24 months<span class="calc" title="' + esc(s.due24.calc) + '"></span></td><td class="num"><b>' + nf1(s.due24.v) + '</b></td><td></td></tr>' : '') + '</tbody></table></div>';
+  }
+  function factList(field, n) {
+    var fs = F.filter(function (f) { return f.field === field && !f.url; }).sort(function (a, b) { return (DOC[b.src].i - DOC[a.src].i) || pcmp(b.period, a.period); }), seen = {}, out = [];
+    fs.forEach(function (f) { var k = (f.text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').slice(0, 48); if (!seen[k] && out.length < (n || 8)) { seen[k] = 1; out.push(f); } });
+    if (!out.length) return '<p class="muted small">No facts of this field on file.</p>';
+    return '<div class="table-scroll"><table><thead><tr><th>Entry</th><th>Period</th><th>Source</th><th class="view"></th></tr></thead><tbody>' + out.map(function (f) { return '<tr><td>' + esc(f.text || '') + '</td><td class="per">' + esc(f.period || '') + '</td><td class="src">' + esc(srcText(f)) + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>'; }).join('') + '</tbody></table></div>' + (fs.length > out.length ? '<p class="muted small" style="margin:4px 0 0">' + out.length + ' of ' + fs.length + ' entries, latest report first; all of them in the fact proof.</p>' : '');
+  }
+  function ratioTable() {
+    var rows = ((D.screen || {}).v3 || {}).ratios_three_ways || []; if (!rows.length) return '<p class="muted small">No ratios on file.</p>';
+    return '<table class="arith"><thead><tr><th>Ratio</th><th>Formula · source</th><th class="num">Per fiscal year</th></tr></thead><tbody>' + rows.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
+  }
+  function conflictTable() {
+    var cs = AN.conflicts || []; if (!cs.length) return '<p class="muted small">No figure differs between the sources on file.</p>';
+    return '<div class="table-scroll"><table><thead><tr><th>Figure</th><th>Period</th><th>Facts (the record uses the later audited report; a reviewer decides)</th></tr></thead><tbody>' + cs.map(function (c) { return '<tr><td>' + esc(FIELD[c[0]] ? FIELD[c[0]].label : c[0]) + '</td><td class="per">' + esc(c[1] || '') + '</td><td>' + fids(c[2].join(', ')) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function missingList() {
+    var ms = AN.missing || [], T = {}; D.blocks.forEach(function (b) { T[b.id] = b.title; });
+    return '<div class="table-scroll"><table><thead><tr><th>Block</th><th>Fields of the format with no fact on file</th></tr></thead><tbody>' + ms.map(function (m) { return '<tr><td>' + esc(T[m[0]] || m[0]) + '</td><td class="small">' + esc(m[1].join('; ')) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function exhibit(ex) {
+    var s = D.snapshot || {}, li = function (xs) { return xs && xs.length ? mgList(xs) : '<p class="muted small">Nothing on file.</p>'; };
+    switch (ex.kind) {
+      case 'strip': return fig(stripTiles(), 'Source: the record; each tile opens the page of its first fact; a calculated tile prints its formula on hover. ' + SRC_CO.slice(8));
+      case 'figures': return fig(figTable(), SRC_CO + ' ƒ = arithmetic on the shown figures, formula on hover; grey italic = pending review.', 'Key figures, periods as columns');
+      case 'bridge': return fig(bridgeTable(), 'Source: other operating income as itemised in the reports; the rule that counts an item is printed in mvp/snapshot.py.', 'One-off income inside EBITDA');
+      case 'chart': return '<div class="charts">' + seriesChart(ex.field, FIELD[ex.field].label) + '</div>';
+      case 'maturities': return fig(matTable() + '<div class="charts" style="margin-top:12px">' + redemptionChart() + '</div>', 'Source: principal per period as the latest annual report states it; the row Next 24 months is arithmetic on those figures.', 'Debt falling due');
+      case 'facts': return fig(factList(ex.field, ex.n), SRC_CO, ex.title || (FIELD[ex.field] ? FIELD[ex.field].label : ex.field));
+      case 'people': return fig(mgPeople(), SRC_CO, 'Who runs it');
+      case 'owners': return fig(li(s.owners), SRC_CO, 'Owners, as stated');
+      case 'guidance': return fig(s.guidance && s.guidance.length ? mgGuidance() : '<p class="muted small">No guidance on file.</p>', 'Source: the guidance as the company stated it in the report of the year before, next to the figure the record holds for that year.', 'Guidance against reported');
+      case 'lenders': return fig(li(s.lenders), SRC_CO, 'Covenant tests and past maturities');
+      case 'changes': return fig(li(s.changes), SRC_CO, 'Changes in the top team');
+      case 'pay': return fig(li(s.pay), SRC_CO, 'Pay, as filed');
+      case 'risks': return fig(li(s.risks), 'Source: the risk and opportunity sections of the latest reports, in the company’s wording; no weighting of ours.', 'Risks as the company states them');
+      case 'ratios': return fig(ratioTable(), 'Source: mvp/schema.py ratios_three_ways on the record; the same figures under the covenant, the S&P and the EBA bank definitions.', 'Leverage and cover under three published definitions');
+      case 'questions': return fig(MQ.length ? mqTable() : '<p class="muted small">No questions prepared yet.</p>', 'Source: the management agent’s question list (agents/management_questions.md); answers enter the record as management representations.', 'Questions to management');
+      case 'requests': return fig(IK && IK.requests.length ? reqTables() : '<p class="muted small">No open requests.</p>', 'Source: the fact agent’s gap list (agents/gaps.md), reconciled with the record.', 'Documents requested from the company');
+      case 'conflicts': return fig(conflictTable(), 'Source: the merge of the documents (mvp/extract.py) flags a figure that differs by more than 1% between sources.', 'Figures that differ between sources');
+      case 'missing': return fig(missingList(), 'Source: the fields of mvp/schema.py against the facts on file; a statistic about the dossier, not about the company.', 'Not on file');
+      case 'sources': return fig(docsTable(), 'Source register of this dossier; every fact above carries one of these ids and a page.', 'Documents');
+    }
+    return '';
+  }
+
+  // ---------- overview: the investor's first screen. Facts, arithmetic and dated events side by side, every number opens its source;
+  //            no conclusion of ours: the assessment is the investor's own, block by block and the overall view last ----------
+  var FYS = Object.keys(F.reduce(function (o, f) { if (f.field === 'revenue' && /^FY\d{4}$/.test(f.period || '') && typeof f.value === 'number') o[f.period] = 1; return o; }, {})).sort(pcmp);
+  function fyFact(field, p) { var fs = F.filter(function (f) { return f.field === field && f.period === p && typeof f.value === 'number'; }); return fs.length ? latest(fs) : null; }
+  function der(k, p) { var v = ((D.screen || {}).derived || {})[k + '|' + p]; return typeof v === 'number' ? v : null; }
+  function nf(v, u) { return v == null ? '–' : u === '%' ? (v * 100).toFixed(1) + '%' : u === 'x' ? v.toFixed(1) + 'x' : v.toFixed(1); }
+  function chg(v, w) { if (v == null || w == null || w <= 0) return ''; var c = (v / w - 1) * 100; return (c >= 0 ? '+' : '−') + Math.abs(c).toFixed(1) + '%'; }
+  function differs(f) { return f && /^conflict/.test(f.note || '') ? ' <a href="#o-open" class="differs" title="' + esc(f.note) + '">sources differ</a>' : ''; }
+  function srcBtn(f) { return '<button type="button" class="cell-btn src-btn" data-view="' + f.id + '">' + esc(srcText(f)) + (f.url ? ' ↗' : '') + '</button>'; }
+  function osec(id, eyebrow, title, ask, body) { return '<section class="block" id="' + id + '" aria-labelledby="h-' + id + '"><p class="eyebrow">' + esc(eyebrow) + '</p><h2 id="h-' + id + '">' + esc(title) + '</h2>' + (ask ? '<p class="ask">' + esc(ask) + '</p>' : '') + body + '</section>'; }
+  var TILES = [['Revenue', 'revenue'], ['EBITDA', 'ebitda'], ['EBITDA margin', 'ebitda_margin', '%', 'EBITDA / revenue'], ['Net debt as reported', 'net_debt'],
+    ['Net leverage', 'net_leverage', 'x', '(gross debt − cash, leases excluded) / EBITDA'], ['Interest cover', 'interest_cover', 'x', 'EBITDA / net finance cost'], ['Cash', 'cash'], ['Equity ratio', 'equity_ratio', '%', 'equity / total assets']];
+  function tiles() {
+    var p = FYS[FYS.length - 1], q = FYS[FYS.length - 2]; if (!p) return '<p class="muted">No fiscal-year figures on file.</p>';
+    return '<div class="tiles">' + TILES.map(function (t) {
+      var calc = !!t[3], u = t[2] || 'm', f = calc ? null : fyFact(t[1], p), g = calc ? null : fyFact(t[1], q);
+      var v = calc ? der(t[1], p) : f && f.value, w = calc ? der(t[1], q) : g && g.value, tag = f ? 'button' : 'div';
+      var sub = (q ? esc(q) + ': ' + nf(w, u) + (u === 'm' && chg(v, w) ? ' · change ' + chg(v, w) : '') + '<br>' : '') + (calc ? 'calc: ' + esc(t[3]) + (v == null ? '; an input for ' + esc(p) + ' is not on file' : '') : f ? esc(srcText(f)) + differs(f) : 'not on file');
+      return '<' + tag + (f ? ' type="button" data-view="' + f.id + '"' : '') + ' class="tile"><span class="label">' + esc(t[0]) + ' · ' + esc(p) + (u === 'm' ? ' · EUR m' : '') + '</span><span class="v">' + nf(v, u) + '</span><span class="s">' + sub + '</span></' + tag + '>';
+    }).join('') + '</div>';
+  }
+  function guidance() {
+    var rows = F.filter(function (f) { return f.field === 'revenue_budget' || f.field === 'ebitda_budget'; }).sort(function (a, b) { return pcmp(a.period, b.period) || (a.field < b.field ? 1 : -1); });
+    if (!rows.length) return '';
+    return '<div class="fieldhead"><h3>Guidance against outcome</h3><span class="muted small">the guidance as the company stated it, next to the reported figure of that year</span></div><div class="table-scroll"><table><thead><tr><th>Period</th><th>Guidance as stated</th><th>Reported</th><th class="view"></th></tr></thead><tbody>' +
+      rows.map(function (f) {
+        var p = 'FY' + (f.period || '').replace(/\D/g, '').slice(0, 4), rev = f.field === 'revenue_budget', a = FYS.indexOf(p) < 0 ? null : fyFact(rev ? 'revenue' : 'ebitda', p), m = der('ebitda_margin', p);
+        return '<tr><td class="per">' + esc(f.period || '') + '</td><td>' + esc(f.text || '') + '</td><td class="nums">' + (a ? (rev ? 'revenue ' : 'EBITDA ') + '<button type="button" class="cell-btn" data-view="' + a.id + '">' + fmt(a.value) + '</button>' + (!rev && m != null ? '<br>margin ' + nf(m, '%') : '') : '<span class="muted">–</span>') + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  function charts() {
+    var ind = (D.screen || {}).indicators || [], lvl = function (i) { var m = /([\d.]+)x/.exec((ind[i] || [])[1] || ''); return m ? +m[1] : null; };
+    var pts = function (k) { var ps = FYS.slice(Math.max(0, FYS.findIndex(function (p) { return der(k, p) != null; }))); return ps.map(function (p, i) { return { label: p.replace('FY', ''), v: der(k, p), latest: i === ps.length - 1 }; }); };
+    return '<div class="charts">' + seriesChart('revenue', FIELD.revenue.label) + seriesChart('ebitda', FIELD.ebitda.label) + seriesChart('net_debt', FIELD.net_debt.label) + seriesChart('cash', FIELD.cash.label) +
+      barChart('Net leverage', 'x · calc: net debt excl. leases / EBITDA' + (lvl(0) ? ' · line: ' + (ind[0][1] || '') + ' (admission criteria v1)' : ''), pts('net_leverage'), false, { unit: 'x', ref: lvl(0), refLabel: lvl(0) ? lvl(0) + 'x' : '' }) +
+      barChart('Interest cover', 'x · calc: EBITDA / net finance cost' + (lvl(1) ? ' · line: ' + (ind[1][1] || '') + ' (admission criteria v1)' : ''), pts('interest_cover'), false, { unit: 'x', ref: lvl(1), refLabel: lvl(1) ? lvl(1) + 'x' : '' }) +
+      redemptionChart() + '</div>' + guidance();
+  }
+  // events the reports date in a year, beside that year's figures
+  var EVENTS = { key_event: 'Event', acquisition: 'Acquisition or disposal', rollover_event: 'Past maturity', team_turnover: 'Top-team change', litigation_item: 'Litigation', one_off: 'One-off item' };
+  function evYear(f) { if (/^(FY|H1-)\d{4}$/.test(f.period || '')) return +f.period.slice(-4); var t = f.text || '', m = /date:\s*(\d{4})/.exec(t) || /(\d{4})-\d\d-\d\d/.exec(t) || /year:\s*(\d{4})/.exec(t) || /\b(19\d\d|20[0-4]\d)\b/.exec(t); return m ? +m[1] : null; }
+  function evLi(f) { var t = f.text || ''; return '<li><span class="evk">' + esc(EVENTS[f.field] || label(f).split(/[:(]/)[0]) + '</span>' + esc(t.length > 240 ? t.slice(0, 240) + '…' : t) + ' ' + srcBtn(f) + '</li>'; }
+  function changes() {
+    var by = {}, seen = {}, order = Object.keys(EVENTS), y0 = FYS.length ? +FYS[0].slice(2) : 0;
+    F.filter(function (f) { return EVENTS[f.field]; }).sort(function (a, b) { return order.indexOf(a.field) - order.indexOf(b.field) || DOC[a.src].i - DOC[b.src].i; }).forEach(function (f) {
+      var y = evYear(f); if (y == null) return; if (y < y0) y = 'earlier';
+      var k = y + '|' + f.field + '|' + (f.text || '').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 50); if (!seen[k]) { seen[k] = 1; (by[y] = by[y] || []).push(f); }
+    });
+    var h1 = F.filter(function (f) { return f.field === 'revenue' && /^H1-\d{4}$/.test(f.period || '') && typeof f.value === 'number'; }).map(function (f) { return f.period; }).sort(pcmp).pop();
+    var years = {}; FYS.forEach(function (p) { years[+p.slice(2)] = p; }); if (h1 && !years[+h1.slice(3)]) years[+h1.slice(3)] = h1;
+    Object.keys(by).forEach(function (y) { if (y !== 'earlier' && !years[y]) years[y] = String(y); });
+    function nums(p) {
+      if (!/^(FY|H1-)\d{4}$/.test(p)) return '<span class="muted">no figures for this period</span>';
+      var q = p.replace(/\d{4}/, function (y) { return y - 1; }), out = [];
+      [['Revenue', 'revenue'], ['EBITDA', 'ebitda'], ['Cash', 'cash']].forEach(function (t) { var f = fyFact(t[1], p), g = fyFact(t[1], q); if (f) out.push(t[0] + ' <button type="button" class="cell-btn" data-view="' + f.id + '">' + fmt(f.value) + '</button>' + (g && chg(f.value, g.value) ? ' <span class="muted">' + chg(f.value, g.value) + ' on ' + esc(q) + '</span>' : '') + differs(f) + differs(g)); });
+      [['EBITDA margin', 'ebitda_margin', '%'], ['Net leverage', 'net_leverage', 'x'], ['Interest cover', 'interest_cover', 'x']].forEach(function (t) { var v = der(t[1], p); if (v != null) out.push(t[0] + ' ' + nf(v, t[2]) + ' <span class="muted">calc</span>'); });
+      return out.join('<br>') || '<span class="muted">–</span>';
+    }
+    function evs(list) { list = list || []; if (!list.length) return '<span class="muted">no dated events on file</span>'; return '<ul class="ev">' + list.slice(0, 5).map(evLi).join('') + '</ul>' + (list.length > 5 ? '<details><summary>' + (list.length - 5) + ' more</summary><ul class="ev">' + list.slice(5).map(evLi).join('') + '</ul></details>' : ''); }
+    var ys = Object.keys(years).map(Number).sort(function (a, b) { return b - a; });
+    return '<div class="table-scroll"><table><thead><tr><th>Period</th><th>Reported figures, change on the year before</th><th>Dated in that year: events, transactions, maturities, one-off items</th></tr></thead><tbody>' +
+      ys.map(function (y) { return '<tr><td class="per">' + esc(years[y]) + '</td><td class="nums">' + nums(years[y]) + '</td><td>' + evs(by[y]) + '</td></tr>'; }).join('') +
+      (by.earlier ? '<tr><td class="per">before ' + esc(FYS[0]) + '</td><td class="nums"><span class="muted">–</span></td><td>' + evs(by.earlier) + '</td></tr>' : '') + '</tbody></table></div>';
+  }
+  var NEWS = { key_event: 1, acquisition: 1, team_turnover: 1, risk_fact: 1, business_fact: 1 };
+  function news() {
+    var web = F.filter(function (f) { return f.url; }), lit = F.filter(function (f) { return f.field === 'litigation_item'; }), sr = A.searched || [], nc = A.not_checked || [];
+    var reg = web.filter(function (f) { return !NEWS[f.field] && f.field !== 'litigation_item'; }), nws = web.filter(function (f) { return NEWS[f.field]; });
+    var li = function (f) { return '<li><span class="evk">' + esc(label(f).split(/[:(]/)[0]) + '</span>' + esc(f.text || '') + ' ' + srcBtn(f) + (f.url && f.status === 'pend' ? ' ' + chip('web') : '') + '</li>'; };
+    var ul = function (fs) { return '<ul class="ev">' + fs.map(li).join('') + '</ul>'; }, log = function (xs) { return '<ul class="log">' + xs.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'; };
+    return osec('o-news', 'Overview · outside the reports', 'Registers, litigation and news', 'What is on file about the company beyond its own reports. For a mid-sized company the registers carry most of it: register entries and changes, filings, insolvency notices. The search log says where the sources agent looked and where it did not; a source that was not searched is listed as not searched, never as a search without hits.',
+      '<div class="fieldhead"><h3>Registers</h3><span class="muted small">' + (sr.length || nc.length ? 'sources agent' + (web[0] && DOC[web[0].src].date ? ', ' + esc(DOC[web[0].src].date) : '') : '') + '</span></div>' +
+      (sr.length || nc.length ? '<div class="cols2"><div><p class="label">Searched</p>' + log(sr) + '</div><div><p class="label">Not searched or not reachable</p>' + log(nc) + '</div></div>' : '<p class="muted">No register search on file for this company.</p>') +
+      (reg.length ? '<p class="label" style="margin-top:12px">Found: registers, exchange and reference pages</p>' + ul(reg) : '') +
+      '<h3>Litigation</h3>' + (lit.length ? ul(lit) : '<p class="muted">No litigation facts on file.</p>') +
+      '<h3>News</h3>' + (nws.length ? ul(nws) : '<p class="muted">' + (web.length ? 'No news items on file from the sources searched.' : 'No news search on file for this company.') + '</p>'));
+  }
+  function openItems() {
+    var groups = {}, cr = (D.screen || {}).criteria || [], cnt = {}, items = [];
+    F.forEach(function (f) { if (/^conflict/.test(f.note || '')) (groups[f.note] = groups[f.note] || []).push(f); });
+    cr.forEach(function (c) { cnt[c[4]] = (cnt[c[4]] || 0) + 1; });
+    if (MQ.length) items.push('<a href="#b-questions">' + MQ.length + ' questions to management</a>' + (A.date ? ', prepared ' + esc(A.date) : '') + ': ' + MQ.filter(function (q) { return q[3].length; }).length + ' answered');
+    if (IK && IK.requests.length) items.push('<a href="#b-requests">' + IK.requests.length + ' items requested from the company</a>; completeness of the dossier ' + IK.on + ' of ' + IK.of + ' fields of the format');
+    items.push(F.filter(function (f) { return f.status === 'pend'; }).length + ' facts pending review by a named reviewer');
+    if (cr.length) items.push('<a href="#b-screen">Admission criteria v1</a>: ' + Object.keys(cnt).map(function (k) { return cnt[k] + ' ' + esc(k.toLowerCase()); }).join(', '));
+    var g = Object.keys(groups);
+    return osec('o-open', 'Overview · process', 'Open items', 'What is still outstanding before the dossier is complete: answers, documents, reviews, and figures that differ between sources.',
+      '<ul class="items">' + items.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>' +
+      (g.length ? '<div class="fieldhead"><h3>Figures that differ between sources</h3><span class="muted small">' + g.length + ' · the record uses the source the fact agent named; a reviewer decides</span></div><div class="table-scroll"><table><thead><tr><th>Figure</th><th>Period</th><th>Sources and the decision so far</th><th>Facts</th></tr></thead><tbody>' +
+        g.map(function (n) { var fs = groups[n]; return '<tr><td>' + esc(label(fs[0])) + '</td><td class="per">' + esc(fs[0].period || '') + '</td><td class="small">' + esc(n.replace(/^conflict:\s*/, '')) + '</td><td>' + fids(fs.map(function (x) { return x.id; }).join(', ')) + '</td></tr>'; }).join('') + '</tbody></table></div>' : ''));
+  }
+  // the investor's own assessment: one box per block and the overall view last (Mediating Assessments Protocol). Private to each investor; an anchor
+  // may share a box with the co-investors on the deal, who see it read-only as the anchor's; a co-investor's stays its own. Demo: kept in this browser only.
+  function akey(b, who) { return 'vb-assess:' + slug + ':' + (who || ROLE) + ':' + b; }
+  function aget(b, who) { try { return localStorage.getItem(akey(b, who)) || ''; } catch (x) { return ''; } }
+  function aset(b, v, who) { try { localStorage.setItem(akey(b, who), v); } catch (x) { /* storage blocked: the text stays on the page until it is left */ } }
+  var AUD = [['coinvestors', 'the co-investors on this deal']].concat((D.anchors || []).map(function (n) { return ['anchor:' + n, n + ' (anchor on this deal)']; }));
+  function aud(b) { try { return JSON.parse(aget(b + ':shared', 'anchor') || '[]'); } catch (x) { return []; } }        // whom the anchor shares this box with
+  function shared(b) { return aud(b).indexOf('coinvestors') >= 0 ? aget(b, 'anchor') : ''; }                              // what a co-investor may read
+  function assessBox(id, title) {
+    if (!INVESTOR) return '';
+    var sh = !ANCHOR && shared(id);
+    return '<div class="assess">' + (sh ? '<div class="shared"><span class="label">Shared by the anchor · ' + esc(title) + '</span>' + esc(sh) + '<span class="small">The anchor’s own view, not VanillaBonds’.</span></div>' : '') +
+      '<label class="label" for="as-' + id + '" style="color:var(--gold-ink)">Your assessment · ' + esc(title) + '</label><textarea id="as-' + id + '" data-assess="' + id + '" rows="' + (id === 'overall' ? 6 : 3) + '" placeholder="' + (id === 'overall' ? 'Your overall view, written after the blocks.' : 'What these facts mean for the credit, in your analyst’s words.') + '">' + esc(aget(id)) + '</textarea>' +
+      (ANCHOR ? '<div class="share small"><span>Share with:</span>' + AUD.map(function (a) { return '<label><input type="checkbox" data-share="' + id + '" value="' + esc(a[0]) + '"' + (aud(id).indexOf(a[0]) >= 0 ? ' checked' : '') + '> ' + esc(a[1]) + '</label>'; }).join('') + '<span class="muted">they read it as yours, read-only; the company never sees it</span></div>' : '') +
+      '<span class="small">Written by your analyst; VanillaBonds supplies no assessment. ' + (ANCHOR ? 'Private unless you share it with someone.' : 'Private to you: not shown to the company, the anchors or other co-investors.') + ' In this demo it is kept in this browser only.</span></div>';
+  }
+  function sumText(t) { return t ? esc(t.length > 160 ? t.slice(0, 160) + '…' : t) : '<span class="muted">not yet written</span>'; }
+  function shareCell(id) { var w = aud(id).map(function (k) { return k === 'coinvestors' ? 'co-investors' : k.slice(7); }); return ANCHOR ? (w.length ? '<span class="chip rep">shared with</span> ' + esc(w.join(', ')) : '<span class="chip">private</span>') : shared(id) ? sumText(shared(id)) : '<span class="muted">not shared</span>'; }
+  function assessAll() {
+    if (!INVESTOR) return '';
+    return assessOverview(true) + D.blocks.map(function (b, i) { return osec('as-b-' + b.id, (i + 1) + ' · ' + b.title, b.title, b.ask, assessBox(b.id, b.title) + '<p class="small" style="margin:8px 0 0"><a href="#b-' + b.id + '">The facts of this block</a></p>'); }).join('') +
+      osec('as-last', 'Last', 'Overall view', 'Written after the blocks, the total last.', assessBox('overall', 'overall view'));
+  }
+  function assessOverview(noOverall) {
+    if (!INVESTOR) return '';
+    return osec('o-assess', 'Overview · yours', 'Your assessment', 'Block by block in the fact proof, the overall view last. The dossier holds the facts and the arithmetic; the opinion is yours. ' + (ANCHOR ? 'Each box is private until you choose who reads it: another anchor on this deal by name, the co-investors, or both.' : 'Yours stays private; where the anchor has shared its assessment, it appears beside yours.'),
+      '<div class="table-scroll"><table class="mrows"><thead><tr><th>#</th><th>Block</th><th>Your assessment</th><th>' + (ANCHOR ? 'Shared with' : 'Shared by the anchor') + '</th></tr></thead><tbody>' +
+      D.blocks.concat([{ id: 'overall', title: 'Overall view' }]).map(function (b, i) { return '<tr><td>' + (b.id === 'overall' ? '' : i + 1) + '</td><td><a href="#as-' + b.id + '">' + esc(b.title) + '</a></td><td id="as-sum-' + b.id + '">' + sumText(aget(b.id)) + '</td><td id="as-sh-' + b.id + '">' + shareCell(b.id) + '</td></tr>'; }).join('') + '</tbody></table></div>' + (noOverall ? '' : assessBox('overall', 'overall view')));
+  }
+  var OVERVIEW = [['o-figures', 'Key figures'], ['o-charts', 'Charts'], ['o-changes', 'What changed'], ['o-news', 'Registers and news'], ['o-open', 'Open items']].concat(INVESTOR ? [['o-assess', 'Your assessment']] : []);
+  // the app's Analysis tab: charts, what changed, registers and news, open items, then the blocks (the key figures live on the Snapshot)
+  function analysisHead() {
+    return osec('o-charts', 'Analysis · by year', 'Charts', 'Reported figures and the arithmetic on them, per fiscal year; the dashed lines are the published levels of the admission criteria, the same for every deal.', charts()) +
+      osec('o-changes', 'Analysis · by year', 'What changed', 'Per period: the reported figures and their change on the same period a year earlier, next to what the reports date in that year. The latest period first.', changes()) + news() + openItems();
+  }
+  function overview() {
+    var p = FYS[FYS.length - 1] || '';
+    return osec('o-figures', 'Overview · ' + p, 'Key figures', 'The latest fiscal year as reported, the year before beside it. Click a figure for the page it was read from; a calculated figure prints its formula.', tiles()) +
+      osec('o-charts', 'Overview · by year', 'Charts', 'Reported figures and the arithmetic on them, per fiscal year; the dashed lines are the published levels of the admission criteria, the same for every deal.', charts()) +
+      osec('o-changes', 'Overview · by year', 'What changed', 'Per period: the reported figures and their change on the same period a year earlier, next to what the reports date in that year. The latest period first.', changes()) +
+      news() + openItems() + (VIEW ? '' : assessOverview() +
+      '<p><button type="button" class="view-btn" data-tab="proof">Open the fact proof: ' + D.blocks.length + ' blocks, every fact with its source →</button></p>');
+  }
+  // embed: the frame takes the content's height and has no scroll of its own; the platform reports where its page is scrolled,
+  // the topic menu sticks against that and every jump scrolls the platform's page
+  var EMB = { top: 0, vh: 800, h: 0 };
+  function sendH() { var m = $('#main'), h = m.offsetTop + m.offsetHeight; if (Math.abs(h - EMB.h) > 1) { EMB.h = h; post({ type: 'dossier-height', slug: slug, h: h }); } embedSync(); }   // first the height, then any jump
+  function scrollToEl(t, center) {
+    var vh = MODE === 'embed' ? EMB.vh : window.innerHeight, y = t.getBoundingClientRect().top + window.pageYOffset - (center ? Math.max(16, (vh - t.offsetHeight) / 2) : 16);
+    if (MODE === 'embed') { sendH(); post({ type: 'dossier-scrollto', slug: slug, y: Math.max(0, y) }); } else window.scrollTo({ top: y });
+  }
+  function setCurrent(id) { Array.prototype.forEach.call(document.querySelectorAll('.topics a'), function (a) { if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); }); }
+  function embedSync() {
+    var as = document.querySelector('main > aside'), m = $('#main'), cur = null; if (!as || !m) return;
+    if (window.innerWidth > 1000) { as.style.maxHeight = (EMB.vh - 32) + 'px'; as.style.overflowY = 'auto'; as.style.transform = 'translateY(' + Math.max(0, Math.min(EMB.top + 16 - as.offsetTop, m.offsetTop + m.offsetHeight - as.offsetHeight - as.offsetTop)) + 'px)'; }
+    else { as.style.transform = ''; as.style.maxHeight = ''; }
+    Array.prototype.forEach.call(document.querySelectorAll('section.block'), function (x) { if (x.offsetParent && x.offsetTop <= EMB.top + 120) cur = x.id; });   // offsetParent null = the hidden tab
+    setCurrent(cur);
+  }
+  function showTab(t) {
+    if (VIEW || !$('#tab-proof')) return;
+    $('#tab-overview').hidden = t !== 'overview'; $('#tab-proof').hidden = t !== 'proof'; $('.tools').hidden = t !== 'proof';
+    Array.prototype.forEach.call(document.querySelectorAll('[data-pane]'), function (x) { x.hidden = x.getAttribute('data-pane') !== t; });
+    Array.prototype.forEach.call(document.querySelectorAll('.tabs [data-tab]'), function (x) { x.setAttribute('aria-selected', x.getAttribute('data-tab') === t ? 'true' : 'false'); });
+  }
+
+  // ---------- page ----------
+  function render() {
+    var c = D.company, k = D.counts;
+    $('#band').innerHTML = '<p class="eyebrow">Fact dossier · beta · ' + esc(D.run_at ? 'screened ' + D.run_at : '') + '</p><h1>' + esc(c.name) + '</h1><div class="meta">' + esc([c.sector, c.country, c.legal_form].filter(Boolean).join(' · ')) + '</div>' +
+      '<div class="legend"><span>' + k.facts + ' facts from ' + k.docs + ' documents</span><span>' + k.ok + ' approved by a named reviewer</span><span>' + (k.facts - k.ok - k.rep) + ' pending review</span>' + (k.rep ? '<span>' + k.rep + ' company statements</span>' : '') + '<span>Each fact: value, document, page, verbatim quote, status.</span></div>' +
+      (IK ? '<div class="legend"><span>Completeness of this dossier: ' + IK.on + ' of ' + IK.of + ' fields of the format on file for the periods ' + esc(IK.span) + '</span>' + (IK.requests.length ? '<a href="#b-requests">' + IK.requests.length + ' items requested from the company</a>' : '') + '</div>' : '') +
+      '<div class="tabs" role="tablist" aria-label="Dossier view"><button type="button" role="tab" data-tab="overview" aria-selected="true">Overview</button><button type="button" role="tab" data-tab="proof" aria-selected="false">Fact proof · ' + D.blocks.length + ' blocks, every fact with its source</button></div>';
+    var n = 0, html = '', nav = '';
+    D.blocks.forEach(function (b) { n++; html += renderBlock(b, n); var cnt = F.filter(function (f) { return FIELD[f.field] && FIELD[f.field].block === b.id; }).length; nav += '<a href="#b-' + b.id + '">' + esc(b.title) + '<span class="n">' + cnt + '</span></a>'; });
+    if (MQ.length) { n++; html += questionsBlock(n); nav += '<a href="#b-questions">Questions to management<span class="n">' + MQ.length + '</span></a>'; }
+    if (IK && IK.requests.length) { n++; html += requestsBlock(n); nav += '<a href="#b-requests">Documents requested<span class="n">' + IK.requests.length + '</span></a>'; }
+    n++; html += screenBlock(n); nav += '<a href="#b-screen">Screen<span class="n"></span></a>';
+    n++; html += sourcesBlock(n); nav += '<a href="#b-sources">Sources<span class="n">' + D.docs.length + '</span></a>';
+    if (VIEW) { $('#band').hidden = !NOTE; $('.tools').hidden = VIEW !== 'proof'; $('#topics').innerHTML = VIEW === 'proof' ? OVERVIEW.slice(1, 5).map(function (o) { return '<a href="#' + o[0] + '">' + esc(o[1]) + '<span class="n"></span></a>'; }).join('') + nav : VIEW === 'analysis' ? noteNav() : '';
+      if (NOTE) $('#band').innerHTML = noteBand();
+      $('#content').innerHTML = '<div id="tab-' + VIEW + '">' + (VIEW === 'proof' ? analysisHead() + html : VIEW === 'assess' ? assessAll() : VIEW === 'analysis' ? noteView() : overview()) + '</div>'; }
+    else {
+    $('#content').innerHTML = '<div id="tab-overview">' + overview() + '</div><div id="tab-proof" hidden>' + html + '</div>';
+    $('#topics').innerHTML = '<div data-pane="overview">' + OVERVIEW.map(function (o) { return '<a href="#' + o[0] + '">' + esc(o[1]) + '<span class="n"></span></a>'; }).join('') + '</div><div data-pane="proof" hidden>' + nav + '</div>';
+    showTab('overview'); }
+    var h0 = location.hash.slice(1), el0 = h0 && document.getElementById(h0);
+    if (Q.get('tab') === 'proof' || (el0 && el0.closest('#tab-proof'))) showTab('proof');
+    if (el0) el0.scrollIntoView();
+    document.title = 'VanillaBonds — Fact dossier · ' + c.name;
+    var sel = $('#co'); sel.innerHTML = slugs.map(function (s) { return '<option value="' + esc(s) + '"' + (s === slug ? ' selected' : '') + '>' + esc(ALL[s].company.name) + '</option>'; }).join('');
+    sel.onchange = function () { location.search = '?c=' + encodeURIComponent(sel.value); };
+    var links = Array.prototype.slice.call(document.querySelectorAll('.topics a'));
+    if (MODE === 'embed') { new ResizeObserver(sendH).observe($('#main')); sendH(); }
+    else if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) setCurrent(e.target.id); }); }, { rootMargin: '-10% 0px -80% 0px' });
+      Array.prototype.forEach.call(document.querySelectorAll('section.block'), function (s) { io.observe(s); });
+    }
+  }
+  function applyFilter() {
+    var q = $('#q').value.trim().toLowerCase(), ok = $('#okonly').checked;
+    Array.prototype.forEach.call(document.querySelectorAll('tr[data-q]'), function (tr) {
+      var hide = (q && tr.getAttribute('data-q').indexOf(q) < 0) || (ok && tr.hasAttribute('data-st') && tr.getAttribute('data-st') !== 'ok');
+      if (hide) tr.setAttribute('hidden', ''); else tr.removeAttribute('hidden');
+    });
+  }
+
+  // ---------- source viewer: the original PDF rendered page by page (PDF.js), every extracted fact highlighted on the page; the page text is the fallback ----------
+  var ORDERED = [], POS = {}, BLOCK_OF = {};
+  D.blocks.forEach(function (b) { b.fields.forEach(function (fd) {
+    BLOCK_OF[fd.id] = b;
+    F.filter(function (f) { return f.field === fd.id; }).sort(function (a, b) { return pcmp(a.period, b.period) || (DOC[a.src].i - DOC[b.src].i) || ((a.page || 0) - (b.page || 0)); })
+      .forEach(function (f) { if (f.page && D.pages[f.src] && D.pages[f.src][f.page]) { POS[f.id] = ORDERED.length; ORDERED.push(f.id); } });
+  }); });
+  var DV = { src: null, active: null, pdf: null, task: null, pages: {}, scale: 1, zoom: 1, p1: null, dims: {}, io: null, textMode: !!Q.get('text') || !window.pdfjsLib }, DOCHTML = {};
+  if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  function flow(t) { return (t || '').split(/\n[ \t]*\n+/).map(function (par) { return par.replace(/\s+/g, ' ').trim(); }).filter(Boolean).join('\n\n'); }
+  // a quote is matched on its letters and digits only, in order, case-insensitively: the PDF's text layer and the extracted text split
+  // words, spaces and punctuation differently. norm() keeps the string length so that match positions map back to the original.
+  function norm(s) { return (s || '').toLowerCase().replace(/\u00ad/g, '-'); }
+  function qre(q) { var t = norm(q).match(/[\p{L}\p{N}]+/gu); return t && t.length ? new RegExp(t.map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('[^\\p{L}\\p{N}]*'), 'u') : null; }
+  function qfind(q, text) { var re = qre(q); return re ? re.exec(norm(text)) : null; }
+  function pagesOf(src) { return Object.keys(D.pages[src] || {}).map(Number).sort(function (a, b) { return a - b; }); }
+  function label(f) { return FIELD[f.field] ? FIELD[f.field].label : f.field; }
+  function factsOn(src, page) { return F.filter(function (f) { return f.src === src && f.page === page && f.quote; }); }
+  function tip(ids) { return ids.map(function (id) { return id + ' · ' + label(BYID[id]); }).join(' | ') + ' · ' + BLOCK_OF[BYID[ids[0]].field].title + ' · click to jump to it'; }
+  function scrollPagesTo(el, center) { var pages = $('#dv-pages'); pages.scrollTop = el.getBoundingClientRect().top - pages.getBoundingClientRect().top + pages.scrollTop - (center ? pages.clientHeight / 2 : 12); }
+  // --- fallback: the page text of every referenced page, flowed, with the quotes marked ---
+  function pageHtml(src, page) {
+    var text = flow(D.pages[src][page]), spans = [], d = DOC[src];
+    factsOn(src, page).forEach(function (f) {
+      var m = qfind(f.quote, text); if (!m) return;
+      var same = spans.filter(function (sp) { return sp.s === m.index && sp.e === m.index + m[0].length; })[0];
+      if (same) same.ids.push(f.id); else spans.push({ s: m.index, e: m.index + m[0].length, ids: [f.id] });
+    });
+    spans.sort(function (a, b) { return a.s - b.s; });
+    var out = '', pos = 0;
+    spans.forEach(function (sp) { if (sp.s < pos) return; out += esc(text.slice(pos, sp.s)) + '<mark data-f="' + sp.ids.join(' ') + '" title="' + esc(tip(sp.ids)) + '">' + esc(text.slice(sp.s, sp.e)) + '</mark>'; pos = sp.e; });
+    out += esc(text.slice(pos));
+    return '<article class="dv-page" id="dv-p-' + page + '" aria-label="' + esc(d.file + ', page ' + page) + '"><div class="rh"><span>' + esc(d.file) + '</span><span>Page ' + page + ' of ' + d.pages + '</span></div><div class="dv-text">' + out + '</div></article>';
+  }
+  function docHtml(src) {
+    if (DOCHTML[src]) return DOCHTML[src];
+    var h = '', prev = 0;
+    function gap(a, b) { return '<div class="dv-gap">' + (a === b ? 'page ' + a : 'pages ' + a + '–' + b) + ': no extracted facts</div>'; }
+    pagesOf(src).forEach(function (p) { if (p > prev + 1) h += gap(prev + 1, p - 1); h += pageHtml(src, p); prev = p; });
+    if (DOC[src].pages > prev) h += gap(prev + 1, DOC[src].pages);
+    return (DOCHTML[src] = h);
+  }
+  function openText(src) {
+    var d = DOC[src]; stopPdf(); DV.src = src; $('#dv-pages').innerHTML = docHtml(src);
+    $('#dv-meta').textContent = docTitle(d) + ' · page text · ' + pagesOf(src).length + ' of ' + d.pages + ' pages carry extracted facts, each one highlighted';
+  }
+  // --- the original PDF: one shell per page, rendered when near the viewport, released when far away ---
+  function stopPdf() { if (DV.task) { try { DV.task.destroy(); } catch (e) { /* already gone */ } } if (DV.io) DV.io.disconnect(); DV.task = null; DV.pdf = null; DV.pages = {}; DV.dims = {}; DV.p1 = null; DV.io = null; }
+  function fitScale() { return Math.max(320, $('#dv-pages').clientWidth - 52) / (DV.p1 ? DV.p1.w : 595); }
+  // the panel changed width, or the zoom: every page gets its new size, rendered pages are drawn again, the view stays where it was
+  function relayout() {
+    if (!DV.pdf || !DV.p1) return;
+    var pages = $('#dv-pages'), old = DV.scale, nw = fitScale() * DV.zoom; if (Math.abs(nw - old) < 0.001) return;
+    var keep = pages.scrollTop / old; DV.scale = nw;
+    Array.prototype.forEach.call(pages.querySelectorAll('.pdfpage'), function (el) {
+      var n = +el.getAttribute('data-page'), dm = DV.dims[n] || DV.p1;
+      el.style.width = Math.round(dm.w * nw) + 'px'; el.style.height = Math.round(dm.h * nw) + 'px';
+      if (DV.pages[n]) { el.innerHTML = '<span class="pn">' + n + '</span>'; delete DV.pages[n]; }
+    });
+    pages.scrollTop = keep * nw;
+    renderInView();
+    var z = $('#dv-zoomlabel'); if (z) z.textContent = Math.round(DV.zoom * 100) + '%';
+  }
+  function setZoom(z) { DV.zoom = Math.max(0.5, Math.min(4, z)); relayout(); }
+  // the pages within 900px of the view, rendered now (the observer only reports changes)
+  function renderInView() {
+    var pages = $('#dv-pages'), top = pages.scrollTop - 900, bottom = pages.scrollTop + pages.clientHeight + 900;
+    Array.prototype.forEach.call(pages.querySelectorAll('.pdfpage'), function (el) { if (el.offsetTop + el.offsetHeight >= top && el.offsetTop <= bottom) renderPage(+el.getAttribute('data-page')); });
+  }
+  function openPdf(src) {
+    var d = DOC[src], pages = $('#dv-pages');
+    stopPdf(); DV.src = src;
+    pages.innerHTML = '<div class="dv-loading">Loading ' + esc(d.file) + (d.bytes ? ' (' + Math.round(d.bytes / 1048576) + ' MB)' : '') + '…</div>';
+    $('#dv-meta').textContent = docTitle(d) + ' · loading the original';
+    var task = DV.task = pdfjsLib.getDocument({ url: d.pdf });
+    task.onProgress = function (p) { if (p.total && DV.task === task) $('#dv-meta').textContent = docTitle(d) + ' · loading the original · ' + Math.round(100 * p.loaded / p.total) + '%'; };
+    return task.promise.then(function (pdf) {
+      if (DV.task !== task) return null;
+      DV.pdf = pdf;
+      return pdf.getPage(1).then(function (p1) {
+        if (DV.task !== task) return null;
+        var vp = p1.getViewport({ scale: 1 }); DV.p1 = { w: vp.width, h: vp.height };
+        DV.scale = fitScale() * DV.zoom; var w = Math.round(vp.width * DV.scale), h = Math.round(vp.height * DV.scale), html = '';
+        for (var n = 1; n <= pdf.numPages; n++) html += '<div class="pdfpage" id="dv-p-' + n + '" data-page="' + n + '" style="width:' + Math.round(w) + 'px;height:' + h + 'px"><span class="pn">' + n + '</span></div>';
+        pages.innerHTML = html;
+        $('#dv-meta').textContent = docTitle(d) + ' · the original, ' + pdf.numPages + ' pages · ' + pagesOf(src).length + ' pages carry extracted facts, highlighted on the page';
+        DV.io = new IntersectionObserver(function (es) { es.forEach(function (e) { var n = +e.target.getAttribute('data-page'); if (e.isIntersecting) renderPage(n); else releasePage(n); }); }, { root: pages, rootMargin: '900px 0px' });
+        Array.prototype.forEach.call(pages.querySelectorAll('.pdfpage'), function (el) { DV.io.observe(el); });
+        return pdf;
+      });
+    });
+  }
+  function renderPage(n) {
+    var st = DV.pages[n]; if (st) return st.promise;
+    var el = document.getElementById('dv-p-' + n), pdf = DV.pdf, src = DV.src; if (!el || !pdf) return Promise.resolve();
+    st = DV.pages[n] = { done: false };
+    st.promise = pdf.getPage(n).then(function (page) {
+      if (DV.pdf !== pdf || DV.pages[n] !== st) return;
+      var vp = page.getViewport({ scale: DV.scale }), dpr = window.devicePixelRatio || 1, v1 = page.getViewport({ scale: 1 });
+      DV.dims[n] = { w: v1.width, h: v1.height };
+      el.style.width = Math.round(vp.width) + 'px'; el.style.height = Math.round(vp.height) + 'px'; el.style.setProperty('--scale-factor', DV.scale);
+      var c = document.createElement('canvas'); c.width = Math.round(vp.width * dpr); c.height = Math.round(vp.height * dpr); el.appendChild(c);
+      var tl = document.createElement('div'); tl.className = 'textLayer'; el.appendChild(tl);
+      return page.render({ canvasContext: c.getContext('2d'), viewport: vp, transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null }).promise
+        .then(function () { return page.getTextContent(); })
+        .then(function (tc) { var divs = []; return pdfjsLib.renderTextLayer({ textContentSource: tc, container: tl, viewport: vp, textDivs: divs }).promise.then(function () { markPdf(src, n, tc, divs); }); })
+        .then(function () { st.done = true; });
+    });
+    return st.promise;
+  }
+  function releasePage(n) { var st = DV.pages[n]; if (!st || !st.done) return; var el = document.getElementById('dv-p-' + n); if (el) el.innerHTML = '<span class="pn">' + n + '</span>'; delete DV.pages[n]; }
+  // the facts read from this page, found in the text layer and marked span by span
+  function markPdf(src, n, tc, divs) {
+    var joined = '', spans = [];
+    tc.items.forEach(function (it, i) { spans.push({ s: joined.length, e: joined.length + (it.str || '').length, i: i }); joined += (it.str || '') + (it.hasEOL ? '\n' : ' '); });
+    factsOn(src, n).forEach(function (f) {
+      var m = qfind(f.quote, joined); if (!m) return;
+      var a = m.index, b = m.index + m[0].length;
+      spans.forEach(function (sp) {
+        if (!(sp.e > a && sp.s < b) || !divs[sp.i] || !(it = tc.items[sp.i]).str.trim()) return;
+        var dv = divs[sp.i], ids = (dv.getAttribute('data-f') || '').split(' ').filter(Boolean); if (ids.indexOf(f.id) < 0) ids.push(f.id);
+        dv.classList.add('hl'); dv.setAttribute('data-f', ids.join(' ')); dv.title = tip(ids); if (f.id === DV.active) dv.classList.add('on');
+      });
+    });
+    var it;
+  }
+  function highlightMain(id, toMain) {
+    if (toMain) showTab('proof');
+    Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"], .cell-btn.on, tr.fact-on'), function (x) { x.classList.remove('on', 'fact-on'); if (x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed', 'false'); });
+    var btn = document.querySelector('.view-btn[data-view="' + id + '"]'), cb = document.querySelector('.cell-btn[data-view="' + id + '"]'), row = document.getElementById('row-' + id);
+    if (btn) btn.setAttribute('aria-pressed', 'true'); if (cb) cb.classList.add('on'); if (row) row.classList.add('fact-on');
+    if (toMain) { var t = row || cb, det = t && t.closest('details'); if (det && !det.open) det.open = true; if (t) scrollToEl(t, true); }
+  }
+  function openFact(id) { var f = BYID[id]; if (f && f.url) window.open(f.url, '_blank', 'noopener'); else showFact(id, false); }   // a web fact opens its URL
+  function showFact(id, toMain) {
+    var f = BYID[id]; if (!f || POS[id] == null) return;
+    if (MODE === 'embed') { highlightMain(id, toMain); post({ type: 'dossier-view', slug: slug, id: id }); return; }
+    var d = DOC[f.src], pages = $('#dv-pages');
+    DV.active = id; $('#doc-viewer').hidden = false; document.body.classList.add('dv-open'); $('#dv-doc').value = f.src;
+    var usePdf = !DV.textMode && !!d.pdf, ready;
+    if (DV.src === f.src && (usePdf ? DV.pdf || DV.task : true)) ready = DV.task && !DV.pdf ? DV.task.promise : Promise.resolve();
+    else if (usePdf) ready = openPdf(f.src);
+    else { openText(f.src); ready = Promise.resolve(); }
+    var b = BLOCK_OF[f.field], i = POS[id];
+    $('#dv-strip').innerHTML = '<span class="lbl">Item</span><b>' + esc(id) + '</b><span>' + esc(label(f)) + (f.period ? ' · ' + esc(f.period) : '') + '</span><span class="dv-pg" aria-current="true">page ' + f.page + '</span>' +
+      '<a class="dv-sec" href="#row-' + id + '" data-jump="' + id + '">' + esc(b.title) + ' ↗</a>' +
+      '<span class="dv-nav">' + zoomHtml() +
+      '<button type="button" class="dv-pg" data-step="-1"' + (i === 0 ? ' disabled' : '') + '>‹ Previous</button><span class="muted">' + (i + 1) + ' of ' + ORDERED.length + '</span><button type="button" class="dv-pg" data-step="1"' + (i === ORDERED.length - 1 ? ' disabled' : '') + '>Next ›</button></span>' +
+      '<div class="dv-quote"><span class="lbl">' + (f.found ? 'Quote as extracted' : 'Quote as extracted · not found verbatim on the page text') + '</span>' + esc(f.quote || f.text) + '</div>';
+    if (MODE === 'viewer') post({ type: toMain ? 'dossier-jump' : 'dossier-active', slug: slug, id: id }); else highlightMain(id, toMain);
+    ready.then(function () {
+      if (DV.src !== f.src || DV.active !== id) return;
+      Array.prototype.forEach.call(pages.querySelectorAll('.on'), function (m) { m.classList.remove('on'); });
+      var pg = document.getElementById('dv-p-' + f.page); if (!pg) return;
+      if (DV.pdf) {
+        scrollPagesTo(pg, false);
+        renderPage(f.page).then(function () { return pg.querySelector('canvas') ? null : renderPage(f.page); }).then(function () {
+          if (DV.active !== id) return;
+          var hits = pg.querySelectorAll('.hl[data-f~="' + id + '"]');
+          Array.prototype.forEach.call(hits, function (x) { x.classList.add('on'); });
+          var go = function () { if (DV.active !== id) return; if (hits.length) scrollPagesTo(hits[0], true); else scrollPagesTo(pg, false); };
+          go(); requestAnimationFrame(go);
+        });
+      } else {
+        var mk = pages.querySelector('mark[data-f~="' + id + '"]');
+        if (mk) { mk.classList.add('on'); scrollPagesTo(mk, true); } else scrollPagesTo(pg, false);
+      }
+    }).catch(function (err) { console.error('viewer: original not shown, falling back to the page text', err); if (!DV.textMode) { DV.textMode = true; DV.src = null; showFact(id, false); } });
+  }
+  function step(n) { var i = POS[DV.active]; if (i == null) return; var j = i + n; if (j >= 0 && j < ORDERED.length) showFact(ORDERED[j], true); }
+  function zoomHtml() { return '<span class="dv-zoom"><button type="button" class="dv-pg" data-zoom="-1" aria-label="Zoom out">−</button><button type="button" class="dv-pg" data-zoom="0" id="dv-zoomlabel" title="Fit to width">' + Math.round(DV.zoom * 100) + '%</button><button type="button" class="dv-pg" data-zoom="1" aria-label="Zoom in">+</button></span>'; }
+  // a document at a page, no item selected (the platform's own View buttons land here); previous / next lead to the nearest items
+  function showPage(src, page) {
+    var d = DOC[src]; if (!d) return;
+    DV.active = null; $('#doc-viewer').hidden = false; document.body.classList.add('dv-open'); $('#dv-doc').value = src;
+    var usePdf = !DV.textMode && !!d.pdf, ready;
+    if (DV.src === src && (usePdf ? DV.pdf || DV.task : true)) ready = DV.task && !DV.pdf ? DV.task.promise : Promise.resolve();
+    else if (usePdf) ready = openPdf(src); else { openText(src); ready = Promise.resolve(); }
+    var here = ORDERED.filter(function (id) { return BYID[id].src === src; }), next = here.filter(function (id) { return BYID[id].page >= page; })[0], prev = here.filter(function (id) { return BYID[id].page < page; }).pop();
+    $('#dv-strip').innerHTML = '<span class="lbl">Document</span><span class="dv-pg" aria-current="true">page ' + page + ' of ' + d.pages + '</span><span class="muted small">the highlights are the extracted facts; click one to select it</span>' +
+      '<span class="dv-nav">' + zoomHtml() + '<button type="button" class="dv-pg" data-goto="' + (prev || '') + '"' + (prev ? '' : ' disabled') + '>‹ Previous item</button><button type="button" class="dv-pg" data-goto="' + (next || '') + '"' + (next ? '' : ' disabled') + '>Next item ›</button></span>';
+    ready.then(function () {
+      if (DV.src !== src || DV.active !== null) return;
+      var pages = $('#dv-pages'); Array.prototype.forEach.call(pages.querySelectorAll('.on'), function (m) { m.classList.remove('on'); });
+      var pg = document.getElementById('dv-p-' + page);
+      if (!pg) { var near = pagesOf(src).filter(function (n) { return n >= page; })[0] || pagesOf(src).pop(); pg = near && document.getElementById('dv-p-' + near); }   // page text: the nearest referenced page
+      if (!pg) return;
+      scrollPagesTo(pg, false);
+      if (DV.pdf) renderPage(+pg.getAttribute('data-page')).then(function () { return pg.querySelector('canvas') ? null : renderPage(+pg.getAttribute('data-page')); }).then(function () { if (DV.active === null) scrollPagesTo(pg, false); });
+    }).catch(function (err) { console.error('viewer: original not shown, falling back to the page text', err); if (!DV.textMode) { DV.textMode = true; DV.src = null; showPage(src, page); } });
+  }
+  function openDocument(src) { var first = ORDERED.filter(function (id) { return BYID[id].src === src; })[0]; if (first) showFact(first, true); }
+  $('#dv-doc').innerHTML = D.docs.map(function (x) { return '<option value="' + esc(x.id) + '">' + esc(x.id + ' · ' + docTitle(x) + ' · ' + x.file) + '</option>'; }).join('');
+  $('#dv-doc').addEventListener('change', function () { openDocument(this.value); });
+  // the panel's width: a handle on its left edge (on the page itself; inside the platform the platform's panel has the handle), remembered per browser
+  function setWidth(px) { px = Math.max(360, Math.min(window.innerWidth * 0.9, px)); document.documentElement.style.setProperty('--dv-w', px + 'px'); }
+  if (MODE === 'page') (function () {
+    var drag = false, h = $('#dv-handle');
+    try { var w = localStorage.getItem('vb-dv-w'); if (w) document.documentElement.style.setProperty('--dv-w', w); } catch (x) { /* storage blocked */ }
+    h.addEventListener('mousedown', function (e) { drag = true; document.body.classList.add('dv-resizing'); e.preventDefault(); });
+    window.addEventListener('mousemove', function (e) { if (drag) setWidth(window.innerWidth - e.clientX); });
+    window.addEventListener('mouseup', function () { if (!drag) return; drag = false; document.body.classList.remove('dv-resizing'); try { localStorage.setItem('vb-dv-w', getComputedStyle($('#doc-viewer')).width); } catch (x) { /* storage blocked */ } relayout(); });
+  })();
+  var relayoutTimer = null; window.addEventListener('resize', function () { clearTimeout(relayoutTimer); relayoutTimer = setTimeout(relayout, 150); });
+  function closeViewer() { if (MODE === 'viewer') { post({ type: 'dossier-close', slug: slug }); return; } $('#doc-viewer').hidden = true; document.body.classList.remove('dv-open'); Array.prototype.forEach.call(document.querySelectorAll('.view-btn[aria-pressed="true"]'), function (b) { b.setAttribute('aria-pressed', 'false'); }); }
+
+  if (MODE !== 'viewer') render();
+  window.addEventListener('message', function (e) {
+    var m = e.data || {}; if (typeof m.type !== 'string' || (m.slug && m.slug !== slug)) return;
+    if (MODE === 'viewer' && m.type === 'show') showFact(m.id, false);
+    if (MODE === 'viewer' && m.type === 'relayout') relayout();
+    if (MODE === 'viewer' && m.type === 'showPage') showPage(m.doc, +m.page || 1);
+    if (MODE === 'embed' && (m.type === 'dossier-active' || m.type === 'dossier-jump')) highlightMain(m.id, m.type === 'dossier-jump');
+    if (MODE === 'embed' && m.type === 'scroll') { EMB.top = m.top; EMB.vh = m.vh; embedSync(); }
+    if (MODE === 'embed' && m.type === 'goto') { var gt = document.getElementById(m.id); if (/^row-/.test(m.id)) highlightMain(m.id.slice(4), true); else if (gt) scrollToEl(gt, false); }
+  });
+  if (MODE === 'viewer') { post({ type: 'dossier-ready', slug: slug }); if (Q.get('item')) showFact(Q.get('item'), false); }
+  document.addEventListener('click', function (e) {
+    var ci = e.target.closest('.cite'); if (ci) { var nx = ci.nextElementSibling; if (nx && nx.classList.contains('cites')) { nx.remove(); return; } ci.insertAdjacentHTML('afterend', '<span class="cites">' + ci.getAttribute('data-cite').split(' ').map(function (i) { return '<button type="button" class="cell-btn" data-view="' + i + '" title="' + esc(label(BYID[i]) + ' · ' + srcText(BYID[i])) + '">' + i + '</button>'; }).join('') + '</span>'); return; }
+    if (e.target.closest('[data-print]')) { window.print(); return; }
+    var tb = e.target.closest('[data-tab]'); if (tb) { showTab(tb.getAttribute('data-tab')); if (MODE === 'embed') { sendH(); post({ type: 'dossier-scrollto', slug: slug, y: 0 }); } else window.scrollTo(0, 0); return; }
+    var an = e.target.closest('a[href^="#"]'), ae = an && document.getElementById(an.getAttribute('href').slice(1));
+    if (an && !ae && VIEW) { e.preventDefault(); post({ type: 'dossier-goto', slug: slug, id: an.getAttribute('href').slice(1) }); return; }
+    if (ae) { showTab(ae.closest('#tab-proof') ? 'proof' : 'overview'); if (MODE === 'embed' && !an.hasAttribute('data-row')) { e.preventDefault(); scrollToEl(ae, false); return; } }
+    var v = e.target.closest('[data-view]'); if (v) { openFact(v.getAttribute('data-view')); return; }
+    var fr = e.target.closest('[data-row]'); if (fr) { e.preventDefault(); highlightMain(fr.getAttribute('data-row'), true); return; }
+    var m = e.target.closest('.dv-text mark, .textLayer .hl'); if (m) { showFact(m.getAttribute('data-f').split(' ')[0], true); return; }
+    var st = e.target.closest('[data-step]'); if (st) { step(+st.getAttribute('data-step')); return; }
+    var gt = e.target.closest('[data-goto]'); if (gt) { if (gt.getAttribute('data-goto')) showFact(gt.getAttribute('data-goto'), true); return; }
+    var z = e.target.closest('[data-zoom]'); if (z) { var zz = +z.getAttribute('data-zoom'); setZoom(zz === 0 ? 1 : zz > 0 ? DV.zoom * 1.25 : DV.zoom / 1.25); return; }
+    var j = e.target.closest('.dv-sec'); if (j) { e.preventDefault(); showFact(j.getAttribute('data-jump'), true); return; }
+    if (e.target.closest('#dv-close')) closeViewer();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.matches('.bar-group[data-view]')) { openFact(e.target.getAttribute('data-view')); return; }
+    if ($('#doc-viewer').hidden || /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === 'Escape') closeViewer(); else if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1);
+  });
+  document.addEventListener('input', function (e) { var id = e.target.getAttribute && e.target.getAttribute('data-assess'); if (!id) return; aset(id, e.target.value); var sm = document.getElementById('as-sum-' + id); if (sm) sm.innerHTML = sumText(e.target.value); });
+  document.addEventListener('change', function (e) { var id = e.target.getAttribute && e.target.getAttribute('data-share'); if (!id) return;
+    aset(id + ':shared', JSON.stringify(Array.prototype.filter.call(document.querySelectorAll('[data-share="' + id + '"]'), function (x) { return x.checked; }).map(function (x) { return x.value; }))); var c = document.getElementById('as-sh-' + id); if (c) c.innerHTML = shareCell(id); });
+  if (MODE !== 'viewer') { $('#q').addEventListener('input', applyFilter); $('#okonly').addEventListener('change', applyFilter); }
+})();
+</script>
+</body>
+</html>
