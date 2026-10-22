@@ -32,7 +32,7 @@
     --navy: var(--vb-navy); --navy-2: var(--vb-navy-raised); --gold: var(--vb-gold); --gold-ink: var(--vb-gold-dim);
     --ground: var(--vb-ground-alt); --paper: var(--vb-white); --border: var(--vb-line-warm); --ink: var(--vb-ink-900); --ink-2: #3A4654; --muted: var(--vb-ink-500);
     --action: var(--vb-action); --action-ink: var(--vb-action-ink); --rail-ink: var(--vb-rail-ink); --rail-mut: var(--vb-rail-ink-mut); --rail-line: var(--vb-rail-line);
-    --sans: var(--vb-font-body); --mono: var(--vb-font-mono); --top: 48px; --vw: min(50vw, 820px);
+    --sans: var(--vb-font-body); --mono: var(--vb-font-mono); --demo: 22px; --top: calc(48px + var(--demo)); --vw: min(50vw, 820px);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
@@ -43,7 +43,10 @@
   .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
   /* ---------- frame: top bar, left menu, content ---------- */
-  .topbar { position: sticky; top: 0; z-index: 30; height: var(--top); display: flex; align-items: center; gap: 18px; padding: 0 16px; background: var(--navy); color: var(--paper); }
+  /* the demo bar (22 Oct 2026, Sam: "a tiny red bar like IBKR's workstation"): always on top, on every screen and in print */
+  .demobar { position: sticky; top: 0; z-index: 31; height: var(--demo); display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 12px; background: #B3261E; color: #fff; font-size: 11.5px; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .demobar b { font-weight: 700; letter-spacing: 0.12em; } .demobar .long { opacity: 0.92; } @media (max-width: 760px) { .demobar .long { display: none; } }
+  .topbar { position: sticky; top: var(--demo); z-index: 30; height: 48px; display: flex; align-items: center; gap: 18px; padding: 0 16px; background: var(--navy); color: var(--paper); }
   .wordmark { font-size: 17px; letter-spacing: 0.02em; text-decoration: none; color: var(--paper); } .wordmark b { color: var(--gold); font-weight: 400; }
   .topbar input[type=search] { width: min(360px, 34vw); background: var(--navy-2); border: 1px solid #3B5068; color: var(--paper); padding: 5px 10px; border-radius: 3px; font-size: 13px; }
   .topbar input::placeholder { color: #9FB0C2; }
@@ -243,6 +246,7 @@
 </style>
 </head>
 <body>
+<div class="demobar" role="note" aria-label="Demonstration"><b>DEMO</b><span>Illustrative deals, investors and orders</span><span class="long">· Fastned and Katjes from their own public reports, Van Dijk fictional · Not an offer, solicitation or investment advice · Nothing trades here</span></div>
 <header class="topbar">
   <a class="wordmark" href="#/deals">VANILLA<b>BONDS</b></a>
   <input type="search" id="q" placeholder="Search issuers, sectors, countries" aria-label="Search deals">
@@ -996,7 +1000,7 @@ window.RATES = {
     var put = function (lx, ly, txt, cls, r) { var w = txt.length * 6.2, tries = 0; if (r === -1) lx -= w; lx = Math.max(2, lx); while (tries++ < 8 && placed.some(function (q) { return Math.abs(q.y - ly) < 13 && lx < q.x + q.w && lx + w > q.x; })) ly += 13; placed.push({ x: lx, y: ly, w: w }); return '<text x="' + lx.toFixed(1) + '" y="' + (ly + 4).toFixed(1) + '"' + (cls ? ' class="' + cls + '"' : '') + '>' + esc(txt) + '</text>'; };
     var dealLabels = '', ly = dl.length ? y(dhi) - 16 : 0;   // the new transaction's labels stack down from its title, highest price first
     if (dl.length) { dealLabels = put(x(dx) - 10, ly, 'New transaction: ' + cname(c.deal) + ' ' + dx.toFixed(1) + 'y', 'val', -1); dl.slice().sort(function (p, q) { return q.y - p.y; }).forEach(function (p) { ly = Math.max(y(p.y), ly + 13); dealLabels += put(x(dx) - 10, ly, p.st + ' E+' + p.y, '', -1); }); }
-    // 23 Oct 2026 (Sam: "text isn't clearly with the bullet; no lines between points that belong to each other?"): one colour and one curve per issuer, as on UniCredit's
+    // 22 Oct 2026 (Sam: "text isn't clearly with the bullet; no lines between points that belong to each other?"): one colour and one curve per issuer, as on UniCredit's
     // pricing page; one label per issuer at its last point, in the issuer's colour, tied back to the point by a thin leader when it has to move; bond details in the hover
     var PAL = ['#3B6EA5', '#D9771F', '#4A8F3F', '#C8434A', '#3E9890', '#8E5E9A', '#8B6347', '#B8860B', '#5F6B7A', '#2E5E4E', '#A0457E', '#6C7F2B'];   // one hue per issuer, far apart; text-safe on white
     var gk = function (p) { return p.layer === 1 ? 'own' : p.layer === 2 ? 'p:' + p.p.company : 'b:' + short(p.b); }, groups = {}, order = [];
