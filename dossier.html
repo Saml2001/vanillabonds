@@ -94,7 +94,7 @@
   td.view-cell { text-align: right; padding-top: 6px; padding-bottom: 6px; }
   tr[hidden] { display: none; }
   details summary { cursor: pointer; color: var(--gold-ink); font-size: 12.5px; margin: 6px 0; }
-  .arith td:first-child { width: 22%; } .arith td:nth-child(2) { color: var(--muted); font-size: 12.5px; }
+  .arith td:first-child { width: 22%; } .arith td:nth-child(2) { color: var(--muted); font-size: 12.5px; } .arith td.num.wrap { white-space: normal; width: 26%; }
   .fnote { font-size: 12px; line-height: 1.45; color: var(--muted); margin-top: 3px; }
   .fids { font-family: var(--mono); font-size: 11px; line-height: 1.7; } .fids a { color: var(--navy); text-decoration: none; border-bottom: 1px dotted var(--gold); } .fids a:hover { border-bottom-style: solid; }
   .mrows td:first-child { font-family: var(--mono); font-size: 11.5px; color: var(--gold-ink); white-space: nowrap; } .mrows td:nth-child(2) { width: 18%; } .mrows td:nth-child(4) { width: 26%; }
@@ -143,6 +143,7 @@
   #doc-viewer { position: fixed; top: 0; right: 0; bottom: 0; width: var(--dv-w, min(50vw, 820px)); z-index: 60; display: flex; flex-direction: column; background: #E4E3DE; border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.10); }
   #doc-viewer[hidden] { display: none; }
   .dv-bar { background: var(--navy); color: var(--paper); padding: 14px 22px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .dv-bar > div { flex: 1; min-width: 0; } .dv-bar .dv-doc { width: 100%; text-overflow: ellipsis; } .dv-bar .dv-meta { overflow-wrap: anywhere; }   /* 23 Oct 2026: a long document title no longer pushes the close button off screen */
   .dv-bar .dv-kicker { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin: 0 0 4px; }
   .dv-bar .dv-title { font-size: 16px; font-weight: 300; margin: 0; }
   .dv-doc { font: inherit; font-size: 15px; font-weight: 300; background: transparent; color: var(--paper); border: 0; border-bottom: 1px solid #3B5068; padding: 2px 0; max-width: 100%; cursor: pointer; }
@@ -152,7 +153,7 @@
   body.dv-resizing { user-select: none; cursor: col-resize; }
   .dv-zoom { display: flex; align-items: center; gap: 4px; margin-right: 10px; }
   .dv-bar .dv-meta { font-family: var(--mono); font-size: 11.5px; color: #B9C3CE; margin: 4px 0 0; }
-  .dv-close { flex: none; width: 34px; height: 34px; border: 1px solid #3B5068; border-radius: 2px; background: none; color: var(--paper); font-size: 20px; line-height: 1; cursor: pointer; }
+  .dv-close { flex: none; width: 36px; height: 36px; border: 1px solid #8A9BAE; border-radius: 3px; background: var(--navy-2); color: var(--paper); font-size: 22px; line-height: 1; cursor: pointer; }
   .dv-close:hover { background: var(--navy-2); border-color: var(--gold); }
   .dv-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 22px; background: var(--paper); border-bottom: 1px solid var(--border); font-size: 12px; }
   .dv-strip .lbl { color: var(--muted); margin-right: 4px; }
@@ -266,10 +267,14 @@
   var MODE = Q.get('viewer') ? 'viewer' : Q.get('embed') ? 'embed' : 'page', NOTE = document.documentElement.getAttribute('data-mode') === 'analysis';   // analysis.html: the written analysis as a page (build_dossier.py)
   var VIEW = MODE === 'embed' ? Q.get('view') : NOTE ? 'analysis' : null;   // app.html: one tab of the deal workspace (overview, proof, analysis or assess); links to another tab go through the app
   if (VIEW) document.body.classList.add(NOTE ? 'note-page' : 'app', VIEW === 'proof' || VIEW === 'analysis' ? 'with-aside' : 'noaside');
-  if (NOTE) { document.querySelector('.primary-nav button').textContent = 'Credit analysis'; document.querySelector('.demobar').textContent = 'Credit analysis · draft written from the record, pending review by a named reviewer · facts, arithmetic on printed formulas and the company’s own words, no opinion · not an offer, solicitation or investment advice'; }
+  if (NOTE) { document.querySelector('.primary-nav button').textContent = 'Company summary'; document.querySelector('.demobar').textContent = 'Company summary · the facts in prose, written from the record, pending review by a named reviewer · VanillaBonds does no credit analysis · not an offer, solicitation or investment advice'; }
   document.body.classList.add('mode-' + MODE); if (MODE === 'embed') document.body.classList.add('embed');
   function post(m) { if (window.parent !== window) window.parent.postMessage(m, '*'); }
   var D = ALL[slug], $ = function (s) { return document.querySelector(s); };
+  function stLine() { var k = D.counts || {}, n = function (x) { return (x || 0).toLocaleString('en-GB'); }, p = (k.facts || 0) - (k.ok || 0) - (k.rep || 0); return k.ok ? n(k.ok) + ' of ' + n(k.facts) + ' facts approved by a named reviewer' + (k.rep ? ', ' + n(k.rep) + ' management representations' : '') + ', ' + n(p) + ' pending review' : 'pending review by a named reviewer'; }
+  if (!NOTE) document.querySelector('.demobar').textContent = 'Fact dossier · beta · facts extracted from public reports, ' + stLine() + ' · facts and arithmetic only, no opinion · not an offer, solicitation or investment advice';
+  // one EBITDA basis for every ratio (mvp/schema.py derive): excluding the one-off income the reports itemise, the figure on EBITDA as reported beside it
+  var XS = Object.keys((D.screen || {}).derived || {}).some(function (k) { return /^one_off_income\|/.test(k); }) ? ' excluding one-off income' : '';
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
   // facts: [id, field, period, value, unit, text, src, page, quote, status, confidence, quote_found, url, note]; url = a web fact, verified at the URL; note = a merge conflict and its decision
@@ -328,17 +333,12 @@
     var pts = ps.map(function (p, i) { var f = latest(by[p]); return { label: p.replace('FY', ''), v: f.value, id: f.id, latest: i === ps.length - 1 }; });
     return barChart(title, 'EUR m · fiscal years as reported · click a bar for the source', pts);
   }
-  function redemptionChart() {
-    var fs = F.filter(function (f) { return f.field === 'debt_maturing' && typeof f.value === 'number' && pkey(f.period)[0] !== 9999; }), by = {};
-    fs.forEach(function (f) { (by[f.period] = by[f.period] || []).push(f); });
-    var ps = Object.keys(by).sort(pcmp);
-    if (!ps.length) return '<p class="muted small">No debt-maturity facts extracted yet.</p>';
-    var pts = ps.map(function (p) { var f = latest(by[p]); return { label: p.replace('FY', ''), v: f.value, id: f.id, plan: /E$/.test(p), note: by[p].length > 1 ? by[p].length + ' entries, latest report shown' : '' }; });
-    var bands = F.filter(function (f) { return f.field === 'debt_maturing' && pkey(f.period)[0] === 9999; });
-    var total = pts.filter(function (p) { return p.plan; }).reduce(function (s, p) { return s + p.v; }, 0);
-    return barChart('Redemption profile', 'Principal falling due per period, EUR m · lighter bars = future periods per the latest report' + (total ? ' · future periods shown: ' + total.toFixed(1) : ''), pts, true) +
-      (bands.length ? '<p class="muted small" style="margin:8px 0 0">Also stated as a band: ' + bands.map(function (f) { return esc(f.period) + ' ' + fmt(f.value) + ' (' + srcText(f) + ')'; }).join('; ') + '.</p>' : '') +
-      '<p class="muted small" style="margin:8px 0 18px">Where several reports state a figure for the same period, the most recent report is charted; every entry is in the table below. Debt instruments and their terms follow.</p>';
+  function redemptionChart() {   // 22 Oct 2026: the debt ladder of snapshot.py, the same rows as the snapshot's table and the databook
+    var L = (D.snapshot || {}).ladder;
+    if (!L || !L.rows.length) return '<p class="muted small">No debt-maturity facts extracted yet.</p>';
+    var pts = L.rows.map(function (r) { return { label: r.y === 'later' ? 'later' : r.y, v: r.p, id: r.ids[0], plan: true, note: [r.l != null ? 'leases ' + nf1(r.l) : '', r.i != null ? 'interest ' + nf1(r.i) : '', r.note || r.items.map(function (x) { return x[0] + ': ' + nf1(x[1]); }).join(' | ')].filter(Boolean).join(' · ') }; });
+    return barChart('Redemption profile', 'Principal falling due per year of maturity, EUR m · ' + (L.kind === 'instrument table' ? 'the instrument table of the ' + L.asof + ' report' : 'the maturity table of the ' + L.asof + ' report, leases and interest apart') + ' · click a bar for the source', pts, true) +
+      '<p class="muted small" style="margin:8px 0 18px">' + esc(L.calc) + '. Check: ' + esc(L.check) + '.' + (L.leases ? ' Leases of ' + nf1(L.leases[0]) + ' are not dated by year.' : '') + ' The snapshot, this chart and the databook show the same rows.</p>';
   }
 
   // ---------- facts per block ----------
@@ -370,7 +370,10 @@
     var ps = Object.keys(periods).sort(pcmp), names = Object.keys(rows);
     if (!names.length) return '';
     return '<div class="fieldhead"><h3>Calculated from the reported figures</h3><span class="muted small">formulas in mvp/schema.py derive()</span></div><div class="table-scroll"><table><thead><tr><th>Calculated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' +
-      names.map(function (n) { return '<tr class="calc" data-q="' + esc(n).toLowerCase() + '"><td>' + esc(n.replace(/_/g, ' ')) + '</td>' + ps.map(function (p) { var v = rows[n][p]; return '<td class="num">' + (v == null ? '<span class="muted">–</span>' : esc(typeof v === 'number' ? (Math.abs(v) < 10 ? v.toFixed(2) : v.toFixed(1)) : v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+      names.map(function (n) { var lab = { gross_debt_calc: 'gross debt excl. leases, calculated: net debt as reported + cash − leases', one_off_income: 'one-off income inside EBITDA', ebitda_excl_one_off_income: 'EBITDA excluding one-off income',
+        ebitda_margin: 'EBITDA margin' + XS, net_leverage: 'net leverage' + (XS ? ', EBITDA' + XS : ''), interest_cover: 'interest cover' + (XS ? ', EBITDA' + XS : ''), ebitda_margin_as_reported: 'EBITDA margin, on EBITDA as reported',
+        net_leverage_as_reported: 'net leverage, on EBITDA as reported', interest_cover_as_reported: 'interest cover, on EBITDA as reported' }[n] || n.replace(/_/g, ' ');
+        return '<tr class="calc" data-q="' + esc(lab).toLowerCase() + '"><td>' + esc(lab) + '</td>' + ps.map(function (p) { var v = rows[n][p]; return '<td class="num">' + (v == null ? '<span class="muted">–</span>' : esc(typeof v === 'number' ? (Math.abs(v) < 10 ? v.toFixed(2) : v.toFixed(1)) : v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
   }
   var ARITH = { plan: ['forward', 'headroom_path', 'stress_grid', 'eba_events'], financials: ['ratios_three_ways', 'volatility_vs_sector'], management: ['calibration'], structure: ['waterfall', 'guarantor_coverage'] };
   function arithmetic(block) {
@@ -378,7 +381,7 @@
     (ARITH[block] || []).forEach(function (k) { var r = k === 'forward' ? S.forward : (S.v3 || {})[k]; (r || []).forEach(function (x) { rows.push(x); }); });
     if (!rows.length) return '';
     return '<div class="fieldhead"><h3>Arithmetic</h3><span class="muted small">shown, never scored · formula and source printed with each number</span></div><table class="arith"><thead><tr><th>Derived</th><th>Formula · source</th><th class="num">Value</th></tr></thead><tbody>' +
-      rows.map(function (r) { return '<tr data-q="' + esc(r[0]).toLowerCase() + '"><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
+      rows.map(function (r) { return '<tr data-q="' + esc(r[0]).toLowerCase() + '"><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num' + (String(r[2]).length > 48 ? ' wrap' : '') + '"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
   }
   // fact ids as links to their rows (the row opens and lights up, as when the viewer jumps back)
   function fids(s) { return s ? '<span class="fids">' + s.split(', ').map(function (x) { var id = x.split(' ')[0]; return BYID[id] ? '<a href="#row-' + id + '" data-row="' + id + '">' + esc(x) + '</a>' : esc(x); }).join(', ') + '</span>' : '<span class="muted">–</span>'; }
@@ -469,7 +472,7 @@
   function noteNav() { return (AN ? AN.sections : []).map(function (s, i) { return '<a href="#an-' + s.id + '">' + (i + 1 < AN.sections.length ? (i + 1) + ' · ' : '') + esc(s.title) + '<span class="n"></span></a>'; }).join(''); }
   function noteBand() {
     var c = D.company, n = AN ? AN.sections.reduce(function (a, s) { return a + s.paras.reduce(function (b, p) { return b + p.length; }, 0); }, 0) : 0;
-    return '<p class="eyebrow">Credit analysis · ' + esc(AN ? 'figures to ' + AN.asof : '') + '</p><h1>' + esc(c.name) + '</h1><div class="meta">' + esc([c.sector, c.country, c.legal_form].filter(Boolean).join(' · ')) + '</div>' +
+    return '<p class="eyebrow">Company summary · ' + esc(AN ? 'figures to ' + AN.asof : '') + '</p><h1>' + esc(c.name) + '</h1><div class="meta">' + esc([c.sector, c.country, c.legal_form].filter(Boolean).join(' · ')) + '</div>' +
       (AN ? '<div class="legend"><span class="draft">' + esc(AN.label) + '</span><span>written ' + esc(AN.written) + ' by the analyst agent from the record</span><span>' + n + ' sentences, each resting on the facts it cites: the superscript opens them</span><span>facts, arithmetic on printed formulas and the company’s own words; no opinion of ours</span><button type="button" class="view-btn" data-print="1">Print</button></div>' : '');
   }
   function cite(ids) {
@@ -477,26 +480,26 @@
     return '<sup class="cite" data-cite="' + esc(ok.join(' ')) + '" title="' + esc(ok.map(function (i) { return i + ' · ' + label(BYID[i]) + ' · ' + srcText(BYID[i]); }).join(' | ')) + '">' + ok.length + '</sup>';
   }
   function noteView() {
-    if (!AN) return '<section class="block"><h2>Credit analysis</h2><p class="muted">No written analysis for this company yet. The analyst agent (mvp/agents/analyst.md) writes it from the record once the screen has run.</p></section>';
+    if (!AN) return '<section class="block"><h2>Company summary</h2><p class="muted">No written analysis for this company yet. The analyst agent (mvp/agents/analyst.md) writes it from the record once the screen has run.</p></section>';
     return '<div class="note">' + AN.sections.map(function (s, i) {
       return '<section class="block" id="an-' + s.id + '" aria-labelledby="h-an-' + s.id + '"><p class="num-h">' + (i + 1 < AN.sections.length ? 'Section ' + (i + 1) : 'Appendix') + '</p><h2 id="h-an-' + s.id + '">' + esc(s.title) + '</h2>' +
         s.paras.map(function (p, j) { return '<p' + (j === 0 ? ' class="lead"' : '') + '>' + p.map(function (x) { return '<span class="s">' + esc(x[0]) + '</span>' + cite(x[1]) + ' '; }).join('') + '</p>'; }).join('') +
         (s.exhibits || []).map(exhibit).join('') + '</section>';
     }).join('') + '</div>';
   }
-  var SRC_CO = 'Source: the company’s own reports as extracted into the record (' + D.docs.filter(function (d) { return d.kind !== 'web page'; }).map(function (d) { return d.id; }).join(', ') + '), pending review by a named reviewer; click a figure or id for its page.';
+  var SRC_CO = 'Source: the company’s own reports as extracted into the record (' + D.docs.filter(function (d) { return d.kind !== 'web page'; }).map(function (d) { return d.id; }).join(', ') + '), ' + stLine() + '; click a figure or id for its page.';
   function fig(h, cap, title) { return '<figure class="ex">' + (title ? '<h3>' + esc(title) + '</h3>' : '') + h + '<figcaption>' + esc(cap) + '</figcaption></figure>'; }
   function stripTiles() {
     return '<div class="tiles">' + (D.snapshot.strip || []).map(function (t) {
       var id = t.ids[0], tag = id ? 'button' : 'div';
-      return '<' + tag + (id ? ' type="button" data-view="' + esc(id) + '"' : '') + ' class="tile"' + (t.calc ? ' title="' + esc(t.calc) + '"' : '') + '><span class="label">' + esc(t.label) + ' · ' + esc(t.period) + '</span><span class="v">' + snum(t.v, t.unit) + (t.unit === 'm' && t.v != null ? '<small>EUR m</small>' : '') + '</span><span class="s">' + (t.calc ? 'arithmetic, formula on hover' : id ? esc(srcText(BYID[id])) : 'not on file') + '</span></' + tag + '>';
+      return '<' + tag + (id ? ' type="button" data-view="' + esc(id) + '"' : '') + ' class="tile"' + (t.calc ? ' title="' + esc(t.calc) + '"' : '') + '><span class="label">' + esc(t.label) + ' · ' + esc(t.period) + '</span><span class="v">' + snum(t.v, t.unit) + (t.unit === 'm' && t.v != null ? '<small>EUR m</small>' : '') + '</span><span class="s">' + (t.calc ? 'arithmetic, formula on hover' : id ? esc(srcText(BYID[id])) : 'not on file') + (t.alt ? '<br>' + esc(t.alt) : '') + '</span></' + tag + '>';
     }).join('') + '</div>';
   }
   function figTable() {
     var s = D.snapshot, ps = s.periods;
     return '<div class="table-scroll"><table class="kf"><thead><tr><th>EUR m unless stated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' + s.figures.map(function (r) {
       var sub = /^of which/.test(r.label);
-      return '<tr class="' + (r.em ? 'em' : sub ? 'sub' : '') + '"><td>' + esc(r.label) + (r.calc && !sub ? '<span class="calc" title="' + esc(r.calc) + '"></span>' : '') + '</td>' + r.v.map(function (v, i) { var id = r.ids[i] && r.ids[i][0]; return '<td class="num">' + (id && v != null ? fb(id, snum(v, r.unit), r.st[i]) : snum(v, r.unit)) + '</td>'; }).join('') + '</tr>';
+      return '<tr class="' + (r.em ? 'em' : sub || r.of ? 'sub' : '') + '"><td>' + esc(r.label) + (r.calc && !sub ? '<span class="calc" title="' + esc(r.calc) + '"></span>' : '') + '</td>' + r.v.map(function (v, i) { var id = r.ids[i] && r.ids[i][0]; return '<td class="num">' + (id && v != null ? fb(id, snum(v, r.unit), r.st[i]) : snum(v, r.unit)) + '</td>'; }).join('') + '</tr>';
     }).join('') + '</tbody></table></div>';
   }
   function bridgeTable() {
@@ -505,9 +508,12 @@
     return '<div class="table-scroll"><table><thead><tr><th>Period</th><th>One-off income inside EBITDA, as itemised in the reports</th><th class="num">EUR m</th><th class="view"></th></tr></thead><tbody>' + ps.map(function (p) { return s.bridge[p].map(function (x) { return '<tr><td class="per">' + esc(p) + '</td><td>' + esc(x[1]) + '</td><td class="num">' + nf1(x[2]) + '</td><td class="view-cell">' + viewBtn(BYID[x[0]]) + '</td></tr>'; }).join(''); }).join('') + '</tbody></table></div>';
   }
   function matTable() {
-    var s = D.snapshot;
-    return '<div class="table-scroll"><table><thead><tr><th>Falls due</th><th class="num">EUR m</th><th class="view"></th></tr></thead><tbody>' + s.maturities.map(function (m) { return '<tr><td class="per">' + esc(m[0].replace(/^FY(\d{4})E$/, '$1')) + '</td><td class="num">' + nf1(m[1]) + '</td><td class="view-cell">' + viewBtn(BYID[m[2]]) + '</td></tr>'; }).join('') +
-      (s.due24 && s.due24.v != null ? '<tr class="calc"><td>Next 24 months<span class="calc" title="' + esc(s.due24.calc) + '"></span></td><td class="num"><b>' + nf1(s.due24.v) + '</b></td><td></td></tr>' : '') + '</tbody></table></div>';
+    var s = D.snapshot, L = s.ladder || { rows: [] }, hasL = L.rows.some(function (r) { return r.l != null; }), hasI = L.rows.some(function (r) { return r.i != null; });
+    var c = function (v, b) { return '<td class="num">' + (v == null ? '<span class="muted">–</span>' : b ? '<b>' + nf1(v) + '</b>' : nf1(v)) + '</td>'; };
+    return '<div class="table-scroll"><table><thead><tr><th>Falls due</th><th class="num">Principal</th>' + (hasL ? '<th class="num">Leases</th>' : '') + (hasI ? '<th class="num">Interest</th>' : '') + '<th class="view"></th></tr></thead><tbody>' +
+      L.rows.map(function (r) { return '<tr><td class="per">' + (r.y === 'later' ? 'Later or not dated' : esc(r.y)) + (r.note || r.items.length ? '<span class="calc" title="' + esc(r.note || r.items.map(function (x) { return x[0] + ': ' + nf1(x[1]); }).join(' | ')) + '"></span>' : '') + '</td>' + c(r.p) + (hasL ? c(r.l) : '') + (hasI ? c(r.i) : '') + '<td class="view-cell">' + (BYID[r.ids[0]] ? viewBtn(BYID[r.ids[0]]) : '') + '</td></tr>'; }).join('') +
+      (L.leases ? '<tr><td class="per">Leases, not dated by year</td>' + c(null) + '<td class="num">' + nf1(L.leases[0]) + '</td><td class="view-cell">' + (BYID[L.leases[1]] ? viewBtn(BYID[L.leases[1]]) : '') + '</td></tr>' : '') +
+      (s.due24 && s.due24.v != null ? '<tr class="calc"><td>Next 24 months<span class="calc" title="' + esc(s.due24.calc) + '"></span></td>' + c(s.due24.v, 1) + (hasL ? c(s.due24.l, 1) : '') + (hasI ? c(s.due24.i, 1) : '') + '<td></td></tr>' : '') + '</tbody></table></div>';
   }
   function factList(field, n) {
     var fs = F.filter(function (f) { return f.field === field && !f.url; }).sort(function (a, b) { return (DOC[b.src].i - DOC[a.src].i) || pcmp(b.period, a.period); }), seen = {}, out = [];
@@ -517,7 +523,7 @@
   }
   function ratioTable() {
     var rows = ((D.screen || {}).v3 || {}).ratios_three_ways || []; if (!rows.length) return '<p class="muted small">No ratios on file.</p>';
-    return '<table class="arith"><thead><tr><th>Ratio</th><th>Formula · source</th><th class="num">Per fiscal year</th></tr></thead><tbody>' + rows.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
+    return '<table class="arith"><thead><tr><th>Ratio</th><th>Formula · source</th><th class="num">Per fiscal year</th></tr></thead><tbody>' + rows.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num' + (String(r[2]).length > 48 ? ' wrap' : '') + '"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
   }
   function conflictTable() {
     var cs = AN.conflicts || []; if (!cs.length) return '<p class="muted small">No figure differs between the sources on file.</p>';
@@ -534,7 +540,7 @@
       case 'figures': return fig(figTable(), SRC_CO + ' ƒ = arithmetic on the shown figures, formula on hover; grey italic = pending review.', 'Key figures, periods as columns');
       case 'bridge': return fig(bridgeTable(), 'Source: other operating income as itemised in the reports; the rule that counts an item is printed in mvp/snapshot.py.', 'One-off income inside EBITDA');
       case 'chart': return '<div class="charts">' + seriesChart(ex.field, FIELD[ex.field].label) + '</div>';
-      case 'maturities': return fig(matTable() + '<div class="charts" style="margin-top:12px">' + redemptionChart() + '</div>', 'Source: principal per period as the latest annual report states it; the row Next 24 months is arithmetic on those figures.', 'Debt falling due');
+      case 'maturities': return fig(matTable() + '<div class="charts" style="margin-top:12px">' + redemptionChart() + '</div>', 'Source: ' + ((s.ladder || {}).calc || 'no maturity on file') + (s.ladder ? '; check: ' + s.ladder.check : '') + '; the row Next 24 months is arithmetic on those figures.', 'Debt falling due');
       case 'facts': return fig(factList(ex.field, ex.n), SRC_CO, ex.title || (FIELD[ex.field] ? FIELD[ex.field].label : ex.field));
       case 'people': return fig(mgPeople(), SRC_CO, 'Who runs it');
       case 'owners': return fig(li(s.owners), SRC_CO, 'Owners, as stated');
@@ -563,14 +569,16 @@
   function differs(f) { return f && /^conflict/.test(f.note || '') ? ' <a href="#o-open" class="differs" title="' + esc(f.note) + '">sources differ</a>' : ''; }
   function srcBtn(f) { return '<button type="button" class="cell-btn src-btn" data-view="' + f.id + '">' + esc(srcText(f)) + (f.url ? ' ↗' : '') + '</button>'; }
   function osec(id, eyebrow, title, ask, body) { return '<section class="block" id="' + id + '" aria-labelledby="h-' + id + '"><p class="eyebrow">' + esc(eyebrow) + '</p><h2 id="h-' + id + '">' + esc(title) + '</h2>' + (ask ? '<p class="ask">' + esc(ask) + '</p>' : '') + body + '</section>'; }
-  var TILES = [['Revenue', 'revenue'], ['EBITDA', 'ebitda'], ['EBITDA margin', 'ebitda_margin', '%', 'EBITDA / revenue'], ['Net debt as reported', 'net_debt'],
-    ['Net leverage', 'net_leverage', 'x', '(gross debt − cash, leases excluded) / EBITDA'], ['Interest cover', 'interest_cover', 'x', 'EBITDA / net finance cost'], ['Cash', 'cash'], ['Equity ratio', 'equity_ratio', '%', 'equity / total assets']];
+  var TILES = [['Revenue', 'revenue'], [XS ? 'EBITDA as reported' : 'EBITDA', 'ebitda'], ['EBITDA margin' + XS, 'ebitda_margin', '%', 'EBITDA' + XS + ' / revenue'], ['Net debt as reported', 'net_debt'],
+    ['Net leverage', 'net_leverage', 'x', '(gross debt − cash, leases excluded) / EBITDA' + XS], ['Interest cover', 'interest_cover', 'x', 'EBITDA' + XS + ' / net finance cost'], ['Cash', 'cash'], ['Equity ratio', 'equity_ratio', '%', 'equity / total assets']];
   function tiles() {
     var p = FYS[FYS.length - 1], q = FYS[FYS.length - 2]; if (!p) return '<p class="muted">No fiscal-year figures on file.</p>';
     return '<div class="tiles">' + TILES.map(function (t) {
       var calc = !!t[3], u = t[2] || 'm', f = calc ? null : fyFact(t[1], p), g = calc ? null : fyFact(t[1], q);
       var v = calc ? der(t[1], p) : f && f.value, w = calc ? der(t[1], q) : g && g.value, tag = f ? 'button' : 'div';
-      var sub = (q ? esc(q) + ': ' + nf(w, u) + (u === 'm' && chg(v, w) ? ' · change ' + chg(v, w) : '') + '<br>' : '') + (calc ? 'calc: ' + esc(t[3]) + (v == null ? '; an input for ' + esc(p) + ' is not on file' : '') : f ? esc(srcText(f)) + differs(f) : 'not on file');
+      var ar = calc ? der(t[1] + '_as_reported', p) : t[1] === 'ebitda' ? der('ebitda_excl_one_off_income', p) : null;
+      var sub = (q ? esc(q) + ': ' + nf(w, u) + (u === 'm' && chg(v, w) ? ' · change ' + chg(v, w) : '') + '<br>' : '') + (calc ? 'calc: ' + esc(t[3]) + (v == null ? '; an input for ' + esc(p) + ' is not on file' : '') : f ? esc(srcText(f)) + differs(f) : 'not on file') +
+        (ar != null ? '<br>' + (calc ? 'on EBITDA as reported ' : 'excluding one-off income ') + nf(ar, u) : '');
       return '<' + tag + (f ? ' type="button" data-view="' + f.id + '"' : '') + ' class="tile"><span class="label">' + esc(t[0]) + ' · ' + esc(p) + (u === 'm' ? ' · EUR m' : '') + '</span><span class="v">' + nf(v, u) + '</span><span class="s">' + sub + '</span></' + tag + '>';
     }).join('') + '</div>';
   }
@@ -585,10 +593,10 @@
   }
   function charts() {
     var ind = (D.screen || {}).indicators || [], lvl = function (i) { var m = /([\d.]+)x/.exec((ind[i] || [])[1] || ''); return m ? +m[1] : null; };
-    var pts = function (k) { var ps = FYS.slice(Math.max(0, FYS.findIndex(function (p) { return der(k, p) != null; }))); return ps.map(function (p, i) { return { label: p.replace('FY', ''), v: der(k, p), latest: i === ps.length - 1 }; }); };
+    var pts = function (k) { var ps = FYS.slice(Math.max(0, FYS.findIndex(function (p) { return der(k, p) != null; }))); return ps.map(function (p, i) { var r = der(k + '_as_reported', p); return { label: p.replace('FY', ''), v: der(k, p), latest: i === ps.length - 1, note: r != null ? 'on EBITDA as reported ' + r.toFixed(1) + 'x' : '' }; }); };
     return '<div class="charts">' + seriesChart('revenue', FIELD.revenue.label) + seriesChart('ebitda', FIELD.ebitda.label) + seriesChart('net_debt', FIELD.net_debt.label) + seriesChart('cash', FIELD.cash.label) +
-      barChart('Net leverage', 'x · calc: net debt excl. leases / EBITDA' + (lvl(0) ? ' · line: ' + (ind[0][1] || '') + ' (admission criteria v1)' : ''), pts('net_leverage'), false, { unit: 'x', ref: lvl(0), refLabel: lvl(0) ? lvl(0) + 'x' : '' }) +
-      barChart('Interest cover', 'x · calc: EBITDA / net finance cost' + (lvl(1) ? ' · line: ' + (ind[1][1] || '') + ' (admission criteria v1)' : ''), pts('interest_cover'), false, { unit: 'x', ref: lvl(1), refLabel: lvl(1) ? lvl(1) + 'x' : '' }) +
+      barChart('Net leverage', 'x · calc: net debt excl. leases / EBITDA' + XS + (lvl(0) ? ' · line: ' + (ind[0][1] || '') + ' (admission criteria v1)' : ''), pts('net_leverage'), false, { unit: 'x', ref: lvl(0), refLabel: lvl(0) ? lvl(0) + 'x' : '' }) +
+      barChart('Interest cover', 'x · calc: EBITDA' + XS + ' / net finance cost' + (lvl(1) ? ' · line: ' + (ind[1][1] || '') + ' (admission criteria v1)' : ''), pts('interest_cover'), false, { unit: 'x', ref: lvl(1), refLabel: lvl(1) ? lvl(1) + 'x' : '' }) +
       redemptionChart() + '</div>' + guidance();
   }
   // events the reports date in a year, beside that year's figures
@@ -608,7 +616,7 @@
       if (!/^(FY|H1-)\d{4}$/.test(p)) return '<span class="muted">no figures for this period</span>';
       var q = p.replace(/\d{4}/, function (y) { return y - 1; }), out = [];
       [['Revenue', 'revenue'], ['EBITDA', 'ebitda'], ['Cash', 'cash']].forEach(function (t) { var f = fyFact(t[1], p), g = fyFact(t[1], q); if (f) out.push(t[0] + ' <button type="button" class="cell-btn" data-view="' + f.id + '">' + fmt(f.value) + '</button>' + (g && chg(f.value, g.value) ? ' <span class="muted">' + chg(f.value, g.value) + ' on ' + esc(q) + '</span>' : '') + differs(f) + differs(g)); });
-      [['EBITDA margin', 'ebitda_margin', '%'], ['Net leverage', 'net_leverage', 'x'], ['Interest cover', 'interest_cover', 'x']].forEach(function (t) { var v = der(t[1], p); if (v != null) out.push(t[0] + ' ' + nf(v, t[2]) + ' <span class="muted">calc</span>'); });
+      [['EBITDA margin', 'ebitda_margin', '%'], ['Net leverage', 'net_leverage', 'x'], ['Interest cover', 'interest_cover', 'x']].forEach(function (t) { var v = der(t[1], p), r = der(t[1] + '_as_reported', p); if (v != null) out.push(t[0] + (r != null ? (t[2] === '%' ? XS : ', EBITDA' + XS) : '') + ' ' + nf(v, t[2]) + ' <span class="muted">calc' + (r != null ? '; on EBITDA as reported ' + nf(r, t[2]) : '') + '</span>'); });
       return out.join('<br>') || '<span class="muted">–</span>';
     }
     function evs(list) { list = list || []; if (!list.length) return '<span class="muted">no dated events on file</span>'; return '<ul class="ev">' + list.slice(0, 5).map(evLi).join('') + '</ul>' + (list.length > 5 ? '<details><summary>' + (list.length - 5) + ' more</summary><ul class="ev">' + list.slice(5).map(evLi).join('') + '</ul></details>' : ''); }
