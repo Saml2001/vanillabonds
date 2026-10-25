@@ -144,7 +144,7 @@
   .fb { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; border-bottom: 1px dotted #B9B2A0; } .fb:hover { color: var(--navy); border-bottom-color: var(--navy); } .fb.pend { color: var(--muted); font-style: italic; }
   .calc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: 5px; cursor: help; } .calc::before { content: "ƒ"; }
   .facts { margin: 0; padding: 0; list-style: none; font-size: 13px; } .facts li { padding: 5px 0; border-bottom: 1px solid #EFEBE0; } .facts li:last-child { border: 0; }
-  .facts li.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }   /* long items show two lines; a click expands */
+  .facts li.clamp { cursor: pointer; } .facts li.clamp > .ct { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }   /* long items show two lines; a click expands */
   /* ---------- the decision strip (21 Oct 2026): the seven numbers that decide, read in one look; each opens its page ---------- */
   .decide { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
   .decide .tile { text-align: left; background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--navy); padding: 10px 12px 9px; font: inherit; color: inherit; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -360,6 +360,20 @@
     .wrow { grid-template-columns: minmax(0, 1fr); } .wrow .amt { text-align: left; } .wrow .amt b { display: inline; margin-right: 6px; } .fo-page .terms-card { display: none; }
     #pop.cpop { left: 8px !important; right: 8px; width: auto; top: auto !important; bottom: 8px; max-height: 70vh; }
   }
+  /* 24 Oct 2026: the proposal first, the team over the years, the competitors */
+  .dp .prop { border-top: 3px solid var(--navy); } .dp .prop + .terms-card { margin-top: 14px; }
+  .prop .ask { font-size: 17px; line-height: 1.45; margin: 0 0 6px; color: var(--ink); } .prop .ask b { color: var(--navy); } .prop .use { font-size: 14px; margin: 0 0 14px; color: var(--ink-2); line-height: 1.5; }
+  .why { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 24px; } .why .rl li { font-size: 13px; } .why h4 { margin: 0 0 4px !important; }
+  .grid.ppl td.nm { white-space: nowrap; width: 1%; } .grid.ppl td { font-size: 12.5px; } .grid.ppl td:nth-child(2) { width: 24%; } .grid.ppl tr.h td { background: var(--paper-2, #F6F4EE); font-weight: 600; color: var(--navy); font-size: 12px; padding: 6px 8px; }
+  .mo2 { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 0 28px; margin: 14px 0 6px; } .mo2 .grid td { font-size: 12.5px; }
+  @media (max-width: 1250px) { .why { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mo2 { grid-template-columns: minmax(0, 1fr); } }
+  .grid.cmpt td { font-size: 12.5px; } .grid.cmpt tr.me td { background: #FBF6E9; } .grid.cmpt tr.me td:first-child { box-shadow: inset 3px 0 0 var(--gold); }
+  .dp details.more { margin-top: 8px; } .dp details.more > summary { cursor: pointer; color: var(--navy); font-size: 13px; font-weight: 600; padding: 4px 0; } .dp details.more[open] > summary { margin-bottom: 4px; }
+  .grid.ppl ul.pr { margin: 0; padding: 0; list-style: none; } .grid.ppl ul.pr li { padding: 0 0 6px; } .grid.ppl ul.pr li:last-child { padding: 0; } .grid.ppl .fig { display: block; color: var(--ink-2); font-size: 12px; margin-top: 2px; } .grid.ppl .op { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .grid.ppl .yr { display: block; font-size: 12px; color: var(--ink); padding-left: 10px; } .grid.ppl .yr.out { color: #9AA3AD; }
+  .grid.ppl { table-layout: fixed; width: 100%; } .grid.ppl th, .grid.ppl td { white-space: normal; overflow-wrap: anywhere; } .grid.ppl th.prc, .grid.ppl td.prc { width: 36%; } .grid.ppl td.nm { width: 150px; white-space: normal; }
+  .grid.ppl th.nm { width: 150px; } .grid.ppl th.pos { width: 15%; } .grid.ppl th.ind { width: 11%; } .grid.ppl th.att { width: 13%; } .grid.ppl.brd th.pos { width: 12%; } .grid.ppl.brd th.ind { width: 10%; } .grid.ppl.brd th.att { width: 12%; } .grid.ppl.brd th.prc { width: 27%; } .grid.ppl .op { display: block; } .grid.ppl details.op { margin-top: 2px; font-size: 12px; color: var(--muted); } .grid.ppl details.op > summary { font-size: 12px; font-weight: 600; }
+  .dp.mgt { margin-top: 12px; } .dp.mgt > .panel + .panel { margin-top: 14px; } .dp.mgt .tabbar { margin-bottom: 12px; }
   /* the comparables on the deal tabs (23 Oct 2026, Sam: "way smaller"): the chart at its small size beside a short table; the full table behind a button */
   .cmpp .cmph h3 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--navy); } .cmpp .cmph p { margin: 3px 0 12px; font-size: 13px; color: var(--muted); line-height: 1.45; }
   .cmp3 { margin-top: 14px; max-width: 1040px; }   /* the chart at its full drawn size (Sam: the small one could not be read), the short table under it */
@@ -646,12 +660,12 @@ window.RATES = {
   function dstr(d) { return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }); }
   // the five stages of the deal journey; a deal's phase is where it stands on that line
   var STAGE = { intake: 1, anchor: 2, open: 3, closed: 4 }, NAMES = J.stages.length ? J.stages.map(function (s) { return s.title; }) : ['Sourcing', 'Fact file', 'Anchor decision', 'One standard bond', 'After closing'];
-  var SHORT = ['Sourcing', 'Fact file', 'Anchors', 'Book', 'After closing'];   // the header's line; the full names are in its hover text
+  var SHORT = ['Sourcing', 'Fact file', 'Anchor evaluation', 'Book', 'After closing'];   // 24 Oct 2026 (MVP review): 'Anchors' read as a page, not a stage   // the header's line; the full names are in its hover text
   var WIN = { factFileDue: 'Fact file due', anchorOpens: 'Anchor window opens', anchorCloses: 'Anchor window closes', bookOpens: 'Book opens', bookCloses: 'Book closes' };
   function win(o) { var w = o.windows || {}, k = o.phase === 'anchor' ? 'anchorCloses' : o.phase === 'open' ? 'bookCloses' : 'factFileDue'; return { label: WIN[k], n: w[k] }; }
   function stageDates(o, i) { var w = o.windows || {}, r = function (a, b) { return w[a] != null ? dstr(wd(w[a])) + (b && w[b] != null ? ' – ' + dstr(wd(w[b])) : '') : ''; }; return [null, w.factFileDue != null ? 'due ' + r('factFileDue') : '', r('anchorOpens', 'anchorCloses'), r('bookOpens', 'bookCloses'), ''][i] || ''; }
   function timeline(o, big) {
-    var cur = STAGE[o.phase] || 0, n = NAMES.length, W = big ? 330 : 150, pad = big ? 32 : 7, y = big ? 10 : 8, step = (W - 2 * pad) / (n - 1), x = function (i) { return pad + i * step; };
+    var cur = STAGE[o.phase] || 0, n = NAMES.length, W = big ? 370 : 150, pad = big ? 36 : 7, y = big ? 10 : 8, step = (W - 2 * pad) / (n - 1), x = function (i) { return pad + i * step; };
     var h = '<svg class="tl" width="' + W + '" height="' + (big ? 36 : 16) + '" viewBox="0 0 ' + W + ' ' + (big ? 36 : 16) + '" role="img" aria-label="' + esc('Stage ' + (cur + 1) + ' of ' + n + ': ' + NAMES[cur]) + '">' +
       '<line class="ln" x1="' + x(0) + '" x2="' + x(n - 1) + '" y1="' + y + '" y2="' + y + '"/><line class="done" x1="' + x(0) + '" x2="' + x(cur) + '" y1="' + y + '" y2="' + y + '"/>';
     for (var i = 0; i < n; i++) h += '<g><title>' + esc(NAMES[i] + (stageDates(o, i) ? ' · ' + stageDates(o, i) : '')) + '</title><circle class="' + (i < cur ? 'past' : i === cur ? 'now' : 'next') + '" cx="' + x(i) + '" cy="' + y + '" r="' + (i === cur ? (big ? 7 : 5.5) : (big ? 5 : 4)) + '"/>' +
@@ -695,6 +709,7 @@ window.RATES = {
   function tabsFor(o) {
     var c = ST.role === 'company', t = [['overview', !c && o.snapshot ? 'Snapshot' : 'Overview']];
     if (!c && o.analysis) t.push(['analysis', 'Company summary']);   // 23 Oct 2026 (Sam, after Geert Henckens): the anchors do the credit analysis, VanillaBonds supplies the facts
+    if (!c && o.depth && o.depth.team && o.depth.team.people.length) t.push(['mgmt', 'Management']);   // 24 Oct 2026 (Sam)
     if (o.dossier) t.push(['dossier', c ? 'Fact dossier' : 'Fact proof']);
     t.push(c ? ['requests', 'Requests'] : ['documents', o.depth ? 'Data room' : 'Documents']);
     if (!c && ((o.mgmtQuestions || []).length || qsOf(o).length || o.phase !== 'intake')) t.push(['qa', 'Q&A']);
@@ -762,6 +777,7 @@ window.RATES = {
       timeline(o, true) + (w.n != null ? '<div class="win">' + esc(w.label) + (ST.role === 'coinvestor' ? '<b>' + dstr(wd(w.n)) + '</b>' + wd(w.n).getFullYear() : '<b>' + Math.max(0, w.n) + ' wd</b>' + dstr(wd(w.n))) + '</div>' : '') + action(o) + '</div>' + coverage(o) +
       '<nav class="tabs" aria-label="Deal">' + tabs.map(function (t) { var c = t[0] === 'qa' ? (o.mgmtQuestions || []).length + qsOf(o).length : t[0] === 'requests' ? outstanding(o).length + openQs(o).filter(function (f) { return !ST.ans[o.id + ':' + f.id]; }).length : ''; return '<a href="#/deal/' + o.id + '/' + t[0] + '"' + (t[0] === tab ? ' aria-current="page"' : '') + '>' + t[1] + (c ? '<span class="c">' + c + '</span>' : '') + '</a>'; }).join('') + '<span style="flex:1"></span><button type="button" class="view" data-act="print" style="align-self:center" title="Print this view">Print</button></nav></div>';
     var body = tab === 'overview' ? (o.depth && ST.role === 'anchor' ? anchorView(o) : o.depth && ST.role === 'coinvestor' ? foView(o) : o.snapshot && ST.role !== 'company' ? snapshotView(o) : o.dossier ? summary(o) + compPanel(o, true) + frame(o, 'overview') : intakeView(o))
+      : tab === 'mgmt' ? mgmtTab(o)
       : tab === 'analysis' ? '<div class="tabbar"><span class="draft">Draft, pending review</span><span>The facts in prose, written from the record: each sentence rests on the facts it cites (the superscript opens them). Facts, arithmetic on printed formulas and the company’s own words; VanillaBonds does no credit analysis, that is the investor’s own work.</span><span style="flex:1"></span><a class="btn sec" href="analysis.html?c=' + encodeURIComponent(o.dossier) + '" target="_blank" rel="noopener">Open as a page · print</a></div>' + compPanel(o, true) + frame(o, 'analysis')
       : tab === 'dossier' ? (o.databook && ST.role !== 'company' ? '<div class="dl" style="margin-top:12px"><span class="muted">Every block with its facts, each opening its page. For your own model: the same record as a workbook with live formulas, and every fact in long format.</span><span style="flex:1"></span><a class="btn sec" href="' + esc(o.databook[0]) + '" download>Databook (xlsx)</a><a class="btn sec" href="' + esc(o.databook[1]) + '" download>Facts (csv)</a></div>' : '') + frame(o, 'proof') : tab === 'assess' ? frame(o, 'assess')
       : '<div class="body">' + ({ documents: o.depth ? dataRoomTab : docsTab, qa: qaTab, book: bookTab, requests: requestsTab }[tab] || docsTab)(o) + '</div>';
@@ -784,7 +800,7 @@ window.RATES = {
   function snum(v, u) { return v == null ? '–' : u === '%' ? (v * 100).toFixed(1) + '%' : u === 'x' ? v.toFixed(1) + 'x' : (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
   function fbtn(id, txt, st, tip) { return id ? '<button type="button" class="fb' + (st === 'pend' ? ' pend' : '') + '" data-fact="' + esc(id) + '" title="' + esc(tip || 'Open the page it was read from') + '">' + txt + '</button>' : txt; }
   function srcb(id) { return '<button type="button" class="src" data-fact="' + esc(id) + '" title="Open the page it was read from">' + esc(id) + '</button>'; }
-  function flist(xs) { return '<ul class="facts">' + xs.map(function (x) { return '<li' + (x[0].length > 150 ? ' class="clamp" title="Click to read the whole item"' : '') + '>' + esc(x[0]) + srcb(x[1]) + '</li>'; }).join('') + '</ul>'; }
+  function flist(xs) { return '<ul class="facts">' + xs.map(function (x) { return '<li' + (x[0].length > 150 ? ' class="clamp" title="Click to read the whole item"' : '') + '><span class="ct">' + esc(x[0]) + srcb(x[1]) + '</span></li>'; }).join('') + '</ul>'; }
   function snapshotView(o) {
     var s = o.snapshot, h = s.head || {}, ps = s.periods, b = function (k) { return (o.bond || []).filter(function (x) { return x.key === k; })[0]; };
     var tv = function (k) { var v = term(o, k), x = b(k); return v || (x && x.st === 'discussion' ? 'set with the anchors' : ''); };
@@ -1047,10 +1063,6 @@ window.RATES = {
         '<div class="pv">' + esc(r.cls) + ' · <button type="button" class="fb srcs" data-calc="' + cref(r.label + ': the group and the method', peerCalc(r), r.ids, peerExtra(r)) + '">the group and the method</button></div></div>';
     }).join('') + '</div>' + (P.missing ? '<p class="note">' + esc(P.missing) + '</p>' : ''));
   }
-  function moPanel(o) {
-    var M = o.depth.mo, sec = function (t, xs) { return xs && xs.length ? '<h4>' + t + '</h4>' + flist(xs) : ''; };
-    return panel('Management and ownership', 'As the documents state them; each item opens its page. No judgement added.', '<div class="mo"><div>' + sec('Owners', M.owners) + sec('Governance', M.governance) + '</div><div>' + sec('Key people', M.people) + sec('Succession and changes', M.succession) + '</div><div>' + sec('Related parties', M.related) + sec('Distributions and pay', M.pay) + '</div></div>', 'full');
-  }
   function commitPanel(o) {
     var A = anchors(o), dp = dealPrice(o), tot = sum(o), open = Math.max(0, o.issueEURm - tot), cnd = sum(o, 'conditional') + sum(o, 'indicative');
     return panel('Commitments', 'Each anchor with its amount, its price and its status; fictional institutions', '<div class="scroll"><table class="grid"><thead><tr><th>Anchor</th><th class="num">EUR m</th><th class="num">Share</th><th>Price</th><th>Status</th></tr></thead><tbody>' +
@@ -1085,11 +1097,185 @@ window.RATES = {
   }
   function anchorView(o) {   // depth 1, the credit analyst: the terms, the access, the fact headline, then the figures and the tests, debt and liquidity, peers, people
     CALC = [];
-    return '<div class="dp">' + termsCard(o) + accessCard(o) + headline(o) +
+    return '<div class="dp">' + purposePanel(o) + termsCard(o) + accessCard(o) + headline(o) +
       '<div class="row2">' + kmPanel(o) + thrPanel(o) + '</div><div class="row2 even">' + ladderPanel(o) + liqPanel(o) + '</div><div class="row2 even">' + peerPanel(o) + guidePanel(o) + '</div>' +
-      moPanel(o) + '<div class="row2 even">' + commitPanel(o) + qaPanel(o) + '</div>' + riskPanels(o) + nextPanel(o) + '</div>';
+      mgmtSummary(o) + compsPanel(o) + '<div class="row2 even">' + commitPanel(o) + qaPanel(o) + '</div>' + riskPanels(o) + nextPanel(o) + '</div>';
   }
 
+
+  // ---------- 24 Oct 2026, after an MVP review: the proposal first (how much, for what, and the company's own plans), the team over the years beside the
+  //            figures (backgrounds, changes with the reason the reports give, the boards), and the competitors as one diagram with each source ----------
+  function purposePanel(o) {
+    var D = o.depth, U = D.purpose || {}, nm = cname(o), dp = dealPrice(o), DT = dealDates(o), cp = dp ? cpnTxt(o, dp.v) : 'a coupon set with the anchors';
+    var L0 = o.snapshot.ladder || { rows: [] }, my = DT.maturity.getFullYear(), top = L0.rows.filter(function (r) { return r.y !== 'later' && +r.y < my && r.p; }).sort(function (a, b) { return b.p - a.p; })[0];
+    var lst = function (t, xs) { return xs && xs.length ? '<div><h4>' + t + '</h4><ul class="rl">' + xs.map(function (x) { return '<li>' + esc(cap1(clip(x[0], 200))) + srcb(x[1]) + '</li>'; }).join('') + '</ul></div>' : ''; };
+    return '<div class="panel prop"><div class="ph"><h3>The proposal</h3><p>What ' + esc(nm) + ' asks for and what the money is for; then what the company itself says about its plans, its acquisitions and its funding.</p></div>' +
+      '<p class="ask">' + esc(o.company.name) + ' asks for <b>EUR ' + o.issueEURm + 'm for ' + DT.yrs + ' years</b> at <b>' + esc(cp) + '</b>' + (dp && !dp.set ? ', the anchors’ indication; the price is set with them' : '') + '. ' + ill('illustrative deal') + '</p>' +
+      '<p class="use"><b>The money is for:</b> ' + esc(cap1((o.company.useOfProceeds || '').replace(/\s*\(illustrative[^)]*\)\.?$/, '').replace(/\.$/, ''))) + '.' + (top ? ' Before this bond is due, ' + esc(nm) + ' must also repay or refinance EUR ' + f1(top.p) + 'm in ' + top.y + '.' : '') + '</p>' +
+      '<div class="why">' + lst('Plans and targets', U.plans) + lst('Companies bought and sold', U.acq) + lst('Strategy, as stated', U.strategy) + lst('How it funds itself', U.funding) + '</div>' +
+      '<p class="note">The financing and its purpose are illustrative and not proposed by ' + esc(nm) + '. The plans, acquisitions, strategy and funding are the company’s own words; each opens its page.</p></div>';
+  }
+  function teamSvg(o) {   // a bar per person and position from the date the reports give; a ring per change; revenue and EBITDA per year underneath on the same axis
+    var T = o.depth.team, P = T.people, F = T.fy.filter(function (f) { return f.rev != null; }); if (!P.length) return '';
+    var now = new Date().getFullYear(), starts = P.map(function (p) { return p.start ? +p.start.slice(0, 4) : now; }).concat(F.length ? [F[0].y] : []), y0 = Math.max(Math.min.apply(null, starts), now - 11), y1 = now + 1;
+    var heads = BODY, rows = [];
+    ['management', 'supervisory', 'trust office', 'advisory board', 'subsidiary'].forEach(function (b) { var ps = P.filter(function (p) { return p.body === b; }); if (ps.length) { rows.push({ head: heads[b] }); ps.forEach(function (p) { rows.push(p); }); } });
+    var W = 1040, L = 300, R = 16, rh = 22, top = 28, fh = 120, H = top + rows.length * rh + 26 + fh + 22, X = function (t) { return L + (t - y0) / (y1 - y0) * (W - L - R); };
+    var yt = function (d) { return d ? +d.slice(0, 4) + (d.length > 4 ? (+d.slice(5, 7) - 1) / 12 : 0) : null; };
+    var s = '<svg class="ch" viewBox="0 0 ' + W + ' ' + H + '" style="max-width:' + W + 'px" role="img" aria-label="Who held which position since when, and the company’s revenue and EBITDA by year">';
+    for (var y = y0; y <= y1; y++) { var gx = X(y).toFixed(1); s += '<line x1="' + gx + '" x2="' + gx + '" y1="' + (top - 6) + '" y2="' + (H - 20) + '" stroke="var(--gridl)"/>' + (y < y1 ? '<text x="' + X(y + 0.5).toFixed(1) + '" y="' + (top - 12) + '" font-size="11" text-anchor="middle" fill="var(--muted)">' + y + '</text>' : ''); }
+    rows.forEach(function (r, i) {
+      var cy = top + i * rh + rh / 2;
+      if (r.head) { s += '<text x="0" y="' + (cy + 4) + '" font-size="11.5" font-weight="600" fill="var(--navy)">' + esc(r.head) + '</text>'; return; }
+      var a = yt(r.start), b = r.end ? yt(r.end) : y1, a2 = Math.max(a == null ? y0 : a, y0), col = r.body === 'management' ? 'var(--c-main)' : r.body === 'subsidiary' ? 'var(--gold)' : 'var(--c-alt)';
+      s += '<text x="10" y="' + (cy + 4) + '" font-size="12" fill="var(--ink)">' + esc(clip(r.name, 24)) + '</text><text x="' + (L - 10) + '" y="' + (cy + 4) + '" font-size="11" text-anchor="end" fill="var(--muted)">' + esc(clip(r.role.split('; ').pop(), 34)) + '</text>';
+      s += '<g><title>' + esc(r.name + ' · ' + r.role + (r.start ? '' : ' · start not stated in the reports') + (r.end ? ' · until ' + r.end : '') + (r.bg ? ' · ' + r.bg[0] : '')) + '</title><rect x="' + X(a2).toFixed(1) + '" y="' + (cy - 6) + '" width="' + Math.max(3, X(b) - X(a2)).toFixed(1) + '" height="12" rx="3" fill="' + col + '"' + (a == null ? ' fill-opacity="0.4"' : '') + '/></g>';
+      if (a != null && a < y0) s += '<text x="' + (X(a2) + 5).toFixed(1) + '" y="' + (cy + 4) + '" font-size="10.5" fill="#fff">since ' + r.start.slice(0, 4) + '</text>';
+      r.events.forEach(function (e) { var t = yt(e.d); if (t == null || t < y0) return; s += '<g><title>' + esc(e.d + ' · ' + e.kind + ' · ' + e.role + (e.why ? ': ' + e.why : '')) + '</title><circle cx="' + X(t).toFixed(1) + '" cy="' + cy + '" r="5.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/></g>'; });
+    });
+    var f0 = top + rows.length * rh + 26, mx = Math.max.apply(null, F.map(function (f) { return f.rev; })) || 1, sy = function (v) { return Math.max(0, v) / mx * (fh - 26); }, bw = Math.min(16, (X(1) - X(0)) / 3.2), b0 = f0 + fh;
+    s += '<text x="0" y="' + (f0 + 14) + '" font-size="11.5" font-weight="600" fill="var(--navy)">Revenue and EBITDA, EUR m</text><line x1="' + L + '" x2="' + (W - R) + '" y1="' + b0 + '" y2="' + b0 + '" stroke="#B9B2A1"/>';
+    F.forEach(function (f) {
+      if (f.y < y0) return; var cx = X(f.y + 0.5);
+      s += '<g><title>' + esc('FY' + f.y + ': revenue ' + f1(f.rev) + (f.e != null ? ', EBITDA as reported ' + f1(f.e) : '') + (f.ex != null ? ', excluding one-off income ' + f1(f.ex) : '')) + '</title><rect x="' + (cx - bw - 1).toFixed(1) + '" y="' + (b0 - sy(f.rev)).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + sy(f.rev).toFixed(1) + '" fill="var(--c-main)"/>' +
+        (f.e != null ? '<rect x="' + (cx + 1).toFixed(1) + '" y="' + (b0 - sy(f.e)).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + sy(f.e).toFixed(1) + '" fill="var(--c-alt)"/>' : '') + '</g>' +
+        '<text x="' + cx.toFixed(1) + '" y="' + (b0 - sy(f.rev) - 5).toFixed(1) + '" font-size="10.5" text-anchor="middle" fill="var(--ink)">' + f1(f.rev) + '</text>' + (f.e != null ? '<text x="' + cx.toFixed(1) + '" y="' + (b0 + 14) + '" font-size="10.5" text-anchor="middle" fill="var(--muted)">' + neg(f1(f.e)) + '</text>' : '');
+    });
+    return s + '</svg>';
+  }
+  // ---------- 24 Oct 2026 (Sam: "a separate management tab", the board and its members' earlier jobs): the Snapshot keeps a summary, the Management
+  //            tab holds the team over the years, the people per body with background and earlier roles (the employer's published figures at entry and exit,
+  //            researched in companies/<x>/people.json), the board's set-up, the changes with their reasons, owners, related parties and pay ----------
+  var BODY = { management: 'Management', supervisory: 'Supervisory board', 'trust office': 'Trust office (holds the shares)', 'advisory board': 'Advisory board', subsidiary: 'Subsidiaries' };
+  function mg(o) {
+    var M = o.depth.mo, T = o.depth.team || { people: [], unnamed: [], boards: [] }, ev = [];
+    T.people.forEach(function (p) { (p.events || []).forEach(function (e) { ev.push([e, p]); }); }); ev.sort(function (a, b) { return (b[0].d || '').localeCompare(a[0].d || ''); });
+    var once = function (xs, not) { var seen = {}; (not || []).forEach(function (x) { seen[x[1]] = seen[x[0].slice(0, 50).toLowerCase()] = 1; }); return xs.filter(function (x) { var k = x[0].slice(0, 50).toLowerCase(); return !seen[x[1]] && !seen[k] && (seen[x[1]] = seen[k] = 1); }); };
+    return { M: M, T: T, ev: ev, once: once, has: function (b) { return T.people.some(function (p) { return p.body === b; }); }, of: function (b) { return T.people.filter(function (p) { return p.body === b; }); } };
+  }
+  function evLine(e, p) {
+    var w = String(e.why || '').replace(/^\d{4}(-\d\d)?(-\d\d)?\s*/, '').replace(/^\((.*)\)$/, '$1');
+    return '<li><b>' + esc(e.d || 'date not stated') + '</b> · ' + esc(p.name) + ' ' + esc({ joins: 'joined as', leaves: 'left as', changes: 'changed role:' }[e.kind] || e.kind) + ' ' + esc(e.role) + (w && w.toLowerCase().replace(/^(?:appointed|welcomed)(?: as)?(?: group)? /, '') !== e.role.toLowerCase() ? ': ' + esc(w) : '') + srcb(e.id) + '</li>';
+  }
+  function sref(src, page, quote, label) {   // a source: the company's own document opens at its page, a web source in a new tab; the quote on hover
+    if (!src) return '';
+    if (/^p\.(null|undefined)$/.test(label)) label = 'source';
+    if (/^S\d+$/.test(src)) return '<button type="button" class="fb srcs" data-doc="' + esc(src) + '" data-page="' + esc(page || 1) + '"' + (quote ? ' title="' + esc('“' + quote + '”') + '"' : '') + '>' + esc(label) + '</button>';
+    if (page && /\.pdf$/i.test(src)) src += '#page=' + page;   // a PDF opens at the cited page
+    return /^https?:/.test(src) ? '<a href="' + esc(src) + '" target="_blank" rel="noopener"' + (quote ? ' title="' + esc('“' + quote + '”') + '"' : '') + '>' + esc(label) + ' ↗</a>' : esc(src);
+  }
+  function current(p) { var r = (p.role || '').split('; ').pop(); return r.replace(/ from /, ' since '); }
+  function mgmtSummary(o) {   // on the Snapshot: who runs and oversees the company, in four lines, and the way to the tab
+    var G = mg(o), T = G.T, nm = cname(o), now = new Date(), cut = new Date(now.getFullYear() - 2, now.getMonth(), 1).toISOString().slice(0, 7);
+    var live = function (b) { return G.of(b).filter(function (p) { return !p.end; }); }, ind = function (p) { var x = p.x || {}; return x.independent != null ? x.independent : (p.info || []).some(function (i) { return /^independent: yes/.test(i); }); };
+    var sup = live('supervisory'), tr = live('trust office'), recent = G.ev.filter(function (x) { return (x[0].d || '') >= cut; }), chair = function (ps) { return ps.filter(function (p) { return /chair/i.test(current(p)); })[0]; };
+    var line = function (t, v) { return v ? '<li><b>' + t + ':</b> ' + v + '</li>' : ''; };
+    var body = '<ul class="rl">' + line('Management', live('management').map(function (p) { return esc(p.name) + ', ' + esc(current(p)); }).join('; ')) +
+      line('Supervisory board', sup.length ? sup.length + ' members' + (chair(sup) ? ', chair ' + esc(chair(sup).name) + ' (' + esc(current(chair(sup)).replace(/^Chair /, '')) + ')' : '') + '; ' + sup.filter(ind).length + ' stated as independent' : '') +
+      line('Trust office holding the shares', tr.length ? tr.length + ' members' + (chair(tr) ? ', chair ' + esc(chair(tr).name) : '') : '') +
+      line('Subsidiaries', live('subsidiary').map(function (p) { return esc(p.name) + ', ' + esc(current(p)); }).join('; ')) +
+      line('Changes in the last two years', recent.length ? recent.length + '; the latest: ' + esc(recent[0][0].d) + ', ' + esc(recent[0][1].name) + ' ' + esc({ joins: 'joined as', leaves: 'left as', changes: 'changed role:' }[recent[0][0].kind]) + ' ' + esc(recent[0][0].role) : 'none in the reports') +
+      line('Owners', G.M.owners[0] ? esc(clip(G.M.owners[0][0], 160)) + srcb(G.M.owners[0][1]) : '') + '</ul>';
+    return panel('Management and board', 'Who runs and oversees ' + esc(nm) + ', as the documents state it. The people, their careers, the changes and the board’s set-up are on the Management tab.', body +
+      '<p style="margin:10px 0 0"><a class="btn sec" href="#/deal/' + esc(o.id) + '/mgmt">Open the Management tab</a></p>', 'full');
+  }
+  function teamBlock(o) {
+    var G = mg(o), has = G.has, bd = has('supervisory') || has('trust office') || has('advisory board'), pale = G.T.people.some(function (p) { return !p.start; });
+    return panel('The team over the years, beside the company’s figures', 'Each position from the date the reports give; revenue and EBITDA per year on the same axis', teamSvg(o) +
+      '<div class="lgd2"><span><i class="sym bar"></i>management</span>' + (bd ? '<span><i class="sym slate"></i>' + [has('supervisory') && 'supervisory board', has('trust office') && 'trust office', has('advisory board') && 'advisory board'].filter(Boolean).join(', ') + '</span>' : '') + (has('subsidiary') ? '<span><i class="sym gold"></i>subsidiary</span>' : '') +
+      '<span><i class="sym ring"></i>a change; point at it for the reason the reports give</span>' + (pale ? '<span><i class="sym ' + (bd ? 'slate' : 'bar') + '" style="opacity:.4"></i>no start date in the reports</span>' : '') + '</div>' +
+      '<p class="how"><b>How to read it.</b> Each bar runs from the date the reports give for the position' + (pale ? '; a pale bar has no start date in the reports' : '') + '. Underneath, revenue (navy, value on top) and EBITDA as reported (grey, value below) per fiscal year on the same time axis, so the figures can be read against who was in charge. No result is attributed to a person.</p>', 'full');
+  }
+  function priorCell(p, nm) {   // earlier roles; where the role was at a company with published figures, those figures by year, each marked by how it relates to the role
+    var pr = ((p.x || {}).prior_roles || []); if (!pr.length) return '<span class="muted">' + (p.x ? 'none listed in the sources' : '–') + '</span>';
+    var n = function (v, ap) { return v == null ? '–' : (ap ? 'about ' : '') + neg(v.toLocaleString('en-GB', { maximumFractionDigits: Math.abs(v) < 10 ? 1 : 0 })); };
+    var md = function (v) { var m = String(v || '').match(/^(\d{4})(?:-(\d\d))?/); return m ? (m[2] ? 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[+m[2] - 1] + ' ' : '') + m[1] : ''; };
+    return '<ul class="pr">' + pr.map(function (r) {
+      var span = md(r.from) || md(r.to) ? ', ' + (md(r.from) || 'start not stated') + '–' + (md(r.to) || (r.to === '?' ? 'end not found' : '')) : '';
+      var ys = r.yrs || [], cur = ys.length ? ys[0].cur : '';
+      return '<li><b>' + esc(r.employer) + '</b>, ' + esc(r.role || '') + esc(span) + ' ' + sref(r.source, r.page, r.quote, 'source') +
+        (r.own ? '<span class="fig muted">' + esc(poss(nm)) + ' own figures for these years: the chart above</span>'
+          : !ys.length && /leadership role/.test(r.why || '') && !/^not /.test(r.why || '') ? '<span class="fig muted">no published figures for this role found</span>'
+          : ys.length ? '<span class="fig">' + esc(cap1(r.basis || 'published figures')) + ', ' + esc(cur) + ' m:</span>' + ys.map(function (y) {
+              return '<span class="yr' + (y.out ? ' out' : '') + '">' + esc(y.fy) + ' (' + esc(y.rel) + '): ' + [['revenue', 'revenue'], ['ebitda', 'EBITDA'], ['ebit', 'EBIT']].filter(function (k) { return y[k[0]] != null; }).map(function (k) { return k[1] + ' ' + n(y[k[0]], y.approx); }).join(' · ') +
+                ' ' + sref(y.src, y.page, y.quote, 'source') + (y.secondary ? ' ' + ill('secondary source') : '') + '</span>'; }).join('') : '') + '</li>'; }).join('') + '</ul>';
+  }
+  function bgCell(p) {
+    var X = p.x || {}, op = X.other_positions || [];
+    var bg = p.bg ? '<span title="' + esc(p.bg[0]) + '">' + esc(clip(p.bg[0], 250)) + '</span>' + srcb(p.bg[1]) : (X.facts || []).filter(function (f) { return !/current members|members then|has three to five/i.test(f.text); }).length ? X.facts.filter(function (f) { return !/current members|members then|has three to five/i.test(f.text); }).slice(0, 2).map(function (f) { return esc(f.text) + ' ' + sref(f.doc, f.page, f.quote, 'p.' + f.page); }).join('<br>') : '<span class="muted">no biography in the documents on file</span>';
+    var one = function (q) { return esc(q.company) + (q.role ? ', ' + esc(q.role) : '') + (q.years ? ' (' + esc(clip(q.years, 60)) + ')' : '') + ' ' + sref(q.source, q.page, q.quote, 'source'); };
+    return bg + (op.length ? '<span class="op">Other positions: ' + op.slice(0, 3).map(one).join('; ') + '</span>' + (op.length > 3 ? '<details class="more op"><summary>' + (op.length - 3) + ' more</summary>' + op.slice(3).map(one).join('; ') + '</details>' : '') : '');
+  }
+  function peopleTable(ps, board, nm) {
+    var anyPrior = ps.some(function (p) { return ((p.x || {}).prior_roles || []).length; });
+    var bx = function (p) { var X = p.x || {}, iv = X.independent != null ? (X.independent ? 'yes' : 'no') : ((p.info || []).filter(function (i) { return /^independent/.test(i); })[0] || '').replace(/^independent: /, ''), cm = (X.committees || []).join(', ') || ((p.info || []).filter(function (i) { return /^committees/.test(i); })[0] || '').replace(/^committees: /, '');
+      return '<td class="ind">' + (iv ? esc(cap1(iv)) : '<span class="muted">–</span>') + (cm ? '<br><span class="muted small">' + esc(cm) + '</span>' : '') + '</td><td class="att">' + (X.attendance ? '<span title="' + esc(X.attendance.text) + '">' + esc(X.attendance.text.replace(/\s*\([^)]*\)\s*$/, '').replace(/^FY(\d{4}): attended /, 'FY$1: ')) + '</span> ' + sref(X.attendance.doc, X.attendance.page, X.attendance.quote, 'p.' + X.attendance.page) : '<span class="muted">–</span>') + '</td>'; };
+    return '<div class="scroll"><table class="grid ppl' + (board ? ' brd' : '') + '"><thead><tr><th class="nm">Person</th><th class="pos">Position, from the reports</th>' + (board ? '<th class="ind">Independent; committees</th><th class="att">Attendance, latest year</th>' : '') + '<th class="bgc">Background, as the reports state it</th>' + (anyPrior ? '<th class="prc">Earlier roles; company figures by year where published (grey: a year mostly outside the role)</th>' : '') + '</tr></thead><tbody>' +
+      ps.map(function (p) { var X = p.x || {};
+        return '<tr><td class="nm"><b>' + esc(p.name) + '</b>' + (X.born ? '<br><span class="muted small">born ' + esc(X.born) + '</span>' : '') + '</td><td class="pos">' + esc(p.role) + (p.end ? '; until ' + esc(p.end) : '') + (X.term_ends ? '<br><span class="muted small">term ends ' + esc(X.term_ends) + '</span>' : '') + (p.ids.length ? srcb(p.ids[0]) : '') + '</td>' +
+          (board ? bx(p) : '') + '<td class="bgc">' + bgCell(p) + '</td>' + (anyPrior ? '<td class="prc">' + priorCell(p, nm) + '</td>' : '') + '</tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function mgmtTab(o) {
+    var G = mg(o), M = G.M, T = G.T, nm = cname(o), sec = function (t, xs) { return xs && xs.length ? '<h4>' + t + '</h4>' + flist(xs) : ''; };
+    var grp = function (b, sub, board, extra) { var ps = G.of(b); return ps.length || extra ? panel(BODY[b], sub, (ps.length ? peopleTable(ps, board, nm) : '') + (extra || ''), 'full') : ''; };
+    var boards = G.once((T.boards || []).concat(M.governance), M.succession);
+    var chg = G.ev.length || (T.unnamed || []).length ? '<ul class="rl">' + G.ev.map(function (x) { return evLine(x[0], x[1]); }).join('') + (T.unnamed || []).map(function (x) { return '<li>' + esc(x[0]) + srcb(x[1]) + '</li>'; }).join('') + '</ul>' : '<p class="muted small">No change recorded in the reports.</p>';
+    var res = T.people_asof ? '<div class="panel full res"><p class="note" style="margin:0">Earlier roles, other positions and the board facts beside the record: researched from public sources on ' + esc(dfull(T.people_asof)) + ', each with its source; a company’s figures are that company’s, not a measure of the person.</p>' +
+      (T.people_method ? '<details class="more"><summary>How it was researched</summary><p class="small">' + esc(T.people_method) + '</p></details>' : '') + ((T.people_not_found || []).length ? '<details class="more"><summary>Looked for and not found</summary><ul class="rl">' + T.people_not_found.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></details>' : '') + '</div>' : '';
+    return '<div class="dp mgt"><div class="tabbar"><span>Who runs and oversees ' + esc(nm) + ': the people, their careers as the documents state them, the changes and how the boards are set up. Facts with their sources; no judgement of any person, and no result attributed to one.</span></div>' +
+      teamBlock(o) +
+      grp('management', 'The executives as the documents name them, with background and earlier roles as stated', false) +
+      (G.has('supervisory') ? grp('supervisory', 'Who oversees the management: members, term, independence, committees and attendance as the reports state them', true, sec('How the board is set up', boards.filter(function (x) { return /board|appoint|nominat|chair|committee/i.test(x[0]) && !/related-party/i.test(x[0]); }).slice(0, 6))) : '') +
+      grp('trust office', 'The foundation that holds the shares and issues the depositary receipts', true) +
+      (G.has('supervisory') ? '' : G.has('advisory board') || /advisory board/i.test(boards.map(function (x) { return x[0]; }).join(' ')) ? grp('advisory board', 'No supervisory board; how the company is run and advised, as the documents describe it', false, sec('What the documents say', boards))
+        : boards.length ? panel('Governance', 'As the documents describe it', flist(boards.slice(0, 6)), 'full') : '') +
+      grp('subsidiary', 'Heads of subsidiaries the reports name', false) + res +
+      '<div class="row2 even">' + panel('Changes, and the reason the reports give', 'Every join, departure and change of role on file, latest first', chg) + panel('Succession and appointment', 'Who appoints whom, and what the documents say about succession', (M.succession.length ? flist(M.succession) : '<p class="muted small">Nothing on file.</p>')) + '</div>' +
+      '<div class="row2 even">' + panel('Owners and control', 'Who holds the shares and the votes', M.owners.length ? flist(M.owners) : '<p class="muted small">Nothing on file.</p>') + panel('Related parties and pay', 'Flows with owners and board members, and what the boards are paid', sec('Related parties', M.related) + sec('Distributions and pay', M.pay)) + '</div></div>';
+  }
+  function compsPanel(o) {   // 24 Oct 2026: the competitors on one measure (the company in gold), each figure with its source and date; then what the company's own reports say
+    var C = o.depth.comps, nm = cname(o); if (!C) return '';
+    var met = C.metric.replace(/\s*\([^)]*\)/g, ''), cur = /EUR/.test(C.company.unit || ''), ms = function (d) { return /^\d{4}-\d\d-\d\d$/.test(d || '') ? 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[+d.slice(5, 7) - 1] + ' ' + d.slice(0, 4) : String(d || '').split(' (')[0]; };
+    var cm = function (u) { return (u || '').match(/^([A-Z]{3}) m$/); }, one = function (t) { return (t || '').split('; ').filter(function (x, i, a) { return a.indexOf(x) === i; }).join('; '); };
+    var all = [{ name: C.company.name || nm, v: C.company.value, d: C.company.date, me: true, c: {} }].concat((C.competitors || []).map(function (c) { return { name: c.name, v: c.v, d: c.date, c: c }; })).sort(function (a, b) { return (b.v == null ? -1 : b.v) - (a.v == null ? -1 : a.v); });
+    var pts = all.filter(function (x) { return x.v != null; }), top = pts[0].v, sec2 = (pts[1] || pts[0]).v, cap = top > 2.5 * sec2 ? sec2 * 1.25 : top;
+    var num = function (x) { return (x.c.about ? 'about ' : x.c.calc ? '≈ ' : '') + x.v.toLocaleString('en-GB', { maximumFractionDigits: 0 }); };
+    var W = 1040, L = 300, R = 190, rh = 30, H = pts.length * rh + 12, X = function (v) { return L + Math.min(v, cap) / cap * (W - L - R); };
+    var svg = '<svg class="ch" viewBox="0 0 ' + W + ' ' + H + '" style="max-width:' + W + 'px" role="img" aria-label="' + esc(met + ': ' + pts.map(function (x) { return x.name + ' ' + num(x); }).join(', ')) + '">';
+    pts.forEach(function (x, i) {
+      var cy = 6 + i * rh + rh / 2, x1 = X(x.v), br = x.v > cap, c = x.c;
+      var tip = x.name + ': ' + num(x) + ', ' + (x.d || '') + (x.me ? ' · ' + C.company.source : ' · ' + (c.basis || '') + ' · ' + (c.source_name || '') + (c.secondary ? ' (secondary source)' : '') + (c.calc ? ' · ' + c.calc : ''));
+      svg += '<text x="' + (L - 12) + '" y="' + (cy + 4) + '" font-size="12.5" text-anchor="end" fill="var(--ink)"' + (x.me ? ' font-weight="600"' : '') + '>' + esc(clip(x.c.label || x.name, 42)) + '</text>' +
+        '<g><title>' + esc(tip) + '</title><rect x="' + L + '" y="' + (cy - 9) + '" width="' + Math.max(2, x1 - L).toFixed(1) + '" height="18" rx="3" fill="' + (x.me ? 'var(--gold)' : 'var(--c-main)') + '"' + (c.secondary ? ' fill-opacity="0.45"' : '') + '/>' +
+        (br ? '<path d="M' + (x1 - 30).toFixed(1) + ' ' + (cy + 11) + ' l8 -22 M' + (x1 - 22).toFixed(1) + ' ' + (cy + 11) + ' l8 -22" stroke="var(--paper)" stroke-width="3"/>' : '') + '</g>' +
+        '<text x="' + (x1 + 8).toFixed(1) + '" y="' + (cy + 4) + '" font-size="12.5" font-weight="600" fill="var(--ink)">' + esc(num(x)) + ' <tspan font-weight="400" fill="var(--muted)" font-size="11.5">' + esc(ms(x.d)) + '</tspan></text>';
+    });
+    svg += '</svg>';
+    var page = (C.company.source || '').match(/\b(S\d+) p\. ?(\d+)/);
+    var fig = function (x) { var c = x.c; if (x.v == null && !x.me) return '<span class="muted">' + (c.value == null ? 'not published' : 'no figure in this measure') + '</span>';
+      var u = cm(x.me ? C.company.unit : c.unit), val = x.me ? x.v : c.value, n = val.toLocaleString('en-GB', { maximumFractionDigits: 1 });
+      return (c.about ? 'about ' : '') + (u ? esc(u[1] + ' ' + n) + 'm' + (c.calc ? ', ≈ EUR ' + esc(f1(c.v)) + 'm' : '') : esc(n + ' ' + (x.me ? C.company.unit : c.unit))) + ', ' + esc(ms(x.d)) +
+        (c.basis ? '<br><span class="muted small">' + esc(clip(c.basis, 110)) + '</span>' : ''); };
+    var src = function (x) { var c = x.c;
+      if (x.me) return page ? '<button type="button" class="fb srcs" data-doc="' + page[1] + '" data-page="' + page[2] + '">' + esc(docName(o, page[1])) + ', p.' + page[2] + '</button>' : esc(C.company.source || '');
+      if (!c.url) return '<span class="muted small">' + esc(clip(c.note || '', 140)) + '</span>';
+      return '<a href="' + esc(c.url) + '" target="_blank" rel="noopener"' + (c.quote ? ' title="' + esc('“' + c.quote + '”') + '"' : '') + '>' + esc(c.source_name) + ' ↗</a>' + (c.secondary ? ' ' + ill('secondary source') : '') + (c.calc ? '<br><span class="muted small">' + esc(c.calc) + '</span>' : ''); };
+    var tbl = '<div class="scroll"><table class="grid cmpt"><thead><tr><th>Company</th><th>Business</th><th>Figure</th><th>Source; point at it for the quote</th></tr></thead><tbody>' + all.map(function (x) {
+      return '<tr' + (x.me ? ' class="me"' : '') + '><td><b>' + esc(x.name) + '</b>' + (x.c.country ? '<br><span class="muted small">' + esc(clip(one(x.c.country), 60)) + '</span>' : '') + '</td><td>' + esc(x.me ? 'the issuer' : x.c.what || '') + '</td><td>' + fig(x) + '</td><td>' + src(x) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    var IR = (C.in_reports || []).slice().sort(function (a, b) { return (/compet/i.test(b.quote) ? 1 : 0) - (/compet/i.test(a.quote) ? 1 : 0); });
+    var qli = function (r) { return '<li><q>' + esc(r.quote) + '</q><span class="s">' + esc(docName(o, r.doc)) + ', p.' + esc(r.page) + ' · <button type="button" class="fb srcs" data-doc="' + esc(r.doc) + '" data-page="' + esc(r.page) + '">open the page</button></span></li>'; };
+    var named = (C.competitors || []).some(function (c) { return c.named_in_reports; });
+    var rep = IR.length ? '<h4>What ' + esc(poss(nm)) + ' own reports say</h4>' + (named ? '' : '<p class="muted small" style="margin:0 0 4px">The reports name no competitor. These are their statements on competition and market position.</p>') +
+      '<ul class="rl">' + IR.slice(0, 4).map(qli).join('') + '</ul>' + (IR.length > 4 ? '<details class="more"><summary>All ' + IR.length + ' passages</summary><ul class="rl">' + IR.slice(4).map(qli).join('') + '</ul></details>' : '') : '';
+    var rel = (C.related_not_competitors || []).length ? '<h4>Related, not competitors</h4><ul class="rl">' + C.related_not_competitors.map(function (r) { return '<li><b>' + esc(r.name) + '</b>: ' + esc(clip(r.why, 230)) + '</li>'; }).join('') + '</ul>' : '';
+    var ext = (C.method ? '<details class="more"><summary>How the list was made</summary><p class="small">' + esc(C.method) + '</p></details>' : '') + ((C.not_found || []).length ? '<details class="more"><summary>Looked for and not found</summary><ul class="rl">' + C.not_found.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></details>' : '');
+    var conv = pts.some(function (x) { return x.c.calc; }), abt = pts.some(function (x) { return x.c.about; }), sec = pts.some(function (x) { return x.c.secondary; });
+    return panel('Competitors', esc(met) + '. ' + esc(nm) + ' in gold; each figure with its source and date, as of ' + esc(dfull(C.asof)) + '. No ranking of ours.', svg +
+      '<div class="lgd2"><span><i class="sym gold"></i>' + esc(nm) + ', its own report</span><span><i class="sym bar"></i>competitor, the company’s own figure</span>' + (sec ? '<span><i class="sym bar" style="opacity:.45"></i>competitor, a secondary source (press, listing, database)</span>' : '') + '</div>' +
+      '<p class="how"><b>How to read it.</b> One bar per company on the same measure, so the sizes can be compared; the bars say nothing about quality or prospects.' + (cap < top ? ' The longest bar is cut (the white break) to keep the others readable; its figure is printed.' : '') +
+      (conv ? ' ≈: converted to EUR at the ECB’s annual average reference rate for the fiscal year; the division is in the table.' : '') + (abt ? ' “about”: the source itself gives a rounded figure.' : '') + ' Dates differ by company: each bar shows the latest figure published.</p>' +
+      '<h4 style="margin-top:14px !important">The figures and their sources</h4>' + tbl + '<div class="mo2"><div>' + rep + '</div><div>' + rel + ext + '</div></div>', 'full');
+  }
   // ---------- the data room (23 Oct 2026): the documents and every fact, downloadable as they come or as an extract in the investor's own shape ----------
   var DRS = { slug: null };
   function dossierData(slug) {   // the full record of a deal (dossier-data/<slug>.js), loaded once when the data room opens
@@ -1205,8 +1391,10 @@ window.RATES = {
       (w.anchorOpens != null && w.anchorCloses != null ? '<li><b>Earlier access:</b> the fact file, and questions to ' + esc(nm) + ', from ' + dstr(wd(w.anchorOpens)) + ' to ' + dstr(wd(w.anchorCloses)) + '. Every question and every answer is published to you below.</li>' : '') +
       '<li><b>Fees, discounts or other payments:</b> none.</li><li><b>Relationship with ' + esc(nm) + ':</b> none declared (no loan, shareholding or mandate).</li></ul>' +
       '<p class="srcl">The anchors’ own credit views are not shown on VanillaBonds; their questions and ' + esc(poss(nm)) + ' answers are. ' + ill() + ' fictional institutions and statements.</p></article>';
+    var U = D.purpose || {}, pl = (U.plans || []).slice(0, 2).concat((U.acq || []).slice(0, 1));
     var rv = F.rev, rep = D.dr.filter(function (d) { return !d.web && /annual|interim/.test(d.kind || ''); });
     var what = '<article class="card c-what"><h2>What is it?</h2><p class="lead">' + esc(o.company.name) + ' (' + esc(lc(o.company.industry.replace(/^.*?: /, '')) + ', ' + o.company.country) + ') borrows <b>EUR ' + o.issueEURm + 'm for ' + DT.yrs + ' years</b> at <b>' + esc(cp) + '</b> a year' + (o.company.financingPurpose ? ': ' + esc(lc(o.company.financingPurpose.replace(/\s*\(illustrative\)$/, ''))) : '') + '.' + (rv ? ' Revenue ' + rv.p.slice(2) + ': EUR ' + f1(rv.v) + 'm.' : '') + '</p>' +
+      (pl.length ? '<div class="sub3">What ' + esc(nm) + ' says it is doing</div><ul class="bul">' + pl.map(function (x) { return '<li>' + esc(cap1(clip(x[0], 170))) + srcb(x[1]) + '</li>'; }).join('') + '</ul>' : '') +
       '<p class="srcl">' + ill('illustrative deal') + ' not proposed by ' + esc(nm) + '. Company facts from its own reports: ' + esc(rep.map(function (d) { return d.kind.replace(/ report$/, '') + ' ' + d.period + (d.audited ? ', audited' : ', unaudited'); }).join('; ')) + '.</p></article>';
     var money = '<article class="card c-money"><h2>What do I get?</h2><p class="sub">On your own ticket: change the amount and the assumed reference rate.</p><div class="inputs"><label>Your ticket, EUR<input id="fo-tk" type="text" inputmode="numeric" value="' + Math.round(MONEY.t).toLocaleString('en-GB') + '"></label>' +
       (fixed(o) ? '' : '<label>Assumed reference rate, %<input id="fo-rr" class="sm" type="text" inputmode="decimal" value="' + (MONEY.r != null ? MONEY.r : RATES.ecb.deposit).toFixed(2) + '"></label>') +
@@ -1996,7 +2184,7 @@ window.RATES = {
     var ms = e.target.closest('th[data-msort]'); if (ms) { var mk = ms.getAttribute('data-msort'); MK.sort = MK.sort && MK.sort[0] === mk ? (MK.sort[1] > 0 ? [mk, -1] : null) : [mk, 1]; render(); return; }
     var s = e.target.closest('th[data-sort]'); if (s) { var k = s.getAttribute('data-sort'); SORT = SORT && SORT[0] === k ? (SORT[1] > 0 ? [k, -1] : null) : [k, 1]; render(); return; }
     var fx = e.target.closest('[data-fact]'); if (fx) { $('#pop').hidden = true; openViewer(DEALS[R.id].dossier, { type: 'show', id: fx.getAttribute('data-fact') }); return; }
-    var d = e.target.closest('[data-doc]'); if (d) { openViewer(DEALS[R.id].dossier, { type: 'showPage', doc: d.getAttribute('data-doc'), page: 1 }); return; }
+    var d = e.target.closest('[data-doc]'); if (d) { $('#pop').hidden = true; openViewer(DEALS[R.id].dossier, { type: 'showPage', doc: d.getAttribute('data-doc'), page: +(d.getAttribute('data-page') || 1) }); return; }
     var u = e.target.closest('[data-up]'); if (u) { ST.up[R.id + ':' + u.getAttribute('data-up')] = 1; save(); render(); return; }
     var ua = e.target.closest('[data-unans]'); if (ua) { delete ST.ans[R.id + ':' + ua.getAttribute('data-unans')]; save(); render(); return; }
     var a = e.target.closest('[data-act]'); if (!a) return; var act = a.getAttribute('data-act'), o = DEALS[R.id];
