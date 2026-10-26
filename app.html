@@ -178,7 +178,11 @@
   .mcharts svg a text { cursor: pointer; } .mcharts svg a:hover text { fill: var(--navy); text-decoration: underline; }
   .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 6px; } .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
   .chip.performing { color: #2F6B3A; border-color: #A9CDB0; background: #EEF6EF; } .chip.written { color: var(--gold-ink); border-color: #D9C79B; background: #FBF6E8; } .chip.standstill, .chip.default { color: #9A3B2E; border-color: #E2B7AE; background: #FBEFEC; }
-  .mtabs { margin: -4px 0 14px; border-bottom: 1px solid var(--border); } .mtabs a { padding: 9px 16px; font-size: 15px; }
+  .mtabs { margin: -4px 0 14px; border-bottom: 1px solid #CFC8B6; gap: 4px; } .mtabs a { padding: 9px 18px 8px; font-size: 15px; font-weight: 600; color: var(--ink-2); border: 1px solid transparent; border-bottom: 0; border-radius: 4px 4px 0 0; margin-bottom: -1px; }
+  .mtabs a:hover { background: #F1EEE5; color: var(--navy); } .mtabs a[aria-current="page"] { background: var(--paper); color: var(--navy); border-color: #CFC8B6; border-bottom: 1px solid var(--paper); box-shadow: inset 0 3px 0 var(--navy); }   /* 26 Oct 2026: tabs that read as tabs, no gold */
+  .mtabs .c { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--navy); background: #E6ECF2; border-radius: 10px; padding: 1px 8px; margin-left: 8px; } .mtabs .t2 { font-weight: 400; font-size: 12.5px; color: var(--muted); margin-left: 6px; }
+  .side a.sub { padding-left: 26px; font-size: 13.5px; } .side a .n2 { font-size: 12px; color: var(--rail-ink); background: var(--navy-2); border-radius: 9px; padding: 0 7px; } .side a.sub[aria-current="page"] .n2 { background: #3B5068; color: #fff; }
+  .mentry { display: flex; align-items: center; gap: 18px; background: var(--paper); border: 1px solid var(--border); border-left: 3px solid var(--navy); padding: 12px 16px; margin: 0 0 14px; } .mentry b { display: block; font-size: 15px; color: var(--navy); } .mentry span { font-size: 13px; color: var(--ink-2); } .mentry .btn { margin-left: auto; }
   .asof { font-size: 12.5px; color: var(--ink-2); margin: 0 0 6px; }
   .lgd { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); } .lgd span { display: inline-flex; align-items: center; gap: 5px; }
   .lgd i { display: inline-block; width: 9px; height: 9px; } .lgd .mk-vb { border: 1.5px solid var(--gold-ink); transform: rotate(45deg); width: 7px; height: 7px; } .lgd .mk-x { border-radius: 50%; background: var(--navy); } .lgd .mk-q { border-radius: 50%; border: 1.5px solid var(--navy); width: 7px; height: 7px; } .lgd .mk-t { background: #2F6B3A; }
@@ -200,7 +204,7 @@
   .secnav { position: sticky; top: var(--top); z-index: 20; background: var(--ground); display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin: 6px -24px 14px; padding: 0 24px; overflow-x: auto; } .secnav a { padding: 8px 12px; font-size: 13px; color: var(--ink-2); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; } .secnav a:hover { color: var(--navy); border-bottom-color: var(--gold); }
   section.sec, details.panel { scroll-margin-top: 96px; } section.sec { margin-bottom: 4px; } details.panel summary { cursor: pointer; list-style: none; } details.panel summary::-webkit-details-marker { display: none; } details.panel summary h3 { margin: 0; }
   .terms2 { columns: 2 300px; column-gap: 28px; } .terms2 .kv { break-inside: avoid; margin-bottom: 8px; }
-  .drawer { position: fixed; top: var(--top); right: 0; bottom: 0; width: min(460px, 100vw); z-index: 35; background: var(--paper); border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.12); overflow-y: auto; padding: 14px 18px 24px; } .drawer .x { float: right; } .drawer h2 { font-size: 17px; margin: 4px 0 2px; } .drawer .kick { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-ink); margin: 0; } .drawer .kv td:first-child { width: 36%; } .drawer h4 { font-size: 12px; font-weight: 600; color: var(--navy); margin: 12px 0 4px; }
+  .drawer { position: fixed; top: var(--top); right: 0; bottom: 0; width: min(460px, 100vw); z-index: 35; background: var(--paper); border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.12); overflow-y: auto; padding: 14px 18px 24px; } .drawer .x { float: right; } .drawer h2 { font-size: 17px; margin: 4px 0 2px; } .drawer .kick { font-size: 12.5px; color: var(--muted); margin: 0; } .drawer .dstep { display: flex; align-items: center; gap: 8px; margin: 0 0 2px; } .drawer .dstep .view { white-space: nowrap; } .drawer .dstep .view[disabled] { opacity: 0.4; cursor: default; } .drawer .dstep span { font-size: 12.5px; color: var(--muted); white-space: nowrap; } .drawer .dstep .x { float: none; margin-left: auto; } .drawer .dhint { font-size: 12px; color: var(--muted); margin: 0 0 10px; } .drawer .kv td:first-child { width: 36%; } .drawer h4 { font-size: 12px; font-weight: 600; color: var(--navy); margin: 12px 0 4px; }
   .grid tr.on td { background: #F3EEDF; } body.d-open .shell { padding-right: min(460px, 100vw); } @media (max-width: 900px) { body.d-open .shell { padding-right: 0; } }
   .grid.comps td:first-child { min-width: 250px; } .grid.comps td { vertical-align: top; }
   .info { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--muted); color: var(--muted); font-size: 10px; font-style: italic; font-family: Georgia, serif; cursor: help; margin-left: 6px; vertical-align: 1px; }
@@ -213,7 +217,7 @@
   .wk .day i { font-style: normal; display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 50%; } .wk .day.today i { background: var(--navy); color: var(--paper); font-weight: 600; }
   .bar, .chipd { margin: 1px 3px 0; font-size: 11.5px; line-height: 18px; height: 18px; padding: 0 6px; border-radius: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; min-width: 0; z-index: 1; }
   .bar { color: var(--paper); background: #8A97A5; } .bar.k-anchor { background: var(--navy); } .bar.k-book { background: var(--gold); color: var(--navy); } .bar.cont-l { border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: 0; } .bar.cont-r { border-top-right-radius: 0; border-bottom-right-radius: 0; margin-right: 0; } .bar:hover, .chipd:hover { outline: 1.5px solid var(--gold-ink); }
-  .chipd { background: none; color: var(--ink); padding-left: 4px; } .chipd::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: 0; background: #8A97A5; } .chipd.k-ecb::before { background: #2A8C8C; } .chipd.k-factfile::before { background: none; border: 1.5px solid var(--navy); width: 6px; height: 6px; } .chipd.k-procedure::before { background: #9A3B2E; }
+  .chipd { background: none; color: var(--ink); padding-left: 4px; } .chipd::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: 0; background: #8A97A5; } .chipd.k-ecb::before { background: #2A8C8C; } .chipd.k-factfile::before { background: none; border: 1.5px solid var(--navy); width: 6px; height: 6px; } .chipd.k-procedure::before { background: #9A3B2E; } .chipd.k-watch::before { background: none; border: 1.5px solid #2F6B3A; width: 6px; height: 6px; }
   .more { font-size: 11px; color: var(--muted); padding: 0 6px; cursor: pointer; grid-row: 5; z-index: 1; } .more:hover { color: var(--navy); text-decoration: underline; }
   #pop { position: fixed; z-index: 50; width: 310px; max-width: calc(100vw - 16px); background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--navy); box-shadow: 0 12px 32px rgba(9, 30, 52, 0.18); padding: 12px 14px; font-size: 13px; } #pop[hidden] { display: none; } #pop h4 { margin: 0 0 6px; font-size: 14px; color: var(--navy); } #pop .kv td:first-child { width: 30%; } #pop .dl { margin-top: 8px; }
   .rates .big { font-size: 28px; font-weight: 500; color: var(--navy); font-variant-numeric: tabular-nums; line-height: 1.1; } .rates h4 { font-size: 12px; font-weight: 600; color: var(--navy); margin: 12px 0 4px; }
@@ -241,7 +245,8 @@
   .dp .panel { margin: 0; padding: 16px 18px; min-width: 0; }
   .dp .full { margin-top: 14px; }
   .dp .ph { margin: 0 0 12px; } .dp .ph h3 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--navy); } .dp .ph p { margin: 3px 0 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
-  .dp .row2 { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 14px; margin-top: 14px; } .dp .row2.even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .dp .row2 { display: grid; grid-template-columns: minmax(0, 7fr) minmax(520px, 5fr); gap: 14px; margin-top: 14px; } .dp .row2.even { grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); }   /* 520 = a 480 chart + the panel's padding: two columns only where both keep their charts whole */
+  @media (max-width: 1530px) { .dp .row2:not(.even) { grid-template-columns: minmax(0, 1fr); } }   /* the key figures need about 740 px beside the 520 of the thresholds: below that, one above the other */
   .dp .note { font-size: 12.5px; color: var(--muted); margin: 10px 0 0; line-height: 1.5; } .dp .how { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; line-height: 1.5; } .dp .how b { color: var(--ink); font-weight: 600; }
   .dp .fb { text-align: inherit; } .dp a.fb { text-decoration: none; } .dp .srcs { font-size: 12.5px; color: var(--muted); }
   .dp h4 { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 6px !important; } .dp h4 span { font-weight: 400; color: var(--muted); font-size: 13px; }
@@ -274,7 +279,7 @@
   .km td.p, .km th.p { color: var(--muted); font-style: italic; } .km th.u, .km td.u { background: #FBFAF6; } .km tr.btr td.u { background: #E9EEF3; }
   .lgr { display: flex; flex-wrap: wrap; gap: 3px 14px; font-size: 12px; color: var(--muted); margin-top: 8px; } .lgr b { color: var(--ink-2); font-weight: 600; }
   /* charts: drawn at their design width, never wider; text in the page's font */
-  .dp svg.ch { display: block; width: 100%; height: auto; } .dp svg text { font-family: var(--sans); }
+  .dp svg.ch { display: block; } .dp svg text { font-family: var(--sans); }   /* 25 Oct 2026: drawn at their width and height attributes, never scaled; .chs scrolls a narrower panel */
   .tests > div + div { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--hair); }
   table.lv { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; } .lv td { padding: 5px 0; border-bottom: 1px solid var(--hair); vertical-align: top; line-height: 1.4; color: var(--ink-2); } .lv tr:last-child td { border-bottom: 0; }
   .lv td:first-child { color: var(--ink); padding-right: 10px; } .lv td.num { padding-left: 10px; color: var(--navy); font-weight: 600; }
@@ -378,9 +383,21 @@
   .cmpp .cmph h3 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--navy); } .cmpp .cmph p { margin: 3px 0 12px; font-size: 13px; color: var(--muted); line-height: 1.45; }
   .cmp3 { margin-top: 14px; max-width: 1040px; }   /* the chart at its full drawn size (Sam: the small one could not be read), the short table under it */
   .cshort { font-size: 13px; } .cshort th, .cshort td { padding: 6px 8px; } .cshort tr.me td { background: #F1F4F7; font-weight: 600; }
+  /* 25 Oct 2026 (reports/Gain platform lessons for VanillaBonds.md): the proof where the eye lands. A panel title opens its full tab; a shortened list
+     ends in '+ N more'; a chart keeps its design size (a narrower panel scrolls it, it never shrinks); the basis notes, the instrument table and the
+     entity matrix are plain tables, each fact with its id */
+  .dp .ph h3 a.tl2, .prop .ph h3 a.tl2 { color: inherit; text-decoration: none; } .dp .ph h3 a.tl2::after { content: " \203A"; color: var(--muted); font-weight: 400; } .dp .ph h3 a.tl2:hover { text-decoration: underline; }
+  a.more1 { font-size: 12.5px; color: var(--navy); text-decoration: none; white-space: nowrap; } a.more1:hover { text-decoration: underline; } .rl li.more1, .facts li.more1 { border-bottom: 0; padding-top: 6px; }
+  .chs { overflow-x: auto; overflow-y: hidden; max-width: 100%; } .chs > svg.ch { max-width: none !important; }
+  .grid.bas td, .grid.ins td, .grid.ent td, .grid.ent th[scope=row] { font-size: 12.5px; line-height: 1.45; vertical-align: top; } .grid.bas td b, .grid.ent th[scope=row] b { font-weight: 600; color: var(--ink-2); }
+  .grid.bas td.per { white-space: nowrap; } .grid.bas .sm2, .grid.ins .sm2, .grid.ent .sm2 { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; } .grid.bas .sm2 b { color: var(--muted); }
+  .grid.ins td.num b { color: var(--navy); font-weight: 600; } .grid.ins td:first-child { min-width: 240px; max-width: 360px; } .grid.ins td:nth-child(2) { max-width: 260px; } .grid.ins td.num .sm2 { text-align: right; white-space: normal; }
+  .grid.ent th[scope=row] { text-align: left; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink); background: var(--paper); white-space: normal; min-width: 210px; border-bottom: 1px solid var(--border); padding: 9px 10px; }
+  .grid.ent th.c, .grid.ent td.c { text-align: center; } .grid.ent td.no { color: #8A949E; }
   @media print {
     .topbar, .side, .tabs, .btn, #viewer, .view, .tb, .rng, .seg, .drawer, #pop, .secnav, .caltb, .back, form { display: none !important; } .shell { display: block; padding: 0 !important; } main { padding: 0; } .dealhead { position: static; margin: 0; padding: 0 0 8px; }
     body { background: #fff; } .panel, .grid { break-inside: avoid; }
+    .chs { overflow: visible; } .dp svg.ch { max-width: 100% !important; height: auto; }   /* on paper a wide chart fits the page; on screen it keeps its size */
   }
   @media (max-width: 900px) {
     .shell { grid-template-columns: minmax(0, 1fr); } .side { position: static; height: auto; flex-direction: row; overflow-x: auto; padding: 6px; } .side .note, .side hr { display: none; }
@@ -747,7 +764,9 @@ window.RATES = {
       : [['#/deals', 'Deals', IDS.filter(function (id) { return canSee(DEALS[id]); }).length, R.view === 'deals' || R.view === 'deal'], ['#/calendar', 'Calendar', '', R.view === 'calendar'],
          ['#/book', 'My book', Object.keys(ST.role === 'anchor' ? ST.ind : ST.ord).length || '', R.view === 'book']];
     $('#side').innerHTML = items.map(function (x) { return '<a href="' + x[0] + '"' + (x[3] ? ' aria-current="page"' : '') + '>' + x[1] + '<span class="c">' + x[2] + '</span></a>'; }).join('') +
-      '<hr>' + [['#/market', 'Market', 'market'], ['#/journey', 'Deal journey', 'journey']].map(function (x) { return '<a href="' + x[0] + '"' + (R.view === x[2] ? ' aria-current="page"' : '') + '>' + x[1] + '<span class="c"></span></a>'; }).join('') +
+      '<hr>' + (function () { var bl = R.view === 'market' && (R.id === 'bonds' || !!byIsin(R.id)), n = BONDS.filter(function (b) { return !closed(b); }).length;   // 26 Oct 2026 (Sam): Market has two parts; Bonds is its own entry
+        return '<a href="#/market"' + (R.view === 'market' && !bl ? ' aria-current="page"' : '') + '>Market<span class="c"></span></a><a class="sub" href="#/market/bonds"' + (bl ? ' aria-current="page"' : '') + '>Bonds<span class="n2">' + n + '</span></a>'; })() +
+        '<a href="#/journey"' + (R.view === 'journey' ? ' aria-current="page"' : '') + '>Deal journey<span class="c"></span></a>' +
       '<p class="note"><a href="index.html">← vanillabonds.com</a> · <a href="#" data-act="reset">Reset demo</a><br><br>Demonstration. Fastned and Katjes are shown from their own public reports; Van Dijk is fictional; the financing and every anchor are illustrative and fictional. Not an offer, solicitation or investment advice.</p>';
   }
 
@@ -845,9 +864,10 @@ window.RATES = {
         '</div>' +
       '<div><div class="panel"><h3>2 · Debt falling due</h3>' + mat + '<p class="small muted" style="margin:6px 0 0">' + esc(matNote) + '</p></div>' +
         '<div class="panel" style="margin-top:14px"><h3>3 · Anchors' + (dp && dp.set ? ', one price for everyone: ' + price(o, dp.v) : '') + '</h3>' + anc + '<p class="small muted" style="margin:6px 0 0">' + esc(ancNote) + '</p></div></div>' +
-      '<div class="panel full"><h3>4 · Comparables · 1 the issuer’s own debt · 2 sector peers in any format · 3 same-format bonds</h3>' + compBlock(cr) + '<p class="small muted" style="margin:6px 0 0">The full table and the price development: <a href="#/deal/' + o.id + '/analysis">Credit analysis</a>. The anchors set the price; nothing here is an indication from VanillaBonds.</p></div>' +
+      '<div class="panel full"><h3>4 · Comparables · 1 the issuer’s own debt · 2 sector peers in any format · 3 same-format bonds</h3>' + compBlock(cr) + '<p class="small muted" style="margin:6px 0 0">' + (o.analysis ? 'The full table and the price development are on the <a href="#/deal/' + o.id + '/analysis">Company summary</a> tab. ' : '') + 'The anchors set the price; nothing here is an indication from VanillaBonds.</p></div>' +
       '<div class="panel full"><h3>5 · Key figures</h3><div class="scroll">' + kf + '</div><div class="dl"><span class="muted">EUR m unless stated · grey italic = pending review · click a figure for its page · <span class="calc" style="margin:0"></span> = arithmetic on the shown figures, formula on hover</span><span style="flex:1"></span>' +
-        (o.databook ? '<a class="btn sec" href="' + esc(o.databook[0]) + '" download>Databook (xlsx)</a><a class="btn sec" href="' + esc(o.databook[1]) + '" download>Facts (csv)</a>' : '') + '</div></div>' +
+        (o.databook ? '<a class="btn sec" href="' + esc(o.databook[0]) + '" download>Databook (xlsx)</a><a class="btn sec" href="' + esc(o.databook[1]) + '" download>Facts (csv)</a>' : '') + '</div>' +
+        ((s.basis || []).length ? '<h3 style="margin-top:14px">Basis notes</h3>' + basisTable(o) + '<p class="small muted" style="margin:6px 0 0">One row per period: the documents its figures are read from and their audit, whose accounts, EBITDA and leases on each basis, the currency. Every id opens its page.</p>' : '') + '</div>' +
       '<div class="panel"><h3>6 · Management, as facts</h3>' + mg + '</div>' + '<div class="panel"><h3>7 · Delivery record</h3>' + (dr || '<p class="small muted">No guidance or lender record on file.</p>') + '</div>' +
       '<div class="panel full"><h3>8 · Risks, as the company states them</h3><div style="columns:2 320px;column-gap:28px">' + flist(s.risks) + '</div><div class="dl"><a href="#/deal/' + o.id + '/dossier">Analysis: every block, every fact</a> · <a href="#/deal/' + o.id + '/documents">Documents</a> · <a href="#/deal/' + o.id + '/qa">Q&amp;A' + (nq ? ' (' + nq + ')' : '') + '</a></div></div>' +
       '</div>';
@@ -867,6 +887,7 @@ window.RATES = {
   function yy(s) { return (/(20\d\d\/20\d\d)/.exec(s || '') || ['', ''])[1]; }
   function ill(t) { return '<span class="ill">' + esc(t || 'illustrative') + '</span>'; }
   function panel(title, sub, body, cls, id) { return '<div class="panel' + (cls ? ' ' + cls : '') + '"' + (id ? ' id="' + id + '"' : '') + '><div class="ph"><h3>' + title + '</h3>' + (sub ? '<p>' + sub + '</p>' : '') + '</div>' + body + '</div>'; }
+  function chs(s) { return s ? '<div class="chs">' + s + '</div>' : ''; }   // 25 Oct 2026: a chart at its design size; a narrower panel scrolls it sideways
   function cbtn(c, u, lab, extra) {
     if (!c) return '';
     var t = esc(neg(c.t ? c.t : snum(c.v, u)));
@@ -963,16 +984,16 @@ window.RATES = {
         r.c.slice(nf).map(function (x, i) { return '<td class="u">' + c(x, nf + i) + '</td>'; }).join('') + '<td class="p">' + (r.P ? cbtn(r.P, r.u, r.l + ' · ' + ny + ' guidance') : '') + '</td>' +
         '<td class="med">' + (ref ? '<button type="button" class="fb" data-calc="' + cref(ref.label + ': reference class', peerCalc(ref), ref.ids, peerExtra(ref)) + '">' + esc(r.ref.t) + '</button>' : '') + '</td></tr>';
     }).join('');
-    return panel('Key figures', 'EUR m · bold rows on the record’s basis: EBITDA without the one-off income the reports itemise, net debt without leases · tap a figure for its page or its formula',
+    return panel(tl(o, 'Key figures', 'dossier', 'b-financials'), 'EUR m · bold rows on the record’s basis: EBITDA without the one-off income the reports itemise, net debt without leases · tap a figure for its page or its formula',
       '<div class="scroll"><table class="km">' + h + '<tbody>' + b + '</tbody></table></div>' +
       '<div class="lgr"><span><b>A</b> audited</span><span><b>U</b> unaudited</span>' + (D.lt ? '<span><b>LTM</b> last 12 months: ' + esc(D.fy + ' + ' + D.h + ' − H1-' + (+D.h.slice(3) - 1)) + '</span>' : '') + '<span><b>P</b> the company’s own guidance; VanillaBonds makes no estimate</span></div>' +
-      '<p class="note">' + (D.xs ? 'One-off income: badwill, disposal and purchase-price-allocation gains booked in other operating income, as the reports itemise them. ' : '') + (D.mo.lines.length ? 'Credit lines as the reports describe them: ' + D.mo.lines.map(function (x) { return esc(clip(x[0], 110)) + srcb(x[1]); }).join(' · ') + '. ' : '') + (D.peers && D.peers.rows.length ? 'Peer median: ' + esc(D.peers.rows[0].short) + '.' : '') + '</p>');
+      '<p class="note">' + (D.xs ? 'One-off income: badwill, disposal and purchase-price-allocation gains booked in other operating income, as the reports itemise them. ' : '') + (D.mo.lines.length ? 'Credit lines as the reports describe them: ' + D.mo.lines.map(function (x) { return esc(clip(x[0], 110)) + srcb(x[1]); }).join(' · ') + '. ' + moreA(o, nmore(o, ['bank_line'], ids1(D.mo.lines)), 'dossier', 'b-plan') + ' ' : '') + (D.peers && D.peers.rows.length ? 'Peer median: ' + esc(D.peers.rows[0].short) + '.' : '') + '</p>');
   }
   // a number line: one row per reading, its value written beside it; the level in the terms as a heavy line named at its top
   var HALO = ' stroke="var(--paper)" stroke-width="4" stroke-linejoin="round" paint-order="stroke"';
   function scaleSvg(rows, g) {
     var W = 480, lab = 158, x0 = lab + 12, x1 = W - 74, rh = 26, top = 22, H = top + rows.length * rh + 22, sc = function (v) { return x0 + Math.max(0, Math.min(v, g.max)) / g.max * (x1 - x0); };
-    var s = '<svg class="ch" viewBox="0 0 ' + W + ' ' + H + '" style="max-width:' + W + 'px" role="img" aria-label="' + esc(g.aria) + '">';
+    var s = '<svg class="ch" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(g.aria) + '">';
     g.ticks.forEach(function (t) { var x = sc(t).toFixed(1); s += '<line x1="' + x + '" x2="' + x + '" y1="' + top + '" y2="' + (H - 20) + '" stroke="var(--gridl)"/><text x="' + x + '" y="' + (H - 5) + '" font-size="11" text-anchor="middle" fill="var(--muted)">' + (+t.toFixed(2)) + g.unit + '</text>'; });
     rows.forEach(function (r, i) {
       var y = top + i * rh + rh / 2;
@@ -994,19 +1015,19 @@ window.RATES = {
           .concat(b.rec != null ? [{ head: 'On the record’s definitions (leases and one-off income out)' }, { lab: '12 months to ' + H1, v: b.rec, t: b.rec.toFixed(1) + 'x', c: 'var(--c-alt)' }] : []);
         var hd = b.head.filter(function (x) { return x != null; }), cp = /up to EUR ([\d.]+)m/.exec(b.tap || ''), at = cp && (D.fo.bonds || []).some(function (x) { return Math.abs(x[1] - +cp[1]) < 0.05; });
         out += '<div><h4>Incurrence test <span>· leverage below ' + b.thr + 'x before new debt or payouts</span></h4>' +
-          scaleSvg(rows, { thr: b.thr, thrLab: 'level ' + b.thr + 'x', max: mx, ticks: ticks, unit: 'x', aria: 'Leverage on the bond terms’ definitions ' + rg(b.lev) + ' over the last 12 months against the ' + b.thr + 'x level' }) +
+          chs(scaleSvg(rows, { thr: b.thr, thrLab: 'level ' + b.thr + 'x', max: mx, ticks: ticks, unit: 'x', aria: 'Leverage on the bond terms’ definitions ' + rg(b.lev) + ' over the last 12 months against the ' + b.thr + 'x level' })) +
           '<p class="how"><b>How to read it.</b> Each bar spans the readings of leverage (net debt ÷ EBITDA) on the bond terms’ own definitions: one-off gains counted or left out, other financial liabilities in or out. The black line is the ' + b.thr + 'x level: below it the terms allow new debt (a tap or a subordinated loan) and payouts to the owners; above it they do not. ' +
           (hd.length === 2 ? 'To reach ' + b.thr + 'x, EBITDA could fall ' + Math.round(Math.abs(hd[0]) * 100) + '% on the lowest reading' + (hd[1] < 0 ? ' and would have to rise ' + Math.round(Math.abs(hd[1]) * 100) + '% on the highest.' : ' and ' + Math.round(hd[1] * 100) + '% on the highest.') : '') +
           (at ? ' The existing bond is at its EUR ' + Math.round(+cp[1]) + 'm maximum, so no further tap is possible.' : '') + ' ' + sbtn('Incurrence test: definitions, figures and sources', b.calc + (b.rule ? '\n\nTest: ' + b.rule : ''), b.ids) + '</p></div>';
       } else if (b.kind === 'coc') {
         out += '<div><h4>Change of control <span>· the owners’ stake against the put level</span></h4>' +
-          scaleSvg([{ lab: 'Named owners’ stake', v: 0, hi: b.v * 100, t: Math.round(b.v * 100) + '%', c: 'var(--c-main)' }], { thr: b.thr * 100, thrLab: 'put if ' + Math.round(b.thr * 100) + '% or less', max: 100, ticks: [0, 100], unit: '%', aria: b.names.join(' and ') + ' hold ' + Math.round(b.v * 100) + '% against a ' + Math.round(b.thr * 100) + '% level' }) +
+          chs(scaleSvg([{ lab: 'Named owners’ stake', v: 0, hi: b.v * 100, t: Math.round(b.v * 100) + '%', c: 'var(--c-main)' }], { thr: b.thr * 100, thrLab: 'put if ' + Math.round(b.thr * 100) + '% or less', max: 100, ticks: [0, 100], unit: '%', aria: b.names.join(' and ') + ' hold ' + Math.round(b.v * 100) + '% against a ' + Math.round(b.thr * 100) + '% level' })) +
           '<p class="how"><b>How to read it.</b> ' + esc(b.names.join(' and ')) + ' hold ' + Math.round(b.v * 100) + '% of the capital. If their stake falls to ' + Math.round(b.thr * 100) + '% or less, every bondholder may sell its bonds back' + (b.put ? ' at ' + esc(b.put.split(' ')[0].replace(/\.00%$/, '%')) : '') + '. ' + sbtn('Change of control: the level and the owners’ stake', b.calc, b.ids) + '</p></div>';
       }
     });
     if (T.levels.length) out += '<div><h4>Limits in the bond terms <span>· on the latest figures; tap a limit for its clause and arithmetic</span></h4><table class="lv">' + T.levels.map(function (l) { return '<tr><td>' + esc(l.l) + '</td><td class="num"><button type="button" class="fb" data-calc="' + cref(l.l, l.calc, l.ids) + '">' + esc(neg(l.t)) + '</button></td></tr>'; }).join('') + '</table></div>';
-    if (T.stated.length) out += '<div><p class="how" style="margin-top:0">No documented level on file. What the documents state about covenants:</p>' + flist(T.stated) + '</div>';
-    return panel('Documented thresholds', esc(D.bt ? 'From the signed bond terms ' + yy(D.bt) + (D.btDate ? ' of ' + dfull(D.btDate) : '') + (D.copies ? '; this bond copies them' : '') : 'As the documents state them; this bond’s covenants are set with the anchors'), '<div class="tests">' + (out || '<p class="muted">None on file.</p>') + '</div>');
+    if (T.stated.length) out += '<div><p class="how" style="margin-top:0">No documented level on file. What the documents state about covenants:</p>' + flist(T.stated).replace(/<\/ul>$/, moreLi(o, nmore(o, ['covenant'], ids1(T.stated)), 'dossier', 'b-debt') + '</ul>') + '</div>';
+    return panel(tl(o, 'Documented thresholds', 'dossier', 'b-structure'), esc(D.bt ? 'From the signed bond terms ' + yy(D.bt) + (D.btDate ? ' of ' + dfull(D.btDate) : '') + (D.copies ? '; this bond copies them' : '') : 'As the documents state them; this bond’s covenants are set with the anchors'), '<div class="tests">' + (out || '<p class="muted">None on file.</p>') + '</div>');
   }
   function ladderSvg(o) {   // principal per year of maturity in navy, this bond pro forma in gold, cash at the latest balance sheet as the reference line
     var L0 = o.snapshot.ladder, liq = o.depth.liq || {}, cash = liq.cash, my = dealDates(o).maturity.getFullYear();
@@ -1014,7 +1035,7 @@ window.RATES = {
     cats.push({ k: String(my), s: 'this bond', v: o.issueEURm, c: 'deal', lab: 'This bond, EUR ' + f1(o.issueEURm) + 'm pro forma (illustrative)' });
     var mx = Math.max.apply(null, cats.map(function (c) { return c.v; }).concat(cash ? [cash.v] : [])), step = mx > 300 ? 100 : mx > 120 ? 50 : 25, max = Math.ceil(mx * 1.1 / step) * step;
     var W = 480, H = 200, Lm = 34, Rm = 8, T = 16, B = 32, y = function (v) { return T + (1 - v / max) * (H - T - B); }, band = (W - Lm - Rm) / cats.length, bw = Math.min(26, band * 0.55), side = band >= 62;
-    var s = '<svg class="ch" viewBox="0 0 ' + W + ' ' + H + '" style="max-width:' + W + 'px" role="img" aria-label="' + esc('Principal falling due by year: ' + cats.map(function (c) { return c.k + ' ' + f1(c.v); }).join(', ') + (cash ? '; cash ' + f1(cash.v) : '')) + '">';
+    var s = '<svg class="ch" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc('Principal falling due by year: ' + cats.map(function (c) { return c.k + ' ' + f1(c.v); }).join(', ') + (cash ? '; cash ' + f1(cash.v) : '')) + '">';
     for (var t = 0; t <= max; t += step) s += '<line x1="' + Lm + '" x2="' + (W - Rm) + '" y1="' + y(t).toFixed(1) + '" y2="' + y(t).toFixed(1) + '" stroke="' + (t ? 'var(--gridl)' : '#B9B2A1') + '"/><text x="' + (Lm - 6) + '" y="' + (y(t) + 4).toFixed(1) + '" font-size="11" text-anchor="end" fill="var(--muted)">' + t + '</text>';
     cats.forEach(function (c, i) {
       var cx = Lm + band * i + band / 2, top = y(c.v), base = y(0), r = Math.min(4, (base - top) / 2);
@@ -1029,7 +1050,7 @@ window.RATES = {
     var L0 = o.snapshot.ladder, liq = o.depth.liq || {};
     if (!L0 || !L0.rows.length) return panel('Debt falling due, against cash', '', '<p class="muted" style="margin:0">No maturity table on file.</p>');
     var ids = [].concat.apply([], L0.rows.map(function (r) { return r.ids; })).concat(liq.cash ? liq.cash.ids : []);
-    return panel('Debt falling due, against cash', 'Principal by year of maturity, from the ' + esc(L0.asof) + ' report’s ' + esc(L0.kind) + (liq.p && liq.p !== L0.asof ? '; cash on ' + day(liq.p) : ''), ladderSvg(o) +
+    return panel(tl(o, 'Debt falling due, against cash', 'dossier', 'b-debt'), 'Principal by year of maturity, from the ' + esc(L0.asof) + ' report’s ' + esc(L0.kind) + (liq.p && liq.p !== L0.asof ? '; cash on ' + day(liq.p) : ''), chs(ladderSvg(o)) +
       '<div class="lgd2"><span><i class="sym bar"></i>principal falling due in that year</span><span><i class="sym gold"></i>this bond, at its maturity</span><span><i class="sym line"></i>cash on ' + day(liq.p || L0.asof) + '</span></div>' +
       '<p class="how"><b>How to read it.</b> Each bar is the debt ' + esc(cname(o)) + ' must repay or refinance in that year; the line is the cash it held. ' + (L0.rows.some(function (r) { return r.l != null || r.i != null; }) || L0.leases ? 'Leases and interest are left out. ' : '') + 'Check: ' + esc(L0.check) + '. ' + sbtn('Debt falling due: the table, the check and the sources', L0.calc + '\nCheck: ' + L0.check, ids) + '</p>');
   }
@@ -1041,31 +1062,39 @@ window.RATES = {
       '<tr class="h"><td colspan="2">Uses</td></tr>' + (q.due ? L('Principal due within 12 months', cbtn({ v: q.due.v, ids: q.due.ids, calc: q.how }, 'm', 'Principal due within 12 months')) : L('Principal due within 12 months', 'not on file')) + (q.ip ? L('Interest paid, last 12 months', cbtn(q.ip, 'm', 'Interest paid, last 12 months')) : '') + (q.v != null ? '<tr class="t"><td>Total</td><td class="num">' + f1(q.use) + '</td></tr>' : '') + '</table>';
     var note = (q.where ? q.where[0] === 'financing' ? 'Interest paid sits in ' + poss(nm) + ' financing cash flow, so it is counted as a use. ' : 'Interest paid sits in operating cash flow, so free cash flow already carries it. ' : 'Where the cash flow statement shows interest paid is not on file, so it is left out. ') + 'Lease instalments and any refinancing are left out.';
     var calc = 'Sources ÷ uses = ' + (q.v != null ? f1(q.src) + ' ÷ ' + f1(q.use) + ' = ' + q.v.toFixed(2) + 'x' : 'not computed') + '\nFree cash flow: ' + (q.fcf ? q.fcf.calc || f1(q.fcf.v) : 'not on file') + (q.ip ? '\nInterest paid: ' + q.ip.calc : '') + (q.due ? '\nPrincipal: ' + q.how : '');
-    return panel('Liquidity over the next 12 months', sub, '<div class="liq2">' + tbl + '<div class="big"><b>' + (q.v != null ? esc(neg(q.v.toFixed(2))) + 'x' : '–') + '</b><span>sources ÷ uses</span></div></div><p class="how">' + esc(note) + ' ' + sbtn('Liquidity: formula and sources', calc, ids) + '</p>');
+    return panel(tl(o, 'Liquidity over the next 12 months', 'dossier', 'b-debt'), sub, '<div class="liq2">' + tbl + '<div class="big"><b>' + (q.v != null ? esc(neg(q.v.toFixed(2))) + 'x' : '–') + '</b><span>sources ÷ uses</span></div></div><p class="how">' + esc(note) + ' ' + sbtn('Liquidity: formula and sources', calc, ids) + '</p>');
   }
   function stripSvg(r) {   // the class's middle half as a grey box, its median as a line, the issuer as a filled dot (latest) and a ring (the class year)
     var hi = Math.max(70, Math.ceil(Math.max(r.q[2], r.v, r.prior ? r.prior.v : 0) / 10) * 10 + 10), W = 480, H = 52, a = 8, b = W - 8, y = 24;
     var sc = function (x) { return a + Math.max(0, Math.min(hi, x)) / hi * (b - a); }, f = function (x) { return x.toFixed(1) + '%'; };
-    var s = '<svg class="ch" viewBox="0 0 ' + W + ' ' + H + '" style="max-width:' + W + 'px" role="img" aria-label="' + esc(r.label + ': middle half of the class ' + f(r.q[0]) + ' to ' + f(r.q[2]) + ', median ' + f(r.q[1]) + '; issuer ' + f(r.v)) + '"><line x1="' + a + '" x2="' + b + '" y1="' + y + '" y2="' + y + '" stroke="var(--track)" stroke-width="6" stroke-linecap="round"/>';
+    var s = '<svg class="ch" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(r.label + ': middle half of the class ' + f(r.q[0]) + ' to ' + f(r.q[2]) + ', median ' + f(r.q[1]) + '; issuer ' + f(r.v)) + '"><line x1="' + a + '" x2="' + b + '" y1="' + y + '" y2="' + y + '" stroke="var(--track)" stroke-width="6" stroke-linecap="round"/>';
     s += '<rect x="' + sc(r.q[0]).toFixed(1) + '" y="' + (y - 6) + '" width="' + (sc(r.q[2]) - sc(r.q[0])).toFixed(1) + '" height="12" fill="#D5DCE3" rx="1"/><line x1="' + sc(r.q[1]).toFixed(1) + '" x2="' + sc(r.q[1]).toFixed(1) + '" y1="' + (y - 9) + '" y2="' + (y + 9) + '" stroke="var(--ink-2)" stroke-width="2"/>';
     s += '<text x="' + sc(0).toFixed(1) + '" y="' + (H - 2) + '" font-size="11" fill="var(--muted)">0%</text><text x="' + sc(hi).toFixed(1) + '" y="' + (H - 2) + '" font-size="11" text-anchor="end" fill="var(--muted)">' + hi + '%</text>';
     if (r.prior) s += '<circle cx="' + sc(r.prior.v).toFixed(1) + '" cy="' + y + '" r="5" fill="var(--paper)" stroke="var(--c-main)" stroke-width="2"/>';
     return s + '<circle cx="' + sc(r.v).toFixed(1) + '" cy="' + y + '" r="6.5" fill="var(--c-main)" stroke="var(--paper)" stroke-width="2"/></svg>';
   }
+  // 26 Oct 2026 (Sam: "everything the law allows"): the issuer's percentile in a named reference class, one ratio per line, with the class, n, year,
+  // source and date beside it; neutral words, no colour, no overall rank (legal notes 22 Oct 2026, idea 1). depth.py computes it with schema.percentile().
+  function pctLine(o, r) {
+    var nm = cname(o), cl = r.short || r.cls, n = r.n ? r.n.toLocaleString('en-GB') : '';
+    return r.label + ', ' + day(r.p) + ': ' + nm + ' ' + r.v.toFixed(1) + '%. ' + (r.pos != null ? 'At the ' + ord(Math.round(r.pos)) + ' percentile of ' + cl + (r.above != null ? ': above about ' + r.above.toLocaleString('en-GB') + ' of the ' + n + ' companies' : '')
+      : r.side === 'below the first quartile' ? 'Below the first quartile of ' + cl + ': fewer than a quarter of the ' + n + ' companies have a lower figure' : 'Above the third quartile of ' + cl + ': more than three quarters of the ' + n + ' companies have a lower figure') + '.';
+  }
+  function srcLine(r) { return [r.cls, r.small ? 'a small class' : '', clip((r.src || '').replace(/,?\s*released \d{1,2} \w+ \d{4}/, ''), 190), r.released ? 'released ' + r.released : 'release date not stated', r.read ? 'read by VanillaBonds ' + r.read : ''].filter(Boolean).join(' · '); }
   function peerPanel(o) {
-    var P = o.depth.peers, nm = cname(o);
-    if (!P || !P.rows.length) return panel('Compared with similar companies', 'Published statistics of a named group of companies', '<p class="muted" style="margin:0">No reference group loaded for this issuer yet: a group is shown only with its published quartiles, its size, its year and its source.</p>');
-    return panel('Compared with similar companies', 'Where ' + esc(nm) + ' sits within a named group, from published quartiles; no ranking of ours', '<div class="peer">' + P.rows.map(function (r) {
-      var pos = r.pos != null ? 'about the ' + ord(Math.round(r.pos)) + ' percentile: roughly ' + Math.round(r.pos / 5) + ' in 20 companies of the group have a lower figure' : r.side === 'below the first quartile' ? 'below the first quartile: more than three quarters of the group have a higher figure' : 'above the third quartile: more than three quarters of the group have a lower figure';
-      return '<div class="row"><div class="pl">' + esc(r.label) + ': <b>' + esc(nm) + ' ' + r.v.toFixed(1) + '%</b>, ' + esc(pos) + '.</div>' + stripSvg(r) +
+    var P = o.depth.peers, nm = cname(o), t = 'Compared with similar companies';
+    if (!P || !P.rows.length) return panel(t, 'Percentiles against a named reference class', '<p class="muted" style="margin:0">No reference class on file for ' + esc(nm) + ': a percentile is shown only against a named class with its n, year, source and date.</p>');
+    return panel(t, 'One ratio at a time against a named reference class: its published quartiles, n, year, source and date; no overall rank, no grade', '<div class="peer">' + P.rows.map(function (r) {
+      return '<div class="row"><div class="pl">' + esc(pctLine(o, r)) + '</div>' + chs(stripSvg(r)) +
         '<div class="lgd2"><span><i class="sym dot"></i>' + esc(nm) + ', ' + day(r.p) + ': ' + r.v.toFixed(1) + '%</span>' + (r.prior ? '<span><i class="sym ring"></i>' + esc(nm) + ', ' + day(r.prior.p) + ': ' + r.prior.v.toFixed(1) + '%</span>' : '') +
-        '<span><i class="sym box"></i>middle half of the group: ' + r.q[0].toFixed(1) + '% to ' + r.q[2].toFixed(1) + '%</span><span><i class="sym med"></i>median ' + r.q[1].toFixed(1) + '%</span></div>' +
-        '<div class="pv">' + esc(r.cls) + ' · <button type="button" class="fb srcs" data-calc="' + cref(r.label + ': the group and the method', peerCalc(r), r.ids, peerExtra(r)) + '">the group and the method</button></div></div>';
-    }).join('') + '</div>' + (P.missing ? '<p class="note">' + esc(P.missing) + '</p>' : ''));
+        '<span><i class="sym box"></i>middle half of the class: ' + r.q[0].toFixed(1) + '% to ' + r.q[2].toFixed(1) + '%</span><span><i class="sym med"></i>median ' + r.q[1].toFixed(1) + '%</span></div>' +
+        '<div class="pv">' + esc(srcLine(r)) + (r.url ? ' · <a href="' + esc(r.url) + '" target="_blank" rel="noopener">source ↗</a>' : '') + ' · <button type="button" class="fb srcs" data-calc="' + cref(r.label + ': the class and the method', peerCalc(r), r.ids, peerExtra(r)) + '">the class and the method</button></div></div>';
+    }).join('') + '</div>' + (P.missing ? '<p class="note">' + esc(P.missing) + '</p>' : '') +
+      '<p class="how"><b>How to read it.</b> Each line sets one ratio of ' + esc(nm) + ' against one published class: the grey box is the class’s middle half, from its first to its third quartile, the line its median and the dot ' + esc(nm) + '. The percentile is read off the published quartiles by straight-line interpolation, so “above about N of the n companies” is approximate; outside the quartiles only the side is given. The class figures and ' + esc(poss(nm)) + ' may be drawn up differently; each class says how. One ratio per line: no overall rank, no grade.</p>');
   }
   function commitPanel(o) {
     var A = anchors(o), dp = dealPrice(o), tot = sum(o), open = Math.max(0, o.issueEURm - tot), cnd = sum(o, 'conditional') + sum(o, 'indicative');
-    return panel('Commitments', 'Each anchor with its amount, its price and its status; fictional institutions', '<div class="scroll"><table class="grid"><thead><tr><th>Anchor</th><th class="num">EUR m</th><th class="num">Share</th><th>Price</th><th>Status</th></tr></thead><tbody>' +
+    return panel(tl(o, 'Commitments', 'book'), 'Each anchor with its amount, its price and its status; fictional institutions', '<div class="scroll"><table class="grid"><thead><tr><th>Anchor</th><th class="num">EUR m</th><th class="num">Share</th><th>Price</th><th>Status</th></tr></thead><tbody>' +
       A.map(function (a) { var x = pdiff(o, a, dp); return '<tr><td>' + esc(a.name) + '<br><span class="muted small">' + esc(a.institutionType + (a.you ? '' : a.consent ? ' · named to co-investors with consent' : ' · not named to co-investors')) + '</span></td><td class="num">' + f1(a.amountEURm) + '</td><td class="num">' + Math.round(a.amountEURm / o.issueEURm * 100) + '%</td><td>' + price(o, a.price) + (x ? '<br><span class="muted small">' + esc(x) + '</span>' : '') + '</td><td><span class="chip ' + a.status + '">' + a.status + '</span>' + (a.conditions ? '<br><span class="muted small">' + esc(a.conditions.replace(/\s*\(fictional institution, illustrative\)\.?$/, '')) + '</span>' : '') + '</td></tr>'; }).join('') +
       '<tr><td class="muted">Open to co-investors</td><td class="num">' + f1(open) + '</td><td class="num">' + Math.round(open / o.issueEURm * 100) + '%</td><td>' + (dp ? price(o, dp.v) : '–') + '</td><td class="muted small">' + (cnd ? f1(open + cnd) + ' if the ' + (sum(o, 'conditional') ? 'conditional' : 'indicative') + ' amounts lapse' : '') + '</td></tr></tbody></table></div>' +
       '<p class="note">' + esc(dp && dp.set ? 'One issue price for every buyer: ' + price(o, dp.v) + ', ' + dp.k.replace(/^deal price, /, '') + '. ' : 'The price is set with the anchors; co-investors then buy at that one price. ') + 'Anchor-only terms: binding commitments are allocated in full; no fee, discount or information right beyond the anchor window.</p>');
@@ -1073,7 +1102,8 @@ window.RATES = {
   function qaPanel(o) {
     var qs = qsOf(o), mq = o.mgmtQuestions || [], w = o.windows || {}, nm = cname(o), asked = w.anchorCloses != null ? 'asked by ' + dstr(wd(w.anchorCloses)) : '';
     var li = qs.slice(0, 4).map(function (q, i) { return '<li><span class="no">Q' + (i + 1) + '</span><span>' + esc(q.q) + '<span class="who">asked by ' + esc(q.by || 'the review') + '</span></span><span class="st">' + asked + '</span><span class="ans">Answer from ' + esc(nm) + ': pending.</span></li>'; }).join('');
-    return panel('Questions and ' + esc(poss(nm)) + ' answers', 'Every answer goes to every investor at the same time', '<ul class="qa">' + (li || '<li><span class="no">–</span><span class="muted">No investor question yet.</span><span></span></li>') +
+    return panel(tl(o, 'Questions and ' + esc(poss(nm)) + ' answers', 'qa'), 'Every answer goes to every investor at the same time', '<ul class="qa">' + (li || '<li><span class="no">–</span><span class="muted">No investor question yet.</span><span></span></li>') +
+      (qs.length > 4 ? '<li class="more1"><span class="no"></span><span>' + moreA(o, qs.length - 4, 'qa', null, 'questions') + '</span><span></span></li>' : '') +
       (mq.length ? '<li><span class="no">+' + mq.length + '</span><span class="muted">' + mq.length + ' questions from the fact file to management, among them: ' + esc(mq.slice(0, 2).map(function (q) { return clip(q[2].replace(/\.$/, ''), 80); }).join('; ')) + '</span><span></span></li>' : '') + '</ul>' +
       '<div class="dl"><a class="btn sec" href="#/deal/' + o.id + '/qa">All questions · ask one</a></div>');
   }
@@ -1081,13 +1111,15 @@ window.RATES = {
     var D = o.depth, nm = cname(o);
     var rk = D.risks.map(function (r) { return '<li><q>' + esc(r[0]) + '</q><span class="s">' + esc(cap1(r[2]) + (r[3] ? ' p.' + r[3] : '')) + ' · ' + srcb(r[1]) + '</span></li>'; }).join('');
     var pt = D.prot.map(function (r) { return '<li>' + esc(r[0].replace(/^term: ([^;]+); value: /, function (m, k) { return cap1(k) + ': '; })) + '<span class="s">' + esc([r[2], r[3] ? 'p.' + r[3] : ''].filter(Boolean).join(' ')) + ' · ' + srcb(r[1]) + '</span></li>'; }).join('');
-    return '<div class="row2 even">' + panel('Risks as ' + esc(nm) + ' states them', 'Quoted with document and page; no weighting added', '<ul class="rl">' + (rk || '<li class="muted">None on file.</li>') + '</ul>') +
-      panel('Lender protections', esc(D.bt ? 'The signed bond terms ' + yy(D.bt) + ', clause and page' + (D.copies ? '; this bond copies them' : '') : 'As the documents state them, with page; this bond’s are set with the anchors'), '<ul class="rl">' + (pt || '<li class="muted">None on file.</li>') + '</ul>') + '</div>';
+    return '<div class="row2 even">' + panel(tl(o, 'Risks as ' + esc(nm) + ' states them', 'dossier', 'b-risk'), 'Quoted with document and page; no weighting added', '<ul class="rl">' + (rk || '<li class="muted">None on file.</li>') + moreLi(o, nmore(o, ['risk_fact'], ids1(D.risks)), 'dossier', 'b-risk') + '</ul>') +
+      panel(tl(o, 'Lender protections', 'dossier', 'b-debt'), esc(D.bt ? 'The signed bond terms ' + yy(D.bt) + ', clause and page' + (D.copies ? '; this bond copies them' : '') : 'As the documents state them, with page; this bond’s are set with the anchors'), '<ul class="rl">' + (pt || '<li class="muted">None on file.</li>') + moreLi(o, nmore(o, ['covenant'], ids1(D.prot)), 'dossier', 'b-debt', 'covenant facts') + '</ul>') + '</div>';
   }
   function guidePanel(o) {
     var gd = (o.snapshot.guidance || []).slice(-6).reverse(), D = o.depth;
     var g = gd.length ? '<div class="scroll"><table class="grid"><thead><tr><th>Year</th><th>Guidance as stated</th><th>Reported</th></tr></thead><tbody>' + gd.map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td>' + esc(x[1]) + ': ' + esc(x[2]) + srcb(x[4][0]) + '</td><td>' + (x[4][1] ? fbtn(x[4][1], esc(x[3])) : esc(x[3])) + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="muted" style="margin:0">No guidance on file.</p>';
-    return panel('Guidance against outcome', 'The company’s own guidance as stated, then what it reported', g + (D.mo.lenders.length ? '<h4 style="margin-top:14px !important">Covenant tests and past maturities</h4>' + flist(D.mo.lenders) : ''));
+    var gm = (o.snapshot.guidance || []).length - gd.length;
+    return panel(tl(o, 'Guidance against outcome', 'dossier', 'b-management'), 'The company’s own guidance as stated, then what it reported', g + (gm > 0 ? '<p class="note" style="margin-top:6px">' + moreA(o, gm, 'dossier', 'b-management', 'guidance lines') + '</p>' : '') +
+      (D.mo.lenders.length ? '<h4 style="margin-top:14px !important">Covenant tests and past maturities</h4>' + flist(D.mo.lenders).replace(/<\/ul>$/, moreLi(o, nmore(o, ['covenant_test', 'rollover_event'], ids1(D.mo.lenders)), 'dossier', 'b-management') + '</ul>') : ''));
   }
   function nextPanel(o) {
     var n = (o.mgmtQuestions || []).length + qsOf(o).length;
@@ -1098,8 +1130,74 @@ window.RATES = {
   function anchorView(o) {   // depth 1, the credit analyst: the terms, the access, the fact headline, then the figures and the tests, debt and liquidity, peers, people
     CALC = [];
     return '<div class="dp">' + purposePanel(o) + termsCard(o) + accessCard(o) + headline(o) +
-      '<div class="row2">' + kmPanel(o) + thrPanel(o) + '</div><div class="row2 even">' + ladderPanel(o) + liqPanel(o) + '</div><div class="row2 even">' + peerPanel(o) + guidePanel(o) + '</div>' +
+      '<div class="row2">' + kmPanel(o) + thrPanel(o) + '</div>' + basisPanel(o) + '<div class="row2 even">' + ladderPanel(o) + liqPanel(o) + '</div>' + instrPanel(o) + '<div class="row2 even">' + peerPanel(o) + guidePanel(o) + '</div>' +
       mgmtSummary(o) + compsPanel(o) + '<div class="row2 even">' + commitPanel(o) + qaPanel(o) + '</div>' + riskPanels(o) + nextPanel(o) + '</div>';
+  }
+
+  // ---------- 25 Oct 2026 (reports/Gain platform lessons for VanillaBonds.md): the proof where the eye lands. A panel title opens its full tab, a list
+  //            cut short says how many more facts the full tab holds, the notes under the key figures per period, the issuer's own debt instrument by
+  //            instrument (snapshot.py basis, instruments), whose accounts are on file (export_dossier.py entities). Facts and printed arithmetic; every id opens its page ----------
+  var TABN = { dossier: 'Fact proof', mgmt: 'Management', qa: 'Q&A', book: 'Book', documents: 'Data room', analysis: 'Company summary' }, INS = {};
+  function tl(o, title, tab, blk) { return '<a class="tl2" href="#/deal/' + o.id + '/' + tab + '"' + (blk ? ' data-proof="' + blk + '"' : '') + ' title="Open it in full on the ' + esc(TABN[tab] || tab) + ' tab">' + title + '</a>'; }
+  function nmore(o, fields, shown) {   // facts of these fields on the Fact proof tab, less those this list shows
+    var nf = o.nf || {}, fl = o.fld || {}, tot = fields.reduce(function (a, f) { return a + (nf[f] || 0); }, 0);
+    return Math.max(0, tot - (shown || []).filter(function (i) { return fields.indexOf(fl[i]) >= 0; }).length);
+  }
+  function moreA(o, n, tab, blk, what) { var w = what === undefined ? 'facts' : what; if (n === 1 && w) w = w.replace(/s$/, ''); return n > 0 ? '<a class="more1" href="#/deal/' + o.id + '/' + tab + '"' + (blk ? ' data-proof="' + blk + '"' : '') + '>+ ' + n + ' more' + (w ? ' ' + w : '') + ' on the ' + esc(TABN[tab] || tab) + ' tab</a>' : ''; }
+  function moreLi(o, n, tab, blk, what) { var a = moreA(o, n, tab, blk, what); return a ? '<li class="more1">' + a + '</li>' : ''; }
+  function ids1(xs) { return (xs || []).map(function (x) { return x[1]; }); }
+  function idsB(ids, n) { return (ids || []).filter(Boolean).slice(0, n || 9).map(srcb).join(''); }
+  function basisTable(o) {
+    var B = (o.snapshot || {}).basis || []; if (!B.length) return '<p class="muted" style="margin:0">No basis notes: the record holds no figures for these periods.</p>';
+    var bt = function (x) { return x ? esc(x.t) + idsB(x.ids, 2) : 'no bond terms on file'; };
+    return '<div class="scroll"><table class="grid bas"><thead><tr><th>Period</th><th>Document and audit</th><th>Entity reported</th><th>EBITDA basis</th><th>Leases in net debt</th><th>Currency</th></tr></thead><tbody>' + B.map(function (r) {
+      var d = r.doc, one = d.from.length === 1 && d.from[0][0] === d.own;
+      var fr = one ? 'all ' + d.n + ' figures read from this report' : 'figures read from ' + d.from.map(function (x) { return x[0] + ', the ' + x[2] + ' (' + x[1] + ')'; }).join('; ') + ', of ' + d.n;
+      return '<tr><td class="per"><b>' + esc(r.p) + '</b><span class="sm2">' + day(r.p) + '</span></td>' +
+        '<td>' + esc(cap1(d.t)) + idsB(d.ids, 1) + '<span class="sm2">' + esc(fr) + '</span></td>' +
+        '<td>' + esc(cap1(r.entity.t)) + idsB(r.entity.ids, 1) + '</td>' +
+        '<td><b>Record:</b> ' + esc(neg(r.ebitda.rec.t)) + idsB(r.ebitda.rec.ids, 3) + '<span class="sm2"><b>Bond terms:</b> ' + bt(r.ebitda.terms) + '</span></td>' +
+        '<td><b>Record:</b> ' + esc(r.lease.rec.t) + idsB(r.lease.rec.ids, 1) + '<span class="sm2"><b>Company:</b> ' + (r.lease.co.ids.length ? 'its own net debt ' : '') + esc(r.lease.co.t) + idsB(r.lease.co.ids, 1) + '</span><span class="sm2"><b>Bond terms:</b> ' + bt(r.lease.terms) + '</span></td>' +
+        '<td>' + esc(r.fx.t) + (r.fx.co ? '<span class="sm2"><b>Company:</b> ' + esc(r.fx.co) + idsB(r.fx.ids, 1) + '</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function basisPanel(o) {
+    return panel(tl(o, 'Basis notes', 'dossier', 'b-financials'), 'How each period of the key figures is read: from which document, whose accounts, and how EBITDA, leases and currencies are treated', basisTable(o) +
+      '<p class="how"><b>How to read it.</b> One row per period of the key figures above. A period is often read from a later report that prints it again; “figures read from” names those reports. “Record” is the basis the key figures use; the company’s own net debt and the bond terms’ definitions sit beside it and are never mixed into it. Every id opens its page.</p>', 'full');
+  }
+  function instrPanel(o) {   // the issuer's own debt as the documents on file itemise it; ten lines, then '+ N more lines' opens the rest in place
+    var I = (o.snapshot || {}).instruments; if (!I || !I.rows.length) return '';
+    var all = INS[o.id] || I.rows.length <= 12, rows = all ? I.rows : I.rows.slice(0, 10), nm = cname(o);
+    var tr = function (r) {
+      var own = r.src[2], s = function (x) { return x[1] && x[1] !== own ? srcb(x[1]) : ''; }, nt = function (x) { return '<span class="muted">' + esc(x) + '</span>'; };
+      return '<tr><td>' + esc(r.name) + (r.terms && r.terms[2] ? '<span class="sm2">ISIN ' + esc(r.terms[2]) + '; its bond terms are on file' + srcb(r.terms[1]) + '</span>' : '') + '</td>' +
+        '<td>' + (r.lender[1] ? esc(r.lender[0]) + s(r.lender) : nt(r.lender[0])) + '</td>' +
+        '<td class="num"><b>' + f1(r.amt[0]) + '</b>' + (r.later ? '<span class="sm2">' + f1(r.later[0]) + ' at ' + esc(r.later[1]) + srcb(r.later[2]) + '</span>' : '') + '</td>' +
+        '<td class="num">' + (r.rate.bp != null ? '<b>' + r.rate.bp + '</b>' : nt('–')) + '<span class="sm2">' + esc(r.rate.t) + '</span></td>' +
+        '<td style="white-space:nowrap">' + (r.mat[1] ? esc(r.mat[0]) + s(r.mat) : nt(r.mat[0])) + '</td><td>' + (r.sec[1] ? esc(cap1(r.sec[0])) + s(r.sec) : nt('not stated')) + '</td>' +
+        '<td style="white-space:nowrap">' + esc(r.src[0]) + ' p.' + esc(r.src[1]) + srcb(own) + '</td></tr>';
+    };
+    var where = 'the instrument table of the ' + docName(o, I.source).replace(/^./, function (c) { return c.toLowerCase(); }) + ' (' + I.source + ' p.' + I.page + ')';
+    return panel(tl(o, 'The issuer’s own debt, instrument by instrument', 'dossier', 'b-debt'), 'As the documents on file itemise it: lender or trustee, amount, margin or coupon, maturity and security, each with its page',
+      '<div class="scroll"><table class="grid ins"><thead><tr><th>Instrument</th><th>Lender or trustee</th><th class="num">EUR m</th><th class="num">Margin or coupon, bp</th><th>Maturity</th><th>Security</th><th>Source</th></tr></thead><tbody>' + rows.map(tr).join('') +
+        (all ? '' : '<tr><td colspan="7"><button type="button" class="fb" data-act="ins-all">+ ' + (I.rows.length - rows.length) + ' more lines of this table</button></td></tr>') + '</tbody></table></div>' +
+      '<p class="note">This table lists the instruments in the documents on file: ' + esc(where) + ', ' + I.rows.length + ' lines' + (I.check ? '; check: ' + esc(I.check) : ' with a balance, adding up to ' + f1(I.total)) + '. An instrument that is not in these documents is not here.</p>' +
+      '<p class="how"><b>How to read it.</b> One row per line of that table, amounts in EUR m at ' + esc(day(I.asof)) + (I.rows.some(function (r) { return r.later; }) ? ', a later report’s amount under it' : '') + '. Margin or coupon in basis points: a fixed 6.75% coupon is 675 bp; a floating line shows its margin over the reference rate where the document states one. A bond whose signed terms are on file takes its trustee, maturity and ranking from them; anything ' + esc(poss(nm)) + ' documents do not state reads “not stated”.</p>', 'full');
+  }
+  function entityPanel(o) {   // the data room: whose accounts are on file, entity by document
+    var E = o.entities; if (!E) return '';
+    var kd = function (s) { return (((o.depth || {}).dr || []).filter(function (d) { return d.id === s; })[0] || {}).kind || ''; };
+    var opn = function (c, lab, cls) { return '<button type="button" class="' + (cls || 'view') + '" ' + (c.id ? 'data-fact="' + esc(c.id) + '"' : 'data-doc="' + esc(c.doc) + '" data-page="' + esc(c.page) + '"') + '>' + esc(lab) + '</button>'; };
+    var td = function (c) {
+      if (!c) return '<td class="c no">not on file</td>';
+      if (c.alt) return '<td class="c no">not on file<span class="sm2">' + opn(c.alt, c.alt.t, 'fb') + '</span></td>';
+      return '<td class="c">' + opn(c, c.doc + ' p.' + c.page) + '<span class="sm2">' + esc(c.t.replace(/, p\.\d+$/, '')) + (/annual|interim/.test(kd(c.doc)) ? (c.aud ? ', audited' : ', unaudited') : '') + '</span></td>';
+    };
+    var alt = E.cols.filter(function (c) { return E.rows.some(function (r) { return r.cells[c.k] && r.cells[c.k].alt; }); }).map(function (c) { return c.lab; });
+    return panel('Whose accounts are on file', 'Entity by document: the group, the issuing entity on its own and any guarantor, against the reports and the bond terms',
+      '<div class="scroll"><table class="grid ent"><thead><tr><th>Entity</th>' + E.cols.map(function (c) { return '<th class="c">' + esc(c.lab) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        E.rows.map(function (r) { return '<tr><th scope="row"><b>' + esc(r.lab) + '</b>' + (r.name ? '<span class="sm2">' + esc(r.name) + idsB(r.ids, 1) + '</span>' : '') + (r.note ? '<span class="sm2">' + esc(r.note) + '</span>' : '') + '</th>' + E.cols.map(function (c) { return td(r.cells[c.k]); }).join('') + '</tr>'; }).join('') + '</tbody></table></div>' +
+      '<p class="how"><b>How to read it.</b> One row per entity whose accounts a bondholder reads: the group as consolidated, the issuing entity on its own, and any guarantor. A filled cell opens the page of that document where the entity’s statements are; “not on file” means VanillaBonds holds no such document' +
+        (alt.length ? '. ' + alt.join(' and ') + ': the reports are not on file; the record’s figures for those years come from a later report that prints them again (the button under “not on file”)' : '') + '.</p>', 'full');
   }
 
 
@@ -1108,11 +1206,11 @@ window.RATES = {
   function purposePanel(o) {
     var D = o.depth, U = D.purpose || {}, nm = cname(o), dp = dealPrice(o), DT = dealDates(o), cp = dp ? cpnTxt(o, dp.v) : 'a coupon set with the anchors';
     var L0 = o.snapshot.ladder || { rows: [] }, my = DT.maturity.getFullYear(), top = L0.rows.filter(function (r) { return r.y !== 'later' && +r.y < my && r.p; }).sort(function (a, b) { return b.p - a.p; })[0];
-    var lst = function (t, xs) { return xs && xs.length ? '<div><h4>' + t + '</h4><ul class="rl">' + xs.map(function (x) { return '<li>' + esc(cap1(clip(x[0], 200))) + srcb(x[1]) + '</li>'; }).join('') + '</ul></div>' : ''; };
-    return '<div class="panel prop"><div class="ph"><h3>The proposal</h3><p>What ' + esc(nm) + ' asks for and what the money is for; then what the company itself says about its plans, its acquisitions and its funding.</p></div>' +
+    var lst = function (t, xs, fs, blk) { return xs && xs.length ? '<div><h4>' + t + '</h4><ul class="rl">' + xs.map(function (x) { return '<li>' + esc(cap1(clip(x[0], 200))) + srcb(x[1]) + '</li>'; }).join('') + moreLi(o, nmore(o, fs, ids1(xs)), 'dossier', blk) + '</ul></div>' : ''; };
+    return '<div class="panel prop"><div class="ph"><h3>' + tl(o, 'The proposal', 'dossier', 'b-plan') + '</h3><p>What ' + esc(nm) + ' asks for and what the money is for; then what the company itself says about its plans, its acquisitions and its funding.</p></div>' +
       '<p class="ask">' + esc(o.company.name) + ' asks for <b>EUR ' + o.issueEURm + 'm for ' + DT.yrs + ' years</b> at <b>' + esc(cp) + '</b>' + (dp && !dp.set ? ', the anchors’ indication; the price is set with them' : '') + '. ' + ill('illustrative deal') + '</p>' +
       '<p class="use"><b>The money is for:</b> ' + esc(cap1((o.company.useOfProceeds || '').replace(/\s*\(illustrative[^)]*\)\.?$/, '').replace(/\.$/, ''))) + '.' + (top ? ' Before this bond is due, ' + esc(nm) + ' must also repay or refinance EUR ' + f1(top.p) + 'm in ' + top.y + '.' : '') + '</p>' +
-      '<div class="why">' + lst('Plans and targets', U.plans) + lst('Companies bought and sold', U.acq) + lst('Strategy, as stated', U.strategy) + lst('How it funds itself', U.funding) + '</div>' +
+      '<div class="why">' + lst('Plans and targets', U.plans, ['plan_item', 'plan_variable'], 'b-plan') + lst('Companies bought and sold', U.acq, ['acquisition'], 'b-management') + lst('Strategy, as stated', U.strategy, ['strategy_statement'], 'b-management') + lst('How it funds itself', U.funding, ['funding_mix'], 'b-plan') + '</div>' +
       '<p class="note">The financing and its purpose are illustrative and not proposed by ' + esc(nm) + '. The plans, acquisitions, strategy and funding are the company’s own words; each opens its page.</p></div>';
   }
   function teamSvg(o) {   // a bar per person and position from the date the reports give; a ring per change; revenue and EBITDA per year underneath on the same axis
@@ -1122,7 +1220,7 @@ window.RATES = {
     ['management', 'supervisory', 'trust office', 'advisory board', 'subsidiary'].forEach(function (b) { var ps = P.filter(function (p) { return p.body === b; }); if (ps.length) { rows.push({ head: heads[b] }); ps.forEach(function (p) { rows.push(p); }); } });
     var W = 1040, L = 300, R = 16, rh = 22, top = 28, fh = 120, H = top + rows.length * rh + 26 + fh + 22, X = function (t) { return L + (t - y0) / (y1 - y0) * (W - L - R); };
     var yt = function (d) { return d ? +d.slice(0, 4) + (d.length > 4 ? (+d.slice(5, 7) - 1) / 12 : 0) : null; };
-    var s = '<svg class="ch" viewBox="0 0 ' + W + ' ' + H + '" style="max-width:' + W + 'px" role="img" aria-label="Who held which position since when, and the company’s revenue and EBITDA by year">';
+    var s = '<svg class="ch" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Who held which position since when, and the company’s revenue and EBITDA by year">';
     for (var y = y0; y <= y1; y++) { var gx = X(y).toFixed(1); s += '<line x1="' + gx + '" x2="' + gx + '" y1="' + (top - 6) + '" y2="' + (H - 20) + '" stroke="var(--gridl)"/>' + (y < y1 ? '<text x="' + X(y + 0.5).toFixed(1) + '" y="' + (top - 12) + '" font-size="11" text-anchor="middle" fill="var(--muted)">' + y + '</text>' : ''); }
     rows.forEach(function (r, i) {
       var cy = top + i * rh + rh / 2;
@@ -1176,12 +1274,12 @@ window.RATES = {
       line('Subsidiaries', live('subsidiary').map(function (p) { return esc(p.name) + ', ' + esc(current(p)); }).join('; ')) +
       line('Changes in the last two years', recent.length ? recent.length + '; the latest: ' + esc(recent[0][0].d) + ', ' + esc(recent[0][1].name) + ' ' + esc({ joins: 'joined as', leaves: 'left as', changes: 'changed role:' }[recent[0][0].kind]) + ' ' + esc(recent[0][0].role) : 'none in the reports') +
       line('Owners', G.M.owners[0] ? esc(clip(G.M.owners[0][0], 160)) + srcb(G.M.owners[0][1]) : '') + '</ul>';
-    return panel('Management and board', 'Who runs and oversees ' + esc(nm) + ', as the documents state it. The people, their careers, the changes and the board’s set-up are on the Management tab.', body +
+    return panel(tl(o, 'Management and board', 'mgmt'), 'Who runs and oversees ' + esc(nm) + ', as the documents state it. The people, their careers, the changes and the board’s set-up are on the Management tab.', body +
       '<p style="margin:10px 0 0"><a class="btn sec" href="#/deal/' + esc(o.id) + '/mgmt">Open the Management tab</a></p>', 'full');
   }
   function teamBlock(o) {
     var G = mg(o), has = G.has, bd = has('supervisory') || has('trust office') || has('advisory board'), pale = G.T.people.some(function (p) { return !p.start; });
-    return panel('The team over the years, beside the company’s figures', 'Each position from the date the reports give; revenue and EBITDA per year on the same axis', teamSvg(o) +
+    return panel('The team over the years, beside the company’s figures', 'Each position from the date the reports give; revenue and EBITDA per year on the same axis', chs(teamSvg(o)) +
       '<div class="lgd2"><span><i class="sym bar"></i>management</span>' + (bd ? '<span><i class="sym slate"></i>' + [has('supervisory') && 'supervisory board', has('trust office') && 'trust office', has('advisory board') && 'advisory board'].filter(Boolean).join(', ') + '</span>' : '') + (has('subsidiary') ? '<span><i class="sym gold"></i>subsidiary</span>' : '') +
       '<span><i class="sym ring"></i>a change; point at it for the reason the reports give</span>' + (pale ? '<span><i class="sym ' + (bd ? 'slate' : 'bar') + '" style="opacity:.4"></i>no start date in the reports</span>' : '') + '</div>' +
       '<p class="how"><b>How to read it.</b> Each bar runs from the date the reports give for the position' + (pale ? '; a pale bar has no start date in the reports' : '') + '. Underneath, revenue (navy, value on top) and EBITDA as reported (grey, value below) per fiscal year on the same time axis, so the figures can be read against who was in charge. No result is attributed to a person.</p>', 'full');
@@ -1241,12 +1339,12 @@ window.RATES = {
     var pts = all.filter(function (x) { return x.v != null; }), top = pts[0].v, sec2 = (pts[1] || pts[0]).v, cap = top > 2.5 * sec2 ? sec2 * 1.25 : top;
     var num = function (x) { return (x.c.about ? 'about ' : x.c.calc ? '≈ ' : '') + x.v.toLocaleString('en-GB', { maximumFractionDigits: 0 }); };
     var W = 1040, L = 300, R = 190, rh = 30, H = pts.length * rh + 12, X = function (v) { return L + Math.min(v, cap) / cap * (W - L - R); };
-    var svg = '<svg class="ch" viewBox="0 0 ' + W + ' ' + H + '" style="max-width:' + W + 'px" role="img" aria-label="' + esc(met + ': ' + pts.map(function (x) { return x.name + ' ' + num(x); }).join(', ')) + '">';
+    var svg = '<svg class="ch" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(met + ': ' + pts.map(function (x) { return x.name + ' ' + num(x); }).join(', ')) + '">';
     pts.forEach(function (x, i) {
       var cy = 6 + i * rh + rh / 2, x1 = X(x.v), br = x.v > cap, c = x.c;
       var tip = x.name + ': ' + num(x) + ', ' + (x.d || '') + (x.me ? ' · ' + C.company.source : ' · ' + (c.basis || '') + ' · ' + (c.source_name || '') + (c.secondary ? ' (secondary source)' : '') + (c.calc ? ' · ' + c.calc : ''));
       svg += '<text x="' + (L - 12) + '" y="' + (cy + 4) + '" font-size="12.5" text-anchor="end" fill="var(--ink)"' + (x.me ? ' font-weight="600"' : '') + '>' + esc(clip(x.c.label || x.name, 42)) + '</text>' +
-        '<g><title>' + esc(tip) + '</title><rect x="' + L + '" y="' + (cy - 9) + '" width="' + Math.max(2, x1 - L).toFixed(1) + '" height="18" rx="3" fill="' + (x.me ? 'var(--gold)' : 'var(--c-main)') + '"' + (c.secondary ? ' fill-opacity="0.45"' : '') + '/>' +
+        '<g><title>' + esc(tip) + '</title><rect x="' + L + '" y="' + (cy - 9) + '" width="' + Math.max(2, x1 - L).toFixed(1) + '" height="18" rx="3" fill="' + (x.me ? 'var(--gold)' : 'var(--c-main)') + '"/>' +
         (br ? '<path d="M' + (x1 - 30).toFixed(1) + ' ' + (cy + 11) + ' l8 -22 M' + (x1 - 22).toFixed(1) + ' ' + (cy + 11) + ' l8 -22" stroke="var(--paper)" stroke-width="3"/>' : '') + '</g>' +
         '<text x="' + (x1 + 8).toFixed(1) + '" y="' + (cy + 4) + '" font-size="12.5" font-weight="600" fill="var(--ink)">' + esc(num(x)) + ' <tspan font-weight="400" fill="var(--muted)" font-size="11.5">' + esc(ms(x.d)) + '</tspan></text>';
     });
@@ -1254,26 +1352,29 @@ window.RATES = {
     var page = (C.company.source || '').match(/\b(S\d+) p\. ?(\d+)/);
     var fig = function (x) { var c = x.c; if (x.v == null && !x.me) return '<span class="muted">' + (c.value == null ? 'not published' : 'no figure in this measure') + '</span>';
       var u = cm(x.me ? C.company.unit : c.unit), val = x.me ? x.v : c.value, n = val.toLocaleString('en-GB', { maximumFractionDigits: 1 });
-      return (c.about ? 'about ' : '') + (u ? esc(u[1] + ' ' + n) + 'm' + (c.calc ? ', ≈ EUR ' + esc(f1(c.v)) + 'm' : '') : esc(n + ' ' + (x.me ? C.company.unit : c.unit))) + ', ' + esc(ms(x.d)) +
+      return (c.about ? 'about ' : '') + (u ? esc(u[1] + ' ' + n) + 'm' + (c.calc ? ', ≈ EUR ' + esc(f1(c.v)) + 'm' : '') : esc(n + ' ' + (x.me ? C.company.unit : c.unit))) +
         (c.basis ? '<br><span class="muted small">' + esc(clip(c.basis, 110)) + '</span>' : ''); };
     var src = function (x) { var c = x.c;
       if (x.me) return page ? '<button type="button" class="fb srcs" data-doc="' + page[1] + '" data-page="' + page[2] + '">' + esc(docName(o, page[1])) + ', p.' + page[2] + '</button>' : esc(C.company.source || '');
       if (!c.url) return '<span class="muted small">' + esc(clip(c.note || '', 140)) + '</span>';
-      return '<a href="' + esc(c.url) + '" target="_blank" rel="noopener"' + (c.quote ? ' title="' + esc('“' + c.quote + '”') + '"' : '') + '>' + esc(c.source_name) + ' ↗</a>' + (c.secondary ? ' ' + ill('secondary source') : '') + (c.calc ? '<br><span class="muted small">' + esc(c.calc) + '</span>' : ''); };
-    var tbl = '<div class="scroll"><table class="grid cmpt"><thead><tr><th>Company</th><th>Business</th><th>Figure</th><th>Source; point at it for the quote</th></tr></thead><tbody>' + all.map(function (x) {
-      return '<tr' + (x.me ? ' class="me"' : '') + '><td><b>' + esc(x.name) + '</b>' + (x.c.country ? '<br><span class="muted small">' + esc(clip(one(x.c.country), 60)) + '</span>' : '') + '</td><td>' + esc(x.me ? 'the issuer' : x.c.what || '') + '</td><td>' + fig(x) + '</td><td>' + src(x) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+      return '<a href="' + esc(c.url) + '" target="_blank" rel="noopener"' + (c.quote ? ' title="' + esc('“' + c.quote + '”') + '"' : '') + '>' + esc(c.source_name) + ' ↗</a>' + (c.calc ? '<br><span class="muted small">' + esc(c.calc) + '</span>' : ''); };
+    var org = function (x) { var c = x.c, k = c.url ? (c.secondary ? 'secondary' : 'primary') : null;   // 25 Oct 2026: how the company came onto the list and what kind of source its figure has
+      return x.me ? 'the company’s own report' : c.named_in_reports ? 'named in the company’s report' + (k ? '<span class="muted small" style="display:block">figure from a ' + k + ' source</span>' : '') : k ? 'researched, ' + k + ' source' : 'researched; no published figure found'; };
+    var dte = function (x) { return (x.d ? esc(ms(x.d)) : '<span class="muted">–</span>') + (x.c.accessed ? '<span class="muted small" style="display:block">read ' + esc(dfull(x.c.accessed)) + '</span>' : ''); };
+    var tbl = '<div class="scroll"><table class="grid cmpt"><thead><tr><th>Company</th><th>Business</th><th>Figure</th><th>Date</th><th>Origin</th><th>Source; point at it for the quote</th></tr></thead><tbody>' + all.map(function (x) {
+      return '<tr' + (x.me ? ' class="me"' : '') + '><td><b>' + esc(x.name) + '</b>' + (x.c.country ? '<br><span class="muted small">' + esc(clip(one(x.c.country), 60)) + '</span>' : '') + '</td><td>' + esc(x.me ? 'the issuer' : x.c.what || '') + '</td><td>' + fig(x) + '</td><td style="white-space:nowrap">' + dte(x) + '</td><td>' + org(x) + '</td><td>' + src(x) + '</td></tr>'; }).join('') + '</tbody></table></div>';
     var IR = (C.in_reports || []).slice().sort(function (a, b) { return (/compet/i.test(b.quote) ? 1 : 0) - (/compet/i.test(a.quote) ? 1 : 0); });
     var qli = function (r) { return '<li><q>' + esc(r.quote) + '</q><span class="s">' + esc(docName(o, r.doc)) + ', p.' + esc(r.page) + ' · <button type="button" class="fb srcs" data-doc="' + esc(r.doc) + '" data-page="' + esc(r.page) + '">open the page</button></span></li>'; };
     var named = (C.competitors || []).some(function (c) { return c.named_in_reports; });
     var rep = IR.length ? '<h4>What ' + esc(poss(nm)) + ' own reports say</h4>' + (named ? '' : '<p class="muted small" style="margin:0 0 4px">The reports name no competitor. These are their statements on competition and market position.</p>') +
-      '<ul class="rl">' + IR.slice(0, 4).map(qli).join('') + '</ul>' + (IR.length > 4 ? '<details class="more"><summary>All ' + IR.length + ' passages</summary><ul class="rl">' + IR.slice(4).map(qli).join('') + '</ul></details>' : '') : '';
+      '<ul class="rl">' + IR.slice(0, 4).map(qli).join('') + '</ul>' + (IR.length > 4 ? '<details class="more"><summary>+ ' + (IR.length - 4) + ' more passages</summary><ul class="rl">' + IR.slice(4).map(qli).join('') + '</ul></details>' : '') : '';
     var rel = (C.related_not_competitors || []).length ? '<h4>Related, not competitors</h4><ul class="rl">' + C.related_not_competitors.map(function (r) { return '<li><b>' + esc(r.name) + '</b>: ' + esc(clip(r.why, 230)) + '</li>'; }).join('') + '</ul>' : '';
     var ext = (C.method ? '<details class="more"><summary>How the list was made</summary><p class="small">' + esc(C.method) + '</p></details>' : '') + ((C.not_found || []).length ? '<details class="more"><summary>Looked for and not found</summary><ul class="rl">' + C.not_found.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></details>' : '');
-    var conv = pts.some(function (x) { return x.c.calc; }), abt = pts.some(function (x) { return x.c.about; }), sec = pts.some(function (x) { return x.c.secondary; });
-    return panel('Competitors', esc(met) + '. ' + esc(nm) + ' in gold; each figure with its source and date, as of ' + esc(dfull(C.asof)) + '. No ranking of ours.', svg +
-      '<div class="lgd2"><span><i class="sym gold"></i>' + esc(nm) + ', its own report</span><span><i class="sym bar"></i>competitor, the company’s own figure</span>' + (sec ? '<span><i class="sym bar" style="opacity:.45"></i>competitor, a secondary source (press, listing, database)</span>' : '') + '</div>' +
+    var conv = pts.some(function (x) { return x.c.calc; }), abt = pts.some(function (x) { return x.c.about; });
+    return panel(tl(o, 'Competitors', 'dossier', 'b-market'), esc(met) + '. ' + esc(nm) + ' in gold; each figure with its source and date, as of ' + esc(dfull(C.asof)) + '. No ranking of ours.', chs(svg) +
+      '<div class="lgd2"><span><i class="sym gold"></i>' + esc(nm) + ', its own report</span><span><i class="sym bar"></i>competitor; the table gives each figure’s date and origin</span></div>' +
       '<p class="how"><b>How to read it.</b> One bar per company on the same measure, so the sizes can be compared; the bars say nothing about quality or prospects.' + (cap < top ? ' The longest bar is cut (the white break) to keep the others readable; its figure is printed.' : '') +
-      (conv ? ' ≈: converted to EUR at the ECB’s annual average reference rate for the fiscal year; the division is in the table.' : '') + (abt ? ' “about”: the source itself gives a rounded figure.' : '') + ' Dates differ by company: each bar shows the latest figure published.</p>' +
+      (conv ? ' ≈: converted to EUR at the ECB’s annual average reference rate for the fiscal year; the division is in the table.' : '') + (abt ? ' “about”: the source itself gives a rounded figure.' : '') + ' Dates differ by company: each bar shows the latest figure published. In the table, Origin says how a company came onto the list and what kind of source its figure has: named in the company’s report, or researched from a primary source (the company’s own report, release or website) or a secondary one (press, a listing, a database).</p>' +
       '<h4 style="margin-top:14px !important">The figures and their sources</h4>' + tbl + '<div class="mo2"><div>' + rep + '</div><div>' + rel + ext + '</div></div>', 'full');
   }
   // ---------- the data room (23 Oct 2026): the documents and every fact, downloadable as they come or as an extract in the investor's own shape ----------
@@ -1340,7 +1441,7 @@ window.RATES = {
       (web.length ? '<tr><td class="mono">' + esc(web[0].id + (web.length > 1 ? '–' + web[web.length - 1].id : '')) + '</td><td colspan="7">Web pages, read ' + (web[0].date ? dfull(web[0].date) : '') + ': ' + web.map(function (d) { return '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">' + esc(clip(d.origin || d.id, 40)) + '</a>'; }).join(' · ') + '</td></tr>' : '') + '</tbody></table></div>', 'full');
     var asked = panel('Requested from ' + esc(nm), (o.phase === 'intake' ? 'In preparation' : open.length ? 'Prepared from the public reports' : 'Prepared') + ': ' + (mand.length - open.length) + ' of ' + mand.length + ' mandatory items present', '<div class="scroll"><table class="grid"><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody>' + reqs(o).map(function (r) { return '<tr><td>' + esc(r.item) + (r.mandatory ? ' <span class="chip">mandatory</span>' : '') + (r.note ? '<div class="small muted">' + esc(r.note) + '</div>' : '') + '</td><td><span class="chip ' + r.st + '">' + esc(r.st) + '</span></td></tr>'; }).join('') + '</tbody></table></div>' +
       ((o.docRequests || []).length ? '<h4 style="margin-top:16px !important">Not in the public documents</h4><div class="scroll"><table class="grid"><thead><tr><th>Block</th><th>Field</th><th>Periods</th><th>Note</th></tr></thead><tbody>' + o.docRequests.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="mono">' + esc(r[2]) + '</td><td class="muted">' + esc(r[3] || '–') + '</td></tr>'; }).join('') + '</tbody></table></div>' : ''), 'full');
-    return '<div class="dp">' + top + builder + docs + asked + '</div>';
+    return '<div class="dp">' + top + builder + entityPanel(o) + docs + asked + '</div>';
   }
   function drAct(o, act, k) {
     var D = window.DOSSIER_DATA && window.DOSSIER_DATA[o.dossier]; if (!D) return;
@@ -1663,7 +1764,7 @@ window.RATES = {
   function unc(bs) { return bs.some(function (b) { return b.unc; }) ? '<p class="small muted" style="margin:4px 0 0">* margin unconfirmed in the dataset: the venue shows only the all-in coupon; not re-verified at source.</p>' : ''; }
   function mtabs(cur) {
     var n = BONDS.filter(function (b) { return !closed(b); }).length;
-    return '<nav class="tabs mtabs" aria-label="Market">' + [['#/market', 'Overview', 'over', ''], ['#/market/bonds', 'Bonds', 'list', n]].map(function (t) { return '<a href="' + t[0] + '"' + (cur === t[2] ? ' aria-current="page"' : '') + '>' + t[1] + (t[3] ? '<span class="c">' + t[3] + '</span>' : '') + '</a>'; }).join('') + '</nav>';
+    return '<nav class="tabs mtabs" aria-label="Market">' + [['#/market', 'Overview', 'over', '', 'events, new issues, maturities, charts'], ['#/market/bonds', 'Bonds', 'list', n, 'the list: terms, prices, parties']].map(function (t) { return '<a href="' + t[0] + '"' + (cur === t[2] ? ' aria-current="page"' : '') + '>' + t[1] + (t[3] ? '<span class="c">' + t[3] + '</span>' : '') + '<span class="t2">' + t[4] + '</span></a>'; }).join('') + '</nav>';
   }
   // ---- charts from the full history: a line through the closes, filled points on trade days, hollow on quote-only days, a dashed segment across a gap of more than a week ----
   var RANGES = [['5d', '5D', 0], ['1m', '1M', 31], ['3m', '3M', 92], ['1y', '1Y', 366], ['max', 'Max', -1]];
@@ -1877,17 +1978,23 @@ window.RATES = {
       var n = ownRows(c, true).length + c.peers.reduce(function (a, p) { return a + pins(p).length; }, 0) + c.fmt.length;
       return sw + rvChart(c) + '<div class="cmp3">' + compShort(c) + '<p class="small muted" style="margin:8px 0 0">' + esc(c.rule) + '. Spread ' + (CMP.view === 'issue' ? 'at issue: a floating margin over 3M Euribor as the contract states it; a fixed coupon − ' + REFL : 'at the mark: the simple margin for floating lines; the yield to maturity − ' + REFL + ' for fixed lines') + '. No fitted curve and no fair value.</p></div>' +
         '<div class="dl"><button type="button" class="btn sec" data-cmp="full">' + (CMP.full ? 'Hide the full table and the price development' : 'Show all ' + n + ' lines and the price development') + '</button></div>' +
-        (CMP.full ? compTable(c) + '<h4 style="margin-top:16px">Price development · this bond against the same-format lines</h4>' + devChart(c) : '');
+        (CMP.full ? compTable(c) + '<h4 style="margin-top:16px">Price development · this bond against the same-format lines</h4>' + devChart(c) : '') + refLines(c.deal);
     }
     var h = sw + '<p class="small muted" style="margin:0 0 6px">' + esc(c.rule) + ' · ' + c.fmt.length + ' line' + (c.fmt.length === 1 ? '' : 's') + (npe ? ' · layer 2: ' + npe + ' researched peers with public terms' : '') + '.</p>' + rvChart(c) +
       '<p class="small muted" style="margin:6px 0 0">' + (CMP.view === 'issue' ? 'At issue: a floating margin over 3M Euribor as the contract states it; a fixed coupon − ' + REFL + '.' : 'At the mark: floating, simple margin = margin + (100 − price) ÷ years to maturity; fixed, yield to maturity at the mark (' + YTM_F + ') − ' + REFL + '. Marks: the latest Börse Frankfurt price on file, dated in the hover.') +
       ' x: years to maturity from ' + dfull(TODAY) + '. No fitted curve and no fair value: ' + (c.deal ? 'the anchors set the price of the new transaction.' : 'nothing here says where a bond should price.') + '</p>';
-    if (c.big) return h + compTable(c) + '<h4 style="margin-top:16px">Price development · this bond against the same-format lines</h4>' + devChart(c);
+    if (c.big) return h + compTable(c) + '<h4 style="margin-top:16px">Price development · this bond against the same-format lines</h4>' + devChart(c) + refLines(c.deal);
     var d = c.snap && c.snap.debt, rated = d ? d.rows.filter(function (r) { return r[1] != null || r[2]; }) : [];
     return h + (d ? '<h4 style="margin-top:12px">1 · The issuer’s own debt, ' + esc(d.asof || '') + '</h4><table class="kf"><thead><tr><th style="text-align:left">Instrument</th><th>Rate</th><th>EUR m</th></tr></thead><tbody>' +
       c.mine.map(function (b) { var m = cur(b); return '<tr><td><a href="#/market/' + b.isin + '">' + esc(bname(b)) + '</a></td><td class="num">' + (m ? num(m.p) + ' · ' + (b.t === 'Fixed' ? 'yield ' + (ytm(m.p, b.cp, matDate(b), m.d) * 100).toFixed(2) + '%' : 'E+' + markSpread(b)) + '<span class="calc" title="' + esc(b.t === 'Fixed' ? YTM_F : 'margin + (100 − price) ÷ years to maturity') + '"></span>' : cpn(b)) + '</td><td class="num">' + b.size + '</td></tr>'; }).join('') +
       rated.filter(function (r) { return !(/bond/i.test(r[0]) && c.mine.some(function (b) { return b.t === 'Fixed' && b.cp === r[1]; })); }).slice(0, 8).map(function (r) { return '<tr><td>' + fbtn(r[5], esc(r[0])) + '</td><td class="num">' + (r[1] != null ? r[1] + '%' : 'floating') + '</td><td class="num">' + num(r[3], 1) + '</td></tr>'; }).join('') +
-      (d.cost ? '<tr class="em"><td>Implied cost of debt, ' + esc(d.cost.period) + '<span class="calc" title="' + esc(d.cost.calc) + '"></span></td><td class="num">' + (d.cost.v * 100).toFixed(2) + '%</td><td></td></tr>' : '') + '</tbody></table>' : '');
+      (d.cost ? '<tr class="em"><td>Implied cost of debt, ' + esc(d.cost.period) + '<span class="calc" title="' + esc(d.cost.calc) + '"></span></td><td class="num">' + (d.cost.v * 100).toFixed(2) + '%</td><td></td></tr>' : '') + '</tbody></table>' : '') + refLines(c.deal);
+  }
+  function refLines(o) {   // 26 Oct 2026: beside the comparables, the issuer's percentile in each named reference class on file, one ratio per line
+    if (!o || !o.depth) return '';
+    var P = o.depth.peers; if (!P || !P.rows.length) return '<p class="small muted" style="margin:10px 0 0">Reference class: none on file for ' + esc(cname(o)) + '.</p>';
+    return '<h4 style="margin-top:16px">' + esc(cname(o)) + ' in a reference class, one ratio at a time</h4><ul class="rl">' + P.rows.map(function (r) { return '<li>' + esc(pctLine(o, r)) + '<span class="s">' + esc(srcLine(r)) + (r.url ? ' · ' : '') + '</span>' + (r.url ? '<a class="small" href="' + esc(r.url) + '" target="_blank" rel="noopener">source ↗</a>' : '') + '</li>'; }).join('') + '</ul>' +
+      '<p class="small muted" style="margin:4px 0 0">Each percentile is read off the class’s published quartiles by straight-line interpolation; outside them only the side is given. No overall rank and no grade.</p>';
   }
   function compPanel(o, big) {   // the deal's comparables: compact under the terms of the Snapshot, large with the table and the development chart on the credit analysis tab and the intake view
     var c = compsOf(o); c.big = big; c.compact = big; market();
@@ -1942,6 +2049,7 @@ window.RATES = {
       [ni.length + ' · ' + vol(ni.reduce(function (s, b) { return s + b.size; }, 0)), 'new issues, twelve months to ' + dfull(TODAY)], [act.length - lv.length, 'lines in standstill or default'], [act.filter(wproc).length, 'in a written procedure (terms amended)']];
     var due = act.filter(function (b) { return dateOf(matDate(b)) <= addDays(TODAY, 365); }).sort(function (a, b) { return matDate(a) < matDate(b) ? -1 : 1; });
     return '<div class="pagehead"><h1>Market</h1><span class="muted small">euro bonds in the Nordic format from issuers outside the Nordics · the platform’s own dataset, ' + BONDS.length + ' lines · nothing trades here</span></div>' + mtabs('over') +
+      '<div class="mentry"><div><b>The bond list</b><span>' + act.length + ' active lines: terms, prices, parties and venues; filters by country, sector, coupon type, status and maturity; a preview per row and a page per bond.</span></div><a class="btn sec" href="#/market/bonds">All ' + act.length + ' bonds ›</a></div>' +
       '<p class="asof">Reference data verified at source in August 2026. Prices: Börse Frankfurt’s daily history per bond, read once on ' + dfull(MARKS.asOf) + ', and one read of the venue pages that day (' + MARKS.window + '): ' + today.length + ' of ' + BONDS.length + ' bonds priced that day, ' + (marked.length - today.length) + ' with an older last price, ' + (BONDS.length - marked.length) + ' without a Frankfurt page.</p>' + legend() +
       '<div class="steps" style="margin-top:12px">' + tiles.map(function (t) { return '<div><b>' + esc(t[0]) + '</b><span>' + esc(t[1]) + '</span></div>'; }).join('') + '</div>' +
       '<div class="panel" style="margin-top:14px"><div class="tb" style="margin:0 0 8px"><h3 style="margin:0">Events</h3><span style="flex:1"></span><details class="dd"><summary class="tgl">Kinds ▾</summary><div class="menu">' + EKIND.map(function (k) { return '<label><input type="checkbox" data-ev="' + k[0] + '"' + (EV[k[0]] ? ' checked' : '') + '> ' + k[1] + '</label>'; }).join('') + '</div></details></div><div id="ev-wrap">' + evTable(act) + '</div></div>' +
@@ -1974,10 +2082,13 @@ window.RATES = {
   };
   function sortVal(b, k) { var m = cur(b), d; return k === 'sp' ? spread(b) : k === 'px1' ? (m ? m.p : -1) : k === 'pd' ? (m ? iso(m.d) : '') : /^(w1|m1|ytd)$/.test(k) ? ((d = deltas(b, function (x) { return x.p; })) && d[k] != null ? d[k] : -999) : k === 'mat' ? matDate(b) : k === 'st' ? status(b) : k === 'to' ? (m && m.to != null ? m.to : -1) : b[k] == null ? '' : b[k]; }
   var MKF = [['c', 'Country'], ['g', 'Sector'], ['t', 'Coupon type'], ['st', 'Status'], ['yr', 'Maturity']], MKN = { FRN: 'Floating', Fixed: 'Fixed', closed: 'Redeemed or called' };
-  function bondRows() {
+  function bondList() {   // the bond list as filtered and sorted: the table's rows, and the order the preview drawer steps through
     var q = MK.q.toLowerCase(), cl = MK.st === 'closed', rows = BONDS.filter(function (b) { return closed(b) === cl && (!q || (b.n + ' ' + b.s + ' ' + b.isin + ' ' + (mk(b).name || '')).toLowerCase().indexOf(q) >= 0) && (!MK.c || b.c === MK.c) && (!MK.g || b.g === MK.g) && (!MK.t || b.t === MK.t) && (!MK.band || (b.size >= 20 && b.size <= 100)) && (!MK.yr || String(matDate(b)).slice(0, 4) === MK.yr) && (!MK.st || cl || status(b) === MK.st); });
     if (MK.sort) rows.sort(function (a, b) { var x = sortVal(a, MK.sort[0]), y = sortVal(b, MK.sort[0]); return (x < y ? -1 : x > y ? 1 : 0) * MK.sort[1]; });
-    var cols = MCOLS[MK.cols];
+    return rows;
+  }
+  function bondRows() {
+    var rows = bondList(), cols = MCOLS[MK.cols];
     return { n: rows.length, html: rows.map(function (b) { return '<tr class="go' + (MK.open === b.isin ? ' on' : '') + '" data-mk="open:' + b.isin + '">' + cols.map(function (c) { return '<td' + (c[2] ? ' class="num"' : '') + '>' + (c[3] ? c[3](b) : esc(b[c[0]])) + '</td>'; }).join('') + '</tr>'; }).join('') || '<tr><td colspan="' + cols.length + '" class="muted">No bonds match.</td></tr>' };
   }
   function tags() { var t = MKF.filter(function (f) { return MK[f[0]]; }).map(function (f) { return '<button type="button" data-mk="' + f[0] + ':" title="Remove">' + f[1] + ': ' + esc(MKN[MK[f[0]]] || MK[f[0]]) + ' ×</button>'; }); if (MK.band) t.push('<button type="button" data-mk="band:toggle" title="Remove">EUR 20–100m ×</button>'); if (MK.q) t.push('<button type="button" data-mk="q:" title="Remove">“' + esc(MK.q) + '” ×</button>'); return t.join(''); }
@@ -1995,7 +2106,11 @@ window.RATES = {
   }
   function drawer(b) {   // the preview on the right: name, status, the mark, a small chart, the terms, the last events, the issuer's other lines, the way to the full page
     var m = cur(b), dp = deltas(b, function (z) { return z.p; }), x = mk(b).xfra, o = dealOf(b), ev = events(b).filter(function (e) { return e.src !== 'dataset'; }).sort(function (p, q) { return p.d < q.d ? 1 : -1; }).slice(0, 2), others = BONDS.filter(function (z) { return z !== b && short(z) === short(b); });
-    return '<aside class="drawer" aria-label="Bond preview"><button type="button" class="view x" data-mk="open:" aria-label="Close the preview">Close ×</button><p class="kick">' + esc(b.s) + ' · ' + esc(b.c) + '</p><h2>' + esc(bname(b)) + '</h2><p class="small" style="margin:0 0 10px"><span class="mono muted">' + b.isin + '</span> · ' + schip(b) + (b.diff ? ' <span class="chip pending" title="' + esc(b.diff) + '">terms differ</span>' : '') + '</p>' +
+    var L = bondList(), i = L.indexOf(b), pv = L[i - 1], nx = i >= 0 ? L[i + 1] : null;   // 25 Oct 2026: step through the list as it is filtered and sorted
+    var step = '<div class="dstep"><button type="button" class="view" data-mk="open:' + (pv ? pv.isin : '') + '"' + (pv ? ' title="' + esc(bname(pv)) + '"' : ' disabled') + '>‹ Previous</button><button type="button" class="view" data-mk="open:' + (nx ? nx.isin : '') + '"' + (nx ? ' title="' + esc(bname(nx)) + '"' : ' disabled') + '>Next ›</button>' +
+      '<span>' + (i >= 0 ? (i + 1) + ' of ' + L.length : 'not in the list now') + '</span><button type="button" class="view x" data-mk="open:" aria-label="Close the preview">Close ×</button></div>' +
+      '<p class="dhint">Previous and next step through the list as it is filtered and sorted; the arrow keys ↑ ↓ do the same.</p>';
+    return '<aside class="drawer" aria-label="Bond preview">' + step + '<p class="kick">' + esc(b.s) + ' · ' + esc(b.c) + '</p><h2>' + esc(bname(b)) + '</h2><p class="small" style="margin:0 0 10px"><span class="mono muted">' + b.isin + '</span> · ' + schip(b) + (b.diff ? ' <span class="chip pending" title="' + esc(b.diff) + '">terms differ</span>' : '') + '</p>' +
       '<div class="pbox" style="padding:10px 12px 10px"><div style="margin:0"><span class="k">' + (m ? 'Last mark · ' + esc(srcOf(m)) : 'No exchange price on file') + '</span><span class="v" style="font-size:28px">' + (m ? num(m.p) : b.px != null ? num(b.px, 1) : '–') + '<small>% of par</small></span><span class="p">' + esc(m ? dtime(m) + ' · ' + kindOf(m) : b.px != null ? 'July 2026 · hand-noted mark' : '') + (dp && dp.prev != null ? ' · ' + delta(dp.prev) + ' on the previous mark' : '') + '</span></div></div>' +
       priceChart(b, { mini: true }) + '<p class="srcl" style="margin:0 0 8px">One year · ' + SRC_LINE + '</p>' +
       '<table class="kv">' + [['Coupon', b.t === 'FRN' ? '3M Euribor + ' + b.cp + ' bp' + (b.unc ? ' (margin unconfirmed)' : '') : b.cp + '% fixed'], ['Maturity', esc(x.ok && x.mat && !b.diff ? dfull(x.mat) : dym(b.mat)) + ' · ' + (yrs(b) > 0 ? yrs(b).toFixed(1) + ' years' : 'matured')], ['Size', 'EUR ' + b.size + 'm' + (x.ok ? ' · venue ' + Math.round(x.outst / 1e6) + 'm outstanding' : '')], ['Venues', x.ok ? 'Börse Frankfurt' + (mk(b).xoam.listed ? ', Euronext Nordic ABM' : '') : 'Frankfurt page not loaded'], ['Δ 1W · 1M · YTD', dp ? [dp.w1, dp.m1, dp.ytd].map(function (v) { return delta(v); }).join(' · ') : '–']].map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>'; }).join('') + '</table>' +
@@ -2040,8 +2155,8 @@ window.RATES = {
       hist_ + '<section class="sec" id="s-events"><div class="panel"><h3>Events</h3><div class="scroll"><table class="grid"><thead><tr><th>Date</th><th>Kind</th><th>Event</th><th>Source</th></tr></thead><tbody>' + ev.map(function (z) { return evRow(z, false); }).join('') + '</tbody></table></div><p class="small muted" style="margin:6px 0 0">Titles of Euronext regulated news as shown on its page (quoted, may be truncated there); each row links to its source.</p></div></section>' + venues;
   }
   // ---------- calendar (22 Oct 2026, v2): a month grid in the style of a desktop calendar (windows as bars, dates as chips, a popover per item), the agenda as the list alternative, the rates panel beside it ----------
-  var ECB_URL = RATES.decisionsUrl || '', CK = { factfile: 'Fact file due', anchor: 'Anchor window', book: 'Book, open to everyone', maturity: 'Maturity', issue: 'Issue', listing: 'Listing', tap: 'Tap or buyback', procedure: 'Written procedure or adjustment', coupon: 'Coupon reset', news: 'Issuer news', ecb: 'ECB decision' };
-  var SHOW = [['deals', 'Your deals'], ['maturity', 'Bond maturities'], ['market', 'Market events (issues, listings, taps, procedures, coupon resets)'], ['news', 'Issuer news and reports'], ['ecb', 'ECB decisions']];
+  var ECB_URL = RATES.decisionsUrl || '', CK = { factfile: 'Fact file due', anchor: 'Anchor window', book: 'Book, open to everyone', maturity: 'Maturity', issue: 'Issue', listing: 'Listing', tap: 'Tap or buyback', procedure: 'Written procedure or adjustment', coupon: 'Coupon reset', news: 'Issuer news', ecb: 'ECB decision', watch: 'Post-issuance date' };
+  var SHOW = [['deals', 'Your deals'], ['maturity', 'Bond maturities'], ['market', 'Market events (issues, listings, taps, procedures, coupon resets)'], ['news', 'Issuer news and reports'], ['ecb', 'ECB decisions'], ['watch', 'Post-issuance dates in the documents on file (coupons, calls, reports with their certificates, covenant tests)']];
   function roleWins(o) {   // the windows that are yours, for the bell: co-investors the book of the deals they can see, anchors the anchor window (its close is the commitment deadline), the company its own timeline with the fact file due
     var w = o.windows || {}, r = ST.role, mine = r === 'company' && o.id === ST.company, x = [];
     if (mine && w.factFileDue != null) x.push({ k: 'factfile', from: w.factFileDue, to: w.factFileDue });
@@ -2050,11 +2165,13 @@ window.RATES = {
     return x;
   }
   function calItems() {   // every item with its kind, layer, dates, label, text and link: the deals you can see (both windows, the company its fact file too), maturities, market events, issuer news, ECB decisions
-    var it = [], off = ST.cal.off || {}, lay = function (k) { return k === 'ecb' || k === 'maturity' || k === 'news' ? k : /^(anchor|book|factfile)$/.test(k) ? 'deals' : 'market'; };
+    var it = [], off = ST.cal.off || {}, lay = function (k) { return k === 'ecb' || k === 'maturity' || k === 'news' || k === 'watch' ? k : /^(anchor|book|factfile)$/.test(k) ? 'deals' : 'market'; };
     IDS.forEach(function (id) { var o = DEALS[id], w = o.windows || {}, mine = ST.role === 'company' && o.id === ST.company; if (!canSee(o) && !mine) return;
       if (mine && w.factFileDue != null) it.push({ k: 'factfile', from: wd(w.factFileDue), to: null, o: o, lab: cname(o) + ' · fact file due', text: o.company.name + ': the signed fact file is due; anchors see the deal from then on', href: '#/deal/' + id + '/requests', who: 'the company' });
       if (w.anchorOpens != null) it.push({ k: 'anchor', from: wd(w.anchorOpens), to: wd(w.anchorCloses), wdTo: w.anchorCloses, o: o, lab: cname(o) + ' · anchor window', text: o.company.name + ': anchor window; the close is the commitment deadline', href: '#/deal/' + id + '/book', who: 'anchor investors' });
-      if (w.bookOpens != null) it.push({ k: 'book', from: wd(w.bookOpens), to: wd(w.bookCloses), wdTo: w.bookCloses, o: o, lab: cname(o) + ' · book', text: o.company.name + ': book open to every investor, orders in pieces of EUR 100,000 on the anchors’ terms', href: '#/deal/' + id + '/book', who: 'every investor' }); });
+      if (w.bookOpens != null) it.push({ k: 'book', from: wd(w.bookOpens), to: wd(w.bookCloses), wdTo: w.bookCloses, o: o, lab: cname(o) + ' · book', text: o.company.name + ': book open to every investor, orders in pieces of EUR 100,000 on the anchors’ terms', href: '#/deal/' + id + '/book', who: 'every investor' });
+      ((o.snapshot || {}).watch || { items: [] }).items.forEach(function (x) {   // 25 Oct 2026: the dates the documents on file set after issuance (snapshot.py watch)
+        it.push({ k: 'watch', sub: x.k, from: dateOf(x.d), o: o, lab: cname(o) + ' · ' + x.lab, text: o.company.name + ': ' + x.t + '.', calc: x.calc, ids: x.ids, slug: o.dossier, href: '#/deal/' + id + '/overview' }); }); });
     BONDS.forEach(function (b) { if (closed(b)) return; var mo = String(matDate(b)).length === 7; it.push({ k: 'maturity', from: dateOf(matDate(b)), month: mo, b: b, lab: short(b) + ' matures', text: bname(b) + ' matures · EUR ' + b.size + 'm · ' + statusText(b).toLowerCase() + (mo ? ' · month per the dataset, the day is not on file' : ''), href: '#/market/' + b.isin }); });
     dedupe([].concat.apply([], BONDS.map(events))).forEach(function (e) { if (e.src === 'dataset') return; it.push({ k: e.k, from: dateOf(e.d), month: String(e.d).length === 7, b: e.b, lab: short(e.b) + ' · ' + ({ news: 'news', tap: /buyback/.test(e.kind) ? 'buyback' : 'tap', procedure: /adjust/.test(e.kind) ? 'adjustment' : /standstill|default/.test(e.kind) ? e.kind : 'written procedure', coupon: 'coupon', listing: 'listing', issue: 'issue' }[e.k] || e.k), text: e.b.n + ' · ' + (e.quote ? '“' + e.title + '”' : e.title), href: '#/market/' + e.b.isin, src: e.url }); });
     (RATES.decisions || []).forEach(function (d) { it.push({ k: 'ecb', from: dateOf(d), lab: 'ECB decision', text: 'ECB Governing Council: monetary policy decision at ' + RATES.decisionTime + ', press conference follows' + (RATES.decisionNotes && RATES.decisionNotes[d] ? ', ' + RATES.decisionNotes[d] : '') + '. Floating-rate coupons in this market are set off 3-month Euribor.', src: ECB_URL, ecb: true }); });
@@ -2084,13 +2201,21 @@ window.RATES = {
     if (!xs.length) return '<p class="muted" style="margin:14px 0">Nothing in ' + a.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) + ' with the kinds selected.</p>';
     return '<div class="scroll"><table class="grid" style="table-layout:fixed"><colgroup><col style="width:200px"><col><col style="width:100px"></colgroup><tbody>' + xs.map(function (i) { var d = i.from, t = i.to; return '<tr' + (i.href ? ' class="go" data-go="' + i.href + '"' : '') + '><td class="mono" style="white-space:nowrap">' + (i.month ? dym(d) : dstr(d) + (t && t > d ? ' – ' + dstr(t) : '')) + '<br><span class="chip k-' + i.k + '">' + esc(CK[i.k]) + '</span></td><td>' + (i.o ? '<span class="issuer">' + mark(i.o) + '<span>' + esc(i.text) + '</span></span>' : esc(i.text)) + (i.wdTo != null && i.wdTo >= 0 ? ' <span class="small muted">· closes in ' + i.wdTo + ' working days</span>' : '') + '</td><td class="small" style="white-space:nowrap">' + (i.src ? '<a href="' + esc(i.src) + '" target="_blank" rel="noopener">source ↗</a>' : i.href ? '<a href="' + i.href + '">open</a>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
   }
-  function calBody() { var items = calItems(); return ST.cal.view === 'agenda' ? agenda(items, CAL.ym) : monthGrid(items, CAL.ym); }
+  function calBody() { var items = calItems(); return (ST.cal.view === 'agenda' ? agenda(items, CAL.ym) : monthGrid(items, CAL.ym)) + watchNote(); }
+  function watchNote() {   // 25 Oct 2026: what the post-issuance layer holds, how its dates are reached, and the obligations with no fixed date
+    if ((ST.cal.off || {}).watch) return '';
+    var ds = IDS.map(function (id) { return DEALS[id]; }).filter(function (o) { return (canSee(o) || (ST.role === 'company' && o.id === ST.company)) && o.snapshot && o.snapshot.watch; });
+    var und = [].concat.apply([], ds.map(function (o) { return o.snapshot.watch.undated.map(function (x) { return esc(cname(o)) + ': ' + esc(x.t.replace(/^\w/, function (c) { return c.toLowerCase(); })) + x.ids.map(function (f) { return ' <button type="button" class="src" data-fact="' + esc(f) + '" data-slug="' + esc(o.dossier) + '">' + esc(f) + '</button>'; }).join(''); }); }));
+    var by = ds.map(function (o) { var n = o.snapshot.watch.items.length; return esc(cname(o)) + ' ' + n + ' date' + (n === 1 ? '' : 's') + (o.snapshot.watch.bond ? ', from the signed terms of its ' + esc(o.snapshot.watch.bond) : n ? ', from its reports' : ', none dated in its documents'); });
+    return '<p class="small" style="margin:10px 0 0"><b>Post-issuance dates</b> (green ring): ' + by.join('; ') + '. Each date is the arithmetic the item prints on the terms as the documents state them: the first coupon date and the interval, the issue date plus the months of a call step, the year end or half-year end plus the reporting period; where the terms ask for one, a compliance certificate goes with each report. Click a date for its clause.' +
+      (und.length ? ' <span class="muted">No fixed date: ' + und.join('; ') + '.</span>' : '') + '</p>';
+  }
   function calendarView() {
     ST.cal = ST.cal || { off: { news: 1 } }; if (Q.get('cal')) ST.cal.view = Q.get('cal'); if (!CAL.ym) CAL.ym = iso(TODAY).slice(0, 7);
     var yy = +CAL.ym.slice(0, 4), mo = +CAL.ym.slice(5, 7) - 1, title = new Date(yy, mo, 1).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
     var tb = '<div class="caltb"><div class="seg">' + [['month', 'Month'], ['agenda', 'Agenda']].map(function (v) { return '<button type="button" data-calv="' + v[0] + '" aria-pressed="' + ((ST.cal.view || 'month') === v[0]) + '">' + v[1] + '</button>'; }).join('') + '</div><button type="button" class="tgl" data-calnav="0">Today</button><button type="button" class="tgl" data-calnav="-1" aria-label="Previous month">‹</button><button type="button" class="tgl" data-calnav="1" aria-label="Next month">›</button><h2>' + title + '</h2><span style="flex:1"></span>' +
       '<details class="dd"><summary class="tgl">Show ▾</summary><div class="menu">' + SHOW.map(function (s) { return '<label><input type="checkbox" data-cal="' + s[0] + '"' + (ST.cal.off && ST.cal.off[s[0]] ? '' : ' checked') + '> ' + s[1] + '</label>'; }).join('') + '</div></details></div>' +
-      '<div class="lgd" style="margin:0 0 10px"><span><i class="sw" style="background:var(--navy)"></i>anchor window</span><span><i class="sw" style="background:var(--gold)"></i>book, open to everyone</span>' + (ST.role === 'company' ? '<span><i class="sw" style="background:none;border:1.5px solid var(--navy)"></i>fact file due</span>' : '') + '<span><i class="sw" style="background:#2A8C8C"></i>ECB decision</span><span><i class="sw" style="background:#8A97A5"></i>maturities, market events, news</span></div>';
+      '<div class="lgd" style="margin:0 0 10px"><span><i class="sw" style="background:var(--navy)"></i>anchor window</span><span><i class="sw" style="background:var(--gold)"></i>book, open to everyone</span>' + (ST.role === 'company' ? '<span><i class="sw" style="background:none;border:1.5px solid var(--navy)"></i>fact file due</span>' : '') + '<span><i class="sw" style="background:#2A8C8C"></i>ECB decision</span><span><i class="sw" style="background:#8A97A5"></i>maturities, market events, news</span><span><i class="sw" style="background:none;border:1.5px solid #2F6B3A;border-radius:50%;width:9px"></i>post-issuance date, from the documents on file</span></div>';
     return '<div class="pagehead"><h1>Calendar</h1><span class="muted small">' + { anchor: 'your anchor windows (the close is the commitment deadline) and the books, the market’s dates, the ECB’s decision days', coinvestor: 'the book windows of the deals open to you, the market’s dates, the ECB’s decision days', company: 'your issue’s timeline, the market’s dates, the ECB’s decision days' }[ST.role] + '</span></div>' +
       '<div class="calwrap"><div>' + tb + '<div id="cal-body">' + calBody() + '</div><p class="small muted" style="margin:10px 0 0">Click an item for its details and link. Deal windows are working days from today, so the demonstration never goes stale. Maturities and events: dates from the venue pages, months from the dataset (shown mid-month). ECB dates: the Governing Council’s official calendar (<a href="' + esc(ECB_URL) + '" target="_blank" rel="noopener">ecb.europa.eu ↗</a>), checked ' + dfull(RATES.asOf) + '. No forecast and no comment.</p></div>' + ratesPanel() + '</div>';
   }
@@ -2109,7 +2234,8 @@ window.RATES = {
     var i = POPS[idx], pop = $('#pop'); if (!i) return; pop.className = '';
     var when = i.month ? dym(i.from) : dfull(i.from) + (i.to && i.to > i.from ? ' – ' + dfull(i.to) : '') + (i.wdTo != null && i.wdTo >= 0 ? ' · closes in ' + i.wdTo + ' working days' : '');
     pop.innerHTML = '<h4>' + esc(i.lab) + '</h4>' + (i.list ? '<ul class="facts">' + i.list.map(function (j) { return '<li>' + (j.href ? '<a href="' + j.href + '">' + esc(j.lab) + '</a>' : esc(j.lab)) + ' · <span class="muted">' + esc(j.month ? dym(j.from) : dfull(j.from)) + '</span>' + (j.src && !j.href ? ' · <a href="' + esc(j.src) + '" target="_blank" rel="noopener">source ↗</a>' : '') + '</li>'; }).join('') + '</ul>' :
-      '<table class="kv"><tr><td>When</td><td>' + esc(when) + '</td></tr><tr><td>What</td><td>' + esc(i.text) + '</td></tr>' + (i.who ? '<tr><td>For whom</td><td>' + esc(i.who) + '</td></tr>' : '') + '</table>' + (i.ecb ? ecbNote() : '')) +
+      '<table class="kv"><tr><td>When</td><td>' + esc(when) + '</td></tr><tr><td>What</td><td>' + esc(i.text) + '</td></tr>' + (i.who ? '<tr><td>For whom</td><td>' + esc(i.who) + '</td></tr>' : '') + (i.calc ? '<tr><td>Arithmetic</td><td>' + esc(i.calc) + '</td></tr>' : '') +
+        (i.ids && i.ids.length ? '<tr><td>Source</td><td>' + i.ids.map(function (f) { return '<button type="button" class="view" data-fact="' + esc(f) + '" data-slug="' + esc(i.slug || '') + '">' + esc(f) + ', open the page</button>'; }).join(' ') + '</td></tr>' : '') + '</table>' + (i.ecb ? ecbNote() : '')) +
       '<div class="dl">' + (i.href ? '<a class="btn sec" href="' + i.href + '">Open</a>' : '') + (i.src ? '<a class="btn sec" href="' + esc(i.src) + '" target="_blank" rel="noopener">Source ↗</a>' : '') + '<span style="flex:1"></span><button type="button" class="view" data-popx="1">Close</button></div>';
     pop.hidden = false; pop.style.left = Math.max(8, Math.min(px, window.innerWidth - 320)) + 'px'; pop.style.top = Math.max(8, Math.min(py + 10, window.innerHeight - pop.offsetHeight - 12)) + 'px';
   }
@@ -2166,6 +2292,9 @@ window.RATES = {
     var pp = e.target.closest('[data-pop]'); if (pp) { e.preventDefault(); popShow(+pp.getAttribute('data-pop'), e.clientX, e.clientY); return; }
     if (e.target.closest('[data-popx]')) { $('#pop').hidden = true; return; }
     var cc = e.target.closest('[data-calc]'); if (cc) { e.preventDefault(); calcShow(cc); return; }
+    var pf = e.target.closest('a[data-proof]'); if (pf) {   // 25 Oct 2026: a panel title or '+ N more' opens the Fact proof tab at its block
+      e.preventDefault(); PEND = pf.getAttribute('data-proof'); var hh = pf.getAttribute('href'), fr0 = $('iframe.dframe');
+      if (location.hash === hh && fr0 && fr0.contentWindow) { fr0.contentWindow.postMessage({ type: 'goto', id: PEND }, '*'); PEND = null; } else location.hash = hh; return; }
     var md = e.target.closest('[data-modal]'); if (md) { modal(reqForm(DEALS[R.id], md.getAttribute('data-modal'))); return; }
     if (e.target.closest('[data-mclose]') || e.target.id === 'modal') { closeModal(); return; }
     var ts = e.target.closest('[data-toast]'); if (ts) { toast(ts.getAttribute('data-toast')); return; }
@@ -2183,13 +2312,14 @@ window.RATES = {
     var f = e.target.closest('[data-filter]'); if (f) { FILTER = f.getAttribute('data-filter'); render(); return; }
     var ms = e.target.closest('th[data-msort]'); if (ms) { var mk = ms.getAttribute('data-msort'); MK.sort = MK.sort && MK.sort[0] === mk ? (MK.sort[1] > 0 ? [mk, -1] : null) : [mk, 1]; render(); return; }
     var s = e.target.closest('th[data-sort]'); if (s) { var k = s.getAttribute('data-sort'); SORT = SORT && SORT[0] === k ? (SORT[1] > 0 ? [k, -1] : null) : [k, 1]; render(); return; }
-    var fx = e.target.closest('[data-fact]'); if (fx) { $('#pop').hidden = true; openViewer(DEALS[R.id].dossier, { type: 'show', id: fx.getAttribute('data-fact') }); return; }
+    var fx = e.target.closest('[data-fact]'); if (fx) { var fo = DEALS[fx.getAttribute('data-slug') || R.id]; $('#pop').hidden = true; if (fo && fo.dossier) openViewer(fo.dossier, { type: 'show', id: fx.getAttribute('data-fact') }); return; }   // data-slug: a fact outside its deal's tabs (the calendar)
     var d = e.target.closest('[data-doc]'); if (d) { $('#pop').hidden = true; openViewer(DEALS[R.id].dossier, { type: 'showPage', doc: d.getAttribute('data-doc'), page: +(d.getAttribute('data-page') || 1) }); return; }
     var u = e.target.closest('[data-up]'); if (u) { ST.up[R.id + ':' + u.getAttribute('data-up')] = 1; save(); render(); return; }
     var ua = e.target.closest('[data-unans]'); if (ua) { delete ST.ans[R.id + ':' + ua.getAttribute('data-unans')]; save(); render(); return; }
     var a = e.target.closest('[data-act]'); if (!a) return; var act = a.getAttribute('data-act'), o = DEALS[R.id];
     if (act === 'print') { window.print(); return; }
     if (/^dr-/.test(act)) { drAct(o, act, a.getAttribute('data-k')); return; }
+    if (act === 'ins-all') { INS[R.id] = true; render(); return; }   // the instrument table: every line
     if (act === 'reset') { e.preventDefault(); try { sessionStorage.removeItem('vb-app'); Object.keys(localStorage).filter(function (k) { return k.indexOf('vb-assess:') === 0; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (x) { /* storage blocked */ } location.hash = '#/deals'; location.reload(); return; }
     if (act === 'bind') ST.ind[R.id].binding = true; else if (act === 'withdraw-ind') delete ST.ind[R.id]; else if (act === 'withdraw-ord') delete ST.ord[R.id];
     else if (act === 'confirm') { var c = (o.company.management || []).filter(function (m) { return m.role === 'CFO'; })[0] || (o.company.management || [])[0] || { name: 'the CFO', role: '' }; ST.conf[R.id] = c.name + (c.role ? ', ' + c.role : '') + ', ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
@@ -2249,6 +2379,11 @@ window.RATES = {
     go(p.getAttribute('data-to') || (r === 'company' ? '#/deal/' + ST.company + '/overview' : '#/deals'));
   }, true);
   document.addEventListener('keydown', function (e) { if (e.key !== 'Escape') return; if (!$('#modal').hidden) { closeModal(); return; } if (!$('#pop').hidden) { $('#pop').hidden = true; return; } if (!$('#viewer').hidden) { closeViewer(); return; } if (!$('#welcome').hidden) { ST.picked = true; save(); $('#welcome').hidden = true; } else if (!$('#pop').hidden) $('#pop').hidden = true; else if (MK.open) { MK.open = null; render(); } });
+  document.addEventListener('keydown', function (e) {   // 25 Oct 2026: ↑ ↓ step the bond preview through the list
+    if (!(R.view === 'market' && R.id === 'bonds' && MK.open) || (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') || (e.target.closest && e.target.closest('input, select, textarea, [contenteditable]')) || e.altKey || e.metaKey || e.ctrlKey) return;
+    var L = bondList(), i = L.indexOf(byIsin(MK.open)), t = L[i + (e.key === 'ArrowDown' ? 1 : -1)]; if (i < 0 || !t) return;
+    e.preventDefault(); MK.open = t.isin; render(); var on = document.querySelector('.grid tr.on'); if (on) on.scrollIntoView({ block: 'nearest' });
+  });
   if (!ST.picked) welcome();
 })();
 </script>

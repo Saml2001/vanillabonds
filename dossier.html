@@ -102,10 +102,13 @@
   tr:target td { background: #F5EFDF; }
   .assess { border: 1px dashed var(--gold); padding: 12px 14px; margin-top: 18px; color: var(--muted); }
   .assess textarea { display: block; width: 100%; margin: 4px 0 6px; font: inherit; font-size: 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--border); padding: 8px 10px; resize: vertical; }
-  .assess .shared { white-space: pre-wrap; color: var(--ink); background: #FBF6E8; border-left: 3px solid var(--gold); padding: 8px 12px; margin-bottom: 10px; }
-  .assess .shared .label, .assess .shared .small { display: block; white-space: normal; color: var(--gold-ink); } .assess .shared .small { color: var(--muted); margin-top: 4px; }
   .assess .share { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; color: var(--ink-2); margin: 2px 0 6px; } .assess .share label { cursor: pointer; white-space: nowrap; }
   .assess textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  /* 26 Oct 2026: the investor's own limits; two states, filled or outlined, never a third */
+  table.lims td { vertical-align: top; } table.lims td.limset { white-space: nowrap; } table.lims .limset .small { display: block; margin-top: 3px; font-weight: 400; }
+  table.lims select, table.lims input { font: inherit; font-size: 13px; color: var(--ink); border: 1px solid var(--border); background: var(--paper); padding: 3px 6px; border-radius: 2px; } table.lims input { width: 72px; text-align: right; }
+  .lim { display: block; font-size: 11.5px; margin-top: 2px; white-space: nowrap; color: var(--ink-2); } .lim::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; border: 1.5px solid var(--navy); background: var(--paper); }
+  .lim.in { color: var(--navy); } .lim.in::before { background: var(--navy); } .lgnd .lim { display: inline; }
   /* ---------- overview: the investor's first screen; the fact proof is the second tab ---------- */
   .tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 16px; }
   .tabs button { background: var(--paper); border: 1px solid var(--border); padding: 8px 16px; font-size: 14px; color: var(--ink-2); cursor: pointer; border-radius: 2px; }
@@ -375,6 +378,22 @@
         net_leverage_as_reported: 'net leverage, on EBITDA as reported', interest_cover_as_reported: 'interest cover, on EBITDA as reported' }[n] || n.replace(/_/g, ' ');
         return '<tr class="calc" data-q="' + esc(lab).toLowerCase() + '"><td>' + esc(lab) + '</td>' + ps.map(function (p) { var v = rows[n][p]; return '<td class="num">' + (v == null ? '<span class="muted">–</span>' : esc(typeof v === 'number' ? (Math.abs(v) < 10 ? v.toFixed(2) : v.toFixed(1)) : v)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
   }
+  // 25 Oct 2026 (reports/Gain platform lessons for VanillaBonds.md): the notes under the financials, one row per period (mvp/snapshot.py basis): the
+  // documents the figures are read from and their audit, whose accounts, EBITDA and leases on the record's basis beside the company's and the bond terms'
+  function basisNotes() {
+    var B = (D.snapshot || {}).basis || []; if (!B.length) return '';
+    var ids = function (xs, n) { return (xs || []).filter(Boolean).slice(0, n || 9).map(jb).join(''); }, bt = function (x) { return x ? esc(x.t) + ids(x.ids, 2) : 'no bond terms on file'; };
+    var sm = function (h) { return '<br><span class="muted small">' + h + '</span>'; };
+    return '<div class="fieldhead"><h3>Basis notes</h3><span class="muted small">how each period’s figures are read</span></div><div class="table-scroll"><table class="mt"><thead><tr><th>Period</th><th>Document and audit</th><th>Entity reported</th><th>EBITDA basis</th><th>Leases in net debt</th><th>Currency</th></tr></thead><tbody>' +
+      B.map(function (r) {
+        var d = r.doc, one = d.from.length === 1 && d.from[0][0] === d.own;
+        var fr = one ? 'all ' + d.n + ' figures read from this report' : 'figures read from ' + d.from.map(function (x) { return x[0] + ', the ' + x[2] + ' (' + x[1] + ')'; }).join('; ') + ', of ' + d.n;
+        return '<tr><td>' + esc(r.p) + '</td><td>' + esc(d.t.replace(/^\w/, function (c) { return c.toUpperCase(); })) + ids(d.ids, 1) + sm(esc(fr)) + '</td><td>' + esc(r.entity.t.replace(/^\w/, function (c) { return c.toUpperCase(); })) + ids(r.entity.ids, 1) + '</td>' +
+          '<td>Record: ' + esc(r.ebitda.rec.t) + ids(r.ebitda.rec.ids, 3) + sm('Bond terms: ' + bt(r.ebitda.terms)) + '</td>' +
+          '<td>Record: ' + esc(r.lease.rec.t) + ids(r.lease.rec.ids, 1) + sm('Company: ' + (r.lease.co.ids.length ? 'its own net debt ' : '') + esc(r.lease.co.t) + ids(r.lease.co.ids, 1)) + sm('Bond terms: ' + bt(r.lease.terms)) + '</td>' +
+          '<td>' + esc(r.fx.t) + (r.fx.co ? sm('Company: ' + esc(r.fx.co) + ids(r.fx.ids, 1)) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<p class="muted small">How to read it: one row per period of the financials above. A period is often read from a later report that prints it again; “figures read from” names those reports. “Record” is the basis the dossier’s ratios use; the company’s own net debt and the bond terms’ definitions sit beside it and are never mixed into it. Every id opens its page.</p>';
+  }
   var ARITH = { plan: ['forward', 'headroom_path', 'stress_grid', 'eba_events'], financials: ['ratios_three_ways', 'volatility_vs_sector'], management: ['calibration'], structure: ['waterfall', 'guarantor_coverage'] };
   function arithmetic(block) {
     var S = D.screen || {}, rows = [];
@@ -436,7 +455,7 @@
     if (b.id === 'debt') h += '<div class="charts">' + redemptionChart() + '</div>';
     if (b.id === 'management') h += mgmtFacts();
     h += pivot(num, fs.filter(function (f) { return numIds[f.field]; }));
-    if (b.id === 'financials') h += derivedPivot();
+    if (b.id === 'financials') h += derivedPivot() + basisNotes();
     var pivoted = fs.filter(function (f) { return numIds[f.field]; }), listed = fs.filter(function (f) { return !(numIds[f.field] && typeof f.value === 'number'); });
     if (pivoted.length) h += '<details><summary>' + pivoted.length + ' entries behind the table, with text and source</summary><div class="table-scroll"><table>' + LIST_HEAD + '<tbody>' + pivoted.sort(function (a, b) { return pcmp(a.period, b.period); }).map(function (f) { return factRow(f, true); }).join('') + '</tbody></table></div></details>';
     var h0 = h; if (b.id === 'management' && D.snapshot) h = '';   // management: the field lists fold under the structured facts and the 17 rows
@@ -653,33 +672,69 @@
         g.map(function (n) { var fs = groups[n]; return '<tr><td>' + esc(label(fs[0])) + '</td><td class="per">' + esc(fs[0].period || '') + '</td><td class="small">' + esc(n.replace(/^conflict:\s*/, '')) + '</td><td>' + fids(fs.map(function (x) { return x.id; }).join(', ')) + '</td></tr>'; }).join('') + '</tbody></table></div>' : ''));
   }
   // the investor's own assessment: one box per block and the overall view last (Mediating Assessments Protocol). Private to each investor; an anchor
-  // may share a box with the co-investors on the deal, who see it read-only as the anchor's; a co-investor's stays its own. Demo: kept in this browser only.
+  // may share a box with another anchor on the deal, by name, who reads it as the anchor's. 26 Oct 2026 (Sam): no sharing with co-investors, since an
+  // anchor's view shown to co-investors through the platform reads as a recommendation or a rating we carry (legal notes, 22 Oct 2026); what co-investors
+  // do see is the anchors' questions and the company's answers in the Q&A. A co-investor's box stays its own. Demo: kept in this browser only.
   function akey(b, who) { return 'vb-assess:' + slug + ':' + (who || ROLE) + ':' + b; }
   function aget(b, who) { try { return localStorage.getItem(akey(b, who)) || ''; } catch (x) { return ''; } }
   function aset(b, v, who) { try { localStorage.setItem(akey(b, who), v); } catch (x) { /* storage blocked: the text stays on the page until it is left */ } }
-  var AUD = [['coinvestors', 'the co-investors on this deal']].concat((D.anchors || []).map(function (n) { return ['anchor:' + n, n + ' (anchor on this deal)']; }));
-  function aud(b) { try { return JSON.parse(aget(b + ':shared', 'anchor') || '[]'); } catch (x) { return []; } }        // whom the anchor shares this box with
-  function shared(b) { return aud(b).indexOf('coinvestors') >= 0 ? aget(b, 'anchor') : ''; }                              // what a co-investor may read
+  var AUD = (D.anchors || []).map(function (n) { return ['anchor:' + n, n + ' (anchor on this deal)']; });
+  function aud(b) { try { return JSON.parse(aget(b + ':shared', 'anchor') || '[]').filter(function (k) { return /^anchor:/.test(k); }); } catch (x) { return []; } }   // the anchors this box is shared with; an older co-investor share is dropped
   function assessBox(id, title) {
     if (!INVESTOR) return '';
-    var sh = !ANCHOR && shared(id);
-    return '<div class="assess">' + (sh ? '<div class="shared"><span class="label">Shared by the anchor · ' + esc(title) + '</span>' + esc(sh) + '<span class="small">The anchor’s own view, not VanillaBonds’.</span></div>' : '') +
-      '<label class="label" for="as-' + id + '" style="color:var(--gold-ink)">Your assessment · ' + esc(title) + '</label><textarea id="as-' + id + '" data-assess="' + id + '" rows="' + (id === 'overall' ? 6 : 3) + '" placeholder="' + (id === 'overall' ? 'Your overall view, written after the blocks.' : 'What these facts mean for the credit, in your analyst’s words.') + '">' + esc(aget(id)) + '</textarea>' +
-      (ANCHOR ? '<div class="share small"><span>Share with:</span>' + AUD.map(function (a) { return '<label><input type="checkbox" data-share="' + id + '" value="' + esc(a[0]) + '"' + (aud(id).indexOf(a[0]) >= 0 ? ' checked' : '') + '> ' + esc(a[1]) + '</label>'; }).join('') + '<span class="muted">they read it as yours, read-only; the company never sees it</span></div>' : '') +
-      '<span class="small">Written by your analyst; VanillaBonds supplies no assessment. ' + (ANCHOR ? 'Private unless you share it with someone.' : 'Private to you: not shown to the company, the anchors or other co-investors.') + ' In this demo it is kept in this browser only.</span></div>';
+    return '<div class="assess">' +
+      '<label class="label" for="as-' + id + '" style="color:var(--navy)">Your assessment · ' + esc(title) + '</label><textarea id="as-' + id + '" data-assess="' + id + '" rows="' + (id === 'overall' ? 6 : 3) + '" placeholder="' + (id === 'overall' ? 'Your overall view, written after the blocks.' : 'What these facts mean for the credit, in your analyst’s words.') + '">' + esc(aget(id)) + '</textarea>' +
+      (ANCHOR && AUD.length ? '<div class="share small"><span>Share with another anchor:</span>' + AUD.map(function (a) { return '<label><input type="checkbox" data-share="' + id + '" value="' + esc(a[0]) + '"' + (aud(id).indexOf(a[0]) >= 0 ? ' checked' : '') + '> ' + esc(a[1]) + '</label>'; }).join('') + '<span class="muted">the anchors you tick read it as yours, read-only; co-investors and the company never see it</span></div>' : '') +
+      '<span class="small">Written by your analyst; VanillaBonds supplies no assessment. ' + (ANCHOR ? 'Private unless you share it with another anchor on this deal.' : 'Private to you: not shown to the company, the anchors or other co-investors.') + ' In this demo it is kept in this browser only.</span></div>';
   }
   function sumText(t) { return t ? esc(t.length > 160 ? t.slice(0, 160) + '…' : t) : '<span class="muted">not yet written</span>'; }
-  function shareCell(id) { var w = aud(id).map(function (k) { return k === 'coinvestors' ? 'co-investors' : k.slice(7); }); return ANCHOR ? (w.length ? '<span class="chip rep">shared with</span> ' + esc(w.join(', ')) : '<span class="chip">private</span>') : shared(id) ? sumText(shared(id)) : '<span class="muted">not shared</span>'; }
+  function shareCell(id) { var w = aud(id).map(function (k) { return k.slice(7); }); return w.length ? '<span class="chip rep">shared with</span> ' + esc(w.join(', ')) : '<span class="chip">private</span>'; }   // anchors only
   function assessAll() {
     if (!INVESTOR) return '';
-    return assessOverview(true) + D.blocks.map(function (b, i) { return osec('as-b-' + b.id, (i + 1) + ' · ' + b.title, b.title, b.ask, assessBox(b.id, b.title) + '<p class="small" style="margin:8px 0 0"><a href="#b-' + b.id + '">The facts of this block</a></p>'); }).join('') +
+    return assessOverview(true) + limitsBox() + D.blocks.map(function (b, i) { return osec('as-b-' + b.id, (i + 1) + ' · ' + b.title, b.title, b.ask, assessBox(b.id, b.title) + '<p class="small" style="margin:8px 0 0"><a href="#b-' + b.id + '">The facts of this block</a></p>'); }).join('') +
       osec('as-last', 'Last', 'Overall view', 'Written after the blocks, the total last.', assessBox('overall', 'overall view'));
   }
   function assessOverview(noOverall) {
     if (!INVESTOR) return '';
-    return osec('o-assess', 'Overview · yours', 'Your assessment', 'Block by block in the fact proof, the overall view last. The dossier holds the facts and the arithmetic; the opinion is yours. ' + (ANCHOR ? 'Each box is private until you choose who reads it: another anchor on this deal by name, the co-investors, or both.' : 'Yours stays private; where the anchor has shared its assessment, it appears beside yours.'),
-      '<div class="table-scroll"><table class="mrows"><thead><tr><th>#</th><th>Block</th><th>Your assessment</th><th>' + (ANCHOR ? 'Shared with' : 'Shared by the anchor') + '</th></tr></thead><tbody>' +
-      D.blocks.concat([{ id: 'overall', title: 'Overall view' }]).map(function (b, i) { return '<tr><td>' + (b.id === 'overall' ? '' : i + 1) + '</td><td><a href="#as-' + b.id + '">' + esc(b.title) + '</a></td><td id="as-sum-' + b.id + '">' + sumText(aget(b.id)) + '</td><td id="as-sh-' + b.id + '">' + shareCell(b.id) + '</td></tr>'; }).join('') + '</tbody></table></div>' + (noOverall ? '' : assessBox('overall', 'overall view')));
+    return osec('o-assess', 'Overview · yours', 'Your assessment', 'Block by block in the fact proof, the overall view last. The dossier holds the facts and the arithmetic; the opinion is yours. ' + (ANCHOR ? 'Each box is private until you choose who reads it: another anchor on this deal, by name. Co-investors never see an anchor’s assessment; they see the anchors’ questions and the company’s answers in the Q&A.' : 'Yours stays private: the company, the anchors and the other co-investors never see it. The anchors’ questions and the company’s answers are in the Q&A.'),
+      '<div class="table-scroll"><table class="mrows"><thead><tr><th>#</th><th>Block</th><th>Your assessment</th>' + (ANCHOR ? '<th>Shared with</th>' : '') + '</tr></thead><tbody>' +
+      D.blocks.concat([{ id: 'overall', title: 'Overall view' }]).map(function (b, i) { return '<tr><td>' + (b.id === 'overall' ? '' : i + 1) + '</td><td><a href="#as-' + b.id + '">' + esc(b.title) + '</a></td><td id="as-sum-' + b.id + '">' + sumText(aget(b.id)) + '</td>' + (ANCHOR ? '<td id="as-sh-' + b.id + '">' + shareCell(b.id) + '</td>' : '') + '</tr>'; }).join('') + '</tbody></table></div>' + (noOverall ? '' : assessBox('overall', 'overall view')));
+  }
+  // 26 Oct 2026 (Sam): the investor's own limits, per ratio. The investor picks at most or at least and a figure; each period's figure from the record is
+  // then marked within or outside that limit, with the rule beside it. It starts blank: no default, no suggested figure, no score and no ranking of deals.
+  // Seen by this investor only, kept in this browser in the demo with the time each rule was last set; two states with a legend, never on ESG data
+  // (legal notes 22 Oct 2026, ideas 7 and 12).
+  function lkey() { return 'vb-limits:' + slug + ':' + ROLE; }
+  function lget() { try { return JSON.parse(localStorage.getItem(lkey()) || '{}') || {}; } catch (x) { return {}; } }
+  function lput(m) { try { localStorage.setItem(lkey(), JSON.stringify(m)); } catch (x) { /* storage blocked: the rules stay on the page until it is left */ } }
+  function lrows() { return ((D.snapshot || {}).figures || []).filter(function (r) { return r.unit === 'x' || r.unit === '%'; }); }
+  function lkeyOf(r) { return (r.of || '') + '|' + r.label; }
+  function lname(r) { return r.of ? r.of.replace(/ excluding one-off income/g, '') + ', on EBITDA as reported' : r.label; }
+  function lfmt(v, u) { return (u === '%' ? v.toFixed(2) + '%' : v.toFixed(2) + 'x').replace('-', '−'); }
+  function lcell(r, j, rule) {
+    var v = r.v[j] == null ? null : r.unit === '%' ? r.v[j] * 100 : r.v[j]; if (v == null) return '<span class="muted">–</span>';
+    if (!rule) return esc(lfmt(v, r.unit));
+    var ok = rule.op === 'max' ? v <= rule.v : v >= rule.v;
+    return esc(lfmt(v, r.unit)) + '<span class="lim ' + (ok ? 'in' : 'out') + '">' + (ok ? 'within' : 'outside') + ': ' + (rule.op === 'max' ? 'at most ' : 'at least ') + esc(lfmt(rule.v, r.unit)) + '</span>';
+  }
+  function limitsBox() {
+    var R0 = lrows(), M = lget(), ps = (D.snapshot || {}).periods || []; if (!R0.length || !INVESTOR) return '';
+    return osec('as-limits', 'Yours · private', 'Your limits', 'Set your own limit for any ratio: choose at most or at least and enter the figure. Each period then shows the record’s figure, within or outside your limit, with your rule beside it. VanillaBonds sets no limit, suggests none, adds no score and ranks no deal; your limits stay in this browser and nobody else sees them.',
+      '<div class="table-scroll"><table class="mt lims"><thead><tr><th>Ratio</th><th>Your limit</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      R0.map(function (r, i) { var m = M[lkeyOf(r)] || {}, rule = m.op && m.v != null && isFinite(m.v) ? m : null;
+        return '<tr data-lim-row="' + i + '"><td>' + esc(lname(r)) + '</td><td class="limset"><select data-lim="op" data-i="' + i + '" aria-label="' + esc('Your limit for ' + lname(r)) + '"><option value="">choose</option><option value="max"' + (m.op === 'max' ? ' selected' : '') + '>at most</option><option value="min"' + (m.op === 'min' ? ' selected' : '') + '>at least</option></select> ' +
+          '<input data-lim="v" data-i="' + i + '" type="text" inputmode="decimal" value="' + (m.v != null && isFinite(m.v) ? esc(String(m.v)) : '') + '" aria-label="' + esc('Figure for ' + lname(r)) + '"> ' + (r.unit === '%' ? '%' : 'x') +
+          '<span class="small muted" id="lim-t-' + i + '">' + (rule && m.at ? 'set ' + esc(m.at) : '') + '</span></td>' + ps.map(function (p, j) { return '<td class="num" id="lim-c-' + i + '-' + j + '">' + lcell(r, j, rule) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>' +
+      '<p class="small muted lgnd"><span class="lim in">within</span> the figure meets your limit · <span class="lim out">outside</span> it does not · the rule beside each figure is yours. The figures are the record’s, as in the key figures, to two decimals so each comparison can be checked.</p>');
+  }
+  function limUpdate(i) {   // one row: keep the rule with the time it was set, mark each period again
+    var r = lrows()[i], row = document.querySelector('tr[data-lim-row="' + i + '"]'); if (!r || !row) return;
+    var op = row.querySelector('[data-lim="op"]').value, raw = row.querySelector('[data-lim="v"]').value.trim().replace(',', '.').replace('−', '-').replace(/[x%\s]/gi, ''), v = raw === '' ? NaN : Number(raw);
+    var M = lget(), k = lkeyOf(r), ok = !!op && isFinite(v);
+    if (!op && raw === '') delete M[k]; else M[k] = { op: op, v: isFinite(v) ? v : null, at: ok ? new Date().toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : null };
+    lput(M);
+    ((D.snapshot || {}).periods || []).forEach(function (p, j) { var c = document.getElementById('lim-c-' + i + '-' + j); if (c) c.innerHTML = lcell(r, j, ok ? M[k] : null); });
+    var t = document.getElementById('lim-t-' + i); if (t) t.textContent = ok ? 'set ' + M[k].at : '';
   }
   var OVERVIEW = [['o-figures', 'Key figures'], ['o-charts', 'Charts'], ['o-changes', 'What changed'], ['o-news', 'Registers and news'], ['o-open', 'Open items']].concat(INVESTOR ? [['o-assess', 'Your assessment']] : []);
   // the app's Analysis tab: charts, what changed, registers and news, open items, then the blocks (the key figures live on the Snapshot)
@@ -997,6 +1052,7 @@
     if ($('#doc-viewer').hidden || /input|textarea|select/i.test(e.target.tagName)) return;
     if (e.key === 'Escape') closeViewer(); else if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1);
   });
+  ['input', 'change'].forEach(function (t) { document.addEventListener(t, function (e) { var li = e.target.getAttribute && e.target.getAttribute('data-lim'); if (li) limUpdate(+e.target.getAttribute('data-i')); }); });   // the investor's own limits
   document.addEventListener('input', function (e) { var id = e.target.getAttribute && e.target.getAttribute('data-assess'); if (!id) return; aset(id, e.target.value); var sm = document.getElementById('as-sum-' + id); if (sm) sm.innerHTML = sumText(e.target.value); });
   document.addEventListener('change', function (e) { var id = e.target.getAttribute && e.target.getAttribute('data-share'); if (!id) return;
     aset(id + ':shared', JSON.stringify(Array.prototype.filter.call(document.querySelectorAll('[data-share="' + id + '"]'), function (x) { return x.checked; }).map(function (x) { return x.value; }))); var c = document.getElementById('as-sh-' + id); if (c) c.innerHTML = shareCell(id); });
