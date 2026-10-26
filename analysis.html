@@ -20,6 +20,13 @@
     --gold: var(--vb-gold); --gold-ink: var(--vb-gold-dim);
     --border: var(--vb-line-warm); --ink: var(--vb-ink-900); --ink-2: #3A4654; --muted: var(--vb-ink-500);
     --sans: var(--vb-font-body); --mono: var(--vb-font-mono);
+    /* 26 Oct 2026 (Gain comparison, reports/Gain company profile design and sourcing.md): three tag families, each a 14% tint with darker ink,
+       defined once here and once in the other file under the same names. status: green = approved, audited, binding, passed; amber = pending,
+       unaudited, conditional, illustrative, company statement; grey = neutral. period: a grey pill with the period of a figure (FY2025, H1-2026,
+       LTM). provenance: a grey pill with a fact id or a document page (F1244, S3 p.37) that opens its page. Nothing else is a tag; no gold or
+       monospace label anywhere; mono stays for ISINs, the exports and the document viewer's page text. */
+    --tag-ok: #2F6B3A; --tag-ok-bg: rgba(47, 107, 58, 0.14); --tag-wait: #7A5A14; --tag-wait-bg: rgba(201, 162, 39, 0.14);
+    --tag-n: #5A6672; --tag-n-bg: rgba(90, 102, 114, 0.12); --tag-n-hover: rgba(13, 27, 42, 0.16);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -29,7 +36,7 @@
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
   /* ---------- Header, as on the platform ---------- */
-  .demobar { background: var(--paper); color: var(--gold-ink); font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em; text-align: center; padding: 5px 24px; border-bottom: 1px solid var(--border); }
+  .demobar { background: var(--paper); color: var(--muted); font: 500 11.5px/1.5 var(--sans); letter-spacing: 0; text-align: center; padding: 5px 24px; border-bottom: 1px solid var(--border); }
   .site-header { background: var(--navy); color: var(--paper); }
   .header-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: stretch; justify-content: space-between; gap: 24px; }
   .wordmark { display: flex; align-items: center; font-size: 19px; letter-spacing: 0.02em; padding: 18px 0; background: none; border: 0; text-decoration: none; }
@@ -47,11 +54,11 @@
   main { max-width: 1280px; margin: 0 auto; padding: 32px 32px 72px; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 36px; align-items: start; }
   main > * { min-width: 0; }   /* wide tables scroll inside their own box instead of widening the page */
   .title-band { grid-column: 1 / -1; border-bottom: 1px solid var(--border); padding-bottom: 18px; }
-  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+  .eyebrow { font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); margin: 0 0 4px; }
   h1 { font-weight: 300; font-size: 34px; line-height: 1.15; color: var(--navy); margin: 0 0 10px; }
   h2 { font-weight: 300; font-size: 23px; line-height: 1.25; color: var(--navy); margin: 0 0 6px; }
   h3 { font-weight: 600; font-size: 14px; color: var(--navy); margin: 0 0 6px; }
-  .label { font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+  .label { font-family: var(--sans); font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); margin: 0 0 4px; }
   .muted { color: var(--muted); } .small { font-size: 12.5px; }
   .meta { color: var(--ink-2); font-size: 14px; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
@@ -59,8 +66,8 @@
   main > aside { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
   .topics a { display: flex; justify-content: space-between; gap: 10px; padding: 6px 10px; text-decoration: none; color: var(--ink-2); border-left: 2px solid transparent; font-size: 13.5px; line-height: 1.35; }
   .topics a:hover { color: var(--navy); background: var(--paper); }
-  .topics a[aria-current="true"] { border-left-color: var(--gold); color: var(--navy); background: var(--paper); font-weight: 600; }
-  .topics .n { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .topics a[aria-current="true"] { border-left-color: var(--navy); color: var(--navy); background: var(--paper); font-weight: 600; }
+  .topics .n { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .tools { margin: 14px 0 0; padding: 0 10px; }
   .tools input[type=search] { width: 100%; font: inherit; font-size: 13.5px; padding: 7px 9px; border: 1px solid var(--border); background: var(--paper); }
   .tools label { display: block; margin-top: 8px; color: var(--ink-2); }
@@ -71,20 +78,28 @@
   .fieldhead h3 { margin: 0; }
   .mfacts { margin: 0; padding: 0; list-style: none; } .mfacts li { padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; } .mfacts li:last-child { border: 0; }
   table.mt td { vertical-align: top; } table.mt td:first-child { white-space: nowrap; font-weight: 600; color: var(--navy); }
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  th { text-align: left; font-family: var(--sans); font-weight: 500; font-size: 11px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--muted); padding: 9px 10px; border-bottom: 1px solid var(--navy); white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  th { text-align: left; font-family: var(--sans); font-weight: 600; font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
   .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .table-scroll { overflow-x: auto; }
+  .table-scroll.stk { max-height: 70vh; overflow: auto; } .table-scroll.stk thead th { position: sticky; top: 0; background: var(--paper); z-index: 2; } .table-scroll.stk th:first-child, .table-scroll.stk td:first-child { position: sticky; left: 0; background: var(--paper); z-index: 1; } .table-scroll.stk thead th:first-child { z-index: 3; } .table-scroll.stk tr.calc td:first-child { background: #F6F4EE; }
   .table-scroll table { min-width: 640px; }
-  tr.calc td { background: #EFECE4; }
-  td.src { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); min-width: 7em; }
-  td.per { font-family: var(--mono); font-size: 11.5px; min-width: 6em; }
+  tr.calc td { background: #F6F4EE; color: var(--muted); }
+  td.src { font-size: 12.5px; color: var(--muted); min-width: 7em; }
+  td.per { font-size: 12.5px; color: var(--muted); min-width: 6em; }
   td.per, td.src, td.st, td.view-cell { width: 1%; } td.src.web { min-width: 15em; }   /* these fit their content; the entry takes the rest */
   td.fld { color: var(--muted); width: 18%; }
-  .chip { font-family: var(--sans); font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; color: var(--muted); }
-  .chip.ok { color: #2F6B3A; } .chip.rep { color: var(--gold-ink); }
-  .cell-btn { background: none; border: 0; padding: 0 2px; cursor: pointer; font: inherit; font-variant-numeric: tabular-nums; color: var(--ink); border-bottom: 1px dotted var(--gold); border-radius: 0; }
+  .chip { display: inline-block; font-family: var(--sans); font-size: 11px; line-height: 1.6; padding: 0 7px; border-radius: 9px; background: var(--tag-n-bg); color: var(--tag-n); letter-spacing: 0; text-transform: none; white-space: nowrap; vertical-align: 1px; }
+  .chip.ok { background: var(--tag-ok-bg); color: var(--tag-ok); } .chip.rep, .chip.pend { background: var(--tag-wait-bg); color: var(--tag-wait); }
+  .pill { display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 400; font-style: normal; line-height: 1.6; padding: 0 7px; border: 0; border-radius: 9px; background: var(--tag-n-bg); color: var(--tag-n); white-space: nowrap; letter-spacing: 0; text-transform: none; vertical-align: 1px; font-variant-numeric: tabular-nums; }
+  .pill.ok { background: var(--tag-ok-bg); color: var(--tag-ok); } .pill.wait { background: var(--tag-wait-bg); color: var(--tag-wait); }
+  button.pill, a.pill { cursor: pointer; text-decoration: none; } button.pill:hover, a.pill:hover { background: var(--tag-n-hover); color: var(--navy); } .pill.on { background: var(--navy); color: var(--paper); }
+  .pill.id { margin-left: 5px; padding: 0 6px; } .pill + .pill { margin-left: 4px; }
+  .empty { color: var(--muted); font-size: 13px; margin: 0; }
+  ul.bnotes { margin: 10px 0 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--ink-2); } .bnotes li { padding: 5px 0; border-top: 1px solid #EFEBE0; line-height: 1.5; } .bnotes li b { color: var(--ink); font-weight: 600; }
+  td.rep, .rep { color: var(--muted); }
+  .cell-btn { background: none; border: 0; padding: 0 2px; cursor: pointer; font: inherit; font-variant-numeric: tabular-nums; color: var(--ink); border-bottom: 1px dotted #B9B2A0; border-radius: 0; }
   .cell-btn:hover { color: var(--navy); border-bottom-style: solid; }
   .cell-btn.on, tr.fact-on td { background: #F5EFDF; }
   .cell-btn sup { font-size: 9px; color: var(--muted); margin-left: 2px; }
@@ -93,17 +108,17 @@
   .view-btn[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
   td.view-cell { text-align: right; padding-top: 6px; padding-bottom: 6px; }
   tr[hidden] { display: none; }
-  details summary { cursor: pointer; color: var(--gold-ink); font-size: 12.5px; margin: 6px 0; }
+  details summary { cursor: pointer; color: var(--navy); font-size: 12.5px; margin: 6px 0; }
   .arith td:first-child { width: 22%; } .arith td:nth-child(2) { color: var(--muted); font-size: 12.5px; } .arith td.num.wrap { white-space: normal; width: 26%; }
   .fnote { font-size: 12px; line-height: 1.45; color: var(--muted); margin-top: 3px; }
-  .fids { font-family: var(--mono); font-size: 11px; line-height: 1.7; } .fids a { color: var(--navy); text-decoration: none; border-bottom: 1px dotted var(--gold); } .fids a:hover { border-bottom-style: solid; }
-  .mrows td:first-child { font-family: var(--mono); font-size: 11.5px; color: var(--gold-ink); white-space: nowrap; } .mrows td:nth-child(2) { width: 18%; } .mrows td:nth-child(4) { width: 26%; }
+  .fids { line-height: 1.9; } .fids .pill { margin: 0 3px 0 0; }
+  .mrows td:first-child { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; } .mrows td:nth-child(2) { width: 18%; } .mrows td:nth-child(4) { width: 26%; }
   .reqs { table-layout: fixed; } .reqs th:first-child { width: 8%; } .reqs th:nth-child(2) { width: 52%; } .reqs th:nth-child(3) { width: 16%; }
   tr:target td { background: #F5EFDF; }
-  .assess { border: 1px dashed var(--gold); padding: 12px 14px; margin-top: 18px; color: var(--muted); }
+  .assess { border: 1px dashed #B9B2A1; padding: 12px 14px; margin-top: 18px; color: var(--muted); }
   .assess textarea { display: block; width: 100%; margin: 4px 0 6px; font: inherit; font-size: 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--border); padding: 8px 10px; resize: vertical; }
   .assess .share { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; color: var(--ink-2); margin: 2px 0 6px; } .assess .share label { cursor: pointer; white-space: nowrap; }
-  .assess textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .assess textarea:focus { outline: 2px solid var(--navy); outline-offset: 1px; }
   /* 26 Oct 2026: the investor's own limits; two states, filled or outlined, never a third */
   table.lims td { vertical-align: top; } table.lims td.limset { white-space: nowrap; } table.lims .limset .small { display: block; margin-top: 3px; font-weight: 400; }
   table.lims select, table.lims input { font: inherit; font-size: 13px; color: var(--ink); border: 1px solid var(--border); background: var(--paper); padding: 3px 6px; border-radius: 2px; } table.lims input { width: 72px; text-align: right; }
@@ -115,15 +130,15 @@
   .tabs button[aria-selected="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
   .tile { display: flex; flex-direction: column; gap: 2px; text-align: left; font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--border); padding: 12px 14px; border-radius: 0; }
-  button.tile { cursor: pointer; } button.tile:hover { border-color: var(--gold); }
+  button.tile { cursor: pointer; } button.tile:hover { border-color: var(--navy); }
   .tile .v { font-size: 26px; font-weight: 300; line-height: 1.2; color: var(--navy); font-variant-numeric: tabular-nums; }
   .tile .s { font-size: 12px; line-height: 1.45; color: var(--muted); }
   a.differs { font-size: 11px; color: #9A3B2E; white-space: nowrap; }
-  .chart .ref { stroke: var(--gold); stroke-width: 1.5; stroke-dasharray: 5 4; } .chart .ref-text { font-size: 10.5px; fill: var(--gold-ink); }
+  .chart .ref { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 5 4; } .chart .ref-text { font-size: 11px; fill: var(--ink-2); }
   ul.ev, ul.log, ul.items { list-style: none; margin: 0; padding: 0; } ul.ev li { margin: 0 0 7px; line-height: 1.45; } ul.log li, ul.items li { margin: 0 0 5px; }
-  ul.items li::before { content: "·"; color: var(--gold); margin-right: 8px; }
-  .evk { font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); margin-right: 6px; white-space: nowrap; }
-  .src-btn { font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+  ul.items li::before { content: "·"; color: var(--muted); margin-right: 8px; }
+  .evk { display: inline-block; font-size: 11px; line-height: 1.6; padding: 0 7px; border-radius: 9px; background: var(--tag-n-bg); color: var(--tag-n); margin-right: 6px; white-space: nowrap; }
+  .src-btn { font-family: var(--sans); font-size: 11px; line-height: 1.6; color: var(--tag-n); background: var(--tag-n-bg); border-radius: 9px; padding: 0 6px; border-bottom: 0; white-space: nowrap; } .src-btn:hover { background: var(--tag-n-hover); color: var(--navy); border-bottom: 0; }
   td.nums { width: 30%; font-size: 13px; line-height: 1.6; }
   .cols2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 24px; font-size: 13px; color: var(--ink-2); }
   section.block h3 + ul { margin-top: 4px; } section.block ul + h3 { margin-top: 16px; }
@@ -136,10 +151,10 @@
   .chart .zero { stroke: #9AA1A9; stroke-width: 1; }
   .chart .axis-text { font-family: var(--sans); font-size: 12.5px; font-variant-numeric: tabular-nums; fill: var(--muted); }
   .chart .val-text { font-size: 13.5px; fill: var(--ink); font-weight: 600; }
-  .chart .bar { fill: var(--navy-2); } .chart .bar.latest { fill: var(--navy); } .chart .bar.plan { fill: #C9B987; }
-  .chart .bar-group { cursor: pointer; } .chart .bar-group:hover .bar { fill: #2B4D72; } .chart .bar-group:hover .bar.plan { fill: var(--gold); }
+  .chart .bar { fill: var(--navy-2); } .chart .bar.latest { fill: var(--navy); } .chart .bar.plan { fill: #9AA9BA; }
+  .chart .bar-group { cursor: pointer; } .chart .bar-group:hover .bar { fill: #2B4D72; } .chart .bar-group:hover .bar.plan { fill: #7E8FA3; }
   .kv td:first-child { width: 30%; color: var(--muted); }
-  .pass { color: #2F6B3A; font-weight: 600; } .fail { color: #9A3B2E; font-weight: 600; } .check { color: var(--gold-ink); font-weight: 600; }
+  .pass { color: #2F6B3A; font-weight: 600; } .fail { color: #9A3B2E; font-weight: 600; } .check { color: var(--tag-wait); font-weight: 600; }
 
   /* ---------- Source viewer: split screen with the referenced page of the document ---------- */
   body.dv-open { padding-right: var(--dv-w, min(50vw, 820px)); }
@@ -196,7 +211,7 @@
   body.embed .title-band .eyebrow, body.embed .title-band h1, body.embed .title-band .meta { display: none; }   /* the platform's page heading names the company */
   body.embed main > aside { position: relative; top: 0; max-height: none; }
   body.noaside main { grid-template-columns: minmax(0, 1fr); } body.noaside main > aside { display: none; }
-  body.app main { gap: 20px; } body.app section.block { padding: 16px 20px 14px; margin-bottom: 16px; } body.app h2 { font-size: 18px; font-weight: 500; } body.app section.block .ask { font-size: 13px; color: var(--muted); margin-bottom: 12px; } body.app #tab-overview .eyebrow { display: none; }
+  body.app main { gap: 20px; } body.app section.block { padding: 16px 20px 14px; margin-bottom: 16px; } body.app h2 { font-size: 16px; font-weight: 600; } body.app section.block .ask { font-size: 13px; color: var(--muted); margin-bottom: 12px; } body.app .eyebrow { display: none; }
   body.mode-viewer .demobar, body.mode-viewer .site-header, body.mode-viewer main { display: none; }
   body.mode-viewer { padding-right: 0 !important; }
   body.mode-viewer #doc-viewer { left: 0; width: 100%; border-left: 0; box-shadow: none; }
@@ -210,23 +225,24 @@
 
   /* ---------- one product with app.html (21 Oct 2026): same tokens, 14 px base in the frames, quiet arithmetic marks, one number format ---------- */
   body.embed { font-size: 14px; } body.app h2 { font-weight: 600; }
-  .calc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: 5px; cursor: help; } .calc::before { content: "ƒ"; }
-  .cell-btn.pend { color: var(--muted); font-style: italic; }
+  span.calc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: 5px; cursor: help; } span.calc::before { content: "ƒ"; }
+  .cell-btn.pend { color: var(--muted); font-style: italic; } .cell-btn.rep { color: var(--muted); }
   .kf { width: 100%; border-collapse: collapse; font-size: 13px; } .kf th { text-align: right; } .kf th:first-child, .kf td:first-child { text-align: left; }
-  .kf td { padding: 5px 10px; border-bottom: 1px solid #EFEBE0; } .kf tr.em td { font-weight: 600; color: var(--navy); } .kf tr.sub td:first-child { padding-left: 18px; color: var(--ink-2); }
+  .kf td { padding: 4px 10px; border-bottom: 0; } .kf tbody tr:not(.sub) td { border-top: 1px solid #EFEBE0; padding-top: 7px; } .kf tbody tr:first-child td { border-top: 0; } .kf tbody tr:has(+ tr:not(.sub)) td, .kf tbody tr:last-child td { padding-bottom: 7px; }
+  .kf tr.em td { font-weight: 600; color: var(--navy); } .kf tr.sub td { color: var(--muted); } .kf tr.sub td:first-child { padding-left: 18px; }
   .tile .v small { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 4px; }
   /* ---------- the credit analysis as a research note ---------- */
   .note { max-width: 880px; } body.note-page main { grid-template-columns: 220px minmax(0, 1fr); }
   @media (max-width: 1000px) { body.note-page main { grid-template-columns: minmax(0, 1fr); } .note section.block { padding: 16px 14px 12px; } }
   .note section.block { padding: 24px 28px 20px; margin-bottom: 18px; } body.app .note section.block { padding: 18px 22px 16px; }
   .note h2 { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
-  .note .num-h { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-ink); margin: 0 0 2px; }
+  .note .num-h { font-size: 13px; letter-spacing: 0; text-transform: none; color: var(--muted); margin: 0 0 2px; }
   .note p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.6; max-width: 74ch; color: var(--ink-2); } .note p.lead { font-size: 15.5px; color: var(--ink); }
-  .cite { font-family: var(--mono); font-size: 9.5px; color: var(--gold-ink); cursor: pointer; margin-left: 1px; border-bottom: 1px dotted var(--gold-ink); line-height: 0; } .cite:hover { color: var(--navy); border-bottom-color: var(--navy); }
+  .cite { font-family: var(--sans); font-size: 10px; color: var(--muted); cursor: pointer; margin-left: 1px; border-bottom: 1px dotted var(--muted); line-height: 0; } .cite:hover { color: var(--navy); border-bottom-color: var(--navy); }
   .cites { display: inline-flex; flex-wrap: wrap; gap: 4px; margin: 0 6px; vertical-align: middle; }
-  .cites .cell-btn { font-family: var(--mono); font-size: 11px; padding: 1px 6px; border: 1px solid var(--border); border-bottom: 1px solid var(--gold); background: var(--paper); }
+  .cites .pill { margin: 0; }
   figure.ex { margin: 18px 0 8px; padding: 0; } figure.ex h3 { margin-bottom: 6px; } figure.ex figcaption { font-size: 12px; line-height: 1.45; color: var(--muted); margin-top: 6px; max-width: 80ch; }
-  .draft { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-ink); border: 1px solid #D9C79B; background: #FBF6E8; padding: 2px 8px; border-radius: 2px; }
+  .draft { display: inline-block; font-size: 11px; line-height: 1.6; color: var(--tag-wait); background: var(--tag-wait-bg); padding: 0 7px; border-radius: 9px; }
   .legend .view-btn { margin-left: auto; }
   @media print {
     body.note-page main { display: block; max-width: none; padding: 0; } .note { max-width: none; } .note section.block { break-inside: auto; border: 0; padding: 0 0 14px; margin: 0; }
@@ -302,9 +318,13 @@
   // one number format everywhere: one decimal, en-GB thousands separator, a true minus; ratios as 1.2x, shares as 10.8%
   function nf1(v) { return v == null ? '–' : (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
   function snum(v, u) { return v == null ? '–' : u === '%' ? (v * 100).toFixed(1) + '%' : u === 'x' ? v.toFixed(1) + 'x' : nf1(v); }
-  function fb(id, txt, st) { return id ? '<button type="button" class="cell-btn' + (st === 'pend' ? ' pend' : '') + '" data-view="' + esc(id) + '">' + txt + '</button>' : txt; }
+  function fb(id, txt, st) { return id ? '<button type="button" class="cell-btn' + (st === 'pend' ? ' pend' : st === 'rep' ? ' rep' : '') + '" data-view="' + esc(id) + '">' + txt + '</button>' : txt; }
   function chip(st) { return '<span class="chip ' + st + '">' + (STATUS[st] || st) + '</span>'; }
   function srcText(f) { return f.url ? (DOC[f.src].origin || f.src) + ' · ' + (DOC[f.src].date || '') : f.page ? f.src + '\u00a0p.' + f.page : f.src; }
+  // 26 Oct 2026: the tag grammar (the :root comment): a period pill, an audit pill read from the document of that period or the fact's status
+  function perPill(p) { return p ? '<span class="pill per">' + esc(p) + '</span>' : ''; }
+  function audPill(p, id) { var f = id && BYID[id], d = D.docs.filter(function (x) { return x.period === p && /annual|interim/.test(x.kind || ''); })[0];
+    return f && f.status === 'pend' ? '<span class="pill wait">pending review</span>' : f && f.status === 'rep' ? '<span class="pill wait">company statement</span>' : d ? '<span class="pill ' + (d.audited ? 'ok">audited' : 'wait">unaudited') + '</span>' : /^(H1|LTM)/.test(p || '') ? '<span class="pill wait">unaudited</span>' : ''; }
   function viewBtn(f) { return f.url ? '<a class="view-btn" href="' + esc(f.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Open the web source of ' + esc(f.id) + ' in a new tab">View ↗</a>' : f.page && D.pages[f.src] && D.pages[f.src][f.page] ? '<button type="button" class="view-btn" data-view="' + f.id + '" aria-pressed="false" aria-controls="doc-viewer" aria-label="View source of ' + esc(f.id) + '">View</button>' : '<span class="muted small">no page</span>'; }
 
   // ---------- charts: the platform's bar chart, by period ----------
@@ -338,7 +358,7 @@
   }
   function redemptionChart() {   // 22 Oct 2026: the debt ladder of snapshot.py, the same rows as the snapshot's table and the databook
     var L = (D.snapshot || {}).ladder;
-    if (!L || !L.rows.length) return '<p class="muted small">No debt-maturity facts extracted yet.</p>';
+    if (!L || !L.rows.length) return '<p class="empty">No debt-maturity facts on file yet.</p>';
     var pts = L.rows.map(function (r) { return { label: r.y === 'later' ? 'later' : r.y, v: r.p, id: r.ids[0], plan: true, note: [r.l != null ? 'leases ' + nf1(r.l) : '', r.i != null ? 'interest ' + nf1(r.i) : '', r.note || r.items.map(function (x) { return x[0] + ': ' + nf1(x[1]); }).join(' | ')].filter(Boolean).join(' · ') }; });
     return barChart('Redemption profile', 'Principal falling due per year of maturity, EUR m · ' + (L.kind === 'instrument table' ? 'the instrument table of the ' + L.asof + ' report' : 'the maturity table of the ' + L.asof + ' report, leases and interest apart') + ' · click a bar for the source', pts, true) +
       '<p class="muted small" style="margin:8px 0 18px">' + esc(L.calc) + '. Check: ' + esc(L.check) + '.' + (L.leases ? ' Leases of ' + nf1(L.leases[0]) + ' are not dated by year.' : '') + ' The snapshot, this chart and the databook show the same rows.</p>';
@@ -348,7 +368,7 @@
   function factRow(f, withField) {
     return '<tr data-q="' + esc((FIELD[f.field] ? FIELD[f.field].label : f.field) + ' ' + (f.text || '') + ' ' + (f.period || '')).toLowerCase() + '" data-st="' + f.status + '" id="row-' + f.id + '">' +
       (withField ? '<td class="fld">' + esc(FIELD[f.field] ? FIELD[f.field].label : f.field) + '</td>' : '') +
-      '<td>' + esc(f.text || '') + (f.value != null && f.text && String(f.value) !== f.text ? ' <span class="muted">(' + fmt(f.value, f.unit) + ')</span>' : '') + (f.note ? '<div class="fnote">' + esc(f.note) + '</div>' : '') + '</td>' +
+      '<td' + (f.status === 'rep' ? ' class="rep"' : '') + '>' + esc(f.text || '') + (f.value != null && f.text && String(f.value) !== f.text ? ' <span class="muted">(' + fmt(f.value, f.unit) + ')</span>' : '') + (f.note ? '<div class="fnote">' + esc(f.note) + '</div>' : '') + '</td>' +
       '<td class="per">' + esc(f.period || '') + '</td><td class="src' + (f.url ? ' web' : '') + '">' + esc(srcText(f)) + '</td><td class="st">' + chip(f.url && f.status === 'pend' ? 'web' : f.status) + '</td><td class="view-cell">' + viewBtn(f) + '</td></tr>';
   }
   var LIST_HEAD = '<thead><tr><th>Field</th><th>Entry</th><th>Period</th><th>Source</th><th>Status</th><th class="view"></th></tr></thead>';
@@ -357,7 +377,7 @@
     fs.forEach(function (f) { if (typeof f.value !== 'number') return; (by[f.field] = by[f.field] || {}); (by[f.field][f.period] = by[f.field][f.period] || []).push(f); periods[f.period] = 1; });
     var ps = Object.keys(periods).sort(pcmp), rows = fields.filter(function (fd) { return by[fd.id]; });
     if (!rows.length) return '';
-    var h = '<div class="table-scroll"><table><thead><tr><th>EUR m unless stated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    var h = '<div class="table-scroll stk"><table><thead><tr><th>Amounts in EUR m</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>';
     rows.forEach(function (fd) {
       h += '<tr data-q="' + esc(fd.label).toLowerCase() + '"><td>' + esc(fd.label) + '</td>' + ps.map(function (p) {
         var c = by[fd.id][p]; if (!c) return '<td class="num muted">–</td>';
@@ -372,7 +392,7 @@
     Object.keys(m).forEach(function (k) { var p = k.split('|'); (rows[p[0]] = rows[p[0]] || {})[p[1]] = m[k]; periods[p[1]] = 1; });
     var ps = Object.keys(periods).sort(pcmp), names = Object.keys(rows);
     if (!names.length) return '';
-    return '<div class="fieldhead"><h3>Calculated from the reported figures</h3><span class="muted small">formulas in mvp/schema.py derive()</span></div><div class="table-scroll"><table><thead><tr><th>Calculated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    return '<div class="fieldhead"><h3>Calculated from the reported figures</h3><span class="muted small">formulas in mvp/schema.py derive()</span></div><div class="table-scroll stk"><table><thead><tr><th>Calculated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' +
       names.map(function (n) { var lab = { gross_debt_calc: 'gross debt excl. leases, calculated: net debt as reported + cash − leases', one_off_income: 'one-off income inside EBITDA', ebitda_excl_one_off_income: 'EBITDA excluding one-off income',
         ebitda_margin: 'EBITDA margin' + XS, net_leverage: 'net leverage' + (XS ? ', EBITDA' + XS : ''), interest_cover: 'interest cover' + (XS ? ', EBITDA' + XS : ''), ebitda_margin_as_reported: 'EBITDA margin, on EBITDA as reported',
         net_leverage_as_reported: 'net leverage, on EBITDA as reported', interest_cover_as_reported: 'interest cover, on EBITDA as reported' }[n] || n.replace(/_/g, ' ');
@@ -380,19 +400,24 @@
   }
   // 25 Oct 2026 (reports/Gain platform lessons for VanillaBonds.md): the notes under the financials, one row per period (mvp/snapshot.py basis): the
   // documents the figures are read from and their audit, whose accounts, EBITDA and leases on the record's basis beside the company's and the bond terms'
+  // 26 Oct 2026 (Gain comparison): the same notes as a list keyed by period, generated from the record (snapshot.py basis and the figure rows' formulas):
+  // fiscal year-end, the document each period is read from and its audit, the entity, EBITDA and net debt on each basis with the amounts, the
+  // currency, and the definitions of the calculated rows. Consecutive periods with the same note become one line. Every id opens its page.
   function basisNotes() {
     var B = (D.snapshot || {}).basis || []; if (!B.length) return '';
-    var ids = function (xs, n) { return (xs || []).filter(Boolean).slice(0, n || 9).map(jb).join(''); }, bt = function (x) { return x ? esc(x.t) + ids(x.ids, 2) : 'no bond terms on file'; };
-    var sm = function (h) { return '<br><span class="muted small">' + h + '</span>'; };
-    return '<div class="fieldhead"><h3>Basis notes</h3><span class="muted small">how each period’s figures are read</span></div><div class="table-scroll"><table class="mt"><thead><tr><th>Period</th><th>Document and audit</th><th>Entity reported</th><th>EBITDA basis</th><th>Leases in net debt</th><th>Currency</th></tr></thead><tbody>' +
-      B.map(function (r) {
-        var d = r.doc, one = d.from.length === 1 && d.from[0][0] === d.own;
-        var fr = one ? 'all ' + d.n + ' figures read from this report' : 'figures read from ' + d.from.map(function (x) { return x[0] + ', the ' + x[2] + ' (' + x[1] + ')'; }).join('; ') + ', of ' + d.n;
-        return '<tr><td>' + esc(r.p) + '</td><td>' + esc(d.t.replace(/^\w/, function (c) { return c.toUpperCase(); })) + ids(d.ids, 1) + sm(esc(fr)) + '</td><td>' + esc(r.entity.t.replace(/^\w/, function (c) { return c.toUpperCase(); })) + ids(r.entity.ids, 1) + '</td>' +
-          '<td>Record: ' + esc(r.ebitda.rec.t) + ids(r.ebitda.rec.ids, 3) + sm('Bond terms: ' + bt(r.ebitda.terms)) + '</td>' +
-          '<td>Record: ' + esc(r.lease.rec.t) + ids(r.lease.rec.ids, 1) + sm('Company: ' + (r.lease.co.ids.length ? 'its own net debt ' : '') + esc(r.lease.co.t) + ids(r.lease.co.ids, 1)) + sm('Bond terms: ' + bt(r.lease.terms)) + '</td>' +
-          '<td>' + esc(r.fx.t) + (r.fx.co ? sm('Company: ' + esc(r.fx.co) + ids(r.fx.ids, 1)) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
-      '<p class="muted small">How to read it: one row per period of the financials above. A period is often read from a later report that prints it again; “figures read from” names those reports. “Record” is the basis the dossier’s ratios use; the company’s own net debt and the bond terms’ definitions sit beside it and are never mixed into it. Every id opens its page.</p>';
+    var ids = function (xs, n) { return (xs || []).filter(Boolean).slice(0, n || 9).map(jb).join(''); }, cap = function (s) { return String(s || '').replace(/^\w/, function (c) { return c.toUpperCase(); }); };
+    var li = function (k, t) { return '<li><b>' + esc(k) + ':</b> ' + t + '</li>'; };
+    var runs = function (text) { var out = []; B.forEach(function (r) { var t = text(r), l = out[out.length - 1]; if (l && l.t === t) l.to = r.p; else out.push({ from: r.p, to: r.p, t: t, r: r }); }); return out.map(function (x) { return [x.from === x.to ? x.from : x.from + '–' + x.to, x.t, x.r]; }); };
+    var h = li('Fiscal year', 'ends 31 December; H1 figures to 30 June' + (D.snapshot.asof ? '. Figures to ' + esc(D.snapshot.asof) : '') + '.');
+    B.forEach(function (r) { var d = r.doc, one = d.from.length === 1 && d.from[0][0] === d.own;
+      h += li(r.p, esc(cap(d.t)) + ids(d.ids, 1) + '; ' + (one ? 'all ' + d.n + ' figures read from this report' : d.n + ' figures, read from ' + d.from.map(function (x) { return x[0] + ' p.' + x[1] + ' (' + x[2] + ')'; }).join(' and ')) + '.'); });
+    runs(function (r) { return r.entity.t; }).forEach(function (x) { h += li(x[0], 'Entity: ' + esc(cap(x[1])) + ids(x[2].entity.ids, 1) + '.'); });
+    B.forEach(function (r) { h += li(r.p, 'EBITDA, record: ' + esc(r.ebitda.rec.t) + ids(r.ebitda.rec.ids, 3) + (r.ebitda.terms ? '; bond terms: ' + esc(r.ebitda.terms.t) + ids(r.ebitda.terms.ids, 2) : '') + '. Net debt, record: ' + esc(r.lease.rec.t) + ids(r.lease.rec.ids, 1) + '; company: ' + (r.lease.co.ids.length ? 'its own net debt ' : '') + esc(r.lease.co.t) + ids(r.lease.co.ids, 1) + (r.lease.terms ? '; bond terms: ' + esc(r.lease.terms.t) + ids(r.lease.terms.ids, 1) : '') + '.'); });
+    runs(function (r) { return r.fx.t; }).forEach(function (x) { h += li(x[0], 'Currency: ' + esc(x[1]) + '.'); });
+    B.forEach(function (r) { if (r.fx.co) h += li(r.p, 'Currency, as the report states it: ' + esc(r.fx.co.length > 180 ? r.fx.co.slice(0, 180) + '…' : r.fx.co) + ids(r.fx.ids, 1)); });
+    (D.snapshot.figures || []).forEach(function (r) { if (r.calc && !r.of) h += li(r.label, esc(r.calc)); });
+    return '<div class="fieldhead"><h3>Basis notes</h3><span class="muted small">how each period’s figures are read, from the record</span></div><ul class="bnotes">' + h + '</ul>' +
+      '<p class="muted small">One line per period of the financials above. A period is often read from a later report that prints it again. “Record” is the basis the dossier’s ratios use; the company’s own figure and the bond terms’ definition sit beside it and are never mixed into it. Every id opens its page.</p>';
   }
   var ARITH = { plan: ['forward', 'headroom_path', 'stress_grid', 'eba_events'], financials: ['ratios_three_ways', 'volatility_vs_sector'], management: ['calibration'], structure: ['waterfall', 'guarantor_coverage'] };
   function arithmetic(block) {
@@ -403,7 +428,7 @@
       rows.map(function (r) { return '<tr data-q="' + esc(r[0]).toLowerCase() + '"><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="num' + (String(r[2]).length > 48 ? ' wrap' : '') + '"><b>' + esc(r[2]) + '</b></td></tr>'; }).join('') + '</tbody></table>';
   }
   // fact ids as links to their rows (the row opens and lights up, as when the viewer jumps back)
-  function fids(s) { return s ? '<span class="fids">' + s.split(', ').map(function (x) { var id = x.split(' ')[0]; return BYID[id] ? '<a href="#row-' + id + '" data-row="' + id + '">' + esc(x) + '</a>' : esc(x); }).join(', ') + '</span>' : '<span class="muted">–</span>'; }
+  function fids(s) { return s ? '<span class="fids">' + s.split(', ').map(function (x) { var id = x.split(' ')[0]; return BYID[id] ? '<a class="pill id" href="#row-' + id + '" data-row="' + id + '">' + esc(x) + '</a>' : esc(x); }).join(' ') + '</span>' : '<span class="muted">–</span>'; }
   function mgmtRows() {
     if (!MROWS.length) return '';
     return '<div class="fieldhead"><h3>The 17 rows of memo section 9</h3><span class="muted small">per row: a document fact, a register fact, or a representation pending with its question</span></div><div class="table-scroll"><table class="mrows"><thead><tr><th>Row</th><th>Item</th><th>Status</th><th>Facts on file</th><th>Question to management</th></tr></thead><tbody>' +
@@ -436,10 +461,10 @@
     return [top, rest];
   }
   // the management block opens with the decision-useful facts (who, owners, guidance against reported, lenders, changes, pay), as the snapshot holds them
-  function jb(id) { return ' <button type="button" class="cell-btn" data-view="' + esc(id) + '">' + esc(id) + '</button>'; }
+  function jb(id) { return ' <button type="button" class="pill id" data-view="' + esc(id) + '">' + esc(id) + '</button>'; }
   function mgList(xs) { return '<ul class="mfacts">' + xs.map(function (x) { return '<li>' + esc(x[0]) + jb(x[1]) + '</li>'; }).join('') + '</ul>'; }
   function mgPeople() { return '<div class="table-scroll"><table class="mt"><tbody>' + D.snapshot.people.map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td>' + esc(x[1]) + jb(x[2]) + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
-  function mgGuidance() { return '<div class="table-scroll"><table class="mt"><thead><tr><th>Year</th><th>Guidance as stated</th><th>Reported</th></tr></thead><tbody>' + D.snapshot.guidance.slice().reverse().map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td>' + esc(x[1] + ': ' + x[2]) + jb(x[4][0]) + '</td><td>' + esc(x[3]) + (x[4][1] ? jb(x[4][1]) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
+  function mgGuidance() { return '<div class="table-scroll"><table class="mt"><thead><tr><th>Year</th><th>Guidance as stated</th><th>Reported</th></tr></thead><tbody>' + D.snapshot.guidance.slice().reverse().map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td class="rep">' + esc(x[1] + ': ' + x[2]) + jb(x[4][0]) + '</td><td>' + esc(x[3]) + (x[4][1] ? jb(x[4][1]) : '') + '</td></tr>'; }).join('') + '</tbody></table></div>'; }
   function mgmtFacts() {
     var s = D.snapshot; if (!s) return '';
     var li = function (t, xs) { return xs.length ? '<div class="fieldhead"><h3>' + t + '</h3><span class="muted small">' + xs.length + '</span></div>' + mgList(xs) : ''; };
@@ -466,7 +491,7 @@
     });
     if (b.id === 'management' && D.snapshot) h = h0 + mgmtRows() + (h ? '<details><summary>All ' + fs.length + ' management facts, field by field</summary>' + h + '</details>' : '');
     else if (b.id === 'management') h += mgmtRows();
-    if (!fs.length) h += '<p class="muted">No facts extracted for this block yet. Fields in the format: ' + b.fields.map(function (fd) { return esc(fd.label); }).join('; ') + '.</p>';
+    if (!fs.length) h += '<p class="empty">No facts on file for this block yet.</p>';
     h += arithmetic(b.id);
     h += assessBox(b.id, b.title) + '</section>';
     return h;
@@ -485,6 +510,18 @@
     return '<section class="block" id="b-sources" aria-labelledby="h-sources"><p class="eyebrow">' + n + ' · Sources</p><h2 id="h-sources">Documents</h2><p class="ask">Every fact above carries the document and page it was read from; the page text opens in the source viewer. A web fact carries its URL instead and opens there, in a new tab.</p>' + docsTable() + '</section>';
   }
 
+  // 26 Oct 2026 (Gain comparison): the documents behind the facts shown in a view, with the pages cited there; generated from the fact ids in the
+  //            rendered html, never from a list kept by hand ----------
+  function sourcesFoot(html) {
+    var by = {}, seen = {}, re = /data-view="(F\d+)"/g, m;
+    while ((m = re.exec(html))) { if (seen[m[1]]) continue; seen[m[1]] = 1; var f = BYID[m[1]]; if (!f || !DOC[f.src]) continue; var e = by[f.src] = by[f.src] || { n: 0, pages: {}, first: f }; e.n++; if (f.page) e.pages[f.page] = 1; }
+    var ks = Object.keys(by).sort(function (a, b) { return DOC[a].i - DOC[b].i; }); if (!ks.length) return '';
+    return '<section class="block" id="b-srcfoot" aria-labelledby="h-srcfoot"><h2 id="h-srcfoot">Sources on this tab</h2><p class="ask">The documents behind the facts shown above, with the pages cited on this tab; generated from those facts.</p><div class="table-scroll"><table><thead><tr><th>Date</th><th>Title</th><th>Source document, pages cited</th><th class="num">Facts</th><th class="view"></th></tr></thead><tbody>' +
+      ks.map(function (k) { var d = DOC[k], e = by[k], ps = Object.keys(e.pages).map(Number).sort(function (a, b) { return a - b; });
+        return '<tr><td class="per">' + esc(d.date || '') + '</td><td>' + (d.kind === 'web page' ? '<a href="' + esc(d.file) + '" target="_blank" rel="noopener noreferrer">' + esc(d.origin || d.file) + ' ↗</a>' : esc(docTitle(d).replace(/ · .*$/, '').replace(/^\w/, function (c) { return c.toUpperCase(); })) + (d.audited != null ? ' <span class="pill ' + (d.audited ? 'ok">audited' : 'wait">unaudited') + '</span>' : '') + (d.origin ? '<div class="fnote">' + esc(d.origin) + '</div>' : '')) + '</td>' +
+          '<td><span class="pill">' + esc(k) + '</span> ' + (ps.length ? 'p. ' + ps.slice(0, 12).join(', ') + (ps.length > 12 ? ' + ' + (ps.length - 12) + ' more' : '') : d.kind === 'web page' ? 'web page' : '') + '</td><td class="num">' + e.n + '</td><td class="view-cell">' + viewBtn(e.first) + '</td></tr>'; }).join('') + '</tbody></table></div></section>';
+  }
+
   // ---------- the written credit analysis (21 Oct 2026): companies/<x>/analysis.json through mvp/analysis.py, rendered as a research note; every
   //            sentence carries the fact ids it rests on (the superscript lists them, each opens its page), every exhibit is drawn from the record ----------
   var AN = D.analysis;
@@ -499,7 +536,7 @@
     return '<sup class="cite" data-cite="' + esc(ok.join(' ')) + '" title="' + esc(ok.map(function (i) { return i + ' · ' + label(BYID[i]) + ' · ' + srcText(BYID[i]); }).join(' | ')) + '">' + ok.length + '</sup>';
   }
   function noteView() {
-    if (!AN) return '<section class="block"><h2>Company summary</h2><p class="muted">No written analysis for this company yet. The analyst agent (mvp/agents/analyst.md) writes it from the record once the screen has run.</p></section>';
+    if (!AN) return '<section class="block"><h2>Company summary</h2><p class="empty">No written summary for this company yet.</p></section>';
     return '<div class="note">' + AN.sections.map(function (s, i) {
       return '<section class="block" id="an-' + s.id + '" aria-labelledby="h-an-' + s.id + '"><p class="num-h">' + (i + 1 < AN.sections.length ? 'Section ' + (i + 1) : 'Appendix') + '</p><h2 id="h-an-' + s.id + '">' + esc(s.title) + '</h2>' +
         s.paras.map(function (p, j) { return '<p' + (j === 0 ? ' class="lead"' : '') + '>' + p.map(function (x) { return '<span class="s">' + esc(x[0]) + '</span>' + cite(x[1]) + ' '; }).join('') + '</p>'; }).join('') +
@@ -511,12 +548,12 @@
   function stripTiles() {
     return '<div class="tiles">' + (D.snapshot.strip || []).map(function (t) {
       var id = t.ids[0], tag = id ? 'button' : 'div';
-      return '<' + tag + (id ? ' type="button" data-view="' + esc(id) + '"' : '') + ' class="tile"' + (t.calc ? ' title="' + esc(t.calc) + '"' : '') + '><span class="label">' + esc(t.label) + ' · ' + esc(t.period) + '</span><span class="v">' + snum(t.v, t.unit) + (t.unit === 'm' && t.v != null ? '<small>EUR m</small>' : '') + '</span><span class="s">' + (t.calc ? 'arithmetic, formula on hover' : id ? esc(srcText(BYID[id])) : 'not on file') + (t.alt ? '<br>' + esc(t.alt) : '') + '</span></' + tag + '>';
+      return '<' + tag + (id ? ' type="button" data-view="' + esc(id) + '"' : '') + ' class="tile"' + (t.calc ? ' title="' + esc(t.calc) + '"' : '') + '><span class="label">' + esc(t.label) + '</span><span class="v">' + snum(t.v, t.unit) + (t.unit === 'm' && t.v != null ? '<small>EUR m</small>' : '') + '</span><span class="s">' + perPill(t.period) + audPill(t.period, id) + ' ' + (t.calc ? 'arithmetic, formula on hover' : id ? '<span class="pill id">' + esc(srcText(BYID[id])) + '</span>' : 'not on file') + (t.alt ? '<br>' + esc(t.alt) : '') + '</span></' + tag + '>';
     }).join('') + '</div>';
   }
   function figTable() {
     var s = D.snapshot, ps = s.periods;
-    return '<div class="table-scroll"><table class="kf"><thead><tr><th>EUR m unless stated</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' + s.figures.map(function (r) {
+    return '<div class="table-scroll stk"><table class="kf"><thead><tr><th>Amounts in EUR m</th>' + ps.map(function (p) { return '<th class="num">' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' + s.figures.map(function (r) {
       var sub = /^of which/.test(r.label);
       return '<tr class="' + (r.em ? 'em' : sub || r.of ? 'sub' : '') + '"><td>' + esc(r.label) + (r.calc && !sub ? '<span class="calc" title="' + esc(r.calc) + '"></span>' : '') + '</td>' + r.v.map(function (v, i) { var id = r.ids[i] && r.ids[i][0]; return '<td class="num">' + (id && v != null ? fb(id, snum(v, r.unit), r.st[i]) : snum(v, r.unit)) + '</td>'; }).join('') + '</tr>';
     }).join('') + '</tbody></table></div>';
@@ -596,9 +633,9 @@
       var calc = !!t[3], u = t[2] || 'm', f = calc ? null : fyFact(t[1], p), g = calc ? null : fyFact(t[1], q);
       var v = calc ? der(t[1], p) : f && f.value, w = calc ? der(t[1], q) : g && g.value, tag = f ? 'button' : 'div';
       var ar = calc ? der(t[1] + '_as_reported', p) : t[1] === 'ebitda' ? der('ebitda_excl_one_off_income', p) : null;
-      var sub = (q ? esc(q) + ': ' + nf(w, u) + (u === 'm' && chg(v, w) ? ' · change ' + chg(v, w) : '') + '<br>' : '') + (calc ? 'calc: ' + esc(t[3]) + (v == null ? '; an input for ' + esc(p) + ' is not on file' : '') : f ? esc(srcText(f)) + differs(f) : 'not on file') +
+      var sub = (q ? esc(q) + ': ' + nf(w, u) + (u === 'm' && chg(v, w) ? ' · change ' + chg(v, w) : '') + '<br>' : '') + (calc ? 'calc: ' + esc(t[3]) + (v == null ? '; an input for ' + esc(p) + ' is not on file' : '') : f ? '<span class="pill id">' + esc(srcText(f)) + '</span>' + differs(f) : 'not on file') +
         (ar != null ? '<br>' + (calc ? 'on EBITDA as reported ' : 'excluding one-off income ') + nf(ar, u) : '');
-      return '<' + tag + (f ? ' type="button" data-view="' + f.id + '"' : '') + ' class="tile"><span class="label">' + esc(t[0]) + ' · ' + esc(p) + (u === 'm' ? ' · EUR m' : '') + '</span><span class="v">' + nf(v, u) + '</span><span class="s">' + sub + '</span></' + tag + '>';
+      return '<' + tag + (f ? ' type="button" data-view="' + f.id + '"' : '') + ' class="tile"><span class="label">' + esc(t[0]) + '</span><span class="v">' + nf(v, u) + (u === 'm' ? '<small>EUR m</small>' : '') + '</span><span class="s">' + perPill(p) + audPill(p, f && f.id) + ' ' + sub + '</span></' + tag + '>';
     }).join('') + '</div>';
   }
   function guidance() {
@@ -788,9 +825,10 @@
     n++; html += sourcesBlock(n); nav += '<a href="#b-sources">Sources<span class="n">' + D.docs.length + '</span></a>';
     if (VIEW) { $('#band').hidden = !NOTE; $('.tools').hidden = VIEW !== 'proof'; $('#topics').innerHTML = VIEW === 'proof' ? OVERVIEW.slice(1, 5).map(function (o) { return '<a href="#' + o[0] + '">' + esc(o[1]) + '<span class="n"></span></a>'; }).join('') + nav : VIEW === 'analysis' ? noteNav() : '';
       if (NOTE) $('#band').innerHTML = noteBand();
-      $('#content').innerHTML = '<div id="tab-' + VIEW + '">' + (VIEW === 'proof' ? analysisHead() + html : VIEW === 'assess' ? assessAll() : VIEW === 'analysis' ? noteView() : overview()) + '</div>'; }
+      var body = VIEW === 'proof' ? analysisHead() + html : VIEW === 'assess' ? assessAll() : VIEW === 'analysis' ? noteView() : overview();
+      $('#content').innerHTML = '<div id="tab-' + VIEW + '">' + body + (VIEW === 'assess' ? '' : sourcesFoot(body)) + '</div>'; }
     else {
-    $('#content').innerHTML = '<div id="tab-overview">' + overview() + '</div><div id="tab-proof" hidden>' + html + '</div>';
+    var ov = overview(); $('#content').innerHTML = '<div id="tab-overview">' + ov + sourcesFoot(ov) + '</div><div id="tab-proof" hidden>' + html + sourcesFoot(html) + '</div>';
     $('#topics').innerHTML = '<div data-pane="overview">' + OVERVIEW.map(function (o) { return '<a href="#' + o[0] + '">' + esc(o[1]) + '<span class="n"></span></a>'; }).join('') + '</div><div data-pane="proof" hidden>' + nav + '</div>';
     showTab('overview'); }
     var h0 = location.hash.slice(1), el0 = h0 && document.getElementById(h0);
@@ -1032,7 +1070,7 @@
   });
   if (MODE === 'viewer') { post({ type: 'dossier-ready', slug: slug }); if (Q.get('item')) showFact(Q.get('item'), false); }
   document.addEventListener('click', function (e) {
-    var ci = e.target.closest('.cite'); if (ci) { var nx = ci.nextElementSibling; if (nx && nx.classList.contains('cites')) { nx.remove(); return; } ci.insertAdjacentHTML('afterend', '<span class="cites">' + ci.getAttribute('data-cite').split(' ').map(function (i) { return '<button type="button" class="cell-btn" data-view="' + i + '" title="' + esc(label(BYID[i]) + ' · ' + srcText(BYID[i])) + '">' + i + '</button>'; }).join('') + '</span>'); return; }
+    var ci = e.target.closest('.cite'); if (ci) { var nx = ci.nextElementSibling; if (nx && nx.classList.contains('cites')) { nx.remove(); return; } ci.insertAdjacentHTML('afterend', '<span class="cites">' + ci.getAttribute('data-cite').split(' ').map(function (i) { return '<button type="button" class="pill id" data-view="' + i + '" title="' + esc(label(BYID[i]) + ' · ' + srcText(BYID[i])) + '">' + i + '</button>'; }).join('') + '</span>'); return; }
     if (e.target.closest('[data-print]')) { window.print(); return; }
     var tb = e.target.closest('[data-tab]'); if (tb) { showTab(tb.getAttribute('data-tab')); if (MODE === 'embed') { sendH(); post({ type: 'dossier-scrollto', slug: slug, y: 0 }); } else window.scrollTo(0, 0); return; }
     var an = e.target.closest('a[href^="#"]'), ae = an && document.getElementById(an.getAttribute('href').slice(1));

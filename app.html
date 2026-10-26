@@ -33,6 +33,13 @@
     --ground: var(--vb-ground-alt); --paper: var(--vb-white); --border: var(--vb-line-warm); --ink: var(--vb-ink-900); --ink-2: #3A4654; --muted: var(--vb-ink-500);
     --action: var(--vb-action); --action-ink: var(--vb-action-ink); --rail-ink: var(--vb-rail-ink); --rail-mut: var(--vb-rail-ink-mut); --rail-line: var(--vb-rail-line);
     --sans: var(--vb-font-body); --mono: var(--vb-font-mono); --demo: 22px; --top: calc(48px + var(--demo)); --vw: min(50vw, 820px);
+    /* 26 Oct 2026 (Gain comparison, reports/Gain company profile design and sourcing.md): three tag families, each a 14% tint with darker ink,
+       defined once here and once in the other file under the same names. status: green = approved, audited, binding, passed; amber = pending,
+       unaudited, conditional, illustrative, company statement; grey = neutral. period: a grey pill with the period of a figure (FY2025, H1-2026,
+       LTM). provenance: a grey pill with a fact id or a document page (F1244, S3 p.37) that opens its page. Nothing else is a tag; no gold or
+       monospace label anywhere; mono stays for ISINs, the exports and the document viewer's page text. */
+    --tag-ok: #2F6B3A; --tag-ok-bg: rgba(47, 107, 58, 0.14); --tag-wait: #7A5A14; --tag-wait-bg: rgba(201, 162, 39, 0.14);
+    --tag-n: #5A6672; --tag-n-bg: rgba(90, 102, 114, 0.12); --tag-n-hover: rgba(13, 27, 42, 0.16);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
@@ -62,34 +69,43 @@
   .side a:hover { background: var(--navy-2); color: #fff; }
   .side a[aria-current="page"] { background: var(--navy-2); color: #fff; font-weight: 600; box-shadow: inset 3px 0 0 var(--gold); }
   .side hr { border: 0; border-top: 1px solid var(--rail-line); margin: 8px 4px; }
-  .side .c { font-family: var(--mono); font-size: 11px; color: var(--rail-mut); }
+  .side .c { font-size: 12px; color: var(--rail-mut); font-variant-numeric: tabular-nums; }
   .side .note { margin-top: auto; font-size: 11.5px; line-height: 1.45; color: var(--rail-mut); padding: 10px; border-top: 1px solid var(--rail-line); }
   main { min-width: 0; padding: 0 24px 56px; }
   main { max-width: 1720px; width: 100%; margin: 0 auto; }   /* ultrawide screens: the workspace stops at a readable width and centres itself */
   .pagehead { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding: 18px 0 12px; }
   h1 { font-size: 20px; font-weight: 600; color: var(--navy); margin: 0; }
-  h2 { font-size: 15px; font-weight: 600; color: var(--navy); margin: 0 0 8px; }
+  h2 { font-size: 16px; font-weight: 600; color: var(--navy); margin: 0 0 8px; }
   .filters { display: flex; gap: 4px; flex-wrap: wrap; }
   .filters button { background: var(--paper); border: 1px solid var(--border); border-radius: 14px; padding: 3px 12px; font-size: 12.5px; color: var(--ink-2); cursor: pointer; }
   .filters button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
 
   /* ---------- tables, panels, chips, marks ---------- */
   .grid { width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--border); font-size: 13px; }
-  .grid th { text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--border); background: #FBFAF6; white-space: nowrap; }
+  .grid th { text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--border); background: #FBFAF6; white-space: nowrap; }
   .grid th.num { text-align: right; }   /* number columns: header over the figures */
   .grid th[data-sort] { cursor: pointer; } .grid th[data-sort]:hover { color: var(--navy); }
   .grid td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   .grid tr.go td { cursor: pointer; } .grid tr.go:hover td { background: #F7F3E8; }
   .grid tr.teaser td { color: var(--muted); }
   .scroll { overflow-x: auto; }
-  .chip { display: inline-block; font-size: 11px; line-height: 1.6; padding: 0 8px; border-radius: 10px; border: 1px solid var(--border); color: var(--muted); white-space: nowrap; }
-  .chip.binding, .chip.passed, .chip.received { color: #2F6B3A; border-color: #A9CDB0; background: #EEF6EF; }
-  .chip.indicative, .chip.conditional, .chip.pending, .chip.outstanding { color: var(--gold-ink); border-color: #D9C79B; background: #FBF6E8; }
+  .scroll.stk { max-height: calc(100vh - 250px); overflow: auto; } .scroll.stk thead th { position: sticky; top: 0; background: var(--paper); z-index: 2; } .scroll.stk .km thead tr:nth-child(2) th { top: 19px; }
+  .scroll.stk th:first-child, .scroll.stk td:first-child { position: sticky; left: 0; background: var(--paper); z-index: 1; } .scroll.stk thead th:first-child { z-index: 3; } .scroll.stk .grid th:first-child { background: #FBFAF6; } .scroll.stk .grid tr.go:hover td:first-child { background: #F7F3E8; } .scroll.stk .km tr.btr td:first-child { background: #F1F4F7; }
+  .chip { display: inline-block; font-size: 11px; line-height: 1.6; padding: 0 7px; border-radius: 9px; border: 0; background: var(--tag-n-bg); color: var(--tag-n); white-space: nowrap; vertical-align: 1px; }
+  .chip.binding, .chip.passed, .chip.received { color: var(--tag-ok); background: var(--tag-ok-bg); }
+  .chip.indicative, .chip.conditional, .chip.pending, .chip.outstanding { color: var(--tag-wait); background: var(--tag-wait-bg); }
+  .pill { display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 400; font-style: normal; line-height: 1.6; padding: 0 7px; border: 0; border-radius: 9px; background: var(--tag-n-bg); color: var(--tag-n); white-space: nowrap; letter-spacing: 0; text-transform: none; vertical-align: 1px; font-variant-numeric: tabular-nums; }
+  .pill.ok { background: var(--tag-ok-bg); color: var(--tag-ok); } .pill.wait { background: var(--tag-wait-bg); color: var(--tag-wait); }
+  button.pill, a.pill { cursor: pointer; text-decoration: none; } button.pill:hover, a.pill:hover { background: var(--tag-n-hover); color: var(--navy); } .pill.on { background: var(--navy); color: var(--paper); }
+  .pill.id { margin-left: 5px; padding: 0 6px; } .pill + .pill { margin-left: 4px; }
+  .empty { color: var(--muted); font-size: 13px; margin: 0; }
+  ul.bnotes { margin: 10px 0 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--ink-2); } .bnotes li { padding: 5px 0; border-top: 1px solid #EFEBE0; line-height: 1.5; } .bnotes li b { color: var(--ink); font-weight: 600; }
+  td.rep, .rep { color: var(--muted); }
   .mark { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 30px; height: 30px; border-radius: 4px; color: #fff; font-weight: 600; font-size: 12px; letter-spacing: 0.02em; }
   .mark.big { width: 44px; height: 44px; font-size: 16px; border-radius: 6px; }
   .issuer { display: flex; align-items: center; gap: 10px; }
   .panel { background: var(--paper); border: 1px solid var(--border); padding: 14px 16px; margin-bottom: 14px; }
-  .panel h3 { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+  .panel h3 { font-size: 14px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--navy); margin: 0 0 8px; }
   .kv { width: 100%; border-collapse: collapse; font-size: 13px; } .kv td { padding: 4px 0; vertical-align: top; } .kv td:first-child { color: var(--muted); width: 40%; padding-right: 10px; }
   .btn { background: var(--action); color: var(--action-ink); border: 1px solid var(--action); padding: 7px 14px; border-radius: 3px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap; }
   .btn:hover { background: #D8B23A; border-color: #D8B23A; } .btn.sec { background: var(--paper); color: var(--navy); border-color: #B9B2A1; } .btn.sec:hover { border-color: var(--navy); }
@@ -116,7 +132,7 @@
   .dh .meta { font-size: 13px; color: var(--ink-2); }
   .dh .sp { flex: 1; }
   .win { text-align: right; font-size: 11.5px; color: var(--muted); line-height: 1.3; }
-  .win b { display: block; font-family: var(--mono); font-weight: 500; font-size: 20px; color: var(--navy); }
+  .win b { display: block; font-weight: 600; font-size: 20px; color: var(--navy); font-variant-numeric: tabular-nums; }
   .cov { display: flex; height: 6px; background: #ECE7D8; margin-top: 10px; } .cov span { display: block; height: 100%; }
   .cov .binding, .covlab .binding { background: var(--navy); } .cov .conditional, .covlab .conditional { background: #5E7A98; } .cov .indicative, .covlab .indicative { background: var(--gold); } .cov .order, .covlab .order { background: #2F6B3A; }
   .covlab { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); margin-top: 4px; }
@@ -124,14 +140,14 @@
   .tabs { display: flex; gap: 2px; margin-top: 6px; overflow-x: auto; }
   .tabs a { padding: 9px 14px; font-size: 13.5px; color: var(--ink-2); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; }
   .tabs a:hover { color: var(--navy); } .tabs a[aria-current="page"] { color: var(--navy); border-bottom-color: var(--gold); font-weight: 600; }
-  .tabs .c { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 4px; }
+  .tabs .c { font-size: 12px; color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
   .strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 16px; }
   .strip .panel { margin: 0; }
   .body { margin-top: 16px; }
   iframe.dframe { display: block; width: 100%; height: 640px; border: 0; margin-top: 16px; }
   .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
   .steps div { background: var(--paper); border: 1px solid var(--border); padding: 10px 12px; }
-  .steps b { display: block; font-size: 18px; font-weight: 500; color: var(--navy); font-family: var(--mono); }
+  .steps b { display: block; font-size: 18px; font-weight: 500; color: var(--navy); font-variant-numeric: tabular-nums; }
   .steps span { font-size: 12px; color: var(--muted); }
 
   /* ---------- snapshot (21 Oct 2026): the deal on one screen, in the order of a Nordic bond credit deck: terms, debt, figures, people, risks ---------- */
@@ -139,34 +155,34 @@
   .snap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px; margin-top: 12px; } .snap .panel { margin: 0; } .snap .full { grid-column: 1 / -1; }
   @media (max-width: 1100px) { .snap { grid-template-columns: minmax(0, 1fr); } } body.v-open .snap { grid-template-columns: minmax(0, 1fr); }
   .kf { width: 100%; border-collapse: collapse; font-size: 13px; } .kf th { text-align: right; font-size: 11px; color: var(--muted); font-weight: 600; padding: 4px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  .kf th:first-child, .kf td:first-child { text-align: left; padding-left: 0; } .kf td { padding: 5px 10px; border-bottom: 1px solid #EFEBE0; vertical-align: top; }
-  .kf tr.em td { font-weight: 600; color: var(--navy); } .kf tr.sub td:first-child { padding-left: 14px; color: var(--ink-2); } .kf td.t { font-size: 12.5px; color: var(--ink-2); }
-  .fb { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; border-bottom: 1px dotted #B9B2A0; } .fb:hover { color: var(--navy); border-bottom-color: var(--navy); } .fb.pend { color: var(--muted); font-style: italic; }
-  .calc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: 5px; cursor: help; } .calc::before { content: "ƒ"; }
+  .kf th:first-child, .kf td:first-child { text-align: left; padding-left: 0; } .kf td { padding: 4px 10px; border-bottom: 0; vertical-align: top; } .kf tbody tr:not(.sub) td { border-top: 1px solid #EFEBE0; padding-top: 7px; } .kf tbody tr:first-child td { border-top: 0; } .kf tbody tr:has(+ tr:not(.sub)) td, .kf tbody tr:last-child td { padding-bottom: 7px; }
+  .kf tr.em td { font-weight: 600; color: var(--navy); } .kf tr.sub td { color: var(--muted); } .kf tr.sub td:first-child { padding-left: 14px; } .kf td.t { font-size: 12.5px; color: var(--ink-2); }
+  .fb { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; border-bottom: 1px dotted #B9B2A0; } .fb:hover { color: var(--navy); border-bottom-color: var(--navy); } .fb.pend { color: var(--muted); font-style: italic; } .fb.rep { color: var(--muted); }
+  span.calc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: 5px; cursor: help; } span.calc::before { content: "ƒ"; }
   .facts { margin: 0; padding: 0; list-style: none; font-size: 13px; } .facts li { padding: 5px 0; border-bottom: 1px solid #EFEBE0; } .facts li:last-child { border: 0; }
   .facts li.clamp { cursor: pointer; } .facts li.clamp > .ct { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }   /* long items show two lines; a click expands */
   /* ---------- the decision strip (21 Oct 2026): the seven numbers that decide, read in one look; each opens its page ---------- */
   .decide { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
   .decide .tile { text-align: left; background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--navy); padding: 10px 12px 9px; font: inherit; color: inherit; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .decide button.tile { cursor: pointer; } .decide button.tile:hover { border-color: var(--gold); border-top-color: var(--gold); }
-  .decide .k { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .decide button.tile { cursor: pointer; } .decide button.tile:hover { border-color: var(--c-main); border-top-color: var(--c-main); }
+  .decide .k { font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .decide .v { font-size: 24px; font-weight: 500; line-height: 1.15; color: var(--navy); font-variant-numeric: tabular-nums; } .decide .v small { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 4px; }
   .decide .p { font-size: 11.5px; color: var(--muted); } .decide .tile.deal { border-top-color: var(--gold); } .decide .a { font-size: 11.5px; color: var(--ink-2); }
   .tabbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; font-size: 12.5px; color: var(--muted); }
-  .draft { display: inline-block; font-size: 12px; color: var(--ink-2); border: 1px solid var(--border); background: var(--paper); padding: 1px 9px; border-radius: 10px; }   /* 23 Oct 2026: no gold monospace labels (Sam) */
-  .src { font-family: var(--mono); font-size: 10.5px; color: var(--muted); background: none; border: 0; padding: 0 0 0 6px; cursor: pointer; } .src:hover { color: var(--navy); text-decoration: underline; }
+  .draft { display: inline-block; font-size: 11px; line-height: 1.6; color: var(--tag-wait); background: var(--tag-wait-bg); padding: 0 7px; border-radius: 9px; }   /* 23 Oct 2026: no gold monospace labels (Sam) */
+  .src { font-family: var(--sans); font-size: 11px; line-height: 1.6; color: var(--tag-n); background: var(--tag-n-bg); border: 0; border-radius: 9px; padding: 0 6px; margin-left: 5px; cursor: pointer; white-space: nowrap; vertical-align: 1px; font-variant-numeric: tabular-nums; } .src:hover { color: var(--navy); background: var(--tag-n-hover); }
   .panel h4 { font-size: 12px; font-weight: 600; color: var(--navy); margin: 14px 0 4px; } .panel h4:first-of-type { margin-top: 2px; }
   .dl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; font-size: 12.5px; }
 
   /* ---------- welcome: a demo, choose your side ---------- */
   #welcome { position: fixed; inset: 0; z-index: 60; background: rgba(9, 30, 52, 0.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
   #welcome[hidden] { display: none; }
-  .wbox { background: var(--paper); width: min(760px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 26px 28px 22px; border-top: 3px solid var(--gold); box-shadow: 0 18px 50px rgba(9, 30, 52, 0.30); }
-  .wbox .kick { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-ink); margin: 0 0 6px; }
+  .wbox { background: var(--paper); width: min(760px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 26px 28px 22px; border-top: 3px solid var(--navy); box-shadow: 0 18px 50px rgba(9, 30, 52, 0.30); }
+  .wbox .kick { font-size: 12.5px; letter-spacing: 0; text-transform: none; color: var(--muted); margin: 0 0 6px; }
   .wbox h2 { font-size: 22px; margin: 0 0 8px; } .wbox p { margin: 0 0 10px; color: var(--ink-2); font-size: 14px; }
   .sides { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 14px 0 12px; }
   .side-card { text-align: left; background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--navy); padding: 14px 14px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
-  .side-card:hover, .side-card:focus-visible { border-color: var(--gold); border-top-color: var(--gold); outline: none; }
+  .side-card:hover, .side-card:focus-visible { border-color: var(--c-main); border-top-color: var(--c-main); outline: none; }
   .side-card b { font-size: 16px; color: var(--navy); } .side-card span { font-size: 13px; color: var(--ink-2); } .side-card em { font-style: normal; font-size: 12px; color: var(--muted); margin-top: auto; }
   .side-card select { width: 100%; margin-top: 2px; border: 1px solid var(--border); padding: 4px 6px; font-size: 13px; background: var(--paper); }
 
@@ -177,7 +193,7 @@
   .mcharts .gl { stroke: #E7E3D8; } .mcharts .band { fill: #F6EDD3; } .mcharts text.sm { font-size: 10.5px; fill: #3A4654; }
   .mcharts svg a text { cursor: pointer; } .mcharts svg a:hover text { fill: var(--navy); text-decoration: underline; }
   .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 6px; } .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
-  .chip.performing { color: #2F6B3A; border-color: #A9CDB0; background: #EEF6EF; } .chip.written { color: var(--gold-ink); border-color: #D9C79B; background: #FBF6E8; } .chip.standstill, .chip.default { color: #9A3B2E; border-color: #E2B7AE; background: #FBEFEC; }
+  .chip.performing { color: var(--tag-ok); background: var(--tag-ok-bg); } .chip.written { color: var(--tag-wait); background: var(--tag-wait-bg); } .chip.standstill, .chip.default { color: #9A3B2E; background: #FBEFEC; }
   .mtabs { margin: -4px 0 14px; border-bottom: 1px solid #CFC8B6; gap: 4px; } .mtabs a { padding: 9px 18px 8px; font-size: 15px; font-weight: 600; color: var(--ink-2); border: 1px solid transparent; border-bottom: 0; border-radius: 4px 4px 0 0; margin-bottom: -1px; }
   .mtabs a:hover { background: #F1EEE5; color: var(--navy); } .mtabs a[aria-current="page"] { background: var(--paper); color: var(--navy); border-color: #CFC8B6; border-bottom: 1px solid var(--paper); box-shadow: inset 0 3px 0 var(--navy); }   /* 26 Oct 2026: tabs that read as tabs, no gold */
   .mtabs .c { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--navy); background: #E6ECF2; border-radius: 10px; padding: 1px 8px; margin-left: 8px; } .mtabs .t2 { font-weight: 400; font-size: 12.5px; color: var(--muted); margin-left: 6px; }
@@ -188,20 +204,20 @@
   .lgd i { display: inline-block; width: 9px; height: 9px; } .lgd .mk-vb { border: 1.5px solid var(--gold-ink); transform: rotate(45deg); width: 7px; height: 7px; } .lgd .mk-x { border-radius: 50%; background: var(--navy); } .lgd .mk-q { border-radius: 50%; border: 1.5px solid var(--navy); width: 7px; height: 7px; } .lgd .mk-t { background: #2F6B3A; }
   .lgd .mk-gap { width: 16px; height: 0; border-top: 2px dashed #8A97A5; } .lgd .mk-ev { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid var(--gold-ink); } .lgd .mk-own { background: var(--navy); transform: rotate(45deg); width: 8px; height: 8px; } .lgd .mk-peer { border: 1.6px solid #3A4654; } .lgd .mk-new { background: var(--gold); border: 2px solid var(--navy); width: 10px; height: 10px; } .lgd .sw { width: 14px; height: 9px; border-radius: 2px; }
   .pbox { background: var(--paper); border: 1px solid var(--border); border-top: 3px solid var(--navy); padding: 12px 16px 14px; } .pbox > div { display: flex; flex-direction: column; margin-bottom: 8px; }
-  .pbox .k { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); } .pbox .v { font-size: 34px; font-weight: 500; line-height: 1.15; color: var(--navy); font-variant-numeric: tabular-nums; } .pbox .v small { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 6px; } .pbox .p { font-size: 12.5px; color: var(--ink-2); }
-  .chip.deal { color: var(--gold-ink); border-color: #D9C79B; background: #FBF6E8; text-decoration: none; } .chip.deal:hover { border-color: var(--gold-ink); }
+  .pbox .k { font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--muted); } .pbox .v { font-size: 34px; font-weight: 500; line-height: 1.15; color: var(--navy); font-variant-numeric: tabular-nums; } .pbox .v small { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 6px; } .pbox .p { font-size: 12.5px; color: var(--ink-2); }
+  .chip.deal { color: var(--navy); background: #EEF2F6; text-decoration: none; } .chip.deal:hover { background: #DFE7EF; }
   .chip.k-procedure { color: #9A3B2E; border-color: #E2B7AE; background: #FBEFEC; } .chip.k-issue, .chip.k-tap, .chip.k-book, .chip.k-anchor, .chip.k-factfile, .chip.k-listing, .chip.k-coupon, .chip.k-maturity { color: var(--navy); border-color: #B9C3CE; background: #EEF2F6; } .chip.k-ecb { color: #1F6B6B; border-color: #9FCFCF; background: #EAF5F5; }
   .grid.kf2 td, .grid.kf2 th { padding: 6px 8px; font-size: 12.5px; } .grid tr.grp td { background: #FBFAF6; padding: 6px 8px; } .kv tr.grp td { padding-top: 8px; color: var(--navy); }
   .tb { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 0 0 8px; } .tb input[type=search], .tb select { border: 1px solid var(--border); background: var(--paper); padding: 6px 9px; border-radius: 3px; font-size: 13px; max-width: 100%; } .tb input[type=search] { width: 210px; }
   .tgl { background: var(--paper); border: 1px solid var(--border); border-radius: 3px; padding: 5px 10px; font-size: 12.5px; color: var(--ink-2); cursor: pointer; white-space: nowrap; } .tgl[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); }
   .tb .clear { font-size: 12.5px; color: var(--muted); background: none; border: 0; cursor: pointer; text-decoration: underline; }
   .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; background: var(--paper); } .seg button { background: none; border: 0; border-left: 1px solid var(--border); padding: 5px 11px; font-size: 12.5px; color: var(--ink-2); cursor: pointer; white-space: nowrap; } .seg button:first-child { border-left: 0; } .seg button[aria-pressed="true"] { background: var(--navy); color: var(--paper); }
-  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 8px; } .tags:empty { display: none; } .tags button { font-size: 11.5px; border: 1px solid #D9C79B; background: #FBF6E8; color: var(--gold-ink); border-radius: 10px; padding: 1px 8px; cursor: pointer; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 8px; } .tags:empty { display: none; } .tags button { font-size: 11.5px; border: 0; background: #EEF2F6; color: var(--navy); border-radius: 10px; padding: 1px 8px; cursor: pointer; }
   details.dd { position: relative; display: inline-block; } details.dd > summary { list-style: none; display: inline-block; } details.dd > summary::-webkit-details-marker { display: none; } details.dd .menu { position: absolute; z-index: 25; top: calc(100% + 4px); right: 0; min-width: 230px; background: var(--paper); border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(9, 30, 52, 0.12); padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; } details.dd label { display: flex; gap: 8px; align-items: center; white-space: nowrap; cursor: pointer; }
   .rng { display: inline-flex; gap: 2px; } .rng button { background: var(--paper); border: 1px solid var(--border); border-radius: 3px; padding: 2px 8px; font-size: 12px; color: var(--ink-2); cursor: pointer; } .rng button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: var(--paper); } .rng button.thin { color: var(--muted); border-style: dashed; } .rng button.thin[aria-pressed="true"] { color: var(--paper); border-style: solid; background: #5E7A98; border-color: #5E7A98; } .rng small { font-size: 10px; margin-left: 4px; opacity: 0.8; }
   .srcl { font-size: 11.5px; color: var(--muted); margin: 6px 0 0; }
   .back { display: inline-block; font-size: 13px; color: var(--navy); text-decoration: none; margin: 12px 0 0; } .back:hover { text-decoration: underline; }
-  .secnav { position: sticky; top: var(--top); z-index: 20; background: var(--ground); display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin: 6px -24px 14px; padding: 0 24px; overflow-x: auto; } .secnav a { padding: 8px 12px; font-size: 13px; color: var(--ink-2); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; } .secnav a:hover { color: var(--navy); border-bottom-color: var(--gold); }
+  .secnav { position: sticky; top: var(--top); z-index: 20; background: var(--ground); display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin: 6px -24px 14px; padding: 0 24px; overflow-x: auto; } .secnav a { padding: 8px 12px; font-size: 13px; color: var(--ink-2); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; } .secnav a:hover { color: var(--navy); border-bottom-color: var(--navy); }
   section.sec, details.panel { scroll-margin-top: 96px; } section.sec { margin-bottom: 4px; } details.panel summary { cursor: pointer; list-style: none; } details.panel summary::-webkit-details-marker { display: none; } details.panel summary h3 { margin: 0; }
   .terms2 { columns: 2 300px; column-gap: 28px; } .terms2 .kv { break-inside: avoid; margin-bottom: 8px; }
   .drawer { position: fixed; top: var(--top); right: 0; bottom: 0; width: min(460px, 100vw); z-index: 35; background: var(--paper); border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.12); overflow-y: auto; padding: 14px 18px 24px; } .drawer .x { float: right; } .drawer h2 { font-size: 17px; margin: 4px 0 2px; } .drawer .kick { font-size: 12.5px; color: var(--muted); margin: 0; } .drawer .dstep { display: flex; align-items: center; gap: 8px; margin: 0 0 2px; } .drawer .dstep .view { white-space: nowrap; } .drawer .dstep .view[disabled] { opacity: 0.4; cursor: default; } .drawer .dstep span { font-size: 12.5px; color: var(--muted); white-space: nowrap; } .drawer .dstep .x { float: none; margin-left: auto; } .drawer .dhint { font-size: 12px; color: var(--muted); margin: 0 0 10px; } .drawer .kv td:first-child { width: 36%; } .drawer h4 { font-size: 12px; font-weight: 600; color: var(--navy); margin: 12px 0 4px; }
@@ -211,7 +227,7 @@
   /* ---------- calendar v2: a month grid, bars for windows, chips for dates, a popover per item, the rates panel beside it ---------- */
   .calwrap { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; align-items: start; } @media (max-width: 1100px) { .calwrap { grid-template-columns: minmax(0, 1fr); } }
   .caltb { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 0 0 8px; } .caltb h2 { font-size: 17px; margin: 0 0 0 6px; min-width: 150px; }
-  .cal { background: var(--paper); border: 1px solid var(--border); } .cal .dow { display: grid; grid-template-columns: repeat(7, 1fr); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); } .cal .dow span { padding: 6px 8px; }
+  .cal { background: var(--paper); border: 1px solid var(--border); } .cal .dow { display: grid; grid-template-columns: repeat(7, 1fr); font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--muted); border-bottom: 1px solid var(--border); } .cal .dow span { padding: 6px 8px; }
   .wk { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-template-rows: 26px repeat(3, 21px) 18px; border-bottom: 1px solid var(--border); } .wk:last-child { border-bottom: 0; }
   .wk .day { grid-row: 1 / -1; border-left: 1px solid var(--border); padding: 3px 6px; font-size: 12.5px; color: var(--ink-2); min-width: 0; } .wk .day:first-child { border-left: 0; } .wk .day.we { background: #FBFAF6; } .wk .day.out { color: #B9B2A1; }
   .wk .day i { font-style: normal; display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; border-radius: 50%; } .wk .day.today i { background: var(--navy); color: var(--paper); font-weight: 600; }
@@ -224,15 +240,15 @@
   @media (max-width: 700px) { .wk { grid-template-rows: 24px repeat(3, 11px) 14px; } .bar, .chipd { font-size: 0; height: 8px; line-height: 8px; margin-top: 2px; padding: 0; } .chipd::before { display: block; width: 8px; height: 8px; margin: 0 auto; } .wk .day { padding: 2px 3px; font-size: 11.5px; } .wk .day i { width: 18px; height: 18px; } .more { font-size: 10px; padding: 0 2px; } }
   /* ---------- deal journey ---------- */
   .stage { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 20px; background: var(--paper); border: 1px solid var(--border); padding: 16px 18px; margin-bottom: 12px; scroll-margin-top: 70px; }
-  .stage .when { font-family: var(--mono); font-size: 12px; color: var(--gold-ink); } .stage h2 { font-size: 17px; margin: 2px 0 0; }
+  .stage .when { font-size: 12.5px; color: var(--ink-2); } .stage h2 { font-size: 17px; margin: 2px 0 0; }
   .stage .lead { margin: 0 0 6px; color: var(--ink); } .stage p { margin: 0 0 8px; font-size: 13.5px; color: var(--ink-2); }
   .stage .who { width: 100%; border-collapse: collapse; font-size: 13px; margin: 6px 0 8px; } .stage .who td { padding: 5px 8px 5px 0; border-top: 1px solid var(--border); vertical-align: top; } .stage .who td:first-child { width: 130px; font-weight: 600; color: var(--navy); }
-  .stage .out { font-size: 13px; } .stage .ex { font-size: 12.5px; color: var(--muted); border-left: 2px solid var(--gold); padding-left: 10px; }
+  .stage .out { font-size: 13px; } .stage .ex { font-size: 12.5px; color: var(--muted); border-left: 2px solid #B9C3CE; padding-left: 10px; }
 
   /* ---------- the source document, beside the workspace ---------- */
   #viewer { position: fixed; top: var(--top); right: 0; bottom: 0; width: var(--vw); z-index: 40; background: #E4E3DE; border-left: 1px solid var(--border); box-shadow: -10px 0 28px rgba(9, 30, 52, 0.10); }
   #viewer[hidden] { display: none; } #viewer iframe { display: block; width: 100%; height: 100%; border: 0; }
-  #vhandle { position: absolute; left: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 2; } #vhandle:hover, body.v-resizing #vhandle { background: rgba(179, 154, 87, 0.35); }
+  #vhandle { position: absolute; left: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 2; } #vhandle:hover, body.v-resizing #vhandle { background: rgba(28, 74, 115, 0.3); }
   body.v-resizing { user-select: none; cursor: col-resize; } body.v-resizing iframe { pointer-events: none; }
 
   .chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; } .chips div { background: var(--paper); border: 1px solid var(--border); padding: 8px 10px; font-size: 12.5px; } .chips b { display: block; color: var(--navy); }
@@ -250,7 +266,7 @@
   .dp .note { font-size: 12.5px; color: var(--muted); margin: 10px 0 0; line-height: 1.5; } .dp .how { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; line-height: 1.5; } .dp .how b { color: var(--ink); font-weight: 600; }
   .dp .fb { text-align: inherit; } .dp a.fb { text-decoration: none; } .dp .srcs { font-size: 12.5px; color: var(--muted); }
   .dp h4 { font-size: 14px; font-weight: 600; color: var(--ink); margin: 0 0 6px !important; } .dp h4 span { font-weight: 400; color: var(--muted); font-size: 13px; }
-  .ill { display: inline-block; font-size: 11.5px; font-weight: 400; font-style: normal; color: var(--muted); border: 1px solid var(--border); border-radius: 10px; padding: 0 7px; line-height: 1.5; white-space: nowrap; vertical-align: 1px; }
+  .ill { display: inline-block; font-size: 11px; font-weight: 400; font-style: normal; color: var(--tag-wait); background: var(--tag-wait-bg); border: 0; border-radius: 9px; padding: 0 7px; line-height: 1.6; white-space: nowrap; vertical-align: 1px; }
   .ib { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--muted); background: var(--paper); color: var(--muted); font: italic 600 11px/1 Georgia, serif; cursor: pointer; padding: 0; vertical-align: 1px; margin-left: 5px; flex: none; }
   .ib:hover, .ib:focus-visible { border-color: var(--navy); color: var(--navy); outline: none; }
   /* the terms: a term sheet, label above value, the fine print under it */
@@ -268,15 +284,16 @@
   .hl { margin: 20px 0 2px; } .hl .kick { font-size: 12.5px; color: var(--muted); } .hl h2 { margin: 3px 0 0; font-size: 20px; line-height: 1.3; font-weight: 600; color: var(--navy); } .hl h2 .fb { border-bottom-color: var(--navy); } .hl p { margin: 5px 0 0; font-size: 14px; color: var(--ink-2); line-height: 1.5; max-width: 1050px; }
   /* key figures */
   table.km { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .km th { font-size: 11.5px; font-weight: 600; color: var(--muted); padding: 2px 6px 5px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border); } .km th small { font-weight: 400; font-size: 11px; margin-left: 2px; }
+  .km th { font-size: 12px; font-weight: 600; color: var(--muted); padding: 2px 6px 5px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border); } .km th .pill { font-size: 10px; line-height: 1.5; padding: 0 5px; margin-left: 3px; vertical-align: 1px; } .km th small { font-weight: 400; font-size: 11px; margin-left: 2px; }
   .km thead tr:first-child th { border-bottom: 0; padding: 0 6px 2px; font-size: 11px; } .km thead tr:first-child th.sp { border-bottom: 1px solid #CFC8B6; text-align: center; }
   .km th:first-child, .km td:first-child { text-align: left; padding-left: 0; }
-  .km td { padding: 4px 6px; border-bottom: 1px solid var(--hair); white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; line-height: 1.4; }
+  .km td { padding: 3px 6px; border-bottom: 0; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; line-height: 1.4; }
+  .km tbody tr:not(.sub) td { border-top: 1px solid var(--hair); padding-top: 6px; } .km tbody tr:first-child td { border-top: 0; } .km tbody tr:has(+ tr:not(.sub)) td, .km tbody tr:last-child td { padding-bottom: 6px; }
   .km td:first-child { white-space: normal; min-width: 185px; color: var(--ink); }
-  .km tr.em td { font-weight: 600; color: var(--navy); } .km tr.sub td { color: var(--ink-2); font-size: 12.5px; } .km tr.sub td:first-child { padding-left: 14px; color: var(--muted); }
+  .km tr.em td { font-weight: 600; color: var(--navy); } .km tr.sub td { color: var(--muted); font-size: 12.5px; } .km tr.sub td:first-child { padding-left: 14px; }
   .km tr.btr td { background: #F1F4F7; } .km tr.btr td:first-child { box-shadow: inset 3px 0 0 var(--c-main); padding-left: 9px; }
   .km td.spk { padding: 0 4px; } .km td.spk svg { display: block; margin: 0 auto; } .km td.d { color: var(--ink-2); font-weight: 400; } .km td.med { color: var(--ink-2); font-weight: 400; border-left: 1px solid var(--hair); }
-  .km td.p, .km th.p { color: var(--muted); font-style: italic; } .km th.u, .km td.u { background: #FBFAF6; } .km tr.btr td.u { background: #E9EEF3; }
+  .km td.p, .km th.p { color: var(--muted); font-style: normal; } .km th.u, .km td.u { background: #FBFAF6; } .km tr.btr td.u { background: #E9EEF3; }
   .lgr { display: flex; flex-wrap: wrap; gap: 3px 14px; font-size: 12px; color: var(--muted); margin-top: 8px; } .lgr b { color: var(--ink-2); font-weight: 600; }
   /* charts: drawn at their design width, never wider; text in the page's font */
   .dp svg.ch { display: block; } .dp svg text { font-family: var(--sans); }   /* 25 Oct 2026: drawn at their width and height attributes, never scaled; .chs scrolls a narrower panel */
@@ -301,6 +318,9 @@
   .fo { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; align-items: start; margin-top: 14px; grid-template-areas: "anchor what" "anchor money" "wrong wrong" "three three" "before bench" "risks dates" "costs sell" "qa qa"; }
   .card { background: var(--paper); border: 1px solid var(--border); padding: 16px 18px; min-width: 0; }
   .card > h2 { font-size: 16px; font-weight: 600; color: var(--navy); margin: 0 0 8px; } .card > .sub { margin: -4px 0 10px; font-size: 13px; color: var(--muted); } .card p { margin: 0 0 8px; } .card p:last-child { margin-bottom: 0; }
+  .fo.fo-overview { grid-template-areas: "what money" "three three"; } .fo.fo-bond { grid-template-areas: "anchor anchor" "wrong wrong" "before bench" "dates costs" "sell sell"; } .fo.fo-company { grid-template-columns: minmax(0, 1fr); grid-template-areas: "risks"; } .fo.fo-qa { grid-template-columns: minmax(0, 1fr); grid-template-areas: "qa"; }
+  .golinks ul { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 20px; margin: 0; padding: 0; list-style: none; } .golinks li a { display: block; font-weight: 600; color: var(--navy); text-decoration: none; } .golinks li a:hover { text-decoration: underline; } .golinks li span { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cline p { margin: 0; font-size: 13.5px; line-height: 1.7; } .dp .decide { margin-top: 14px; } .dp .decide + .panel { margin-top: 14px; }
   .c-anchor { grid-area: anchor; border-top: 3px solid var(--navy); } .c-what { grid-area: what; } .c-money { grid-area: money; } .c-wrong { grid-area: wrong; } .c-three { grid-area: three; }
   .c-before { grid-area: before; } .c-bench { grid-area: bench; } .c-risks { grid-area: risks; } .c-dates { grid-area: dates; } .c-costs { grid-area: costs; } .c-sell { grid-area: sell; } .c-qa { grid-area: qa; }
   .wrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--hair); }
@@ -327,7 +347,7 @@
   .num3 { border: 1px solid var(--border); border-top: 3px solid var(--navy); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
   .num3 .k { font-size: 13px; font-weight: 600; color: var(--ink-2); display: flex; align-items: center; justify-content: space-between; gap: 6px; }
   .num3 .v { font-size: 34px; font-weight: 500; line-height: 1.05; color: var(--navy); } .num3 .v small { font-size: 14px; color: var(--muted); font-weight: 400; margin-left: 4px; }
-  .num3 .ln { font-size: 13.5px; color: var(--ink); line-height: 1.45; } .num3 .pos { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; } .num3 svg { display: block; max-width: 100%; height: auto; }
+  .num3 .tg { display: flex; flex-wrap: wrap; gap: 4px; } .num3 .ln { font-size: 13.5px; color: var(--ink); line-height: 1.45; } .num3 .pos { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; } .num3 svg { display: block; max-width: 100%; height: auto; }
   .risk { margin: 0; padding: 0; list-style: none; counter-reset: r; } .risk li { counter-increment: r; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--hair); font-size: 13.5px; line-height: 1.5; } .risk li:last-child { border-bottom: 0; }
   .risk li::before { content: counter(r); font-size: 12px; color: var(--muted); padding-top: 1px; } .risk b { color: var(--ink); }
   .dates { width: 100%; border-collapse: collapse; font-size: 13.5px; } .dates td { padding: 6px 0; border-bottom: 1px solid var(--hair); } .dates td:last-child { text-align: right; font-weight: 600; color: var(--navy); white-space: nowrap; padding-left: 12px; }
@@ -394,6 +414,21 @@
   .grid.ins td.num b { color: var(--navy); font-weight: 600; } .grid.ins td:first-child { min-width: 240px; max-width: 360px; } .grid.ins td:nth-child(2) { max-width: 260px; } .grid.ins td.num .sm2 { text-align: right; white-space: normal; }
   .grid.ent th[scope=row] { text-align: left; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink); background: var(--paper); white-space: normal; min-width: 210px; border-bottom: 1px solid var(--border); padding: 9px 10px; }
   .grid.ent th.c, .grid.ent td.c { text-align: center; } .grid.ent td.no { color: #8A949E; }
+  /* 26 Oct 2026: the Group and ownership block (nested-list tree, no scaling) and the Parties and advisers panel */
+  .idl { margin: 0 0 12px; font-size: 13.5px; line-height: 1.7; } .idl span { white-space: nowrap; margin-right: 16px; } .idl span b { font-weight: 600; color: var(--ink); } .idl span i { font-style: normal; color: var(--muted); }
+  .own .vt { display: inline-flex; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; margin: 0 0 8px; } .own .vt button { background: var(--paper); border: 0; padding: 4px 12px; font: inherit; font-size: 12.5px; color: var(--ink-2); cursor: pointer; }
+  .own .vt button[aria-pressed="true"] { background: var(--navy); color: var(--paper); } .own .vt button + button { border-left: 1px solid var(--border); }
+  .otree, .otree ul { list-style: none; margin: 0; padding: 0; } .otree ul { padding-left: 26px; } .otree li { position: relative; padding: 2px 0 2px 16px; }
+  .otree li::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; border-left: 1px solid #B9B2A1; } .otree li::after { content: ''; position: absolute; left: 0; top: 15px; width: 13px; border-top: 1px solid #B9B2A1; }
+  .otree li:last-child::before { height: 15px; bottom: auto; } .otree > li { padding-left: 0; } .otree > li::before, .otree > li::after { display: none; }
+  .otree .nd { display: inline-block; padding: 4px 10px; border: 1px solid var(--border); background: var(--paper); font-size: 13px; line-height: 1.4; max-width: 100%; } .otree .nd .l1, .olayer .nd .l1 { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+  .otree li.root > .nd { border: 2px solid var(--navy); font-size: 14px; } .otree .nd b { font-weight: 600; color: var(--ink); } .otree .nd .st { color: var(--navy); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .otree .nd .sm2 { display: block; font-size: 12px; color: var(--muted); margin: 0; max-width: 520px; }
+  .cc { display: inline-block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-2); background: #EDE9DE; border-radius: 2px; padding: 0 5px; line-height: 1.6; }
+  .olayer { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; margin: 0 0 6px; } .olayer .nd { display: inline-block; padding: 4px 10px; border: 1px dashed #8A949E; background: var(--paper); font-size: 13px; line-height: 1.4; max-width: 420px; }
+  .olayer .nd b { font-weight: 600; color: var(--ink); } .olayer .lbl { display: block; font-size: 12px; color: var(--muted); margin: 2px 0 0; } .oarrow { font-size: 12px; color: var(--muted); margin: 2px 0 6px 10px; }
+  .chip.role { color: var(--navy); border-color: #B9C6D4; background: #EEF2F6; } .grid.own td.e { padding-left: calc(8px + var(--d, 0) * 18px); }
+  .grid.pty tr.sd th { text-transform: none; letter-spacing: 0; font-size: 12.5px; color: var(--navy); background: #F3F0E7; }
   @media print {
     .topbar, .side, .tabs, .btn, #viewer, .view, .tb, .rng, .seg, .drawer, #pop, .secnav, .caltb, .back, form { display: none !important; } .shell { display: block; padding: 0 !important; } main { padding: 0; } .dealhead { position: static; margin: 0; padding: 0 0 8px; }
     body { background: #fff; } .panel, .grid { break-inside: avoid; }
@@ -719,14 +754,16 @@ window.RATES = {
   function canSee(o) { return ST.role === 'anchor' || (ST.role === 'coinvestor' && o.phase === 'open') || (ST.role === 'company' && o.id === ST.company); }
   // amounts in the book in full euros (pieces of EUR 100,000); the issue size stays in millions
   function eur(m) { return 'EUR ' + Math.round(m * 1e6).toLocaleString('en-GB'); }
+  function em(m) { return 'EUR ' + f1(m) + 'm'; }   // 26 Oct 2026: one format per table, millions with one decimal; eur() stays for the order forms
 
   // ---------- routes: #/deals · #/calendar · #/book · #/journey · #/deal/<id>/<tab> ----------
-  function parse() { var p = location.hash.replace(/^#\/?/, '').split('/'); return { view: p[0] || (ST.role === 'company' ? 'deal' : 'deals'), id: p[1] || (ST.role === 'company' ? ST.company : ''), tab: p[2] || 'overview' }; }
+  function parse() { var p = location.hash.replace(/^#\/?/, '').split('/'); return { view: p[0] || (ST.role === 'company' ? 'deal' : 'deals'), id: p[1] || (ST.role === 'company' ? ST.company : ''), tab: p[2] || 'overview', sub: p[3] || '' }; }   // sub: a panel id to scroll to (26 Oct 2026)
   function go(h) { if (location.hash === h) render(); else location.hash = h; }
   function tabsFor(o) {
     var c = ST.role === 'company', t = [['overview', !c && o.snapshot ? 'Snapshot' : 'Overview']];
-    if (!c && o.analysis) t.push(['analysis', 'Company summary']);   // 23 Oct 2026 (Sam, after Geert Henckens): the anchors do the credit analysis, VanillaBonds supplies the facts
+    if (!c && o.depth) { t.push(['bond', 'Bond'], ['financials', 'Financials']); if (o.depth.comps) t.push(['competitors', 'Competitors']); t.push(['company', 'Company']); }   // 26 Oct 2026 (Sam): the deal in pages, the Snapshot one screen
     if (!c && o.depth && o.depth.team && o.depth.team.people.length) t.push(['mgmt', 'Management']);   // 24 Oct 2026 (Sam)
+    if (!c && o.analysis) t.push(['analysis', 'Company summary']);   // 23 Oct 2026 (Sam, after Geert Henckens): the anchors do the credit analysis, VanillaBonds supplies the facts
     if (o.dossier) t.push(['dossier', c ? 'Fact dossier' : 'Fact proof']);
     t.push(c ? ['requests', 'Requests'] : ['documents', o.depth ? 'Data room' : 'Documents']);
     if (!c && ((o.mgmtQuestions || []).length || qsOf(o).length || o.phase !== 'intake')) t.push(['qa', 'Q&A']);
@@ -750,6 +787,7 @@ window.RATES = {
     document.title = 'VanillaBonds — ' + (R.view === 'deal' && o ? o.company.name : R.view === 'market' && byIsin(R.id) ? bname(byIsin(R.id)) : { calendar: 'Calendar', book: 'My book', journey: 'Deal journey', market: R.id === 'bonds' ? 'Bonds' : 'Market' }[R.view] || 'Deals');
     stick(); if (R.view === 'market' && R.id === 'bonds' && MK.scroll != null && old.view === 'market' && byIsin(old.id)) { window.scrollTo(0, MK.scroll); MK.scroll = null; }
     else if (!old.view || old.view !== R.view || old.id !== R.id || old.tab !== R.tab) window.scrollTo(0, 0);
+    if (R.sub && document.getElementById(R.sub)) window.scrollTo(0, document.getElementById(R.sub).getBoundingClientRect().top + window.scrollY - stickH() - 8);   // a link to one panel
   }
   function renderTop() {
     $('#role').innerHTML = [['anchor', 'Anchor investor'], ['coinvestor', 'Co-investor']].concat(IDS.map(function (id) { return ['company:' + id, 'Company · ' + cname(DEALS[id])]; }))
@@ -771,7 +809,7 @@ window.RATES = {
   }
 
   // ---------- deals: one sortable table ----------
-  var COLS = [['name', 'Issuer'], ['sector', 'Sector'], ['country', 'Country'], ['size', 'Size', 1], ['tenor', 'Tenor'], ['coupon', 'Coupon'], ['stage', 'Stage'], ['anch', 'Anchors', 1]];
+  var COLS = [['name', 'Issuer'], ['sector', 'Sector'], ['country', 'Country'], ['size', 'Size, EUR m', 1], ['tenor', 'Tenor'], ['coupon', 'Coupon'], ['stage', 'Stage'], ['anch', 'Anchors, EUR m', 1]];
   function rowOf(o) { var w = win(o); return { o: o, name: o.company.name, sector: o.company.industry, country: o.company.country, size: o.issueEURm, tenor: term(o, 'maturity'), coupon: term(o, 'couponType'), stage: (STAGE[o.phase] || 0) * 1000 + (w.n || 0), anch: sum(o) }; }
   function dealsView() {
     var order = ST.role === 'coinvestor' ? ['open', 'anchor', 'intake'] : ['anchor', 'open', 'intake'], q = QTEXT.toLowerCase();
@@ -779,12 +817,12 @@ window.RATES = {
     rows.sort(function (a, b) { if (SORT) { var x = a[SORT[0]], y = b[SORT[0]]; return (x < y ? -1 : x > y ? 1 : 0) * SORT[1]; } return order.indexOf(a.o.phase) - order.indexOf(b.o.phase) || (win(a.o).n || 0) - (win(b.o).n || 0); });
     return '<div class="pagehead"><h1>Deals</h1><span class="muted small">' + rows.length + ' of ' + IDS.length + ' · ' + (ST.role === 'anchor' ? 'as an anchor you see every deal, from the fact file on' : 'co-investors join once the anchors have committed, on the same terms') + '</span><span style="flex:1"></span>' +
       '<div class="filters">' + [['all', 'All'], ['intake', 'Fact file'], ['anchor', 'Anchor decision'], ['open', 'Book open']].map(function (f) { return '<button type="button" data-filter="' + f[0] + '" aria-pressed="' + (FILTER === f[0]) + '">' + f[1] + '</button>'; }).join('') + '</div></div>' +
-      '<div class="scroll"><table class="grid"><thead><tr>' + COLS.map(function (c) { return '<th data-sort="' + c[0] + '"' + (c[2] ? ' class="num"' : '') + '>' + c[1] + (SORT && SORT[0] === c[0] ? (SORT[1] > 0 ? ' ↑' : ' ↓') : '') + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      '<div class="scroll stk"><table class="grid"><thead><tr>' + COLS.map(function (c) { return '<th data-sort="' + c[0] + '"' + (c[2] ? ' class="num"' : '') + '>' + c[1] + (SORT && SORT[0] === c[0] ? (SORT[1] > 0 ? ' ↑' : ' ↓') : '') + '</th>'; }).join('') + '</tr></thead><tbody>' +
       (rows.map(function (r) {
         var o = r.o, see = canSee(o);
         return '<tr class="' + (see ? 'go' : 'teaser') + '"' + (see ? ' data-go="#/deal/' + o.id + '/overview"' : '') + '><td><div class="issuer">' + (see ? mark(o) + '<b>' + esc(r.name) + '</b>' : '<span class="mark" style="background:#B9B2A1">?</span><span>' + esc(o.compSector || r.sector) + ' issuer · <span class="small">name once the anchors have committed</span></span>') + '</div></td>' +
-          '<td>' + esc(see ? r.sector : o.compSector || '') + '</td><td>' + esc(r.country) + '</td><td class="num">EUR ' + r.size + 'm</td><td>' + esc(r.tenor) + '</td><td>' + esc(r.coupon) + '</td><td>' + stageCell(o) + '</td>' +
-          '<td class="num">' + (r.anch ? eur(r.anch) + '<br><span class="small muted">' + Math.round(r.anch / o.issueEURm * 100) + '% of issue</span>' : '<span class="muted">–</span>') + '</td></tr>';
+          '<td>' + esc(see ? r.sector : o.compSector || '') + '</td><td>' + esc(r.country) + '</td><td class="num">' + f1(r.size) + '</td><td>' + esc(r.tenor) + '</td><td>' + esc(r.coupon) + '</td><td>' + stageCell(o) + '</td>' +
+          '<td class="num">' + (r.anch ? f1(r.anch) + '<br><span class="small muted">' + Math.round(r.anch / o.issueEURm * 100) + '% of issue</span>' : '<span class="muted">–</span>') + '</td></tr>';
       }).join('') || '<tr><td colspan="8" class="muted">No deals match.</td></tr>') + '</tbody></table></div>';
   }
 
@@ -795,12 +833,26 @@ window.RATES = {
       '<div class="dh"><div class="issuer">' + mark(o, true) + '<div><div class="name">' + esc(o.company.name) + '</div><div class="meta">' + esc([o.company.industry, o.company.country, 'EUR ' + o.issueEURm + 'm', term(o, 'maturity'), term(o, 'couponType').toLowerCase(), term(o, 'repayment').toLowerCase()].filter(Boolean).join(' · ')) + '</div></div></div><span class="sp"></span>' +
       timeline(o, true) + (w.n != null ? '<div class="win">' + esc(w.label) + (ST.role === 'coinvestor' ? '<b>' + dstr(wd(w.n)) + '</b>' + wd(w.n).getFullYear() : '<b>' + Math.max(0, w.n) + ' wd</b>' + dstr(wd(w.n))) + '</div>' : '') + action(o) + '</div>' + coverage(o) +
       '<nav class="tabs" aria-label="Deal">' + tabs.map(function (t) { var c = t[0] === 'qa' ? (o.mgmtQuestions || []).length + qsOf(o).length : t[0] === 'requests' ? outstanding(o).length + openQs(o).filter(function (f) { return !ST.ans[o.id + ':' + f.id]; }).length : ''; return '<a href="#/deal/' + o.id + '/' + t[0] + '"' + (t[0] === tab ? ' aria-current="page"' : '') + '>' + t[1] + (c ? '<span class="c">' + c + '</span>' : '') + '</a>'; }).join('') + '<span style="flex:1"></span><button type="button" class="view" data-act="print" style="align-self:center" title="Print this view">Print</button></nav></div>';
-    var body = tab === 'overview' ? (o.depth && ST.role === 'anchor' ? anchorView(o) : o.depth && ST.role === 'coinvestor' ? foView(o) : o.snapshot && ST.role !== 'company' ? snapshotView(o) : o.dossier ? summary(o) + compPanel(o, true) + frame(o, 'overview') : intakeView(o))
+    var body = tab === 'overview' ? (o.depth && ST.role === 'anchor' ? anchorView(o, 'overview') : o.depth && ST.role === 'coinvestor' ? foView(o, 'overview') : o.snapshot && ST.role !== 'company' ? snapshotView(o) : o.dossier ? summary(o) + compPanel(o, true) + frame(o, 'overview') : intakeView(o))
+      : /^(bond|financials|competitors|company)$/.test(tab) ? (ST.role === 'coinvestor' && (tab === 'bond' || tab === 'company') ? foView(o, tab) : anchorView(o, tab))   // the facts pages are the same for both roles; Bond and Company keep the family office's questions
       : tab === 'mgmt' ? mgmtTab(o)
-      : tab === 'analysis' ? '<div class="tabbar"><span class="draft">Draft, pending review</span><span>The facts in prose, written from the record: each sentence rests on the facts it cites (the superscript opens them). Facts, arithmetic on printed formulas and the company’s own words; VanillaBonds does no credit analysis, that is the investor’s own work.</span><span style="flex:1"></span><a class="btn sec" href="analysis.html?c=' + encodeURIComponent(o.dossier) + '" target="_blank" rel="noopener">Open as a page · print</a></div>' + compPanel(o, true) + frame(o, 'analysis')
+      : tab === 'analysis' ? '<div class="tabbar"><span class="draft">Draft, pending review</span><span>The facts in prose, written from the record: each sentence rests on the facts it cites (the superscript opens them). Facts, arithmetic on printed formulas and the company’s own words; VanillaBonds does no credit analysis, that is the investor’s own work.</span><span style="flex:1"></span><a class="btn sec" href="analysis.html?c=' + encodeURIComponent(o.dossier) + '" target="_blank" rel="noopener">Open as a page · print</a></div>' + frame(o, 'analysis')
       : tab === 'dossier' ? (o.databook && ST.role !== 'company' ? '<div class="dl" style="margin-top:12px"><span class="muted">Every block with its facts, each opening its page. For your own model: the same record as a workbook with live formulas, and every fact in long format.</span><span style="flex:1"></span><a class="btn sec" href="' + esc(o.databook[0]) + '" download>Databook (xlsx)</a><a class="btn sec" href="' + esc(o.databook[1]) + '" download>Facts (csv)</a></div>' : '') + frame(o, 'proof') : tab === 'assess' ? frame(o, 'assess')
-      : '<div class="body">' + ({ documents: o.depth ? dataRoomTab : docsTab, qa: qaTab, book: bookTab, requests: requestsTab }[tab] || docsTab)(o) + '</div>';
-    return h + body;
+      : '<div class="body">' + ({ documents: o.depth ? dataRoomTab : docsTab, qa: function (x) { return qaIntro(x) + qaTab(x); }, book: bookTab, requests: requestsTab }[tab] || docsTab)(o) + '</div>';
+    return h + body + (/^(analysis|dossier|assess|documents)$/.test(tab) ? '' : sourcesFoot(o, body));   // the frames add their own foot; the Data room's Source documents panel is that tab's table
+  }
+  // 26 Oct 2026 (Gain comparison): the documents behind the facts shown on a tab, with the pages cited there; generated from the ids in the rendered
+  // html (data-fact = a fact of the record, data-doc + data-page = a page opened directly), never from a list kept by hand
+  function sourcesFoot(o, html) {
+    var cite = o.cite || {}, dr = (o.depth || {}).dr || [], by = {}, seen = {}, m, re = /data-fact="(F\d+)"/g, rd = /data-doc="(S\d+)" data-page="(\d+)"/g;
+    var add = function (doc, page, id) { var e = by[doc] = by[doc] || { n: 0, pages: {}, first: null }; e.n++; if (page) e.pages[page] = 1; if (id && !e.first) e.first = id; };
+    while ((m = re.exec(html))) { var c = cite[m[1]]; if (c && !seen[m[1]]) { seen[m[1]] = 1; add(c[0], c[1], m[1]); } }
+    while ((m = rd.exec(html))) { var k = m[1] + ':' + m[2]; if (!seen[k]) { seen[k] = 1; add(m[1], +m[2], null); } }
+    var ks = Object.keys(by).sort(function (a, b) { return +a.slice(1) - +b.slice(1); }); if (!ks.length) return '<div class="dp">' + panel('Sources on this tab', '', '<p class="empty">No fact is cited on this tab.</p>', 'full') + '</div>';
+    var rows = ks.map(function (k) { var d = dr.filter(function (x) { return x.id === k; })[0] || {}, e = by[k], ps = Object.keys(e.pages).map(Number).sort(function (a, b) { return a - b; });
+      return '<tr><td style="white-space:nowrap">' + (d.date ? dfull(d.date) : '<span class="muted">–</span>') + '</td><td>' + (d.web ? '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">' + esc(d.origin || k) + ' ↗</a>' : esc(cap1(d.kind || 'document')) + (d.period ? ' ' + esc(d.period.length < 12 ? d.period : yy(d.period) || d.period) : '') + (/annual|interim/.test(d.kind || '') ? ' <span class="pill ' + (d.audited ? 'ok">audited' : 'wait">unaudited') + '</span>' : '') + (d.origin ? '<br><span class="muted small">' + esc(clip(d.origin, 90)) + '</span>' : '')) + '</td>' +
+        '<td><span class="pill">' + esc(k) + '</span> ' + (ps.length ? 'p. ' + ps.slice(0, 12).join(', ') + (ps.length > 12 ? ' + ' + (ps.length - 12) + ' more' : '') : d.web ? 'web page' : '') + '</td><td class="num">' + e.n + '</td><td class="num" style="white-space:nowrap">' + (e.first ? '<button type="button" class="view" data-fact="' + esc(e.first) + '">View</button>' : ps.length ? '<button type="button" class="view" data-doc="' + esc(k) + '" data-page="' + ps[0] + '">View</button>' : '') + '</td></tr>'; });
+    return '<div class="dp">' + panel('Sources on this tab', 'The documents behind the facts shown above, with the pages cited on this tab; generated from those facts, not kept by hand.', '<div class="scroll"><table class="grid"><thead><tr><th>Date</th><th>Title</th><th>Source document, pages cited</th><th class="num">Facts</th><th></th></tr></thead><tbody>' + rows.join('') + '</tbody></table></div>', 'full') + '</div>';
   }
   function action(o) {
     if (ST.role === 'company') { var n = outstanding(o).length + openQs(o).filter(function (f) { return !ST.ans[o.id + ':' + f.id]; }).length; return '<a class="btn' + (n ? '' : ' sec') + '" href="#/deal/' + o.id + '/requests">' + (n ? n + ' open item' + (n === 1 ? '' : 's') : 'Requests') + '</a>'; }
@@ -812,14 +864,15 @@ window.RATES = {
     if (o.phase === 'intake') return '<div class="covlab" style="margin-top:10px"><span>No anchors yet: the anchor window opens ' + (o.windows && o.windows.anchorOpens != null ? dstr(wd(o.windows.anchorOpens)) : 'once the fact file is signed') + '.</span></div>';
     var segs = [['binding', 'Anchors, binding', sum(o, 'binding')], ['conditional', 'Anchors, conditional', sum(o, 'conditional')], ['indicative', 'Anchors, indicative', sum(o, 'indicative')], ['order', 'Your order', ST.role === 'coinvestor' && ST.ord[o.id] ? ST.ord[o.id].amount : 0]].filter(function (s) { return s[2] > 0; });
     var t = segs.reduce(function (s, x) { return s + x[2]; }, 0);
-    return '<div class="cov" role="img" aria-label="' + esc(segs.map(function (s) { return s[1] + ' ' + eur(s[2]); }).join('; ') + ' of EUR ' + o.issueEURm + 'm') + '">' + segs.map(function (s) { return '<span class="' + s[0] + '" style="width:' + Math.min(100, s[2] / o.issueEURm * 100) + '%"></span>'; }).join('') + '</div>' +
-      '<div class="covlab">' + segs.map(function (s) { return '<span><i class="' + s[0] + '"></i>' + s[1] + ' ' + eur(s[2]) + '</span>'; }).join('') + '<span>' + eur(t) + ' of ' + eur(o.issueEURm) + ' (' + Math.round(t / o.issueEURm * 100) + '%)</span></div>';
+    return '<div class="cov" role="img" aria-label="' + esc(segs.map(function (s) { return s[1] + ' ' + em(s[2]); }).join('; ') + ' of EUR ' + o.issueEURm + 'm') + '">' + segs.map(function (s) { return '<span class="' + s[0] + '" style="width:' + Math.min(100, s[2] / o.issueEURm * 100) + '%"></span>'; }).join('') + '</div>' +
+      '<div class="covlab">' + segs.map(function (s) { return '<span><i class="' + s[0] + '"></i>' + s[1] + ' ' + em(s[2]) + '</span>'; }).join('') + '<span>' + em(t) + ' of ' + em(o.issueEURm) + ' (' + Math.round(t / o.issueEURm * 100) + '%)</span></div>';
   }
   // ---------- snapshot: the decision on one screen; every figure opens the page it was read from, calculated rows print their formula ----------
   function snum(v, u) { return v == null ? '–' : u === '%' ? (v * 100).toFixed(1) + '%' : u === 'x' ? v.toFixed(1) + 'x' : (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
-  function fbtn(id, txt, st, tip) { return id ? '<button type="button" class="fb' + (st === 'pend' ? ' pend' : '') + '" data-fact="' + esc(id) + '" title="' + esc(tip || 'Open the page it was read from') + '">' + txt + '</button>' : txt; }
+  function fbtn(id, txt, st, tip) { return id ? '<button type="button" class="fb' + (st === 'pend' ? ' pend' : st === 'rep' ? ' rep' : '') + '" data-fact="' + esc(id) + '" title="' + esc(tip || 'Open the page it was read from') + '">' + txt + '</button>' : txt; }
+  function stOf(id) { var c = ((DEALS[R.id] || {}).cite || {})[id]; return c ? c[2] : ''; }   // the review status of a fact: ok, pend or rep (a company statement, set in grey)
   function srcb(id) { return '<button type="button" class="src" data-fact="' + esc(id) + '" title="Open the page it was read from">' + esc(id) + '</button>'; }
-  function flist(xs) { return '<ul class="facts">' + xs.map(function (x) { return '<li' + (x[0].length > 150 ? ' class="clamp" title="Click to read the whole item"' : '') + '><span class="ct">' + esc(x[0]) + srcb(x[1]) + '</span></li>'; }).join('') + '</ul>'; }
+  function flist(xs) { return '<ul class="facts">' + xs.map(function (x) { return '<li class="' + (x[0].length > 150 ? 'clamp' : '') + (stOf(x[1]) === 'rep' ? ' rep' : '') + '"' + (x[0].length > 150 ? ' title="Click to read the whole item"' : '') + '><span class="ct">' + esc(x[0]) + srcb(x[1]) + '</span></li>'; }).join('') + '</ul>'; }
   function snapshotView(o) {
     var s = o.snapshot, h = s.head || {}, ps = s.periods, b = function (k) { return (o.bond || []).filter(function (x) { return x.key === k; })[0]; };
     var tv = function (k) { var v = term(o, k), x = b(k); return v || (x && x.st === 'discussion' ? 'set with the anchors' : ''); };
@@ -831,7 +884,7 @@ window.RATES = {
       ['Comparables', cb.length > 1 ? 'median E+' + Math.round(median(sp)) + ' at issue, range E+' + Math.min.apply(null, sp) + ' to E+' + Math.max.apply(null, sp) + ', ' + cb.length + ' lines under the rule below' : cb.length ? 'E+' + sp[0] + ' at issue, the one line under the rule below' : 'no line under the rule below']].filter(function (r) { return r[1]; });
     var head = [h.legal_form && h.legal_form[0], h.registry && h.registry[0], h.auditor && 'auditor ' + h.auditor[0].split(' Wirtschafts')[0], h.accounting_standard && h.accounting_standard[0]].filter(Boolean).join(' · ') +
       (s.opinions.length ? ' · audit opinions ' + s.opinions.filter(function (x) { return /^FY/.test(x[0]); }).map(function (x) { return x[0] + ' ' + x[1].split(' ')[0].replace(/[,.;:]+$/, ''); }).join(', ') : '') + (s.asof ? ' · figures to ' + s.asof : '');
-    var kf = '<table class="kf"><thead><tr><th>EUR m unless stated</th>' + ps.map(function (p) { return '<th>' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' + s.figures.map(function (r) {
+    var kf = '<table class="kf"><thead><tr><th>Amounts in EUR m</th>' + ps.map(function (p) { return '<th>' + esc(p) + '</th>'; }).join('') + '</tr></thead><tbody>' + s.figures.map(function (r) {
       var sub = /^of which/.test(r.label);
       return '<tr class="' + (r.em ? 'em' : sub || r.of ? 'sub' : '') + '"><td>' + esc(r.label) + (r.calc && !sub ? '<span class="calc" title="' + esc(r.calc) + '"></span>' : '') + '</td>' + r.v.map(function (v, i) {
         var id = r.ids[i] && r.ids[i][0], tip = sub && s.bridge[ps[i]] ? s.bridge[ps[i]].map(function (x) { return x[2].toFixed(1) + ': ' + x[1]; }).join(' | ') : null;
@@ -845,19 +898,16 @@ window.RATES = {
     var matNote = L.rows.length ? 'Principal per year of maturity, ' + (L.kind === 'instrument table' ? 'from the instrument table of the ' + L.asof + ' report (carrying amounts)' : 'from the maturity table of the ' + L.asof + ' report, leases and interest as it names them') +
       (L.leases ? '; leases of ' + snum(L.leases[0], 'm') + ' are not dated by year' : '') + '. Check: ' + L.check + '. Click a figure for its page.' : 'No maturity on file.';
     var dp = dealPrice(o), dif = anchors(o).filter(function (a) { return pdiff(o, a, dp); });
-    var anc = anchors(o).map(function (a) { var x = pdiff(o, a, dp); return '<div style="font-size:13px;padding:3px 0"><b>' + esc(a.name) + '</b> · ' + eur(a.amountEURm) + ' · ' + price(o, a.price) + (x ? ' <span class="muted small">(' + esc(x) + ')</span>' : '') + ' <span class="chip ' + a.status + '">' + a.status + '</span></div>'; }).join('') || '<span class="muted small">No anchor commitment yet.</span>';
+    var anc = anchors(o).map(function (a) { var x = pdiff(o, a, dp); return '<div style="font-size:13px;padding:3px 0"><b>' + esc(a.name) + '</b> · ' + em(a.amountEURm) + ' · ' + price(o, a.price) + (x ? ' <span class="muted small">(' + esc(x) + ')</span>' : '') + ' <span class="chip ' + a.status + '">' + a.status + '</span></div>'; }).join('') || '<span class="muted small">No anchor commitment yet.</span>';
     var ancNote = dp && dp.set ? 'Every investor buys at ' + price(o, dp.v) + ', ' + dp.k.replace(/^deal price, /, '') + ', on the same documentation. ' + (dif.length ? 'Different from it: ' + dif.map(function (a) { return a.name + ', ' + a.status + ' at ' + price(o, a.price) + ' (' + pdiff(o, a, dp) + ')'; }).join('; ') + '.' : 'No anchor indication differs from it.') : 'The price is set with the anchors; co-investors then buy at that one price, on the same documentation.';
     var gd = s.guidance.slice(-6).reverse();
     var mg = '<h4>Who runs it</h4><table class="kf"><tbody>' + s.people.slice(0, 6).map(function (x) { return '<tr><td style="white-space:nowrap"><b>' + esc(x[0]) + '</b></td><td class="t">' + esc(x[1]) + srcb(x[2]) + '</td></tr>'; }).join('') + '</tbody></table>' +
       (s.owners.length ? '<h4>Owners</h4>' + flist(s.owners.slice(0, 2)) : '') + (s.changes.length ? '<h4>Changes in the top team</h4>' + flist(s.changes.slice(0, 3)) : '');
     var dr = (gd.length ? '<h4>Guidance against reported</h4><table class="kf"><thead><tr><th>Year</th><th style="text-align:left">Guidance as stated</th><th style="text-align:left">Reported</th></tr></thead><tbody>' + gd.map(function (x) {
-        return '<tr><td>' + esc(x[0]) + '</td><td class="t">' + esc(x[1]) + ': ' + esc(x[2]) + srcb(x[4][0]) + '</td><td class="t">' + (x[4][1] ? fbtn(x[4][1], esc(x[3])) : esc(x[3])) + '</td></tr>'; }).join('') + '</tbody></table>' : '') +
+        return '<tr><td>' + esc(x[0]) + '</td><td class="t rep">' + esc(x[1]) + ': ' + esc(x[2]) + srcb(x[4][0]) + '</td><td class="t">' + (x[4][1] ? fbtn(x[4][1], esc(x[3])) : esc(x[3])) + '</td></tr>'; }).join('') + '</tbody></table>' : '') +
       (s.lenders.length ? '<h4>Covenant tests and past maturities</h4>' + flist(s.lenders.slice(0, 4)) : '') + (s.pay.length ? '<h4>Pay, as filed</h4>' + flist(s.pay.slice(0, 2)) : '');
     var nq = (o.mgmtQuestions || []).length + qsOf(o).length;
-    // the decision strip: the deal's size and its one price first (the platform's own figures), then the six numbers snapshot.py picks from the record
-    var tiles = [{ k: 'Size · price', v: 'EUR ' + o.issueEURm + 'm', small: dp ? priceTxt(o, dp) : term(o, 'couponType').toLowerCase(), p: dp ? dp.k : 'price set with the anchors', a: dif.length ? dif.length + ' anchor price' + (dif.length > 1 ? 's differ' : ' differs') + ', see 3' : '', deal: true }]
-      .concat((s.strip || []).map(function (t) { return { k: t.label, v: snum(t.v, t.unit), small: t.unit === 'm' && t.v != null ? 'EUR m' : '', p: t.period + (t.calc ? ' · ƒ' : ''), a: t.alt, id: t.ids[0], calc: t.calc }; }));
-    var strip = '<div class="decide">' + tiles.map(function (t) { var tag = t.id ? 'button' : 'div'; return '<' + tag + (t.id ? ' type="button" data-fact="' + esc(t.id) + '"' : '') + ' class="tile' + (t.deal ? ' deal' : '') + '" title="' + esc(t.calc || (t.id ? 'Open the page it was read from' : '')) + '"><span class="k">' + esc(t.k) + '</span><span class="v">' + t.v + (t.small ? '<small>' + esc(t.small) + '</small>' : '') + '</span><span class="p">' + esc(t.p) + '</span>' + (t.a ? '<span class="a">' + esc(t.a) + '</span>' : '') + '</' + tag + '>'; }).join('') + '</div>';
+    var strip = decideStrip(o);
     return '<p class="shead">' + esc(head) + '</p>' + strip + '<div class="snap">' +
       '<div class="panel"><h3>1 · Terms</h3><table class="kv">' + terms.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + esc(r[1]) + (r[0] === 'Comparables' ? ' · <a href="#/market/bonds" data-msector="' + esc(o.compSector) + '">bond list</a>' : '') + '</td></tr>'; }).join('') + '</table>' +
         '<p class="small muted" style="margin:8px 0 0">Terms of this demonstration deal are illustrative; the company has not proposed them.</p>' +
@@ -865,12 +915,19 @@ window.RATES = {
       '<div><div class="panel"><h3>2 · Debt falling due</h3>' + mat + '<p class="small muted" style="margin:6px 0 0">' + esc(matNote) + '</p></div>' +
         '<div class="panel" style="margin-top:14px"><h3>3 · Anchors' + (dp && dp.set ? ', one price for everyone: ' + price(o, dp.v) : '') + '</h3>' + anc + '<p class="small muted" style="margin:6px 0 0">' + esc(ancNote) + '</p></div></div>' +
       '<div class="panel full"><h3>4 · Comparables · 1 the issuer’s own debt · 2 sector peers in any format · 3 same-format bonds</h3>' + compBlock(cr) + '<p class="small muted" style="margin:6px 0 0">' + (o.analysis ? 'The full table and the price development are on the <a href="#/deal/' + o.id + '/analysis">Company summary</a> tab. ' : '') + 'The anchors set the price; nothing here is an indication from VanillaBonds.</p></div>' +
-      '<div class="panel full"><h3>5 · Key figures</h3><div class="scroll">' + kf + '</div><div class="dl"><span class="muted">EUR m unless stated · grey italic = pending review · click a figure for its page · <span class="calc" style="margin:0"></span> = arithmetic on the shown figures, formula on hover</span><span style="flex:1"></span>' +
+      '<div class="panel full"><h3>5 · Key figures</h3><div class="scroll stk">' + kf + '</div><div class="dl"><span class="muted">EUR m unless stated · grey italic = pending review · click a figure for its page · <span class="calc" style="margin:0"></span> = arithmetic on the shown figures, formula on hover</span><span style="flex:1"></span>' +
         (o.databook ? '<a class="btn sec" href="' + esc(o.databook[0]) + '" download>Databook (xlsx)</a><a class="btn sec" href="' + esc(o.databook[1]) + '" download>Facts (csv)</a>' : '') + '</div>' +
-        ((s.basis || []).length ? '<h3 style="margin-top:14px">Basis notes</h3>' + basisTable(o) + '<p class="small muted" style="margin:6px 0 0">One row per period: the documents its figures are read from and their audit, whose accounts, EBITDA and leases on each basis, the currency. Every id opens its page.</p>' : '') + '</div>' +
+        basisList(o) + '</div>' +
       '<div class="panel"><h3>6 · Management, as facts</h3>' + mg + '</div>' + '<div class="panel"><h3>7 · Delivery record</h3>' + (dr || '<p class="small muted">No guidance or lender record on file.</p>') + '</div>' +
       '<div class="panel full"><h3>8 · Risks, as the company states them</h3><div style="columns:2 320px;column-gap:28px">' + flist(s.risks) + '</div><div class="dl"><a href="#/deal/' + o.id + '/dossier">Analysis: every block, every fact</a> · <a href="#/deal/' + o.id + '/documents">Documents</a> · <a href="#/deal/' + o.id + '/qa">Q&amp;A' + (nq ? ' (' + nq + ')' : '') + '</a></div></div>' +
       '</div>';
+  }
+  // the decision strip: the deal's size and its one price first (the platform's own figures), then the six numbers snapshot.py picks from the record
+  function decideStrip(o) {
+    var s = o.snapshot, dp = dealPrice(o), dif = anchors(o).filter(function (a) { return pdiff(o, a, dp); });
+    var tiles = [{ k: 'Size · price', v: 'EUR ' + o.issueEURm + 'm', small: dp ? priceTxt(o, dp) : term(o, 'couponType').toLowerCase(), p: dp ? dp.k : 'price set with the anchors', a: dif.length ? dif.length + ' anchor price' + (dif.length > 1 ? 's differ' : ' differs') + ', see Book' : '', deal: true }]
+      .concat((s.strip || []).map(function (t) { return { k: t.label, v: snum(t.v, t.unit), small: t.unit === 'm' && t.v != null ? 'EUR m' : '', p: t.period + (t.calc ? ' · ƒ' : ''), period: t.period, a: t.alt, id: t.ids[0], calc: t.calc }; }));
+    return '<div class="decide">' + tiles.map(function (t) { var tag = t.id ? 'button' : 'div'; return '<' + tag + (t.id ? ' type="button" data-fact="' + esc(t.id) + '"' : '') + ' class="tile' + (t.deal ? ' deal' : '') + '" title="' + esc(t.calc || (t.id ? 'Open the page it was read from' : '')) + '"><span class="k">' + esc(t.k) + '</span><span class="v">' + t.v + (t.small ? '<small>' + esc(t.small) + '</small>' : '') + '</span><span class="p">' + (t.period ? perPill(t.period) + audPill(o, t.period) + (t.calc ? ' ƒ' : '') : esc(t.p)) + '</span>' + (t.a ? '<span class="a">' + esc(t.a) + '</span>' : '') + '</' + tag + '>'; }).join('') + '</div>';
   }
   // ---------- two reading depths (23 Oct 2026, mvp/depth.py; v2 after Sam's review the same night): anchors read the anchor screen, co-investors the
   //            family-office page; one fact base. The sections sit in rows, one type family, charts at their design size with a line in words on how to
@@ -892,7 +949,7 @@ window.RATES = {
     if (!c) return '';
     var t = esc(neg(c.t ? c.t : snum(c.v, u)));
     if (!c.calc && !extra && (c.ids || []).length === 1) return fbtn(c.ids[0], t, c.st);
-    return '<button type="button" class="fb' + (c.st === 'pend' ? ' pend' : '') + '" data-calc="' + cref(lab, c.calc, c.ids, extra) + '">' + t + '</button>';
+    return '<button type="button" class="fb' + (c.st === 'pend' ? ' pend' : c.st === 'rep' ? ' rep' : '') + '" data-calc="' + cref(lab, c.calc, c.ids, extra) + '">' + t + '</button>';
   }
   function ibtn(lab, calc, ids, extra) { return '<button type="button" class="ib" data-calc="' + cref(lab, calc, ids, extra) + '" aria-label="' + esc(lab) + '">i</button>'; }
   function sbtn(lab, calc, ids, txt) { return '<button type="button" class="fb srcs" data-calc="' + cref(lab, calc, ids) + '">' + esc(txt || 'formula and sources') + '</button>'; }
@@ -923,6 +980,9 @@ window.RATES = {
   function peerCalc(r) { return r.cls + '\nQuartiles ' + r.year + ': ' + r.q.join(' / ') + (r.alt ? '\n' + r.alt : '') + (r.v != null ? '\nIssuer, ' + day(r.p) + ': ' + r.calc + (r.pos != null ? ' → about the ' + ord(Math.round(r.pos)) + ' percentile, by linear interpolation between the published quartiles' : ' → ' + r.side + '; no percentile outside the published quartiles') : '') + '\n\n' + r.def; }
   function peerExtra(r) { return '<p class="small" style="margin:6px 0 0">' + esc(r.src) + (r.url ? ' <a href="' + esc(r.url) + '" target="_blank" rel="noopener">source ↗</a>' : '') + '</p>'; }
   function audited(o, p) { return ((o.depth || {}).dr || []).some(function (d) { return d.period === p && d.audited; }); }
+  // 26 Oct 2026: the tag grammar (the :root comment): a period pill and an audit pill read from the document of that period
+  function perPill(p) { return p ? '<span class="pill per">' + esc(p) + '</span>' : ''; }
+  function audPill(o, p) { return !p ? '' : audited(o, p) ? '<span class="pill ok">audited</span>' : /^(FY\d{4}|H1-\d{4}|LTM)$/.test(p) ? '<span class="pill wait">unaudited</span>' : ''; }
 
   // the terms of the bond as a term sheet: label above value, the fine print in grey under it, nothing cut off
   function termsCard(o) {
@@ -973,21 +1033,21 @@ window.RATES = {
   function kmPanel(o) {
     var D = o.depth, cols = D.cols, nf = cols.filter(function (p) { return /^FY/.test(p); }).length, P = D.peers ? D.peers.rows : [], ns = cols.length - nf;
     var lab = function (p) { return p === 'LTM' ? 'LTM' : /^FY/.test(p) ? 'FY' + p.slice(4) : 'H1-' + p.slice(5); }, ny = D.fy ? 'FY' + String(+D.fy.slice(2) + 1).slice(2) : 'Plan';
-    var h = '<thead><tr><th></th><th></th><th class="sp" colspan="' + nf + '">Reported</th><th></th>' + (ns ? '<th class="sp u" colspan="' + ns + '">Unaudited</th>' : '') + '<th class="p">Guidance</th><th></th></tr><tr><th>EUR m</th><th>trend</th>' +
-      cols.slice(0, nf).map(function (p) { return '<th>' + lab(p) + '<small>' + (audited(o, p) ? 'A' : 'U') + '</small></th>'; }).join('') + '<th>Δ ' + lab(cols[nf - 1]) + '</th>' +
-      cols.slice(nf).map(function (p) { return '<th class="u">' + lab(p) + '<small>U</small></th>'; }).join('') + '<th class="p">' + ny + '<small>P</small></th><th>Peer median</th></tr></thead>';
+    var h = '<thead><tr><th></th><th></th><th class="sp" colspan="' + nf + '">Reported</th><th></th>' + (ns ? '<th class="sp u" colspan="' + ns + '">Unaudited</th>' : '') + '<th class="p">Guidance</th><th></th></tr><tr><th>Amounts in EUR m</th><th>trend</th>' +
+      cols.slice(0, nf).map(function (p) { return '<th>' + lab(p) + (audited(o, p) ? '<span class="pill ok">A</span>' : '<span class="pill wait">U</span>') + '</th>'; }).join('') + '<th>Δ ' + lab(cols[nf - 1]) + '</th>' +
+      cols.slice(nf).map(function (p) { return '<th class="u">' + lab(p) + '<span class="pill wait">U</span></th>'; }).join('') + '<th class="p">' + ny + '<span class="pill wait">P</span></th><th>Peer median</th></tr></thead>';
     var tdef = D.tdef ? '<p class="small" style="margin:6px 0 0">' + esc(D.tdef) + '</p>' : '';
     var b = D.km.map(function (r) {
-      var c = function (x, i) { return x ? cbtn(x, r.u, r.l + ' · ' + lab(cols[i]), r.k === 'cov' ? tdef : '') : ''; }, ref = r.ref ? P.filter(function (q) { return q.key === r.ref.key; })[0] : null;
+      var c = function (x, i) { return x ? cbtn(x, r.u, r.l + ' · ' + lab(cols[i]), r.k === 'cov' ? tdef : '') : '<span class="muted">–</span>'; }, ref = r.ref ? P.filter(function (q) { return q.key === r.ref.key; })[0] : null;
       return '<tr class="' + (r.k === 'cov' ? 'btr' : r.k || '') + '"><td>' + esc(r.l) + '</td><td class="spk">' + (r.sp ? spk(r.sp) : '') + '</td>' + r.c.slice(0, nf).map(function (x, i) { return '<td>' + c(x, i) + '</td>'; }).join('') +
         '<td class="d">' + (r.d ? cbtn({ t: dd(r.d), ids: [], calc: r.d.calc + ' = ' + dd(r.d) }, r.u, r.l + ' · change in ' + lab(cols[nf - 1])) : '') + '</td>' +
         r.c.slice(nf).map(function (x, i) { return '<td class="u">' + c(x, nf + i) + '</td>'; }).join('') + '<td class="p">' + (r.P ? cbtn(r.P, r.u, r.l + ' · ' + ny + ' guidance') : '') + '</td>' +
         '<td class="med">' + (ref ? '<button type="button" class="fb" data-calc="' + cref(ref.label + ': reference class', peerCalc(ref), ref.ids, peerExtra(ref)) + '">' + esc(r.ref.t) + '</button>' : '') + '</td></tr>';
     }).join('');
     return panel(tl(o, 'Key figures', 'dossier', 'b-financials'), 'EUR m · bold rows on the record’s basis: EBITDA without the one-off income the reports itemise, net debt without leases · tap a figure for its page or its formula',
-      '<div class="scroll"><table class="km">' + h + '<tbody>' + b + '</tbody></table></div>' +
-      '<div class="lgr"><span><b>A</b> audited</span><span><b>U</b> unaudited</span>' + (D.lt ? '<span><b>LTM</b> last 12 months: ' + esc(D.fy + ' + ' + D.h + ' − H1-' + (+D.h.slice(3) - 1)) + '</span>' : '') + '<span><b>P</b> the company’s own guidance; VanillaBonds makes no estimate</span></div>' +
-      '<p class="note">' + (D.xs ? 'One-off income: badwill, disposal and purchase-price-allocation gains booked in other operating income, as the reports itemise them. ' : '') + (D.mo.lines.length ? 'Credit lines as the reports describe them: ' + D.mo.lines.map(function (x) { return esc(clip(x[0], 110)) + srcb(x[1]); }).join(' · ') + '. ' + moreA(o, nmore(o, ['bank_line'], ids1(D.mo.lines)), 'dossier', 'b-plan') + ' ' : '') + (D.peers && D.peers.rows.length ? 'Peer median: ' + esc(D.peers.rows[0].short) + '.' : '') + '</p>');
+      '<div class="scroll stk"><table class="km">' + h + '<tbody>' + b + '</tbody></table></div>' +
+      '<div class="lgr"><span><span class="pill ok">A</span> audited</span><span><span class="pill wait">U</span> unaudited</span><span><span class="pill wait">P</span> the company’s own guidance; VanillaBonds makes no estimate</span></div>' +
+      '<p class="note">' + (D.xs ? 'One-off income: badwill, disposal and purchase-price-allocation gains booked in other operating income, as the reports itemise them. ' : '') + (D.mo.lines.length ? 'Credit lines as the reports describe them: ' + D.mo.lines.map(function (x) { return esc(clip(x[0], 110)) + srcb(x[1]); }).join(' · ') + '. ' + moreA(o, nmore(o, ['bank_line'], ids1(D.mo.lines)), 'dossier', 'b-plan') + ' ' : '') + (D.peers && D.peers.rows.length ? 'Peer median: ' + esc(D.peers.rows[0].short) + '.' : '') + '</p>' + basisList(o));
   }
   // a number line: one row per reading, its value written beside it; the level in the terms as a heavy line named at its top
   var HALO = ' stroke="var(--paper)" stroke-width="4" stroke-linejoin="round" paint-order="stroke"';
@@ -1092,46 +1152,64 @@ window.RATES = {
     }).join('') + '</div>' + (P.missing ? '<p class="note">' + esc(P.missing) + '</p>' : '') +
       '<p class="how"><b>How to read it.</b> Each line sets one ratio of ' + esc(nm) + ' against one published class: the grey box is the class’s middle half, from its first to its third quartile, the line its median and the dot ' + esc(nm) + '. The percentile is read off the published quartiles by straight-line interpolation, so “above about N of the n companies” is approximate; outside the quartiles only the side is given. The class figures and ' + esc(poss(nm)) + ' may be drawn up differently; each class says how. One ratio per line: no overall rank, no grade.</p>');
   }
-  function commitPanel(o) {
-    var A = anchors(o), dp = dealPrice(o), tot = sum(o), open = Math.max(0, o.issueEURm - tot), cnd = sum(o, 'conditional') + sum(o, 'indicative');
-    return panel(tl(o, 'Commitments', 'book'), 'Each anchor with its amount, its price and its status; fictional institutions', '<div class="scroll"><table class="grid"><thead><tr><th>Anchor</th><th class="num">EUR m</th><th class="num">Share</th><th>Price</th><th>Status</th></tr></thead><tbody>' +
-      A.map(function (a) { var x = pdiff(o, a, dp); return '<tr><td>' + esc(a.name) + '<br><span class="muted small">' + esc(a.institutionType + (a.you ? '' : a.consent ? ' · named to co-investors with consent' : ' · not named to co-investors')) + '</span></td><td class="num">' + f1(a.amountEURm) + '</td><td class="num">' + Math.round(a.amountEURm / o.issueEURm * 100) + '%</td><td>' + price(o, a.price) + (x ? '<br><span class="muted small">' + esc(x) + '</span>' : '') + '</td><td><span class="chip ' + a.status + '">' + a.status + '</span>' + (a.conditions ? '<br><span class="muted small">' + esc(a.conditions.replace(/\s*\(fictional institution, illustrative\)\.?$/, '')) + '</span>' : '') + '</td></tr>'; }).join('') +
-      '<tr><td class="muted">Open to co-investors</td><td class="num">' + f1(open) + '</td><td class="num">' + Math.round(open / o.issueEURm * 100) + '%</td><td>' + (dp ? price(o, dp.v) : '–') + '</td><td class="muted small">' + (cnd ? f1(open + cnd) + ' if the ' + (sum(o, 'conditional') ? 'conditional' : 'indicative') + ' amounts lapse' : '') + '</td></tr></tbody></table></div>' +
-      '<p class="note">' + esc(dp && dp.set ? 'One issue price for every buyer: ' + price(o, dp.v) + ', ' + dp.k.replace(/^deal price, /, '') + '. ' : 'The price is set with the anchors; co-investors then buy at that one price. ') + 'Anchor-only terms: binding commitments are allocated in full; no fee, discount or information right beyond the anchor window.</p>');
+  // 26 Oct 2026 (Sam: the Snapshot one screen): the anchors' commitments in one line, the full table is on the Book tab
+  function commitLine(o) {
+    var A = anchors(o), dp = dealPrice(o), t = sum(o), open = Math.max(0, o.issueEURm - t);
+    var li = A.map(function (a) { return esc(a.name) + ' ' + em(a.amountEURm) + ' <span class="chip ' + a.status + '">' + a.status + '</span>' + (a.price ? ' at ' + price(o, a.price) : ''); }).join(' · ');
+    return '<div class="panel full cline"><div class="ph"><h3>' + tl(o, 'Anchors’ commitments', 'book') + '</h3></div><p>' + (li || 'No anchor commitment yet') + ' · <b>' + em(t) + ' of ' + em(o.issueEURm) + '</b> (' + Math.round(t / o.issueEURm * 100) + '%), ' + em(open) + ' open to co-investors' + (dp ? '; ' + (dp.set ? 'one price for every buyer: ' : 'the anchors’ indication: ') + priceTxt(o, dp) : '') + '.</p></div>';
   }
-  function qaPanel(o) {
-    var qs = qsOf(o), mq = o.mgmtQuestions || [], w = o.windows || {}, nm = cname(o), asked = w.anchorCloses != null ? 'asked by ' + dstr(wd(w.anchorCloses)) : '';
-    var li = qs.slice(0, 4).map(function (q, i) { return '<li><span class="no">Q' + (i + 1) + '</span><span>' + esc(q.q) + '<span class="who">asked by ' + esc(q.by || 'the review') + '</span></span><span class="st">' + asked + '</span><span class="ans">Answer from ' + esc(nm) + ': pending.</span></li>'; }).join('');
-    return panel(tl(o, 'Questions and ' + esc(poss(nm)) + ' answers', 'qa'), 'Every answer goes to every investor at the same time', '<ul class="qa">' + (li || '<li><span class="no">–</span><span class="muted">No investor question yet.</span><span></span></li>') +
-      (qs.length > 4 ? '<li class="more1"><span class="no"></span><span>' + moreA(o, qs.length - 4, 'qa', null, 'questions') + '</span><span></span></li>' : '') +
-      (mq.length ? '<li><span class="no">+' + mq.length + '</span><span class="muted">' + mq.length + ' questions from the fact file to management, among them: ' + esc(mq.slice(0, 2).map(function (q) { return clip(q[2].replace(/\.$/, ''), 80); }).join('; ')) + '</span><span></span></li>' : '') + '</ul>' +
-      '<div class="dl"><a class="btn sec" href="#/deal/' + o.id + '/qa">All questions · ask one</a></div>');
+  // the Snapshot's way to the other pages, one line each; only the tabs this deal has
+  function goLinks(o) {
+    var n = (o.mgmtQuestions || []).length + qsOf(o).length, T = {}; tabsFor(o).forEach(function (t) { T[t[0]] = 1; });
+    var L = [['bond', 'Bond', 'terms, debt due, comparables'], ['financials', 'Financials', 'key figures, charts, guidance, peers'],
+      ['competitors', 'Competitors', 'one measure, each with its source'], ['company', 'Company', 'ownership, parties and advisers, risks'], ['mgmt', 'Management', 'the people, their earlier roles'],
+      ['analysis', 'Company summary', 'the facts in prose, each cited'], ['dossier', 'Fact proof', 'every fact, each opening its page'], ['documents', 'Data room', 'documents and downloads'], ['qa', 'Q&amp;A' + (n ? ' (' + n + ')' : ''), 'questions, meetings and visits'], ['book', 'Book', 'the anchors in full, your ticket']];
+    return '<div class="panel full golinks"><div class="ph"><h3>The pages of this deal</h3></div><ul>' + L.filter(function (l) { return T[l[0]]; }).map(function (l) { return '<li><a href="#/deal/' + o.id + '/' + l[0] + '">' + l[1] + ' ›</a><span>' + esc(l[2]) + '</span></li>'; }).join('') + '</ul></div>';
   }
-  function riskPanels(o) {
-    var D = o.depth, nm = cname(o);
-    var rk = D.risks.map(function (r) { return '<li><q>' + esc(r[0]) + '</q><span class="s">' + esc(cap1(r[2]) + (r[3] ? ' p.' + r[3] : '')) + ' · ' + srcb(r[1]) + '</span></li>'; }).join('');
-    var pt = D.prot.map(function (r) { return '<li>' + esc(r[0].replace(/^term: ([^;]+); value: /, function (m, k) { return cap1(k) + ': '; })) + '<span class="s">' + esc([r[2], r[3] ? 'p.' + r[3] : ''].filter(Boolean).join(' ')) + ' · ' + srcb(r[1]) + '</span></li>'; }).join('');
-    return '<div class="row2 even">' + panel(tl(o, 'Risks as ' + esc(nm) + ' states them', 'dossier', 'b-risk'), 'Quoted with document and page; no weighting added', '<ul class="rl">' + (rk || '<li class="muted">None on file.</li>') + moreLi(o, nmore(o, ['risk_fact'], ids1(D.risks)), 'dossier', 'b-risk') + '</ul>') +
-      panel(tl(o, 'Lender protections', 'dossier', 'b-debt'), esc(D.bt ? 'The signed bond terms ' + yy(D.bt) + ', clause and page' + (D.copies ? '; this bond copies them' : '') : 'As the documents state them, with page; this bond’s are set with the anchors'), '<ul class="rl">' + (pt || '<li class="muted">None on file.</li>') + moreLi(o, nmore(o, ['covenant'], ids1(D.prot)), 'dossier', 'b-debt', 'covenant facts') + '</ul>') + '</div>';
+  function riskPanel(o) {
+    var D = o.depth, nm = cname(o), rk = D.risks.map(function (r) { return '<li><q>' + esc(r[0]) + '</q><span class="s">' + esc(cap1(r[2]) + (r[3] ? ' p.' + r[3] : '')) + ' · ' + srcb(r[1]) + '</span></li>'; }).join('');
+    return panel(tl(o, 'Risks as ' + esc(nm) + ' states them', 'dossier', 'b-risk'), 'Quoted with document and page; no weighting added', '<ul class="rl">' + (rk || '<li class="muted">None on file.</li>') + moreLi(o, nmore(o, ['risk_fact'], ids1(D.risks)), 'dossier', 'b-risk') + '</ul>', 'full');
   }
+  function protPanel(o) {
+    var D = o.depth, pt = D.prot.map(function (r) { return '<li>' + esc(r[0].replace(/^term: ([^;]+); value: /, function (m, k) { return cap1(k) + ': '; })) + '<span class="s">' + esc([r[2], r[3] ? 'p.' + r[3] : ''].filter(Boolean).join(' ')) + ' · ' + srcb(r[1]) + '</span></li>'; }).join('');
+    return panel(tl(o, 'Lender protections', 'dossier', 'b-debt'), esc(D.bt ? 'The signed bond terms ' + yy(D.bt) + ', clause and page' + (D.copies ? '; this bond copies them' : '') : 'As the documents state them, with page; this bond’s are set with the anchors'), '<ul class="rl">' + (pt || '<li class="muted">None on file.</li>') + moreLi(o, nmore(o, ['covenant'], ids1(D.prot)), 'dossier', 'b-debt', 'covenant facts') + '</ul>', 'full');
+  }
+  // revenue and EBITDA per fiscal year, drawn at their own size (never scaled), the value on each bar
+  function yrBars(title, pts) {
+    var W = 480, H = 190, L = 10, B = 26, T = 22, n = pts.length, slot = (W - L - 8) / n, bw = Math.min(40, slot * 0.6);
+    var vals = pts.map(function (p) { return p.v; }), max = Math.max(0, Math.max.apply(null, vals)), min = Math.min(0, Math.min.apply(null, vals)), sp = (max - min) || 1, y = function (v) { return T + (max - v) / sp * (H - T - B); };
+    var s = '<svg class="ch" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(title + ': ' + pts.map(function (p) { return p.y + ' ' + f1(p.v); }).join(', ')) + '"><line x1="' + L + '" x2="' + W + '" y1="' + y(0).toFixed(1) + '" y2="' + y(0).toFixed(1) + '" stroke="#9AA1A9"/>';
+    pts.forEach(function (p, i) { var x = L + slot * i + (slot - bw) / 2, cx = x + bw / 2, top = Math.min(y(p.v), y(0)), h = Math.abs(y(p.v) - y(0));
+      s += '<rect x="' + x.toFixed(1) + '" y="' + top.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + Math.max(1, h).toFixed(1) + '" rx="2" fill="' + (i === n - 1 ? 'var(--navy)' : 'var(--c-main)') + '"/><text x="' + cx.toFixed(1) + '" y="' + (p.v >= 0 ? top - 5 : top + h + 12).toFixed(1) + '" font-size="12" font-weight="600" text-anchor="middle" fill="var(--ink)">' + esc(f1(p.v)) + '</text><text x="' + cx.toFixed(1) + '" y="' + (H - 8) + '" font-size="11.5" text-anchor="middle" fill="var(--muted)">' + p.y + '</text>'; });
+    return '<h4>' + esc(title) + '</h4>' + chs(s + '</svg>');
+  }
+  function finCharts(o) {
+    var F = ((o.depth.team || {}).fy || []).filter(function (f) { return f.rev != null; }).slice(-7); if (F.length < 2) return '';
+    var ids = [].concat.apply([], F.map(function (f) { return f.ids || []; })), E = F.filter(function (f) { return f.e != null; });
+    return panel(tl(o, 'Revenue and EBITDA by year', 'dossier', 'b-financials'), 'EUR m, fiscal years as reported; EBITDA as reported, one-off income included', '<div class="row2 even" style="margin-top:0"><div>' + yrBars('Revenue', F.map(function (f) { return { y: f.y, v: f.rev }; })) + '</div><div>' + (E.length > 1 ? yrBars('EBITDA as reported', E.map(function (f) { return { y: f.y, v: f.e }; })) : '') + '</div></div>' +
+      '<p class="how"><b>How to read it.</b> One bar per fiscal year, the latest in navy, the value printed on each bar; the figures are the reported ones, the same as in the key figures above. ' + sbtn('Revenue and EBITDA by year: sources', 'As reported per fiscal year; the ids are the facts the bars are drawn from', ids) + '</p>', 'full');
+  }
+  // the Q&A tab opens with the way to the company (anchors) or the family office's question card (co-investors)
+  function qaIntro(o) { return !o.depth ? '' : ST.role === 'anchor' ? '<div class="dp">' + accessCard(o) + '</div>' : ST.role === 'coinvestor' ? foView(o, 'qa') : ''; }
   function guidePanel(o) {
     var gd = (o.snapshot.guidance || []).slice(-6).reverse(), D = o.depth;
-    var g = gd.length ? '<div class="scroll"><table class="grid"><thead><tr><th>Year</th><th>Guidance as stated</th><th>Reported</th></tr></thead><tbody>' + gd.map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td>' + esc(x[1]) + ': ' + esc(x[2]) + srcb(x[4][0]) + '</td><td>' + (x[4][1] ? fbtn(x[4][1], esc(x[3])) : esc(x[3])) + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="muted" style="margin:0">No guidance on file.</p>';
+    var g = gd.length ? '<div class="scroll"><table class="grid"><thead><tr><th>Year</th><th>Guidance as stated</th><th>Reported</th></tr></thead><tbody>' + gd.map(function (x) { return '<tr><td>' + esc(x[0]) + '</td><td class="rep">' + esc(x[1]) + ': ' + esc(x[2]) + srcb(x[4][0]) + '</td><td>' + (x[4][1] ? fbtn(x[4][1], esc(x[3])) : esc(x[3])) + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="muted" style="margin:0">No guidance on file.</p>';
     var gm = (o.snapshot.guidance || []).length - gd.length;
     return panel(tl(o, 'Guidance against outcome', 'dossier', 'b-management'), 'The company’s own guidance as stated, then what it reported', g + (gm > 0 ? '<p class="note" style="margin-top:6px">' + moreA(o, gm, 'dossier', 'b-management', 'guidance lines') + '</p>' : '') +
       (D.mo.lenders.length ? '<h4 style="margin-top:14px !important">Covenant tests and past maturities</h4>' + flist(D.mo.lenders).replace(/<\/ul>$/, moreLi(o, nmore(o, ['covenant_test', 'rollover_event'], ids1(D.mo.lenders)), 'dossier', 'b-management') + '</ul>') : ''));
   }
-  function nextPanel(o) {
-    var n = (o.mgmtQuestions || []).length + qsOf(o).length;
-    return panel('Where to go next', '', '<ul class="rl">' + (o.analysis ? '<li><a href="#/deal/' + o.id + '/analysis"><b>Company summary</b></a>: the facts in prose, each sentence on the facts it cites, and the comparables in three layers.</li>' : '') +
-      (o.dossier ? '<li><a href="#/deal/' + o.id + '/dossier"><b>Fact proof</b></a>: ' + esc(o.company.reportingNote.replace(/^.*?; /, '').replace(/\.$/, '')) + '; every block and fact, each opening its page.</li>' : '') +
-      '<li><a href="#/deal/' + o.id + '/documents"><b>Data room</b></a>: the documents and every fact, downloadable in the shape your model needs.</li><li><a href="#/deal/' + o.id + '/qa"><b>Q&amp;A</b></a>' + (n ? ' (' + n + ')' : '') + ' · <a href="#/deal/' + o.id + '/book"><b>Book</b></a></li></ul>', 'full');
-  }
-  function anchorView(o) {   // depth 1, the credit analyst: the terms, the access, the fact headline, then the figures and the tests, debt and liquidity, peers, people
+  // 26 Oct 2026 (Sam: "snapshot short. financial page. bond page. competitor page etc."): the anchor screen in pages. Snapshot = the proposal, the
+  // decision strip, the anchors in one line and the way to the pages, one screen; Bond = terms, debt falling due and liquidity, the issuer's own
+  // instruments, lender protections, comparables; Financials = the fact headline, key figures with basis notes and thresholds, revenue and EBITDA by
+  // year, the team over the years, reference classes and guidance; Competitors; Company = group and ownership, parties and advisers, the risks
+  function anchorView(o, tab) {
     CALC = [];
-    return '<div class="dp">' + purposePanel(o) + termsCard(o) + accessCard(o) + headline(o) +
-      '<div class="row2">' + kmPanel(o) + thrPanel(o) + '</div>' + basisPanel(o) + '<div class="row2 even">' + ladderPanel(o) + liqPanel(o) + '</div>' + instrPanel(o) + '<div class="row2 even">' + peerPanel(o) + guidePanel(o) + '</div>' +
-      mgmtSummary(o) + compsPanel(o) + '<div class="row2 even">' + commitPanel(o) + qaPanel(o) + '</div>' + riskPanels(o) + nextPanel(o) + '</div>';
+    var PG = { overview: function () { return purposePanel(o, 1) + decideStrip(o) + commitLine(o) + goLinks(o); },
+      bond: function () { return termsCard(o) + '<div class="row2 even">' + ladderPanel(o) + liqPanel(o) + '</div>' + instrPanel(o) + protPanel(o) + compPanel(o, true); },
+      financials: function () { return headline(o) + '<div class="row2">' + kmPanel(o) + thrPanel(o) + '</div>' + finCharts(o) + teamBlock(o) + '<div class="row2 even">' + peerPanel(o) + guidePanel(o) + '</div>'; },
+      competitors: function () { return compsPanel(o) || panel('Competitors', '', '<p class="empty">No competitor research on file for this company.</p>', 'full'); },
+      company: function () { return ownPanel(o) + partiesPanel(o) + riskPanel(o); } };
+    return '<div class="dp">' + (PG[tab] || PG.overview)() + '</div>';
   }
 
   // ---------- 25 Oct 2026 (reports/Gain platform lessons for VanillaBonds.md): the proof where the eye lands. A panel title opens its full tab, a list
@@ -1147,22 +1225,24 @@ window.RATES = {
   function moreLi(o, n, tab, blk, what) { var a = moreA(o, n, tab, blk, what); return a ? '<li class="more1">' + a + '</li>' : ''; }
   function ids1(xs) { return (xs || []).map(function (x) { return x[1]; }); }
   function idsB(ids, n) { return (ids || []).filter(Boolean).slice(0, n || 9).map(srcb).join(''); }
-  function basisTable(o) {
-    var B = (o.snapshot || {}).basis || []; if (!B.length) return '<p class="muted" style="margin:0">No basis notes: the record holds no figures for these periods.</p>';
-    var bt = function (x) { return x ? esc(x.t) + idsB(x.ids, 2) : 'no bond terms on file'; };
-    return '<div class="scroll"><table class="grid bas"><thead><tr><th>Period</th><th>Document and audit</th><th>Entity reported</th><th>EBITDA basis</th><th>Leases in net debt</th><th>Currency</th></tr></thead><tbody>' + B.map(function (r) {
-      var d = r.doc, one = d.from.length === 1 && d.from[0][0] === d.own;
-      var fr = one ? 'all ' + d.n + ' figures read from this report' : 'figures read from ' + d.from.map(function (x) { return x[0] + ', the ' + x[2] + ' (' + x[1] + ')'; }).join('; ') + ', of ' + d.n;
-      return '<tr><td class="per"><b>' + esc(r.p) + '</b><span class="sm2">' + day(r.p) + '</span></td>' +
-        '<td>' + esc(cap1(d.t)) + idsB(d.ids, 1) + '<span class="sm2">' + esc(fr) + '</span></td>' +
-        '<td>' + esc(cap1(r.entity.t)) + idsB(r.entity.ids, 1) + '</td>' +
-        '<td><b>Record:</b> ' + esc(neg(r.ebitda.rec.t)) + idsB(r.ebitda.rec.ids, 3) + '<span class="sm2"><b>Bond terms:</b> ' + bt(r.ebitda.terms) + '</span></td>' +
-        '<td><b>Record:</b> ' + esc(r.lease.rec.t) + idsB(r.lease.rec.ids, 1) + '<span class="sm2"><b>Company:</b> ' + (r.lease.co.ids.length ? 'its own net debt ' : '') + esc(r.lease.co.t) + idsB(r.lease.co.ids, 1) + '</span><span class="sm2"><b>Bond terms:</b> ' + bt(r.lease.terms) + '</span></td>' +
-        '<td>' + esc(r.fx.t) + (r.fx.co ? '<span class="sm2"><b>Company:</b> ' + esc(r.fx.co) + idsB(r.fx.ids, 1) + '</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
-  }
-  function basisPanel(o) {
-    return panel(tl(o, 'Basis notes', 'dossier', 'b-financials'), 'How each period of the key figures is read: from which document, whose accounts, and how EBITDA, leases and currencies are treated', basisTable(o) +
-      '<p class="how"><b>How to read it.</b> One row per period of the key figures above. A period is often read from a later report that prints it again; “figures read from” names those reports. “Record” is the basis the key figures use; the company’s own net debt and the bond terms’ definitions sit beside it and are never mixed into it. Every id opens its page.</p>', 'full');
+  // 26 Oct 2026 (Gain comparison): the basis notes as a list under the key figures, keyed by period and generated from the record (snapshot.py basis
+  // and the figure rows' formulas): fiscal year-end, the document each period is read from and its audit, the entity, EBITDA and net debt on each
+  // basis with the amounts, the currency, and the definitions of the calculated rows. Consecutive periods with the same note become one line.
+  function basisList(o) {
+    var B = (o.snapshot || {}).basis || [], D = o.depth || {}; if (!B.length) return '<p class="empty">No basis notes: the record holds no figures for these periods.</p>';
+    var li = function (k, t) { return '<li><b>' + esc(k) + ':</b> ' + t + '</li>'; };
+    var runs = function (text) { var out = []; B.forEach(function (r) { var t = text(r), l = out[out.length - 1]; if (l && l.t === t) l.to = r.p; else out.push({ from: r.p, to: r.p, t: t, r: r }); }); return out.map(function (x) { return [x.from === x.to ? x.from : x.from + '–' + x.to, x.t, x.r]; }); };
+    var h = li('Fiscal year', 'ends ' + day('FY2000').replace(/ \d{4}$/, '') + '; H1 figures to ' + day('H1-2000').replace(/ \d{4}$/, '') + (o.snapshot.asof ? '. Figures to ' + esc(o.snapshot.asof) : '') + '.');
+    B.forEach(function (r) { var d = r.doc, one = d.from.length === 1 && d.from[0][0] === d.own;
+      h += li(r.p, esc(cap1(d.t)) + idsB(d.ids, 1) + '; ' + (one ? 'all ' + d.n + ' figures read from this report' : d.n + ' figures, read from ' + d.from.map(function (x) { return x[0] + ' p.' + x[1] + ' (' + x[2] + ')'; }).join(' and ')) + '.'); });
+    runs(function (r) { return r.entity.t; }).forEach(function (x) { h += li(x[0], 'Entity: ' + esc(cap1(x[1])) + idsB(x[2].entity.ids, 1) + '.'); });
+    B.forEach(function (r) { h += li(r.p, 'EBITDA, record: ' + esc(neg(r.ebitda.rec.t)) + idsB(r.ebitda.rec.ids, 3) + (r.ebitda.terms ? '; bond terms: ' + esc(r.ebitda.terms.t) + idsB(r.ebitda.terms.ids, 2) : '') + '. Net debt, record: ' + esc(r.lease.rec.t) + idsB(r.lease.rec.ids, 1) + '; company: ' + (r.lease.co.ids.length ? 'its own net debt ' : '') + esc(r.lease.co.t) + idsB(r.lease.co.ids, 1) + (r.lease.terms ? '; bond terms: ' + esc(r.lease.terms.t) + idsB(r.lease.terms.ids, 1) : '') + '.'); });
+    runs(function (r) { return r.fx.t; }).forEach(function (x) { h += li(x[0], 'Currency: ' + esc(x[1]) + '.'); });
+    B.forEach(function (r) { if (r.fx.co) h += li(r.p, 'Currency, as the report states it: ' + esc(clip(r.fx.co, 180)) + idsB(r.fx.ids, 1)); });
+    (o.snapshot.figures || []).forEach(function (r) { if (r.calc && !r.of) h += li(r.label, esc(neg(r.calc))); });
+    if (D.lt) h += li('LTM', 'the last 12 months: ' + esc(D.fy + ' + ' + D.h + ' − H1-' + (+D.h.slice(3) - 1)) + '.');
+    if (D.tdef) h += li('Leverage, bond terms’ basis', '<details class="more"><summary>how it is computed, clause by clause</summary><p class="small" style="margin:4px 0 0">' + esc(D.tdef) + '</p></details>');
+    return '<h4 style="margin-top:14px !important">Basis notes</h4><ul class="bnotes">' + h + '</ul><p class="note">One line per period of the key figures above. A period is often read from a later report that prints it again. “Record” is the basis the key figures use; the company’s own figure and the bond terms’ definition sit beside it and are never mixed into it. Every id opens its page.</p>';
   }
   function instrPanel(o) {   // the issuer's own debt as the documents on file itemise it; ten lines, then '+ N more lines' opens the rest in place
     var I = (o.snapshot || {}).instruments; if (!I || !I.rows.length) return '';
@@ -1201,12 +1281,76 @@ window.RATES = {
   }
 
 
+  // ---------- 26 Oct 2026 (reports/Gain company profile design and sourcing.md): the Group and ownership block on the Management tab and the Parties and
+  //            advisers panel in the Data room. Facts from the filings on file (export_dossier.py -> ownership.py), every row with document, page and status;
+  //            the tree is a nested list drawn at its own size, never scaled; no beneficial owner, no inferred percentage, no opinion ----------
+  var OWNV = {};
+  function ccode(c, W) { return c ? '<span class="cc" title="' + esc((W.country || {})[c] || c) + '">' + esc(c) + '</span>' : ''; }
+  function pct(v) { return v == null ? '' : (Math.round(v * 1000) / 10) + '%'; }
+  function ctxt(c) { return { A: 'A · fully consolidated', B: 'B · equity method', C: 'C · joint venture', none: 'not consolidated' }[c] || c; }
+  function vbtn(id) { return id ? ' <button type="button" class="view" data-fact="' + esc(id) + '" title="Open the page it was read from, with the quote marked">View</button>' : ''; }
+  function stchip(st) { return st === 'ok' ? '<span class="chip passed">approved</span>' : st === 'rep' ? '<span class="chip">representation</span>' : '<span class="chip pending">pending</span>'; }
+  function ownNode(nd, W) {
+    var chips = (nd.code ? '<span class="chip" title="consolidation code as the list prints it">' + esc(ctxt(nd.code)) + '</span>' : '') + (nd.role ? '<span class="chip role">' + esc(nd.role) + '</span>' : '');
+    return '<li' + (nd.root ? ' class="root"' : '') + '><div class="nd"><span class="l1">' + ccode(nd.country, W) + '<b>' + esc(nd.name) + '</b>' + (nd.stake != null && !nd.root ? '<span class="st">' + pct(nd.stake) + '</span>' : '') + chips + idsB(nd.ids, 2) + (nd.root ? '' : vbtn(nd.ids[0])) + '</span>' +
+      (nd.notes && nd.notes.length ? '<span class="sm2">' + esc(nd.notes.join('; ')) + '</span>' : '') + '</div>' + (nd.children.length ? '<ul>' + nd.children.map(function (c) { return ownNode(c, W); }).join('') + '</ul>' : '') + '</li>';
+  }
+  function ownerNode(r, W) { return '<div class="nd"><span class="l1"><b>' + esc(r.owner) + '</b>' + (r.stake ? '<span class="st">' + esc(r.stake) + '</span>' : '') + idsB(r.ids || [r._id], 3) + vbtn((r.ids || [r._id])[0]) + '</span><span class="lbl">' + esc(r.role) + '</span></div>'; }
+  function ownTree(o, W) {
+    var above = W.above.map(function (r) { return ownerNode(r, W); }).join(''), beside = W.beside.map(function (r) { return ownerNode(r, W); }).join('');
+    return (above ? '<div class="olayer">' + above + '</div><p class="oarrow">↓ legal owners and partners as the filings name them; below them the issuer and its entities</p>' : '') +
+      '<ul class="otree">' + ownNode(W.root, W) + '</ul>' + (beside ? '<p class="oarrow" style="margin-top:10px">Beside the group, outside the consolidation: sister companies the documents name</p><div class="olayer">' + beside + '</div>' : '');
+  }
+  function ownTable(o, W) {
+    return '<div class="scroll"><table class="grid own"><thead><tr><th>Legal entity</th><th>Country</th><th>Parent, as stated</th><th class="num">Stake</th><th>Consolidation</th><th>Role</th><th>Note</th><th>Source</th></tr></thead><tbody>' +
+      W.table.map(function (r) { return '<tr><td class="e" style="--d:' + r.depth + '"><b>' + esc(r.name) + '</b></td><td>' + ccode(r.country, W) + ' ' + esc((W.country || {})[r.country] || '') + '</td><td>' + (r.parent_stated ? esc(r.parent) : '<span class="muted">' + esc(cname(o)) + ', direct or indirect as listed</span>') + '</td><td class="num">' + pct(r.stake) + '</td><td>' + esc(ctxt(r.code) || '–') + '</td><td>' + esc(r.role || '') + '</td><td class="small">' + esc((r.notes || []).join('; ')) + '</td><td style="white-space:nowrap">' + idsB(r.ids, 3) + vbtn(r.ids[0]) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  }
+  function ownPanel(o) {
+    var W = o.own; if (!W) return ''; var nm = cname(o), view = OWNV[o.id] || 'tree', G = mg(o), M = G.M;
+    var idl = '<p class="idl">' + W.identity.map(function (x) { return '<span><i>' + esc(x[0]) + '</i> <b>' + esc(x[1]) + '</b>' + srcb(x[2]) + vbtn(x[2]) + '</span>'; }).join('') + '</p>';
+    var owners = W.owners.length ? '<div class="scroll"><table class="grid"><thead><tr><th>Owner or partner</th><th>Role, as the document states it</th><th>Stake, as stated</th><th>Basis</th><th>As of</th><th>Source</th></tr></thead><tbody>' +
+      W.owners.map(function (r) { return '<tr><td><b>' + esc(r.owner) + '</b></td><td>' + esc(r.role) + '</td><td>' + esc(r.stake || '–') + '</td><td class="small">' + esc(r.basis || '') + '</td><td style="white-space:nowrap">' + esc(r.as_of || '') + '</td><td style="white-space:nowrap">' + esc(docName(o, r._s)) + (r._p ? ' p.' + r._p : '') + srcb(r._id) + vbtn(r._id) + ' ' + stchip(r._st) + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="muted small">No legal owner on file.</p>';
+    var said = M.owners.length ? '<h4 style="margin-top:12px !important">As the reports state it</h4>' + flist(M.owners) : '';
+    var src = W.sources, main = W.tree_src;
+    var what = '<p class="how" style="margin:0 0 10px"><b>What the tree shows.</b> One node per entity in the consolidation list' + (main ? ' of the ' + esc(main.title) + ' (p.' + esc(main.pages) + ')' : '') + ', ' + esc(nm) + ' at the top; ' + W.n + ' entities in ' + W.countries.length + ' countries. ' +
+      'The percentage is the stake as the list prints it; the code says how the entity is consolidated. An entity sits under the issuer unless the report names the holding entity, then under that entity; nothing is inferred, so there is no total percentage and no beneficial owner. ' +
+      'Dashed boxes above the issuer are the legal owners and partners as the filings name them; dashed boxes beside it are sister companies outside the group. Every id opens the page it was read from.</p>';
+    var vt = '<div class="vt" role="group" aria-label="View"><button type="button" data-act="own-tree" aria-pressed="' + (view === 'tree') + '">Tree view</button><button type="button" data-act="own-table" aria-pressed="' + (view === 'table') + '">Table view</button></div>';
+    var roles = W.terms.length ? '<ul class="rl">' + W.terms.map(function (r) { return '<li><b>' + esc(r.owner) + ':</b> ' + esc(r.role) + (r.basis ? ' <span class="muted">(' + esc(r.basis) + ')</span>' : '') + srcb(r._id) + vbtn(r._id) + '</li>'; }).join('') + '</ul>' +
+      '<p class="note">The bond terms on file name no guarantor and no material group company; a node would carry that badge if they did. The roles printed on the nodes (general partner, joint venture, associate, minority) are the filings’ own words.</p>'
+      : '<p class="muted small">No bond terms on file name a parent, guarantor, material group company or change-of-control owner for ' + esc(nm) + '. The roles printed on the nodes (general partner, joint venture, associate) are the filings’ own words.</p>';
+    var ev = W.events.length ? '<ul class="rl">' + W.events.map(function (r) { return '<li><b>' + esc(r.date || 'date not stated') + '</b> · ' + esc(r.entity) + ' · ' + esc(r.event) + (r.detail ? ': ' + esc(r.detail) : '') + srcb(r._id) + vbtn(r._id) + '</li>'; }).join('') + '</ul>' : '<p class="muted small">No entity event on file.</p>';
+    var srcs = '<div class="scroll"><table class="grid"><thead><tr><th>Document</th><th>Issued by</th><th>Dated</th><th>Pages read</th><th class="num">Facts</th><th>Status</th></tr></thead><tbody>' +
+      src.map(function (x) { return '<tr><td>' + (x.web ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(cap1(x.title)) + ' ↗</a>' : '<button type="button" class="fb" data-doc="' + esc(x.doc) + '">' + esc(cap1(x.title)) + '</button>') + ' <span class="muted small">' + esc(x.doc) + '</span>' + (x.web ? '' : ' <button type="button" class="view" data-doc="' + esc(x.doc) + '" data-page="' + esc(String(x.pages || '1').split(/[,–]/)[0].trim()) + '">View</button>') + '</td><td class="small">' + esc(clip(x.origin, 80)) + '</td><td>' + (x.date ? dfull(x.date) : '–') + '</td><td>' + esc(x.pages || (x.web ? 'web' : '–')) + '</td><td class="num">' + x.n + '</td><td>' + (x.pend === x.n ? 'all pending' : x.pend ? x.pend + ' pending' : 'approved') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    return '<div class="panel full own" id="own"><div class="ph"><h3>' + tl(o, 'Group and ownership', 'dossier', 'b-governance') + '</h3><p>Who owns ' + esc(nm) + ', what it owns and where each entity sits, as the filings on file state it. Statutory filings and the issuer’s own documents only; no register of beneficial owners, no inferred percentage, no indicator.</p></div>' +
+      '<h4>Identity</h4>' + idl + '<h4>Legal owners and partners</h4>' + owners + said +
+      '<h4 style="margin-top:16px !important">Group structure <span>· ' + W.n + ' entities</span></h4>' + what + vt + (view === 'tree' ? ownTree(o, W) : ownTable(o, W)) +
+      '<h4 style="margin-top:16px !important">Roles the bond terms define</h4>' + roles + '<h4 style="margin-top:16px !important">Ownership and entity events <span>· latest first</span></h4>' + ev +
+      '<h4 style="margin-top:16px !important">Sources</h4>' + srcs + '</div>';
+  }
+  function partiesPanel(o) {
+    var P = o.parties; if (!P || !P.rows.length) return ''; var nm = cname(o), lab = { 'for the issuer': 'For the issuer', 'for the bondholders': 'For the bondholders', lenders: 'Lenders', 'statutory-neutral': 'Statutory or neutral' };
+    var body = '';
+    P.sides.forEach(function (sd) {
+      var rs = P.rows.filter(function (r) { return r.side === sd; }); if (!rs.length) return;
+      body += '<tr class="sd"><th colspan="7">' + esc(lab[sd] || sd) + '</th></tr>' + rs.map(function (r) {
+        var wd = r._url ? ((o.depth || {}).dr || []).filter(function (x) { return x.id === r._s; })[0] : null, wl = wd && wd.origin ? clip(wd.origin.replace(/\s*\(.*$/, ''), 44) : 'web source';   // a web source by its publisher
+        var doc = r._url ? sref(r._url, r._p, null, wl + (r._p ? ', p.' + r._p : '')) : esc(docName(o, r._s)) + (r._p ? ' p.' + r._p : '');
+        return '<tr><td>' + esc(cap1(r.role)) + '</td><td><b>' + esc(r.entity) + '</b></td><td class="small">' + esc(r.identifier || '–') + '</td><td class="small">' + esc(r.source_class || '') + '</td><td style="white-space:nowrap">' + doc + srcb(r._id) + vbtn(r._id) + '</td><td style="white-space:nowrap">' + esc(r.as_of || '') + '</td><td>' + stchip(r._st) + '</td></tr>';
+      }).join('');
+    });
+    return '<div class="panel full" id="parties"><div class="ph"><h3>' + tl(o, 'Parties and advisers', 'dossier', 'b-structure') + '</h3><p>Who stands around ' + esc(nm) + ' and its bonds: trustee, agents, managers, exchanges, counsel, auditor, lenders and regulator, each as one document names it.</p></div>' +
+      '<div class="scroll"><table class="grid pty"><thead><tr><th>Role</th><th>Party</th><th>Identifier</th><th>Source class</th><th>Document, page</th><th>As of</th><th>Status</th></tr></thead><tbody>' + body + '</tbody></table></div>' +
+      '<p class="how"><b>How to read it.</b> Firms only; a person appears only where the document shows them signing (the auditor’s signing partner, the signatories of the bond terms). The side says whom the party acts for. The source class says which kind of document names the party: the bond terms, the exchange’s term sheet, the adviser’s own release or the accounts; a party named only by itself is marked so. Nothing here ranks or counts advisers.' +
+      (P.rating ? ' No rating agency is named in any document on file.' : '') + '</p></div>';
+  }
+
   // ---------- 24 Oct 2026, after an MVP review: the proposal first (how much, for what, and the company's own plans), the team over the years beside the
   //            figures (backgrounds, changes with the reason the reports give, the boards), and the competitors as one diagram with each source ----------
-  function purposePanel(o) {
+  function purposePanel(o, n) {   // n: at most n items per column (the one-screen Snapshot), the rest counted on the Fact proof link
     var D = o.depth, U = D.purpose || {}, nm = cname(o), dp = dealPrice(o), DT = dealDates(o), cp = dp ? cpnTxt(o, dp.v) : 'a coupon set with the anchors';
     var L0 = o.snapshot.ladder || { rows: [] }, my = DT.maturity.getFullYear(), top = L0.rows.filter(function (r) { return r.y !== 'later' && +r.y < my && r.p; }).sort(function (a, b) { return b.p - a.p; })[0];
-    var lst = function (t, xs, fs, blk) { return xs && xs.length ? '<div><h4>' + t + '</h4><ul class="rl">' + xs.map(function (x) { return '<li>' + esc(cap1(clip(x[0], 200))) + srcb(x[1]) + '</li>'; }).join('') + moreLi(o, nmore(o, fs, ids1(xs)), 'dossier', blk) + '</ul></div>' : ''; };
+    var lst = function (t, xs, fs, blk) { if (xs && n) xs = xs.slice(0, n); return xs && xs.length ? '<div><h4>' + t + '</h4><ul class="rl">' + xs.map(function (x) { return '<li' + (stOf(x[1]) === 'rep' ? ' class="rep"' : '') + '>' + esc(cap1(clip(x[0], 200))) + srcb(x[1]) + '</li>'; }).join('') + moreLi(o, nmore(o, fs, ids1(xs)), 'dossier', blk) + '</ul></div>' : ''; };
     return '<div class="panel prop"><div class="ph"><h3>' + tl(o, 'The proposal', 'dossier', 'b-plan') + '</h3><p>What ' + esc(nm) + ' asks for and what the money is for; then what the company itself says about its plans, its acquisitions and its funding.</p></div>' +
       '<p class="ask">' + esc(o.company.name) + ' asks for <b>EUR ' + o.issueEURm + 'm for ' + DT.yrs + ' years</b> at <b>' + esc(cp) + '</b>' + (dp && !dp.set ? ', the anchors’ indication; the price is set with them' : '') + '. ' + ill('illustrative deal') + '</p>' +
       '<p class="use"><b>The money is for:</b> ' + esc(cap1((o.company.useOfProceeds || '').replace(/\s*\(illustrative[^)]*\)\.?$/, '').replace(/\.$/, ''))) + '.' + (top ? ' Before this bond is due, ' + esc(nm) + ' must also repay or refinance EUR ' + f1(top.p) + 'm in ' + top.y + '.' : '') + '</p>' +
@@ -1273,7 +1417,8 @@ window.RATES = {
       line('Trust office holding the shares', tr.length ? tr.length + ' members' + (chair(tr) ? ', chair ' + esc(chair(tr).name) : '') : '') +
       line('Subsidiaries', live('subsidiary').map(function (p) { return esc(p.name) + ', ' + esc(current(p)); }).join('; ')) +
       line('Changes in the last two years', recent.length ? recent.length + '; the latest: ' + esc(recent[0][0].d) + ', ' + esc(recent[0][1].name) + ' ' + esc({ joins: 'joined as', leaves: 'left as', changes: 'changed role:' }[recent[0][0].kind]) + ' ' + esc(recent[0][0].role) : 'none in the reports') +
-      line('Owners', G.M.owners[0] ? esc(clip(G.M.owners[0][0], 160)) + srcb(G.M.owners[0][1]) : '') + '</ul>';
+      line('Owners', G.M.owners[0] ? esc(clip(G.M.owners[0][0], 160)) + srcb(G.M.owners[0][1]) : '') +
+      line('Group', o.own && o.own.n ? o.own.n + ' entities in ' + o.own.countries.length + ' countries in the consolidation list' + (o.own.above.length ? '; legal owners and partners: ' + esc(o.own.above.slice(0, 4).map(function (r) { return r.owner; }).join(', ')) : '') + ' · <a href="#/deal/' + esc(o.id) + '/mgmt/own">Group and ownership</a>' : '') + '</ul>';
     return panel(tl(o, 'Management and board', 'mgmt'), 'Who runs and oversees ' + esc(nm) + ', as the documents state it. The people, their careers, the changes and the board’s set-up are on the Management tab.', body +
       '<p style="margin:10px 0 0"><a class="btn sec" href="#/deal/' + esc(o.id) + '/mgmt">Open the Management tab</a></p>', 'full');
   }
@@ -1321,7 +1466,6 @@ window.RATES = {
     var res = T.people_asof ? '<div class="panel full res"><p class="note" style="margin:0">Earlier roles, other positions and the board facts beside the record: researched from public sources on ' + esc(dfull(T.people_asof)) + ', each with its source; a company’s figures are that company’s, not a measure of the person.</p>' +
       (T.people_method ? '<details class="more"><summary>How it was researched</summary><p class="small">' + esc(T.people_method) + '</p></details>' : '') + ((T.people_not_found || []).length ? '<details class="more"><summary>Looked for and not found</summary><ul class="rl">' + T.people_not_found.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></details>' : '') + '</div>' : '';
     return '<div class="dp mgt"><div class="tabbar"><span>Who runs and oversees ' + esc(nm) + ': the people, their careers as the documents state them, the changes and how the boards are set up. Facts with their sources; no judgement of any person, and no result attributed to one.</span></div>' +
-      teamBlock(o) +
       grp('management', 'The executives as the documents name them, with background and earlier roles as stated', false) +
       (G.has('supervisory') ? grp('supervisory', 'Who oversees the management: members, term, independence, committees and attendance as the reports state them', true, sec('How the board is set up', boards.filter(function (x) { return /board|appoint|nominat|chair|committee/i.test(x[0]) && !/related-party/i.test(x[0]); }).slice(0, 6))) : '') +
       grp('trust office', 'The foundation that holds the shares and issues the depositary receipts', true) +
@@ -1329,7 +1473,7 @@ window.RATES = {
         : boards.length ? panel('Governance', 'As the documents describe it', flist(boards.slice(0, 6)), 'full') : '') +
       grp('subsidiary', 'Heads of subsidiaries the reports name', false) + res +
       '<div class="row2 even">' + panel('Changes, and the reason the reports give', 'Every join, departure and change of role on file, latest first', chg) + panel('Succession and appointment', 'Who appoints whom, and what the documents say about succession', (M.succession.length ? flist(M.succession) : '<p class="muted small">Nothing on file.</p>')) + '</div>' +
-      '<div class="row2 even">' + panel('Owners and control', 'Who holds the shares and the votes', M.owners.length ? flist(M.owners) : '<p class="muted small">Nothing on file.</p>') + panel('Related parties and pay', 'Flows with owners and board members, and what the boards are paid', sec('Related parties', M.related) + sec('Distributions and pay', M.pay)) + '</div></div>';
+      panel('Related parties and pay', 'Flows with owners and board members, and what the boards are paid', sec('Related parties', M.related) + sec('Distributions and pay', M.pay), 'full') + '</div>';   // 26 Oct 2026: the Group and ownership block holds the owners
   }
   function compsPanel(o) {   // 24 Oct 2026: the competitors on one measure (the company in gold), each figure with its source and date; then what the company's own reports say
     var C = o.depth.comps, nm = cname(o); if (!C) return '';
@@ -1437,10 +1581,10 @@ window.RATES = {
       '<button type="button" class="btn sec" data-toast="Demo: the same data over an API with the field dictionary; not yet available.">API<small>not yet available</small></button></div>', 'full');
     var builder = D ? drBuilder(o, D) : panel('Build your own extract', '', '<p class="muted" style="margin:0">Loading the record…</p>', 'full');
     var docs = panel('Source documents', pdf.length + ' documents, ' + pdf.reduce(function (a, d) { return a + (d.pages || 0); }, 0) + ' pages' + (web.length ? ', and ' + web.length + ' web pages read for single facts' : ''), '<div class="scroll"><table class="grid"><thead><tr><th>#</th><th>Document</th><th>Period</th><th>Dated</th><th class="num">Pages</th><th class="num">Facts</th><th>Status</th><th></th></tr></thead><tbody>' +
-      pdf.map(function (d) { var x = dd2(d.id); return '<tr><td class="mono">' + esc(d.id) + '</td><td>' + esc(cap1(d.kind || 'document')) + '<br><span class="muted small">' + esc(clip(d.origin, 90)) + '</span></td><td>' + esc(clip(d.period, 44)) + '</td><td>' + (d.date ? dfull(d.date) : '–') + '</td><td class="num">' + (d.pages || '–') + '</td><td class="num">' + (x ? x.facts : '') + '</td><td>' + (/annual|interim/.test(d.kind || '') ? (d.audited ? 'audited' : 'unaudited') : 'contract document') + '</td><td class="num" style="white-space:nowrap"><button type="button" class="view" data-doc="' + esc(d.id) + '">View</button>' + (x && x.pdf ? ' <a class="view" href="' + esc(x.pdf) + '" download>PDF</a>' : '') + '</td></tr>'; }).join('') +
-      (web.length ? '<tr><td class="mono">' + esc(web[0].id + (web.length > 1 ? '–' + web[web.length - 1].id : '')) + '</td><td colspan="7">Web pages, read ' + (web[0].date ? dfull(web[0].date) : '') + ': ' + web.map(function (d) { return '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">' + esc(clip(d.origin || d.id, 40)) + '</a>'; }).join(' · ') + '</td></tr>' : '') + '</tbody></table></div>', 'full');
+      pdf.map(function (d) { var x = dd2(d.id); return '<tr><td><span class="pill">' + esc(d.id) + '</span></td><td>' + esc(cap1(d.kind || 'document')) + '<br><span class="muted small">' + esc(clip(d.origin, 90)) + '</span></td><td>' + esc(clip(d.period, 44)) + '</td><td>' + (d.date ? dfull(d.date) : '–') + '</td><td class="num">' + (d.pages || '–') + '</td><td class="num">' + (x ? x.facts : '') + '</td><td>' + (/annual|interim/.test(d.kind || '') ? (d.audited ? 'audited' : 'unaudited') : 'contract document') + '</td><td class="num" style="white-space:nowrap"><button type="button" class="view" data-doc="' + esc(d.id) + '">View</button>' + (x && x.pdf ? ' <a class="view" href="' + esc(x.pdf) + '" download>PDF</a>' : '') + '</td></tr>'; }).join('') +
+      (web.length ? '<tr><td><span class="pill">' + esc(web[0].id + (web.length > 1 ? '–' + web[web.length - 1].id : '')) + '</span></td><td colspan="7">Web pages, read ' + (web[0].date ? dfull(web[0].date) : '') + ': ' + web.map(function (d) { return '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">' + esc(clip(d.origin || d.id, 40)) + '</a>'; }).join(' · ') + '</td></tr>' : '') + '</tbody></table></div>', 'full');
     var asked = panel('Requested from ' + esc(nm), (o.phase === 'intake' ? 'In preparation' : open.length ? 'Prepared from the public reports' : 'Prepared') + ': ' + (mand.length - open.length) + ' of ' + mand.length + ' mandatory items present', '<div class="scroll"><table class="grid"><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody>' + reqs(o).map(function (r) { return '<tr><td>' + esc(r.item) + (r.mandatory ? ' <span class="chip">mandatory</span>' : '') + (r.note ? '<div class="small muted">' + esc(r.note) + '</div>' : '') + '</td><td><span class="chip ' + r.st + '">' + esc(r.st) + '</span></td></tr>'; }).join('') + '</tbody></table></div>' +
-      ((o.docRequests || []).length ? '<h4 style="margin-top:16px !important">Not in the public documents</h4><div class="scroll"><table class="grid"><thead><tr><th>Block</th><th>Field</th><th>Periods</th><th>Note</th></tr></thead><tbody>' + o.docRequests.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="mono">' + esc(r[2]) + '</td><td class="muted">' + esc(r[3] || '–') + '</td></tr>'; }).join('') + '</tbody></table></div>' : ''), 'full');
+      ((o.docRequests || []).length ? '<h4 style="margin-top:16px !important">Not in the public documents</h4><div class="scroll"><table class="grid"><thead><tr><th>Block</th><th>Field</th><th>Periods</th><th>Note</th></tr></thead><tbody>' + o.docRequests.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td><td class="muted">' + esc(r[3] || '–') + '</td></tr>'; }).join('') + '</tbody></table></div>' : ''), 'full');
     return '<div class="dp">' + top + builder + entityPanel(o) + docs + asked + '</div>';
   }
   function drAct(o, act, k) {
@@ -1473,7 +1617,7 @@ window.RATES = {
       '<tr class="tot"><td>Total over ' + DT.yrs + ' years<small>' + e(t) + ' + interest ' + e(tot) + ', before your bank’s fees and taxes</small></td><td class="num">' + e(t + tot) + '</td></tr>' +
       (t < 100000 ? '<tr><td colspan="2" class="small muted">Below the EUR 100,000 minimum order.</td></tr>' : '');
   }
-  function foView(o) {
+  function foView(o, tab) {   // 26 Oct 2026: Snapshot = what is it, what do I get, three numbers; Bond = the anchors on their terms and the six question cards on the bond; Company = what can go wrong
     CALC = []; var D = o.depth, F = D.fo, s = o.snapshot, nm = cname(o), dp = dealPrice(o), DT = dealDates(o), A = anchors(o), w = o.windows || {}, my = DT.maturity.getFullYear();
     var cp = dp ? cpnTxt(o, dp.v) : 'set with the anchors', ip = term(o, 'issuePrice') || '100%', sec = /secur|pledge/i.test(term(o, 'security') + ' ' + term(o, 'ranking')), lc = function (x) { return String(x).replace(/^\w/, function (c) { return c.toLowerCase(); }); };
     // the anchor block: name by consent, amount and share, price against yours, its own deal-by-deal line; then parity and what only the anchor gets
@@ -1495,7 +1639,7 @@ window.RATES = {
     var U = D.purpose || {}, pl = (U.plans || []).slice(0, 2).concat((U.acq || []).slice(0, 1));
     var rv = F.rev, rep = D.dr.filter(function (d) { return !d.web && /annual|interim/.test(d.kind || ''); });
     var what = '<article class="card c-what"><h2>What is it?</h2><p class="lead">' + esc(o.company.name) + ' (' + esc(lc(o.company.industry.replace(/^.*?: /, '')) + ', ' + o.company.country) + ') borrows <b>EUR ' + o.issueEURm + 'm for ' + DT.yrs + ' years</b> at <b>' + esc(cp) + '</b> a year' + (o.company.financingPurpose ? ': ' + esc(lc(o.company.financingPurpose.replace(/\s*\(illustrative\)$/, ''))) : '') + '.' + (rv ? ' Revenue ' + rv.p.slice(2) + ': EUR ' + f1(rv.v) + 'm.' : '') + '</p>' +
-      (pl.length ? '<div class="sub3">What ' + esc(nm) + ' says it is doing</div><ul class="bul">' + pl.map(function (x) { return '<li>' + esc(cap1(clip(x[0], 170))) + srcb(x[1]) + '</li>'; }).join('') + '</ul>' : '') +
+      (pl.length ? '<div class="sub3">What ' + esc(nm) + ' says it is doing</div><ul class="bul">' + pl.map(function (x) { return '<li' + (stOf(x[1]) === 'rep' ? ' class="rep"' : '') + '>' + esc(cap1(clip(x[0], 170))) + srcb(x[1]) + '</li>'; }).join('') + '</ul>' : '') +
       '<p class="srcl">' + ill('illustrative deal') + ' not proposed by ' + esc(nm) + '. Company facts from its own reports: ' + esc(rep.map(function (d) { return d.kind.replace(/ report$/, '') + ' ' + d.period + (d.audited ? ', audited' : ', unaudited'); }).join('; ')) + '.</p></article>';
     var money = '<article class="card c-money"><h2>What do I get?</h2><p class="sub">On your own ticket: change the amount and the assumed reference rate.</p><div class="inputs"><label>Your ticket, EUR<input id="fo-tk" type="text" inputmode="numeric" value="' + Math.round(MONEY.t).toLocaleString('en-GB') + '"></label>' +
       (fixed(o) ? '' : '<label>Assumed reference rate, %<input id="fo-rr" class="sm" type="text" inputmode="decimal" value="' + (MONEY.r != null ? MONEY.r : RATES.ecb.deposit).toFixed(2) + '"></label>') +
@@ -1522,14 +1666,14 @@ window.RATES = {
         : '<p class="srcl">The steps after a missed payment are set by this bond’s terms; signed terms are not yet on file for this deal.</p>') +
       (trig.length ? '<div class="sub3">The covenants, as plain triggers</div><ul class="bul">' + trig.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') + '</article>';
     // three numbers, each with one plain line and twenty companies of a named class
-    var pr = D.peers ? D.peers.rows.filter(function (r) { return r.metric === 'equity_ratio'; })[0] : null, nl = (D.peers && D.peers.missing ? D.peers.missing.replace(/^Not loaded: /, 'Not loaded yet: ') : 'No reference group loaded yet.') + ' No position is shown.';
+    var pr = D.peers ? D.peers.rows.filter(function (r) { return r.metric === 'equity_ratio'; })[0] : null, par = /\(([^)]*)\)/.exec((D.peers && D.peers.missing) || ''), nl = 'Reference class not loaded' + (par ? ' (' + par[1] + ')' : '') + '.';
     var fyA = D.fy.slice(2) + (audited(o, D.fy) ? ', audited' : '');
     var T3 = [F.cover && { k: 'Interest cover', v: F.cover.v.toFixed(1), u: 'x', ln: (F.cover.p === 'LTM' ? 'Over the 12 months to ' + day(D.h) : 'In ' + D.fy.slice(2)) + ', operating earnings before interest, tax, depreciation and amortisation' + (D.xs ? ', excluding one-off income,' : '') + ' were ' + F.cover.v.toFixed(1) + ' times net interest cost' + (F.coverFy != null && F.cover.p === 'LTM' ? ' (' + fyA + ': ' + F.coverFy.toFixed(1) + ' times)' : '') + '.', c: F.cover, p: null, pos: nl },
       F.lev && { k: 'Net debt in years of earnings', v: F.lev.v.toFixed(1), u: 'years', ln: 'Net debt excluding leases on ' + day(F.lev.p === 'LTM' ? D.h : D.fy) + ' equals ' + F.lev.v.toFixed(1) + ' years of operating earnings' + (D.xs ? ' excluding one-off income' : '') + (F.lev.p === 'LTM' ? ', over the 12 months to ' + day(D.h) : '') + (F.levFy != null && F.lev.p === 'LTM' ? ' (end of ' + fyA + ': ' + F.levFy.toFixed(1) + ' years)' : '') + '.', c: F.lev, p: null, pos: nl },
       F.eqr && { k: 'Owners’ equity', v: Math.round(F.eqr.v * 100), u: '% of assets', ln: 'Owners’ equity' + (F.minorities ? ', including minority shareholders,' : '') + ' is ' + Math.round(F.eqr.v * 100) + '% of everything the company owns (' + day(F.eqr.p) + '); losses up to that amount are borne by the owners before lenders.', c: F.eqr, p: pr ? pr.pos : null,
         pos: pr ? pr.pos != null ? 'Higher than about ' + Math.round(pr.pos / 5) + ' in 20 ' + pr.short + '.' : 'The figure is ' + pr.side + ' of ' + pr.short + '.' : nl }].filter(Boolean);
     var three = '<article class="card c-three"><h2>Three numbers</h2><p class="sub">' + esc(D.lt ? 'The 12 months to ' + day(D.h) + ', unaudited' : D.fy) + '; each against a named group of companies where one is loaded.</p><div class="three">' + T3.map(function (t) {
-      return '<div class="num3"><div class="k">' + esc(t.k) + ibtn(t.k + ': formula and sources', t.c.calc, t.c.ids) + '</div><div class="v">' + esc(neg(String(t.v))) + '<small>' + esc(t.u) + '</small></div><div class="ln">' + esc(neg(t.ln)) + '</div>' + icons(t.p) + '<div class="pos">' + esc(t.pos) + '</div></div>';
+      return '<div class="num3"><div class="k">' + esc(t.k) + ibtn(t.k + ': formula and sources', t.c.calc, t.c.ids) + '</div><div class="v">' + esc(neg(String(t.v))) + '<small>' + esc(t.u) + '</small></div><div class="tg">' + perPill(t.c.p || F.p) + audPill(o, t.c.p || F.p) + '</div><div class="ln">' + esc(neg(t.ln)) + '</div>' + (t.p == null ? '<p class="empty">' + esc(t.pos) + '</p>' : icons(t.p) + '<div class="pos">' + esc(t.pos) + '</div>') + '</div>';
     }).join('') + '</div></article>';
     // what falls due before this bond, and the benchmarks beside it
     var L0 = s.ladder || { rows: [] }, pre = L0.rows.filter(function (r) { return r.y !== 'later' && +r.y < my && r.p; }), dsum = pre.reduce(function (a, r) { return a + r.p; }, 0), top = pre.slice().sort(function (a, b) { return b.p - a.p; })[0], later = L0.rows.filter(function (r) { return r.y === 'later' && r.p; })[0], cash = D.liq && D.liq.cash;
@@ -1559,20 +1703,22 @@ window.RATES = {
     var dates = '<article class="card c-dates"><h2>Dates and allocation</h2><table class="dates">' + rows.map(function (r) { var now = r[2] && today >= r[2] && today <= r[3]; return '<tr' + (now ? ' class="now"' : '') + '><td>' + esc(r[0]) + (now ? ' <span class="ill">now</span>' : '') + '</td><td>' + esc(r[1]) + '</td></tr>'; }).join('') + '</table>' +
       '<div class="sub3">Allocation rule, published before the book opened</div><p class="small">Binding anchor commitments first, in full. If co-investor orders exceed what is left, each order is cut pro rata, in steps of EUR 1,000 with at least EUR 100,000 per investor. An order placed on the first day of the book counts the same as one placed on the last day. ' + ill() + '</p></article>';
     var costs = '<article class="card c-costs"><h2>Costs and fees</h2><p>You pay ' + esc(ip) + ' of the amount you buy and no fee to VanillaBonds. ' + esc(nm) + ' pays VanillaBonds a fee only if the bond is issued. VanillaBonds does not buy or hold the bond. Your own bank’s custody fees and your taxes are not in the example above.</p></article>';
-    var sell = '<article class="card c-sell"><h2>How long, and can I sell?</h2><p>' + DT.yrs + ' years, to ' + dfull(DT.maturity) + '.' + (DT.call ? ' ' + esc(nm) + ' may repay early from ' + dfull(DT.call) + (/half the coupon/i.test(term(o, 'call')) ? ' at 100% plus half a year’s coupon, stepping down later' : '') + '.' : '') + ' A listing on the Frankfurt Open Market is planned ' + ill() + '; a listing does not mean there will be a buyer' + (ri ? ' (see risk ' + ri + ')' : '') + '.</p></article>';
+    var sell = '<article class="card c-sell"><h2>How long, and can I sell?</h2><p>' + DT.yrs + ' years, to ' + dfull(DT.maturity) + '.' + (DT.call ? ' ' + esc(nm) + ' may repay early from ' + dfull(DT.call) + (/half the coupon/i.test(term(o, 'call')) ? ' at 100% plus half a year’s coupon, stepping down later' : '') + '.' : '') + ' A listing on the Frankfurt Open Market is planned ' + ill() + '; a listing does not mean there will be a buyer (What can go wrong, on the Company page).</p></article>';
     var qs = qsOf(o), qa = '<article class="card c-qa"><h2>Questions to ' + esc(nm) + ', and its answers</h2><ul class="qa">' + qs.map(function (q, i) {
         var a = A.filter(function (x) { return x.name === q.by; })[0], by = a ? (a.consent || a.you ? a.name : 'a ' + lc(a.institutionType)) + ' (anchor)' : q.by === 'You' ? 'you' : q.by || 'the review';
         return '<li><span class="no">Q' + (i + 1) + '</span><span>' + esc(q.q) + '<span class="who">asked by ' + esc(by) + '</span></span><span class="st">' + (w.anchorCloses != null ? 'asked by ' + dstr(wd(w.anchorCloses)) : '') + '</span><span class="ans">Answer from ' + esc(nm) + ': pending. It appears here for every investor at the same time, before the book closes.</span></li>'; }).join('') +
       ((o.mgmtQuestions || []).length ? '<li><span class="no">+' + o.mgmtQuestions.length + '</span><span class="muted">' + o.mgmtQuestions.length + ' questions from VanillaBonds’ fact file to ' + esc(poss(nm)) + ' management; no answer yet.</span><span></span></li>' : '') + '</ul>' +
       '<div class="dl"><button class="btn sec" type="button" data-toast="Demo: a two-page PDF with these blocks for your investment committee or adviser; not yet available.">Two-page PDF for your committee</button><a href="#/deal/' + o.id + '/qa">Ask a question</a></div></article>';
-    return '<div class="dp fo-page">' + termsCard(o) + '<div class="fo">' + anchor + what + money + wrong + three + before + bench + risks + dates + costs + sell + qa + '</div></div>';
+    var C = { anchor: anchor, what: what, money: money, wrong: wrong, three: three, before: before, bench: bench, risks: risks, dates: dates, costs: costs, sell: sell, qa: qa };
+    var PG = { overview: ['what', 'money', 'three'], bond: ['anchor', 'wrong', 'before', 'bench', 'dates', 'costs', 'sell'], company: ['risks'], qa: ['qa'] }, ks = PG[tab] || PG.overview; tab = PG[tab] ? tab : 'overview';
+    return '<div class="dp fo-page">' + (tab === 'bond' ? termsCard(o) : tab === 'company' ? ownPanel(o) + partiesPanel(o) : '') + '<div class="fo fo-' + tab + '">' + ks.map(function (k) { return C[k]; }).join('') + '</div>' + (tab === 'overview' ? goLinks(o) : '') + '</div>';
   }
   function frame(o, view) { return '<iframe class="dframe" scrolling="no" src="dossier.html?c=' + encodeURIComponent(o.dossier) + '&embed=1&view=' + view + '&role=' + ST.role + '&v=2026-10-23" title="' + esc(o.company.name + ' · ' + view) + '"></iframe>'; }
   // the summary above the overview, full width so the dossier's charts below get the room
   function summary(o) {
     var terms = [['amount', 'Amount'], ['maturity', 'Tenor'], ['couponType', 'Coupon type'], ['coupon', 'Coupon'], ['repayment', 'Repayment'], ['ranking', 'Ranking'], ['security', 'Security'], ['covenants', 'Covenants']];
     return '<div class="strip"><div class="panel"><h3>Proposed terms</h3><table class="kv">' + terms.map(function (t) { var b = (o.bond || []).filter(function (x) { return x.key === t[0]; })[0], v = term(o, t[0]); return '<tr><td>' + t[1] + '</td><td>' + (v ? esc(v) : '<span class="muted">' + (b && b.st === 'discussion' ? 'with the anchors' : '–') + '</span>') + '</td></tr>'; }).join('') + '</table></div>' +
-      '<div class="panel"><h3>Anchors</h3>' + (anchors(o).map(function (a) { return '<div style="font-size:13px;padding:3px 0"><b>' + esc(a.name) + '</b><br>' + eur(a.amountEURm) + ' · ' + price(o, a.price) + ' <span class="chip ' + a.status + '">' + a.status + '</span></div>'; }).join('') || '<span class="muted small">None yet.</span>') + '</div>' +
+      '<div class="panel"><h3>Anchors</h3>' + (anchors(o).map(function (a) { return '<div style="font-size:13px;padding:3px 0"><b>' + esc(a.name) + '</b><br>' + em(a.amountEURm) + ' · ' + price(o, a.price) + ' <span class="chip ' + a.status + '">' + a.status + '</span></div>'; }).join('') || '<span class="muted small">None yet.</span>') + '</div>' +
       '<div class="panel"><h3>Use of proceeds</h3><p class="small" style="margin:0 0 10px">' + esc(o.company.useOfProceeds) + '</p><h3>Management</h3>' + (o.company.management || []).map(function (m) { return '<div class="small"><b>' + esc(m.name) + '</b> · ' + esc(m.role) + (m.since ? ' · since ' + esc(m.since) : '') + '</div>'; }).join('') + '</div>' +
       (o.phase === 'intake' ? '' : '<div class="panel"><h3>Company</h3><p class="small" style="margin:0 0 8px">' + esc(o.company.description) + '</p><p class="small muted" style="margin:0">' + esc(o.company.ownership) + '</p></div>') + '</div>';
   }
@@ -1587,7 +1733,7 @@ window.RATES = {
     return '<div class="body"><h2>Fact file in preparation</h2><p class="small muted" style="margin:-4px 0 10px">The company delivers its documents and answers the reviewer’s questions; every document is checked before its facts enter the file. Anchors see the fact file once a named credit professional has signed it.</p>' +
       '<div class="steps">' + steps.map(function (s) { return '<div><b>' + esc(s[0]) + '</b><span>' + esc(s[1]) + '</span></div>'; }).join('') + '</div>' +
       '<div class="strip"><div class="panel" style="grid-column:span 2"><h3>Figures as delivered, EUR m</h3><div class="scroll"><table class="kv"><tr><td></td>' + yrs.map(function (y) { return '<td class="num muted">' + y + '</td>'; }).join('') + '</tr>' +
-        (o.finRows || []).map(function (r) { var lab = (FIN.filter(function (f) { return f[0] === r.key; })[0] || [r.key, r.key])[1]; return '<tr><td>' + esc(lab) + '</td>' + r.v.map(function (v) { return '<td class="num">' + snum(v, 'm') + '</td>'; }).join('') + '<td class="mono muted" style="padding-left:14px">' + (o.finDocs || []).map(function (d, i) { return esc(d) + ' p.' + ((r.pages || [])[i] || '–'); }).join(' · ') + '</td></tr>'; }).join('') + '</table></div>' +
+        (o.finRows || []).map(function (r) { var lab = (FIN.filter(function (f) { return f[0] === r.key; })[0] || [r.key, r.key])[1]; return '<tr><td>' + esc(lab) + '</td>' + r.v.map(function (v) { return '<td class="num">' + snum(v, 'm') + '</td>'; }).join('') + '<td class="muted small" style="padding-left:14px">' + (o.finDocs || []).map(function (d, i) { return esc(d) + ' p.' + ((r.pages || [])[i] || '–'); }).join(' · ') + '</td></tr>'; }).join('') + '</table></div>' +
         '<p class="small muted" style="margin:8px 0 0">' + (o.fictional ? 'Fictional company: figures and documents are illustrative. ' : '') + 'Pending the document checks and the reviewer’s sign-off.</p></div>' +
       '<div class="panel"><h3>Company</h3><p class="small" style="margin:0 0 8px">' + esc(o.company.description) + '</p><p class="small muted" style="margin:0">' + esc(o.company.ownership) + '</p></div></div>' + summary(o) + sourced(o) + compPanel(o, true) + '</div>';
   }
@@ -1602,25 +1748,25 @@ window.RATES = {
     return '<div class="strip" style="margin:0 0 16px"><div class="panel"><h3>Dossier status</h3><p style="margin:0 0 4px"><b>' + (o.phase === 'intake' ? 'In preparation' : o.real && open.length ? 'Prepared from the public reports' : 'Prepared') + '</b> · ' + (mand.length - open.length) + ' of ' + mand.length + ' mandatory items present</p><p class="small muted" style="margin:0">Dossier status describes the information package only; it does not mean the financing is approved, final or open for subscription.</p></div>' +
       '<div class="panel" style="grid-column:span 2"><h3>How the figures are prepared</h3><p class="small" style="margin:0 0 6px">' + (o.dossier ? 'Every fact is read from the company’s own documents with document, page and verbatim quote, and carries its status: approved by a named reviewer, pending, or a management representation. Calculations print their formula; no assessment, score or rating.' : 'Revenue, EBITDA, net income, cash, financial debt, operating cash flow, capital expenditure and interest expense are taken from the company’s documents as reported, in EUR millions, for fiscal years ending 31 December.') + '</p><p class="small muted" style="margin:0">Figures have not been independently audited or verified by VanillaBonds. Proposed terms are indicative and not agreed.</p></div></div>' +
       '<h2>Source documents</h2><div class="scroll"><table class="grid"><thead><tr><th>Reference</th><th>Document</th><th>Category</th><th>Check</th><th></th></tr></thead><tbody>' +
-      (o.docs || []).map(function (d) { return '<tr><td class="mono">' + esc(d.ref) + '</td><td>' + esc(d.title) + '</td><td>' + esc(d.category) + '</td><td>' + (d.check ? '<span class="chip ' + d.check + '">' + esc(d.check) + '</span>' : '') + '</td><td class="num">' + (o.dossier ? '<button type="button" class="view" data-doc="' + esc(d.id) + '">View</button>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      (o.docs || []).map(function (d) { return '<tr><td><span class="pill">' + esc(d.ref) + '</span></td><td>' + esc(d.title) + '</td><td>' + esc(d.category) + '</td><td>' + (d.check ? '<span class="chip ' + d.check + '">' + esc(d.check) + '</span>' : '') + '</td><td class="num">' + (o.dossier ? '<button type="button" class="view" data-doc="' + esc(d.id) + '">View</button>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
       '<h2 style="margin-top:22px">Requested from the company</h2><div class="scroll"><table class="grid"><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody>' + reqs(o).map(function (r) { return '<tr><td>' + esc(r.item) + (r.mandatory ? ' <span class="chip">mandatory</span>' : '') + (r.note ? '<div class="small muted">' + esc(r.note) + '</div>' : '') + '</td><td><span class="chip ' + r.st + '">' + esc(r.st) + '</span></td></tr>'; }).join('') + '</tbody></table></div>' +
       ((o.docRequests || []).length ? '<h2 style="margin-top:22px">Not in the public documents</h2><p class="small muted" style="margin:-4px 0 8px">Fields of the format the reports do not carry, requested from the company; they enter the record with source and page.</p><div class="scroll"><table class="grid"><thead><tr><th>Block</th><th>Field</th><th>Periods</th><th>Note</th></tr></thead><tbody>' +
-        o.docRequests.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td class="mono">' + esc(r[2]) + '</td><td class="muted">' + esc(r[3] || '–') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '');
+        o.docRequests.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td><td class="muted">' + esc(r[3] || '–') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '');
   }
   function qsOf(o) { return (o.facts || []).filter(function (f) { return f.followUp; }).map(function (f) { return { q: f.fact, by: f.askedBy }; }).concat((ST.qs[o.id] || []).map(function (q) { return { q: q, by: 'You' }; })); }
   function qaTab(o) {
     var mq = o.mgmtQuestions || [];
     return (mq.length ? '<h2>Questions to management</h2><p class="small muted" style="margin:-4px 0 8px">For the recorded management meeting, one question per row of the management block; the answers enter the record as management representations.</p><div class="scroll"><table class="grid"><thead><tr><th>#</th><th>Row</th><th>Question</th><th>Answer</th></tr></thead><tbody>' +
-        mq.map(function (q) { return '<tr><td class="mono">Q' + q[0] + '</td><td class="mono">' + q[1] + '</td><td>' + esc(q[2]) + '</td><td>' + (q[3].length ? esc(q[3].join(', ')) : '<span class="chip">open</span>') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
+        mq.map(function (q) { return '<tr><td>Q' + q[0] + '</td><td>' + q[1] + '</td><td>' + esc(q[2]) + '</td><td>' + (q[3].length ? esc(q[3].join(', ')) : '<span class="chip">open</span>') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
       '<h2 style="margin-top:22px">Questions from investors</h2><div class="scroll"><table class="grid"><thead><tr><th>Question</th><th>Asked by</th><th>Answer</th></tr></thead><tbody>' +
         (qsOf(o).map(function (q) { return '<tr><td>' + esc(q.q) + '</td><td>' + esc(q.by || 'the review') + '</td><td><span class="chip">open</span></td></tr>'; }).join('') || '<tr><td colspan="3" class="muted">No questions yet.</td></tr>') + '</tbody></table></div>' +
       '<form novalidate class="form panel" data-form="ask" style="margin-top:14px"><label style="flex:1">Ask the company a question; every investor on this deal sees the question and the answer<textarea name="q" rows="2" style="width:100%"></textarea></label><button class="btn">Ask</button><p class="err" hidden></p></form>';
   }
   function bookTab(o) {
     var unit = fixed(o) ? 'Coupon, % (fixed)' : 'Price, bp over 3m Euribor', pstep = fixed(o) ? '0.01' : '1', dp = dealPrice(o);
-    var h = '<h2>Anchors</h2><div class="scroll"><table class="grid"><thead><tr><th>Institution</th><th>Type</th><th class="num">Amount</th><th class="num">Share of issue</th><th class="num">' + (fixed(o) ? 'Coupon' : 'Price') + '</th><th>Status</th><th>Conditions</th></tr></thead><tbody>' +
-      (anchors(o).map(function (a) { var x = pdiff(o, a, dp); return '<tr><td>' + (a.you ? '<b>' + esc(a.name) + '</b>' : esc(a.name)) + '</td><td>' + esc(a.institutionType) + '</td><td class="num">' + eur(a.amountEURm) + '</td><td class="num">' + Math.round(a.amountEURm / o.issueEURm * 100) + '%</td><td class="num">' + price(o, a.price) + (x ? '<br><span class="small muted">' + esc(x) + '</span>' : '') + '</td><td><span class="chip ' + a.status + '">' + a.status + '</span></td><td class="small muted">' + esc(a.conditions || '') + '</td></tr>'; }).join('') || '<tr><td colspan="7" class="muted">No anchor yet.</td></tr>') + '</tbody></table></div>' +
-      '<p class="small muted">Amounts in pieces of EUR 100,000. Anchors and their price are visible to every investor on the deal, so co-investors can follow; co-investor orders are seen by the company only.' + (dp && dp.set ? ' The deal price is ' + price(o, dp.v) + ', ' + dp.k.replace(/^deal price, /, '') + '; an anchor price that differs from it is marked.' : '') + '</p>';
+    var h = '<h2>Anchors</h2><div class="scroll"><table class="grid"><thead><tr><th>Institution</th><th>Type</th><th class="num">Amount, EUR m</th><th class="num">Share of issue</th><th class="num">' + (fixed(o) ? 'Coupon' : 'Price') + '</th><th>Status</th><th>Conditions</th></tr></thead><tbody>' +
+      (anchors(o).map(function (a) { var x = pdiff(o, a, dp); return '<tr><td>' + (a.you ? '<b>' + esc(a.name) + '</b>' : esc(a.name)) + '</td><td>' + esc(a.institutionType) + '</td><td class="num">' + f1(a.amountEURm) + '</td><td class="num">' + Math.round(a.amountEURm / o.issueEURm * 100) + '%</td><td class="num">' + price(o, a.price) + (x ? '<br><span class="small muted">' + esc(x) + '</span>' : '') + '</td><td><span class="chip ' + a.status + '">' + a.status + '</span></td><td class="small muted">' + esc(a.conditions || '') + '</td></tr>'; }).join('') || '<tr><td colspan="7" class="muted">No anchor yet.</td></tr>') + '</tbody></table></div>' +
+      '<p class="small muted">Amounts in EUR m; orders are placed in pieces of EUR 100,000. Anchors and their price are visible to every investor on the deal, so co-investors can follow; co-investor orders are seen by the company only.' + (dp && dp.set ? ' The deal price is ' + price(o, dp.v) + ', ' + dp.k.replace(/^deal price, /, '') + '; an anchor price that differs from it is marked.' : '') + '</p>';
     var amountIn = function (v) { return '<label>Amount, EUR (pieces of 100,000)<input name="amount" type="number" min="100000" step="100000" value="' + v + '"></label>'; };
     var priceIn = '<label>' + unit + '<input name="price" type="number" min="0" step="' + pstep + '" value="' + (dp ? dp.v : fixed(o) ? '' : 700) + '"></label>';
     if (ST.role === 'anchor') {
@@ -1634,7 +1780,7 @@ window.RATES = {
         : '<form novalidate class="form" data-form="ord">' + amountIn(1000000) + priceIn + '<button class="btn">Place order</button><p class="err" hidden></p></form><p class="small muted" style="margin:8px 0 0">On the anchors’ terms; the price shown is ' + (dp && dp.set ? 'the deal price, ' + price(o, dp.v) : 'the anchors’ indication') + '.</p>') + '</div>';
     } else {
       var od = ST.ord[o.id];
-      h += '<h2 style="margin-top:22px">Order book · co-investors</h2><div class="scroll"><table class="grid"><thead><tr><th>Investor</th><th class="num">Amount</th><th class="num">Price</th></tr></thead><tbody>' + (od ? '<tr><td>Co-investor (demonstration)</td><td class="num">' + eur(od.amount) + '</td><td class="num">' + price(o, od.price) + '</td></tr>' : '<tr><td colspan="3" class="muted">No co-investor orders yet.</td></tr>') + '</tbody></table></div>';
+      h += '<h2 style="margin-top:22px">Order book · co-investors</h2><div class="scroll"><table class="grid"><thead><tr><th>Investor</th><th class="num">Amount, EUR m</th><th class="num">Price</th></tr></thead><tbody>' + (od ? '<tr><td>Co-investor (demonstration)</td><td class="num">' + f1(od.amount) + '</td><td class="num">' + price(o, od.price) + '</td></tr>' : '<tr><td colspan="3" class="muted">No co-investor orders yet.</td></tr>') + '</tbody></table></div>';
     }
     return h;
   }
@@ -1645,8 +1791,8 @@ window.RATES = {
     return '<h2>Documents requested</h2><div class="scroll"><table class="grid"><thead><tr><th>Item</th><th>Status</th><th></th></tr></thead><tbody>' +
       reqs(o).map(function (r) { return '<tr><td>' + esc(r.item) + (r.mandatory ? ' <span class="chip">mandatory</span>' : '') + (r.note && r.st !== 'received' ? '<div class="small muted">' + esc(r.note) + '</div>' : '') + '</td><td><span class="chip ' + r.st + '">' + esc(r.st) + '</span></td><td class="num">' + (r.st === 'received' ? '' : '<button type="button" class="view" data-up="' + esc(r.id) + '">Upload</button>') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
       (qs.length ? '<h2 style="margin-top:22px">Questions from the reviewer</h2><div class="scroll"><table class="grid"><thead><tr><th>Question</th><th>Your answer</th></tr></thead><tbody>' + qs.map(function (f) { var a = ST.ans[o.id + ':' + f.id]; return '<tr><td>' + esc(f.fact) + (f.mandatory ? ' <span class="chip">mandatory</span>' : '') + '</td><td>' + (a ? esc(a) + ' <button type="button" class="view" data-unans="' + esc(f.id) + '">Change</button>' : '<form novalidate class="form" data-form="ans" data-f="' + esc(f.id) + '"><input name="a" style="width:260px" aria-label="Answer"><button class="btn sec">Save</button><p class="err" hidden></p></form>') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
-      ((o.mgmtQuestions || []).length ? '<h2 style="margin-top:22px">Questions to management</h2><p class="small muted" style="margin:-4px 0 8px">Answer in one management Q&amp;A document, each answer starting with its number (Q1: ...); a named officer attests it.</p><div class="scroll"><table class="grid"><thead><tr><th>#</th><th>Question</th></tr></thead><tbody>' + o.mgmtQuestions.map(function (q) { return '<tr><td class="mono">Q' + q[0] + '</td><td>' + esc(q[2]) + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
-      ((o.docRequests || []).length ? '<h2 style="margin-top:22px">Not in your public documents</h2><div class="scroll"><table class="grid"><thead><tr><th>Field</th><th>Periods</th><th>Note</th></tr></thead><tbody>' + o.docRequests.map(function (r) { return '<tr><td>' + esc(r[1]) + '</td><td class="mono">' + esc(r[2]) + '</td><td class="muted">' + esc(r[3] || '–') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
+      ((o.mgmtQuestions || []).length ? '<h2 style="margin-top:22px">Questions to management</h2><p class="small muted" style="margin:-4px 0 8px">Answer in one management Q&amp;A document, each answer starting with its number (Q1: ...); a named officer attests it.</p><div class="scroll"><table class="grid"><thead><tr><th>#</th><th>Question</th></tr></thead><tbody>' + o.mgmtQuestions.map(function (q) { return '<tr><td>Q' + q[0] + '</td><td>' + esc(q[2]) + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
+      ((o.docRequests || []).length ? '<h2 style="margin-top:22px">Not in your public documents</h2><div class="scroll"><table class="grid"><thead><tr><th>Field</th><th>Periods</th><th>Note</th></tr></thead><tbody>' + o.docRequests.map(function (r) { return '<tr><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td><td class="muted">' + esc(r[3] || '–') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
       '<div class="panel" style="margin-top:18px"><h3>Confirmation</h3>' + (ST.conf[o.id] ? '<p style="margin:0">Confirmed by ' + esc(ST.conf[o.id]) + '. <button type="button" class="view" data-act="unconfirm">Withdraw</button></p>'
         : '<p class="small" style="margin:0 0 10px">I confirm that the company information delivered is complete and correct to the best of my knowledge. The company signs no bond documents at this stage.</p><button type="button" class="btn" data-act="confirm">Confirm as ' + esc(cfo.name + (cfo.role ? ', ' + cfo.role : '')) + '</button>') + '</div>';
   }
@@ -1654,8 +1800,8 @@ window.RATES = {
   // ---------- book and the deal journey ----------
   function bookView() {
     var src = ST.role === 'anchor' ? ST.ind : ST.ord, ids = Object.keys(src).filter(function (id) { return DEALS[id]; });
-    return '<div class="pagehead"><h1>My book</h1><span class="muted small">' + (ST.role === 'anchor' ? 'your indications and commitments' : 'your orders') + '</span></div><div class="scroll"><table class="grid"><thead><tr><th>Deal</th><th>Stage</th><th class="num">Amount</th><th class="num">Price</th><th>Status</th></tr></thead><tbody>' +
-      (ids.map(function (id) { var o = DEALS[id], x = src[id]; return '<tr class="go" data-go="#/deal/' + id + '/book"><td><div class="issuer">' + mark(o) + '<b>' + esc(o.company.name) + '</b></div></td><td>' + stageCell(o) + '</td><td class="num">' + eur(x.amount) + '</td><td class="num">' + price(o, x.price) + '</td><td>' + (ST.role === 'anchor' ? (x.binding ? 'binding' : 'indicative') : 'order, seen by the company') + '</td></tr>'; }).join('') || '<tr><td colspan="5" class="muted">Nothing yet. Open a deal and use Book.</td></tr>') + '</tbody></table></div>';
+    return '<div class="pagehead"><h1>My book</h1><span class="muted small">' + (ST.role === 'anchor' ? 'your indications and commitments' : 'your orders') + '</span></div><div class="scroll"><table class="grid"><thead><tr><th>Deal</th><th>Stage</th><th class="num">Amount, EUR m</th><th class="num">Price</th><th>Status</th></tr></thead><tbody>' +
+      (ids.map(function (id) { var o = DEALS[id], x = src[id]; return '<tr class="go" data-go="#/deal/' + id + '/book"><td><div class="issuer">' + mark(o) + '<b>' + esc(o.company.name) + '</b></div></td><td>' + stageCell(o) + '</td><td class="num">' + f1(x.amount) + '</td><td class="num">' + price(o, x.price) + '</td><td>' + (ST.role === 'anchor' ? (x.binding ? 'binding' : 'indicative') : 'order, seen by the company') + '</td></tr>'; }).join('') || '<tr><td colspan="5" class="muted">Nothing yet. Open a deal and use Book.</td></tr>') + '</tbody></table></div>';
   }
   // ---------- market (22 Oct 2026, v2): the platform's own dataset of euro bonds in the Nordic format from issuers outside the Nordics (seb-mvp/market_data.js), one
   //            hand-noted read of the exchange pages per ISIN (market_marks.js), the full Frankfurt price history and the comparables research (market-data/*.js,
@@ -2320,6 +2466,7 @@ window.RATES = {
     if (act === 'print') { window.print(); return; }
     if (/^dr-/.test(act)) { drAct(o, act, a.getAttribute('data-k')); return; }
     if (act === 'ins-all') { INS[R.id] = true; render(); return; }   // the instrument table: every line
+    if (act === 'own-tree' || act === 'own-table') { OWNV[R.id] = act.slice(4); render(); return; }   // the group tree as a tree or a table
     if (act === 'reset') { e.preventDefault(); try { sessionStorage.removeItem('vb-app'); Object.keys(localStorage).filter(function (k) { return k.indexOf('vb-assess:') === 0; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (x) { /* storage blocked */ } location.hash = '#/deals'; location.reload(); return; }
     if (act === 'bind') ST.ind[R.id].binding = true; else if (act === 'withdraw-ind') delete ST.ind[R.id]; else if (act === 'withdraw-ord') delete ST.ord[R.id];
     else if (act === 'confirm') { var c = (o.company.management || []).filter(function (m) { return m.role === 'CFO'; })[0] || (o.company.management || [])[0] || { name: 'the CFO', role: '' }; ST.conf[R.id] = c.name + (c.role ? ', ' + c.role : '') + ', ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
